@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/User%20Settings/AddUserDialog.dart';
@@ -10,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:universal_html/html.dart' as html;
 
 class UserBusinessSettingsForm extends StatefulWidget {
   final String rol;
@@ -425,6 +429,92 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                               setState(() => businessSize = int.parse(val));
                             },
                           ),
+                          SizedBox(height: 25),
+                          //Tienda
+                          Text(
+                            'Mi Tienda',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Text(
+                                'http://mi-denario.web.app/?id=${userBusiness.businessID}',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(width: 8),
+                              IconButton(
+                                  tooltip: 'Copiar',
+                                  iconSize: 14,
+                                  splashRadius: 15,
+                                  onPressed: () async {
+                                    Clipboard.setData(ClipboardData(
+                                            text:
+                                                'http://mi-denario.web.app/?id=${userBusiness.businessID}'))
+                                        .then((_) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Link copiado al clipboard")));
+                                    });
+                                  },
+                                  icon: Icon(Icons.copy)),
+                            ],
+                          ),
+                          SizedBox(height: 15),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              QrImage(
+                                data:
+                                    'http://mi-denario.web.app/?id=${userBusiness.businessID}',
+                                version: QrVersions.auto,
+                                size: 100.0,
+                              ),
+                              SizedBox(width: 10),
+                              IconButton(
+                                  tooltip: 'Descargar QR',
+                                  iconSize: 21,
+                                  splashRadius: 15,
+                                  onPressed: () async {
+                                    final qrCode = QrPainter(
+                                      data:
+                                          'http://mi-denario.web.app/?id=${userBusiness.businessID}',
+                                      version: QrVersions.auto,
+                                    );
+                                    final painter = qrCode;
+                                    final image = await painter.toImage(
+                                        200); // specify the size of the image
+                                    final byteData = await image.toByteData(
+                                        format: ImageByteFormat.png);
+                                    final bytes = byteData.buffer.asUint8List();
+
+                                    final blob = html.Blob([bytes]);
+                                    final url =
+                                        html.Url.createObjectUrlFromBlob(blob);
+                                    final anchor = html.document
+                                            .createElement('a')
+                                        as html.AnchorElement
+                                      ..href = url
+                                      ..download =
+                                          '${userBusiness.businessName} QR.png';
+                                    anchor.click();
+                                    html.document.body.children.remove(anchor);
+                                    html.Url.revokeObjectUrl(url);
+                                  },
+                                  icon: Icon(Icons.download)),
+                            ],
+                          ),
+                          //Imagen de fondo
+
+                          //Categorias
+
                           //Social Media
                           SizedBox(height: 25),
                           Text(
@@ -557,6 +647,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                   ],
                                 )
                               : Container(),
+                          SizedBox(height: 25),
                         ],
                       ),
                     ),

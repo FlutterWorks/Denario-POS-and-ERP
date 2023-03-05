@@ -32,24 +32,9 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //Title
-        Text(
-          'Mis Negocios',
-          style: TextStyle(
-              fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 15),
-        Divider(
-          color: Colors.grey,
-          endIndent: 5,
-          indent: 5,
-        ),
-        SizedBox(height: 15),
         //Data
         Expanded(
           child: Container(
-            // width: double.infinity,
-            // // height: 500,
             constraints: BoxConstraints(minWidth: 400),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
