@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:denario/Backend/DatabaseService.dart';
@@ -107,9 +106,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
   }
 
   void selectPayment(payment) {
-    setState(() {
-      paymentType = payment;
-    });
+    paymentType = payment;
   }
 
   void clearVariables() {
@@ -272,15 +269,11 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
   }
 
   void moneyFromCashier(amount) {
-    setState(() {
-      cashRegisterAmount = amount;
-    });
+    cashRegisterAmount = amount;
   }
 
   void checkCashierMoneyBox(val) {
-    setState(() {
-      isChecked = val;
-    });
+    isChecked = val;
   }
 
   @override
@@ -497,8 +490,11 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                   // Use money in petty cash?
                                   (paymentType == 'Efectivo' &&
                                           widget.dailyTransactions != null)
-                                      ? CreateExpenseUseCashierMoney(snapshot,
-                                          expenseTotalAmount(snapshot), moneyFromCashier, checkCashierMoneyBox)
+                                      ? CreateExpenseUseCashierMoney(
+                                          snapshot,
+                                          expenseTotalAmount(snapshot),
+                                          moneyFromCashier,
+                                          checkCashierMoneyBox)
                                       : Container(),
                                   SizedBox(
                                     height: 25,
@@ -991,10 +987,5 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
             );
           }
         });
-    // } else {
-    //   return Center();
-    // }
-    //   },
-    // );
   }
 }

@@ -241,33 +241,40 @@ class DatabaseService {
       'Social Media': [],
       'Business Schedule': [
         {
-          'Open': TimeOfDay(hour: 9, minute: 00),
-          'Close': TimeOfDay(hour: 20, minute: 00),
+          'Open': {'Hour': 09, 'Minute': 00},
+          'Close': {'Hour': 20, 'Minute': 00},
+          'Opens': true
         },
         {
-          'Open': TimeOfDay(hour: 9, minute: 00),
-          'Close': TimeOfDay(hour: 20, minute: 00),
+          'Open': {'Hour': 09, 'Minute': 00},
+          'Close': {'Hour': 20, 'Minute': 00},
+          'Opens': true
         },
         {
-          'Open': TimeOfDay(hour: 9, minute: 00),
-          'Close': TimeOfDay(hour: 20, minute: 00),
+          'Open': {'Hour': 09, 'Minute': 00},
+          'Close': {'Hour': 20, 'Minute': 00},
+          'Opens': true
         },
         {
-          'Open': TimeOfDay(hour: 9, minute: 00),
-          'Close': TimeOfDay(hour: 20, minute: 00),
+          'Open': {'Hour': 09, 'Minute': 00},
+          'Close': {'Hour': 20, 'Minute': 00},
+          'Opens': true
         },
         {
-          'Open': TimeOfDay(hour: 9, minute: 00),
-          'Close': TimeOfDay(hour: 20, minute: 00),
+          'Open': {'Hour': 09, 'Minute': 00},
+          'Close': {'Hour': 20, 'Minute': 00},
+          'Opens': true
         },
         {
-          'Open': TimeOfDay(hour: 9, minute: 00),
-          'Close': TimeOfDay(hour: 20, minute: 00),
+          'Open': {'Hour': 09, 'Minute': 00},
+          'Close': {'Hour': 20, 'Minute': 00},
+          'Opens': true
         },
         {
-          'Open': TimeOfDay(hour: 00, minute: 00),
-          'Close': TimeOfDay(hour: 00, minute: 00),
-        }
+          'Open': {'Hour': 09, 'Minute': 00},
+          'Close': {'Hour': 20, 'Minute': 00},
+          'Opens': true
+        },
       ]
     });
   }
@@ -3174,4 +3181,23 @@ class DatabaseService {
       'Order Type': 'Takeaway'
     });
   }
+
+  ////////////////////////////////////Clone Products Collection
+  // Future cloneGaliaMenu() async {
+  //   final QuerySnapshot snapshot = await FirebaseFirestore.instance
+  //       .collection('Products')
+  //       .doc('VTam7iYZhiWiAFs3IVRBaLB5s3m2')
+  //       .collection('Menu')
+  //       .get();
+  //   final CollectionReference newCollectionRef = FirebaseFirestore.instance
+  //       .collection('Products')
+  //       .doc('DjGEhTFq4pPzHMr')
+  //       .collection('Menu');
+
+  //   snapshot.docs.forEach((doc) {
+  //     newCollectionRef.doc(doc.id).set(doc.data());
+  //   });
+
+  //   print('Finito');
+  // }
 }

@@ -550,7 +550,6 @@ class _HomeDeskState extends State<HomeDesk> {
               //       Icons.access_alarm,
               //       color: Colors.black,
               //     )),
-
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
