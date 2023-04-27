@@ -18,8 +18,6 @@ class DailyCashBalancing extends StatefulWidget {
 
 class _DailyCashBalancingState extends State<DailyCashBalancing> {
   final formatCurrency = new NumberFormat.simpleCurrency();
-  int indexOfCashSales = 0;
-  double cashaSales = 0;
   double expectedInRegister = 0;
   Widget closedRegister() {
     return Container(
@@ -123,21 +121,17 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
           ));
     } else if (registerStatus.registerisOpen) {
       //Si esta abierta
-      indexOfCashSales = dailyTransactions.salesByMedium
-          .indexWhere((element) => element['Type'] == 'Efectivo');
-
-      if (indexOfCashSales == -1) {
+      if (dailyTransactions.salesByMedium.toString().contains('Efectivo')) {
+        //.containsKey('Efectivo')) {
         expectedInRegister = dailyTransactions.initialAmount +
+            dailyTransactions.salesByMedium['Efectivo'] +
             dailyTransactions.inflows -
             dailyTransactions.outflows;
       } else {
-        cashaSales =
-            dailyTransactions.salesByMedium[indexOfCashSales]['Amount'];
-
-        expectedInRegister = cashaSales +
+        expectedInRegister = //dailyTransactions.salesByMedium['Efectivo'] +
             dailyTransactions.initialAmount +
-            dailyTransactions.inflows -
-            dailyTransactions.outflows;
+                dailyTransactions.inflows -
+                dailyTransactions.outflows;
       }
 
       return Column(
@@ -302,7 +296,9 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                       SizedBox(height: 15),
                       //Sales
                       Text(
-                        'Ventas en efectivo: ${formatCurrency.format(cashaSales)}',
+                        (dailyTransactions.salesByMedium['Efectivo'] != null)
+                            ? 'Ventas en efectivo: ${formatCurrency.format(dailyTransactions.salesByMedium['Efectivo'])}'
+                            : 'Ventas en efectivo: ${formatCurrency.format(0)}',
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       SizedBox(height: 15),

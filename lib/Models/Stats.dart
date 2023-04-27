@@ -5,6 +5,7 @@ class MonthlyStats {
   Map<String, dynamic> salesCountbyProduct;
   Map<String, dynamic> salesAmountbyProduct;
   Map<String, dynamic> salesCountbyCategory;
+  Map<String, dynamic> salesAmountbyCategory;
   Map<String, dynamic> salesbyOrderType;
 
   MonthlyStats(
@@ -14,5 +15,6 @@ class MonthlyStats {
       this.salesCountbyProduct,
       this.salesCountbyCategory,
       this.salesAmountbyProduct,
+      this.salesAmountbyCategory,
       this.salesbyOrderType});
 }

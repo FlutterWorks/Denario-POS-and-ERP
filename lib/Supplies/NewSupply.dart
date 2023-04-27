@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Models/Supplier.dart';
 import 'package:denario/Models/Supply.dart';
@@ -113,12 +114,6 @@ class _NewSupplyState extends State<NewSupply> {
       ingredients = widget.supply.recipe;
       historicPrices = widget.supply.priceHistory;
       if (widget.supply.recipe.length > 0) {
-        // for (var x = 0; x < widget.supply.recipe.length; x++) {
-        //   ingredients.add({
-        //     'Ingredient': widget.supply.recipe[x].ingredient,
-        //     'Quantity': widget.supply.recipe[x].qty,
-        //   });
-        // }
         priceController.text = totalIngredientsCost().toString();
       } else {
         ingredients = [];
@@ -156,7 +151,9 @@ class _NewSupplyState extends State<NewSupply> {
                     iconSize: 20.0),
                 SizedBox(width: 25),
                 Text(
-                  'Agregar Insumo',
+                  (widget.supply == null)
+                      ? 'Agregar Insumo'
+                      : widget.supply.supply,
                   textAlign: TextAlign.left,
                   style: TextStyle(fontWeight: FontWeight.w900, fontSize: 28),
                 ),
@@ -207,6 +204,7 @@ class _NewSupplyState extends State<NewSupply> {
                         }
                       },
                       initialValue: name,
+                      enabled: (widget.supply == null) ? true : false,
                       decoration: InputDecoration(
                         focusColor: Colors.black,
                         hintStyle:
@@ -889,6 +887,11 @@ class _NewSupplyState extends State<NewSupply> {
                                   selectedVendors.add(temp.toLowerCase());
                                 }
                               }
+                              List listofIngredients = [];
+                              for (var x in ingredients) {
+                                listofIngredients.add(x['Ingredient']);
+                              }
+
                               DatabaseService().createSuppy(
                                   widget.activeBusiness,
                                   name,
@@ -907,7 +910,8 @@ class _NewSupplyState extends State<NewSupply> {
                                       'To Date': null,
                                       'Price': price
                                     }
-                                  ]);
+                                  ],
+                                  listofIngredients);
 
                               Navigator.of(context).pop();
                             }
@@ -945,17 +949,107 @@ class _NewSupplyState extends State<NewSupply> {
                                         },
                                       ),
                                     ),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (_formKey.currentState.validate()) {
                                         if (widget.supply.price != price) {
+                                          //Edit supply history
                                           historicPrices.last['To Date'] =
                                               DateTime.now();
-
                                           historicPrices.add({
                                             'From Date': DateTime.now(),
                                             'To Date': null,
                                             'Price': price
                                           });
+
+                                          //Edit products that use this supply
+                                          List updatedDocuments = [];
+                                          await FirebaseFirestore.instance
+                                              .collection("Products")
+                                              .doc(widget.activeBusiness)
+                                              .collection("Menu")
+                                              .where('List Of Ingredients',
+                                                  arrayContains: name)
+                                              .get()
+                                              .then((snapshot) =>
+                                                  List.from(snapshot.docs)
+                                                      .forEach((doc) {
+                                                    if (updatedDocuments
+                                                        .contains(doc.id)) {
+                                                      //
+                                                    } else {
+                                                      //Take list of ingredients
+                                                      List ingredients =
+                                                          doc['Ingredients'];
+                                                      //Identify which has ingredient to update (named like KEY)
+                                                      for (var x = 0;
+                                                          x <
+                                                              ingredients
+                                                                  .length;
+                                                          x++) {
+                                                        //Update price in this index
+                                                        if (ingredients[x][
+                                                                'Ingredient'] ==
+                                                            name) {
+                                                          ingredients[x][
+                                                                  'Supply Cost'] =
+                                                              price;
+                                                        }
+                                                      }
+                                                      DatabaseService()
+                                                          .editProductSupply(
+                                                              widget
+                                                                  .activeBusiness,
+                                                              doc.id,
+                                                              ingredients);
+                                                      updatedDocuments
+                                                          .add(doc.id);
+                                                    }
+                                                  }));
+
+                                          //Edit Other supplies that use the same product
+                                          List updatedSupplyDocuments = [];
+                                          await FirebaseFirestore.instance
+                                              .collection("ERP")
+                                              .doc(widget.activeBusiness)
+                                              .collection("Supplies")
+                                              .where('List of Ingredients',
+                                                  arrayContains: name)
+                                              .get()
+                                              .then((snapshot) =>
+                                                  List.from(snapshot.docs)
+                                                      .forEach((doc) {
+                                                    if (updatedSupplyDocuments
+                                                        .contains(doc.id)) {
+                                                      //
+                                                    } else {
+                                                      //Take list of ingredients
+                                                      List ingredients =
+                                                          doc['Recipe'];
+                                                      //Identify which has ingredient to update (named like KEY)
+                                                      for (var x = 0;
+                                                          x <
+                                                              ingredients
+                                                                  .length;
+                                                          x++) {
+                                                        //Update price in this index
+                                                        if (ingredients[x][
+                                                                'Ingredient'] ==
+                                                            name) {
+                                                          ingredients[x][
+                                                                  'Supply Cost'] =
+                                                              price;
+                                                        }
+                                                      }
+                                                      DatabaseService()
+                                                          .editSupplyIngredients(
+                                                              widget
+                                                                  .activeBusiness,
+                                                              doc.id,
+                                                              ingredients);
+                                                      updatedSupplyDocuments
+                                                          .add(doc.id);
+                                                    }
+                                                  }));
                                         }
                                         //Add all characters to the list
                                         for (int x = 0;
@@ -970,6 +1064,12 @@ class _NewSupplyState extends State<NewSupply> {
                                                 .add(temp.toLowerCase());
                                           }
                                         }
+                                        //Get list of ingredients if changed or not
+                                        List listofIngredients = [];
+                                        for (var x in ingredients) {
+                                          listofIngredients
+                                              .add(x['Ingredient']);
+                                        }
                                         DatabaseService().editSuppy(
                                             widget.activeBusiness,
                                             widget.supply.docID,
@@ -983,7 +1083,8 @@ class _NewSupplyState extends State<NewSupply> {
                                             sellers,
                                             selectedVendors,
                                             ingredients,
-                                            historicPrices);
+                                            historicPrices,
+                                            listofIngredients);
                                       }
                                       Navigator.of(context).pop();
                                     },

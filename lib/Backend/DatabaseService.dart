@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Expenses.dart';
@@ -809,6 +810,307 @@ class DatabaseService {
 
   ///////////////////////// ORDERS //////////////////////////
 
+  // Save order function
+  void saveNewOrder(
+    String activeBusiness,
+    bool splitPayment,
+    List splitPaymentDetails,
+    invoiceNO,
+    cashRegister,
+    bool isTable,
+    tableCode,
+    bool isSavedOrder,
+    savedOrderID,
+    bool reveresed,
+  ) async {
+    //Date variables
+    var year = DateTime.now().year.toString();
+    var month = DateTime.now().month.toString();
+
+    //Gather TicketBloc values before they get cleared using doc.get()
+    final cartList = bloc.ticketItems['Items'];
+    final total = bloc.totalTicketAmount;
+    final paymentType = bloc.ticketItems['Payment Type'];
+    final orderType = bloc.ticketItems['Order Type'];
+
+    // //////////Create Sale
+    createOrder(
+        activeBusiness,
+        DateTime.now().toString(),
+        year,
+        month,
+        DateTime.now(),
+        bloc.ticketItems['Subtotal'],
+        bloc.ticketItems['Discount'],
+        bloc.ticketItems['IVA'],
+        bloc.totalTicketAmount,
+        bloc.ticketItems['Items'],
+        bloc.ticketItems['Order Name'],
+        splitPayment ? 'Split' : bloc.ticketItems['Payment Type'],
+        bloc.ticketItems['Order Name'],
+        {
+          'Name': bloc.ticketItems['Order Name'],
+          'Address': '',
+          'Phone': 0,
+          'email': '',
+        },
+        invoiceNO,
+        (cashRegister == null) ? 'Independiente' : cashRegister,
+        false,
+        splitPaymentDetails);
+
+    // ////////////////////////Update Accounts (sales and categories)
+
+    //Firestore reference
+    var firestore = FirebaseFirestore.instance;
+    var docRef = firestore
+        .collection('ERP')
+        .doc(activeBusiness)
+        .collection(year)
+        .doc(month);
+
+    final doc = await docRef.get();
+
+    try {
+      if (doc.exists) {
+        docRef.update({'Ventas': FieldValue.increment(total)});
+      } else {
+        docRef.set({'Ventas': total});
+      }
+    } catch (error) {
+      print('Error updating Total Sales Value: $error');
+    }
+
+    /////Update each Account for the month based on order's categories
+    Map orderCategories = {};
+
+    //Logic to retrieve and add up categories totals
+    for (var i = 0; i < cartList.length; i++) {
+      //Check if the map contains the key
+      if (orderCategories.containsKey('Ventas de ${cartList[i]["Category"]}')) {
+        //Add to existing category amount
+        orderCategories.update(
+            'Ventas de ${cartList[i]["Category"]}',
+            (value) =>
+                value + (cartList[i]["Price"] * cartList[i]["Quantity"]));
+      } else {
+        //Add new category with amount
+        orderCategories['Ventas de ${cartList[i]["Category"]}'] =
+            cartList[i]["Price"] * cartList[i]["Quantity"];
+      }
+    }
+    ////Logic to add Sales by Categories to Firebase based on current Values from snap
+    orderCategories.forEach((k, v) {
+      docRef.update({k: FieldValue.increment(v)});
+    });
+
+    /////////////////////////// MONTH STATS ///////////////////////////
+
+    //Increment stats
+    var monthStatsRef = firestore
+        .collection('ERP')
+        .doc(activeBusiness)
+        .collection(year)
+        .doc(month)
+        .collection('Stats')
+        .doc('Monthly Stats');
+
+    //Update STATS for MONTH
+    try {
+      final monthStatsdoc = await monthStatsRef.get();
+
+      if (monthStatsdoc.exists) {
+        //MONTHLY Stats
+        if (!splitPayment) {
+          monthStatsRef.update({
+            'Total Sales Count': FieldValue.increment(1),
+            'Total Sales': FieldValue.increment(total),
+            'Total Items Sold': FieldValue.increment(cartList.length),
+            'Sales by Order Type.$orderType': FieldValue.increment(total),
+            'Sales by Payment Type.$paymentType': FieldValue.increment(total),
+          });
+        } else {
+          monthStatsRef.update({
+            'Total Sales Count': FieldValue.increment(1),
+            'Total Sales': FieldValue.increment(total),
+            'Total Items Sold': FieldValue.increment(cartList.length),
+            'Sales by Order Type.$orderType': FieldValue.increment(total),
+          });
+          for (var x in splitPaymentDetails) {
+            monthStatsRef.update({
+              'Sales by Payment Type.${x['Type']}':
+                  FieldValue.increment(x['Amount']),
+            });
+          }
+        }
+        //MONTHLY Stats By PRODUCTS and CATEGORIES'
+        for (var i = 0; i < cartList.length; i++) {
+          monthStatsRef.update({
+            'Sales Amount by Product.${cartList[i]["Name"]}':
+                FieldValue.increment(
+                    cartList[i]["Price"] * cartList[i]["Quantity"]),
+            'Sales Count by Product.${cartList[i]["Name"]}':
+                FieldValue.increment(cartList[i]["Quantity"]),
+            'Sales Amount by Category.${cartList[i]["Category"]}':
+                FieldValue.increment(
+                    cartList[i]["Price"] * cartList[i]["Quantity"]),
+            'Sales Count by Category.${cartList[i]["Category"]}':
+                FieldValue.increment(cartList[i]["Quantity"]),
+          });
+        }
+      } else {
+        Map<String, dynamic> orderStats = {
+          'Total Sales Count': 0,
+          'Total Sales': 0,
+          'Total Items Sold': 0,
+          'Sales by Order Type': {},
+          'Sales by Payment Type': {},
+          'Sales Amount by Product': {},
+          'Sales Count by Product': {},
+          'Sales Amount by Category': {},
+          'Sales Count by Category': {}
+        };
+
+        orderStats['Total Sales Count'] = 1;
+        orderStats['Total Sales'] = total;
+        orderStats['Total Items Sold'] = cartList.length;
+        orderStats['Sales by Order Type'] = {orderType: total};
+
+        //Add list of payment types to the Map
+        if (splitPayment) {
+          for (var x in splitPaymentDetails) {
+            orderStats['Sales by Payment Type']['${x['Type']}'] = x['Amount'];
+          }
+        } else {
+          orderStats['Sales by Payment Type']['$paymentType'] = total;
+        }
+
+        //Add product and categories stats
+        for (var i = 0; i < cartList.length; i++) {
+          //Product Amounts
+          orderStats['Sales Amount by Product']['${cartList[i]["Name"]}'] =
+              (orderStats['Sales Amount by Product']
+                          ['${cartList[i]["Name"]}'] ??
+                      0) +
+                  (cartList[i]["Price"] * cartList[i]["Quantity"]);
+          //Products Count
+          orderStats['Sales Count by Product']['${cartList[i]["Name"]}'] =
+              (orderStats['Sales Count by Product']['${cartList[i]["Name"]}'] ??
+                      0) +
+                  cartList[i]["Quantity"];
+          //Categories Amount
+          orderStats['Sales Amount by Category']['${cartList[i]["Category"]}'] =
+              (orderStats['Sales Amount by Category']
+                          ['${cartList[i]["Category"]}'] ??
+                      0) +
+                  (cartList[i]["Price"] * cartList[i]["Quantity"]);
+          //Categories Count
+          orderStats['Sales Count by Category']['${cartList[i]["Category"]}'] =
+              (orderStats['Sales Count by Category']
+                          ['${cartList[i]["Category"]}'] ??
+                      0) +
+                  cartList[i]["Quantity"];
+        }
+
+        await monthStatsRef.set(orderStats);
+      }
+    } catch (error) {
+      print('Error updating Monthly Stats: $error');
+    }
+
+    /////////////////////////// DAILY STATS ///////////////////////////
+
+    ///Increment stats
+    if (cashRegister != null) {
+      var dayStatsRef = firestore
+          .collection('ERP')
+          .doc(activeBusiness)
+          .collection(year)
+          .doc(month)
+          .collection('Daily')
+          .doc(cashRegister);
+
+      //Update STATS for DAY
+      try {
+        final dayStatsdoc = await dayStatsRef.get();
+
+        if (dayStatsdoc.exists) {
+          //DAILY Stats
+          if (!splitPayment) {
+            dayStatsRef.update({
+              'Total Sales Count': FieldValue.increment(1),
+              'Ventas': FieldValue.increment(total),
+              'Transacciones del Día': FieldValue.increment(total),
+              'Total Items Sold': FieldValue.increment(cartList.length),
+              'Sales by Order Type.$orderType': FieldValue.increment(total),
+              'Ventas por Medio.$paymentType': FieldValue.increment(total),
+            });
+          } else {
+            dayStatsRef.update({
+              'Total Sales Count': FieldValue.increment(1),
+              'Ventas': FieldValue.increment(total),
+              'Transacciones del Día': FieldValue.increment(total),
+              'Total Items Sold': FieldValue.increment(cartList.length),
+              'Sales by Order Type.$orderType': FieldValue.increment(total),
+            });
+            for (var x in splitPaymentDetails) {
+              dayStatsRef.update({
+                'Ventas por Medio.${x['Type']}':
+                    FieldValue.increment(x['Amount']),
+              });
+            }
+          }
+
+          //DAILY Stats By PRODUCTS and CATEGORIES'
+          for (var i = 0; i < cartList.length; i++) {
+            dayStatsRef.update({
+              'Sales Amount by Product.${cartList[i]["Name"]}':
+                  FieldValue.increment(
+                      cartList[i]["Price"] * cartList[i]["Quantity"]),
+              'Sales Count by Product.${cartList[i]["Name"]}':
+                  FieldValue.increment(cartList[i]["Quantity"]),
+              'Sales Amount by Category.${cartList[i]["Category"]}':
+                  FieldValue.increment(
+                      cartList[i]["Price"] * cartList[i]["Quantity"]),
+              'Sales Count by Category.${cartList[i]["Category"]}':
+                  FieldValue.increment(cartList[i]["Quantity"]),
+            });
+          }
+        }
+      } catch (error) {
+        print('Error updating Daily Stats: $error');
+      }
+    }
+
+    //If is table
+    if (isTable) {
+      DatabaseService().updateTable(
+        activeBusiness,
+        tableCode,
+        0,
+        0,
+        0,
+        0,
+        [],
+        '',
+        Colors.white.value,
+        false,
+        {
+          'Name': '',
+          'Address': '',
+          'Phone': 0,
+          'email': '',
+        },
+      );
+      DatabaseService().deleteOrder(activeBusiness, 'Mesa ' + tableCode);
+    }
+
+    //If is saved order
+    if (isSavedOrder) {
+      DatabaseService().deleteOrder(activeBusiness, savedOrderID);
+    }
+  }
+
   // orders List from snapshot
   List<SavedOrders> _savedOrderListFromSnapshot(QuerySnapshot snapshot) {
     try {
@@ -943,7 +1245,8 @@ class DatabaseService {
       Map clientDetails,
       transactionID,
       String currentCashRegister,
-      bool reversed) async {
+      bool reversed,
+      List splitPaymentDetails) async {
     return await FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -965,7 +1268,8 @@ class DatabaseService {
       'Client Details': clientDetails,
       'Transaction ID': transactionID,
       'Cash Register': currentCashRegister,
-      'Reversed': reversed
+      'Reversed': reversed,
+      'Split Payment Details': splitPaymentDetails
     });
   }
 
@@ -2005,7 +2309,7 @@ class DatabaseService {
       'Ingresos': 0,
       'Egresos': 0,
       'Monto al Cierre': 0,
-      'Ventas por Medio': [],
+      'Ventas por Medio': {},
       'Detalle de Ingresos y Egresos': [
         {
           'Type': 'Apertura',
@@ -2201,8 +2505,10 @@ class DatabaseService {
             ? snapshot['Monto al Cierre']
             : 0,
         salesByMedium: snapshot.data().toString().contains('Ventas por Medio')
-            ? snapshot['Ventas por Medio']
-            : [],
+            ? (snapshot['Ventas por Medio'].runtimeType == List)
+                ? {}
+                : snapshot['Ventas por Medio']
+            : {},
         totalItemsSold: snapshot.data().toString().contains('Total Items Sold')
             ? snapshot['Total Items Sold']
             : 0,
@@ -2221,6 +2527,10 @@ class DatabaseService {
         salesAmountbyProduct:
             snapshot.data().toString().contains('Sales Amount by Product')
                 ? snapshot['Sales Amount by Product']
+                : {},
+        salesAmountbyCategory:
+            snapshot.data().toString().contains('Sales Amount by Category')
+                ? snapshot['Sales Amount by Category']
                 : {},
         salesbyOrderType:
             snapshot.data().toString().contains('Sales by Order Type')
@@ -2285,7 +2595,9 @@ class DatabaseService {
               ? doc['Monto al Cierre']
               : 0,
           salesByMedium: doc.data().toString().contains('Ventas por Medio')
-              ? doc['Ventas por Medio']
+              ? (doc['Ventas por Medio'].runtimeType == List)
+                  ? {}
+                  : doc['Ventas por Medio']
               : {},
           totalItemsSold: doc.data().toString().contains('Total Items Sold')
               ? doc['Total Items Sold']
@@ -2304,6 +2616,10 @@ class DatabaseService {
           salesAmountbyProduct:
               doc.data().toString().contains('Sales Amount by Product')
                   ? doc['Sales Amount by Product']
+                  : {},
+          salesAmountbyCategory:
+              doc.data().toString().contains('Sales Amount by Category')
+                  ? doc['Sales Amount by Category']
                   : {},
           salesbyOrderType:
               doc.data().toString().contains('Sales by Order Type')
@@ -2414,6 +2730,13 @@ class DatabaseService {
           reversed: doc.data().toString().contains('Reversed')
               ? doc['Reversed']
               : false,
+          orderType: doc.data().toString().contains('Order Type')
+              ? doc['Order Type']
+              : '',
+          splitPaymentDetails:
+              doc.data().toString().contains('Split Payment Details')
+                  ? doc['Split Payment Details']
+                  : {},
         );
       }).toList();
     } catch (e) {
@@ -2602,6 +2925,10 @@ class DatabaseService {
         salesCountbyCategory:
             snapshot.data().toString().contains('Sales Count by Category')
                 ? snapshot['Sales Count by Category']
+                : {},
+        salesAmountbyCategory:
+            snapshot.data().toString().contains('Sales Amount by Category')
+                ? snapshot['Sales Amount by Category']
                 : {},
         salesbyOrderType:
             snapshot.data().toString().contains('Sales by Order Type')
@@ -2972,7 +3299,8 @@ class DatabaseService {
       List suppliers,
       List suppliersSearchName,
       List recipe,
-      List priceHistory) async {
+      List priceHistory,
+      List listofIngredients) async {
     return await FirebaseFirestore.instance
         .collection('ERP')
         .doc(activeBusiness)
@@ -2988,6 +3316,7 @@ class DatabaseService {
       'Suppliers Search Name': suppliersSearchName,
       'Recipe': recipe,
       'Price History': priceHistory,
+      'List of Ingredients': listofIngredients
     });
   }
 
@@ -3003,7 +3332,8 @@ class DatabaseService {
       List suppliers,
       List suppliersSearchName,
       List recipe,
-      List priceHistory) async {
+      List priceHistory,
+      List listofIngredients) async {
     return await FirebaseFirestore.instance
         .collection('ERP')
         .doc(activeBusiness)
@@ -3019,6 +3349,7 @@ class DatabaseService {
       'Suppliers Search Name': suppliersSearchName,
       'Recipe': recipe,
       'Price History': priceHistory,
+      'List of Ingredients': listofIngredients
     });
   }
 
@@ -3033,6 +3364,22 @@ class DatabaseService {
         .update({
       'Price': price,
       'Price History': priceHistory,
+    });
+  }
+
+  //Edit product supply
+  Future editSupplyIngredients(
+    String activeBusiness,
+    supply,
+    ingredients,
+  ) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(activeBusiness)
+        .collection('Supplies')
+        .doc(supply)
+        .update({
+      'Recipe': ingredients,
     });
   }
 
@@ -3069,6 +3416,10 @@ class DatabaseService {
             priceHistory: doc.data().toString().contains('Price History')
                 ? doc['Price History']
                 : [],
+            listofIngredients:
+                doc.data().toString().contains('List of Ingredients')
+                    ? doc['List of Ingredients']
+                    : [],
             docID: doc.id);
       }).toList();
     } catch (e) {
@@ -3107,6 +3458,10 @@ class DatabaseService {
           priceHistory: doc.data().toString().contains('Price History')
               ? doc['Price History']
               : [],
+          listofIngredients:
+              doc.data().toString().contains('List of Ingredients')
+                  ? doc['List of Ingredients']
+                  : [],
           docID: doc.id);
     } catch (e) {
       print(e);
@@ -3199,5 +3554,24 @@ class DatabaseService {
   //   });
 
   //   print('Finito');
+  // }
+
+  ////////////////////////////////////Get total of a collection
+  // Future totalGaliaExp() async {
+  //   final QuerySnapshot snapshot = await FirebaseFirestore.instance
+  //       .collection('ERP')
+  //       .doc('PzrcDHtyl4T3vdlZusQlsMQrMRE3')
+  //       .collection('2023')
+  //       .doc('4')
+  //       .collection('Sales')
+  //       .get();
+
+  //   double sum = 0.0;
+
+  //   snapshot.docs.forEach((doc) {
+  //     sum += doc['Total'];
+  //   });
+
+  //   print(sum);
   // }
 }

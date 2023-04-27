@@ -468,7 +468,7 @@ class DailyStats extends StatelessWidget {
                                                                             .categoryList[
                                                                         i])] !=
                                                                     null)
-                                                                ? '${formatCurrency.format(dailyTransactions.salesCountbyCategory[(categoriesProvider.categoryList[i])])}'
+                                                                ? '${formatCurrency.format(dailyTransactions.salesAmountbyCategory[(categoriesProvider.categoryList[i])])}'
                                                                 : '${formatCurrency.format(0)}',
                                                             maxLines: 1,
                                                             overflow:
@@ -908,7 +908,7 @@ class DailyStats extends StatelessWidget {
                                                     child: Center(
                                                       child: Text(
                                                         (dailyTransactions
-                                                                        .salesCountbyCategory[
+                                                                        .salesAmountbyCategory[
                                                                     (categoriesProvider
                                                                             .categoryList[
                                                                         i])] !=

@@ -22,7 +22,7 @@ class VendorsTags extends StatelessWidget {
             padding: const EdgeInsets.all(5.0),
             child: ItemTags(
                 borderRadius: BorderRadius.all(Radius.circular(12)),
-                border: Border.all(color: Colors.grey),
+                border: Border.all(color: Colors.grey[200]),
                 padding: EdgeInsets.all(12),
                 key: Key(i.toString()),
                 index: i,
@@ -31,6 +31,7 @@ class VendorsTags extends StatelessWidget {
                 textActiveColor: Colors.black,
                 color: Colors.white,
                 activeColor: Colors.white,
+                elevation: 1,
                 onPressed: (item) {
                   selectVendor(suppliers[i]);
                 }),

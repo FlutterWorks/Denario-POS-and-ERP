@@ -5,12 +5,9 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:provider/provider.dart';
 
 class VendorProductsTags extends StatelessWidget {
-  final AsyncSnapshot snapshot;
   final Supplier selectedVendor;
   final selectProduct;
-  const VendorProductsTags(
-      this.snapshot, this.selectedVendor, this.selectProduct,
-      {Key key})
+  const VendorProductsTags(this.selectedVendor, this.selectProduct, {Key key})
       : super(key: key);
 
   @override
@@ -28,7 +25,7 @@ class VendorProductsTags extends StatelessWidget {
             padding: const EdgeInsets.all(5.0),
             child: ItemTags(
                 borderRadius: BorderRadius.all(Radius.circular(12)),
-                border: Border.all(color: Colors.grey),
+                border: Border.all(color: Colors.grey[200]),
                 padding: EdgeInsets.all(12),
                 key: Key(i.toString()),
                 index: i,
@@ -37,9 +34,10 @@ class VendorProductsTags extends StatelessWidget {
                 textActiveColor: Colors.black,
                 color: Colors.greenAccent,
                 activeColor: Colors.white,
+                elevation: 1,
                 onPressed: (item) {
                   if (!item.active) {
-                    selectProduct(selectedVendor, snapshot, supplies[i]);
+                    selectProduct(selectedVendor, supplies[i]);
                   }
                 }),
           );

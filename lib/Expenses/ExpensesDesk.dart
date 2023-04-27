@@ -11,7 +11,6 @@ import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/Payables.dart';
 import 'package:denario/Models/User.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ExpensesDesk extends StatefulWidget {
@@ -24,12 +23,6 @@ class ExpensesDesk extends StatefulWidget {
 class _ExpensesDeskState extends State<ExpensesDesk> {
   DateTime selectedIvoiceDate;
   bool searchByPayables;
-
-  void resetDate() {
-    setState(() {
-      selectedIvoiceDate = DateTime.now();
-    });
-  }
 
   @override
   void initState() {
@@ -50,9 +43,9 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(20.0),
         child: Container(
-          padding: EdgeInsets.all(15),
+          // padding: EdgeInsets.all(15),
           child: Column(children: [
             Container(
               width: double.infinity,
@@ -63,77 +56,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                   //Fecha
                   Text(
                     'Registrar gasto',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Spacer(),
-                  Container(
-                    width: 175,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    padding: EdgeInsets.all(12),
-                    child: Row(
-                      children: [
-                        Text(
-                          DateFormat('dd/MM/yyyy').format(selectedIvoiceDate),
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 16),
-                        ),
-                        Spacer(),
-                        Container(
-                          height: 20,
-                          width: 20,
-                          child: IconButton(
-                            splashRadius: 1,
-                            onPressed: () async {
-                              DateTime pickedDate = await showDatePicker(
-                                  context: context,
-                                  helpText: 'Fecha del gasto',
-                                  confirmText: 'Guardar',
-                                  cancelText: 'Cancelar',
-                                  initialDate: DateTime.now(),
-                                  firstDate: (widget.rol == 'Dueñ@')
-                                      ? DateTime.now()
-                                          .subtract(Duration(days: 60))
-                                      : DateTime(DateTime.now().year,
-                                          DateTime.now().month, 1),
-                                  lastDate: DateTime.now(),
-                                  builder: ((context, child) {
-                                    return Theme(
-                                        data: Theme.of(context).copyWith(
-                                          colorScheme: ColorScheme.light(
-                                            primary: Colors
-                                                .black, // header background color
-                                            onPrimary: Colors
-                                                .white, // header text color
-                                            onSurface:
-                                                Colors.black, // body text color
-                                          ),
-                                          textButtonTheme: TextButtonThemeData(
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Colors
-                                                  .black, // button text color
-                                            ),
-                                          ),
-                                        ),
-                                        child: child);
-                                  }));
-                              setState(() {
-                                if (pickedDate != null) {
-                                  selectedIvoiceDate = pickedDate;
-                                }
-                              });
-                            },
-                            padding: EdgeInsets.all(0),
-                            tooltip: 'Seleccionar fecha del gasto',
-                            iconSize: 18,
-                            icon: Icon(Icons.calendar_month),
-                          ),
-                        )
-                      ],
-                    ),
+                    style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -151,12 +74,8 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                       value: DatabaseService()
                           .accountsList(userProfile.activeBusiness))
                 ],
-                child: ExpenseInput(
-                    userProfile.activeBusiness,
-                    selectedIvoiceDate,
-                    resetDate,
-                    categoriesProvider,
-                    highlevelMapping)),
+                child: ExpenseInput(userProfile.activeBusiness,
+                    selectedIvoiceDate, categoriesProvider, highlevelMapping)),
             SizedBox(height: 30),
             //Expense List
             MultiProvider(

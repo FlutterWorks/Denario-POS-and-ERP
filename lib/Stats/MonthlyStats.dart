@@ -438,11 +438,11 @@ class MonthStats extends StatelessWidget {
                                                         width: 120,
                                                         child: Center(
                                                           child: Text(
-                                                            (monthlyStats.salesCountbyCategory[
+                                                            (monthlyStats.salesAmountbyCategory[
                                                                         (categoriesProvider
                                                                             .categoryList[i])] !=
                                                                     null)
-                                                                ? '${formatCurrency.format(monthlyStats.salesCountbyCategory[(categoriesProvider.categoryList[i])])}'
+                                                                ? '${formatCurrency.format(monthlyStats.salesAmountbyCategory[(categoriesProvider.categoryList[i])])}'
                                                                 : '${formatCurrency.format(0)}',
                                                             maxLines: 1,
                                                             overflow:
@@ -881,12 +881,12 @@ class MonthStats extends StatelessWidget {
                                                     width: 120,
                                                     child: Center(
                                                       child: Text(
-                                                        (monthlyStats.salesCountbyCategory[
+                                                        (monthlyStats.salesAmountbyCategory[
                                                                     (categoriesProvider
                                                                             .categoryList[
                                                                         i])] !=
                                                                 null)
-                                                            ? '${formatCurrency.format(monthlyStats.salesCountbyCategory[(categoriesProvider.categoryList[i])])}'
+                                                            ? '${formatCurrency.format(monthlyStats.salesAmountbyCategory[(categoriesProvider.categoryList[i])])}'
                                                             : '${formatCurrency.format(0)}',
                                                         maxLines: 1,
                                                         overflow: TextOverflow

@@ -9,6 +9,7 @@ class Supply {
   List recipe;
   List priceHistory;
   String docID;
+  List listofIngredients;
 
   Supply(
       {this.supply,
@@ -20,7 +21,8 @@ class Supply {
       this.suppliersSearchName,
       this.recipe,
       this.priceHistory,
-      this.docID});
+      this.docID,
+      this.listofIngredients});
 }
 
 // class SupplyRecipe {

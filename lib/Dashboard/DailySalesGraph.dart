@@ -26,6 +26,10 @@ class DailySalesGraphState extends State<DailySalesGraph> {
   @override
   Widget build(BuildContext context) {
     final dailyTransactionsList = Provider.of<List<DailyTransactions>>(context);
+
+    if (dailyTransactionsList == null) {
+      return Container();
+    }
     salesGraphValues = dailyTransactionsList;
 
     if (salesGraphValues == null) {

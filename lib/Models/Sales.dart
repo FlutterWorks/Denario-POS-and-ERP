@@ -15,6 +15,8 @@ class Sales {
   String docID;
   String cashRegister;
   bool reversed;
+  String orderType;
+  List splitPaymentDetails;
 
   Sales(
       {this.account,
@@ -32,7 +34,9 @@ class Sales {
       this.transactionID,
       this.docID,
       this.cashRegister,
-      this.reversed});
+      this.reversed,
+      this.orderType,
+      this.splitPaymentDetails});
 }
 
 class SoldItems {

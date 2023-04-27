@@ -13,11 +13,12 @@ class DailySales extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registerStatus = Provider.of<CashRegister>(context);
-    final dailyTransactionsList = Provider.of<List<DailyTransactions>>(context);
     final dailyTransactions = Provider.of<DailyTransactions>(context);
     final userProfile = Provider.of<UserData>(context);
 
-    if (userProfile == null || registerStatus == null) {
+    if (userProfile == null ||
+        registerStatus == null ||
+        dailyTransactions == null) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.42,
         height: 400,
@@ -36,35 +37,6 @@ class DailySales extends StatelessWidget {
       );
     }
 
-    if (dailyTransactionsList == null) {
-      return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Container(
-          width: MediaQuery.of(context).size.width * 0.42,
-          height: 400,
-          padding: EdgeInsets.all(30),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: <BoxShadow>[
-              new BoxShadow(
-                color: Colors.grey[200],
-                offset: new Offset(15.0, 15.0),
-                blurRadius: 10.0,
-              )
-            ],
-          ),
-          child: Container(
-            height: 150,
-            width: 150,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('images/EmptyWallet.jpg'),
-                    fit: BoxFit.fitWidth)),
-          ),
-        ),
-      ]);
-    }
-
     return (MediaQuery.of(context).size.width > 1100)
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +46,7 @@ class DailySales extends StatelessWidget {
                 Expanded(
                   child: Container(
                       width: MediaQuery.of(context).size.width * 0.42,
-                      padding: EdgeInsets.all(30),
+                      padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: new BorderRadius.circular(12.0),
@@ -141,10 +113,7 @@ class DailySales extends StatelessWidget {
                                 ),
                           SizedBox(height: 15),
                           //Graph Sales per day
-                          Expanded(
-                              child: (dailyTransactionsList == null)
-                                  ? Container()
-                                  : DailySalesGraph())
+                          Expanded(child: DailySalesGraph())
                         ],
                       )),
                 ),
@@ -164,7 +133,7 @@ class DailySales extends StatelessWidget {
                         )
                       ],
                     ),
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,15 +164,6 @@ class DailySales extends StatelessWidget {
                             scrollDirection: Axis.vertical,
                             itemCount: registerStatus.paymentTypes.length,
                             itemBuilder: (context, i) {
-                              var salesByMediumIndex;
-                              if (dailyTransactions != null) {
-                                salesByMediumIndex = dailyTransactions
-                                    .salesByMedium
-                                    .indexWhere((x) =>
-                                        x['Type'] ==
-                                        registerStatus.paymentTypes[i]['Type']);
-                              }
-
                               return Container(
                                 padding: EdgeInsets.all(5.0),
                                 child: Column(
@@ -225,9 +185,17 @@ class DailySales extends StatelessWidget {
 
                                     ///Text
                                     Text(
-                                      (salesByMediumIndex != null &&
-                                              salesByMediumIndex >= 0)
-                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium[salesByMediumIndex]['Amount'])}'
+                                      (dailyTransactions.salesByMedium[
+                                                      registerStatus
+                                                              .paymentTypes[i]
+                                                          ['Type']] !=
+                                                  null &&
+                                              dailyTransactions.salesByMedium[
+                                                      registerStatus
+                                                              .paymentTypes[i]
+                                                          ['Type']] >
+                                                  0)
+                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium[registerStatus.paymentTypes[i]['Type']])}'
                                           : '${formatCurrency.format(0)}',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
@@ -325,10 +293,7 @@ class DailySales extends StatelessWidget {
                                 ),
                           SizedBox(height: 15),
                           //Graph Sales per day
-                          Expanded(
-                              child: (dailyTransactionsList == null)
-                                  ? Container()
-                                  : DailySalesGraph())
+                          Expanded(child: DailySalesGraph())
                         ],
                       )),
                 ),
@@ -379,15 +344,6 @@ class DailySales extends StatelessWidget {
                             scrollDirection: Axis.vertical,
                             itemCount: registerStatus.paymentTypes.length,
                             itemBuilder: (context, i) {
-                              var salesByMediumIndex;
-                              if (dailyTransactions != null) {
-                                salesByMediumIndex = dailyTransactions
-                                    .salesByMedium
-                                    .indexWhere((x) =>
-                                        x['Type'] ==
-                                        registerStatus.paymentTypes[i]['Type']);
-                              }
-
                               return Container(
                                 padding: EdgeInsets.all(5.0),
                                 child: Column(
@@ -409,9 +365,17 @@ class DailySales extends StatelessWidget {
 
                                     ///Text
                                     Text(
-                                      (salesByMediumIndex != null &&
-                                              salesByMediumIndex >= 0)
-                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium[salesByMediumIndex]['Amount'])}'
+                                      (dailyTransactions.salesByMedium[
+                                                      registerStatus
+                                                              .paymentTypes[i]
+                                                          ['Type']] !=
+                                                  null &&
+                                              dailyTransactions.salesByMedium[
+                                                      registerStatus
+                                                              .paymentTypes[i]
+                                                          ['Type']] >
+                                                  0)
+                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium[registerStatus.paymentTypes[i]['Type']])}'
                                           : '${formatCurrency.format(0)}',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,

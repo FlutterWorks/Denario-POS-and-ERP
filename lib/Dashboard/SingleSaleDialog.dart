@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Dashboard/ConfirmDeleteOrder.dart';
 import 'package:denario/Models/DailyCash.dart';
@@ -175,12 +176,6 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                             setState(() {
                               editMethod = true;
                             });
-                            // DatabaseService().editSalePaymentMethod(
-                            //     widget.businessID,
-                            //     widget.sale.date.year,
-                            //     widget.sale.date.month,
-                            //     widget.sale.docID,
-                            //     '');
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -196,7 +191,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           //Payment Method
-                          (editMethod)
+                          (editMethod && widget.sale.paymentType != 'Split')
                               ? Container(
                                   width: 200,
                                   decoration: BoxDecoration(
@@ -301,7 +296,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                               },
                             ),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             DatabaseService().editSalePaymentMethod(
                                 widget.businessID,
                                 widget.sale.date.year,
@@ -320,36 +315,70 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                 widget.registerStatus.registerName != '' &&
                                 widget.sale.cashRegister ==
                                     widget.registerStatus.registerName) {
-                              //Update sales by medium
-                              List salesByMedium =
-                                  dailyTransactions.salesByMedium;
+                              //Substract previus payment type // Add new
+                              var firestore = FirebaseFirestore.instance;
+                              var dayStatsRef = firestore
+                                  .collection('ERP')
+                                  .doc(widget.businessID)
+                                  .collection(widget.sale.date.year.toString())
+                                  .doc(widget.sale.date.month.toString())
+                                  .collection('Daily')
+                                  .doc(widget.sale.cashRegister);
 
-                              bool listUpdated = false;
+                              final doc = await dayStatsRef.get();
 
-                              for (var map in salesByMedium) {
-                                if (map["Type"] == widget.sale.paymentType) {
-                                  map['Amount'] =
-                                      map['Amount'] - widget.sale.total;
-                                } else if ((map["Type"] == paymentType)) {
-                                  map['Amount'] =
-                                      map['Amount'] + widget.sale.total;
-                                  listUpdated = true;
+                              try {
+                                if (doc.exists) {
+                                  if (widget.sale.paymentType == 'Split') {
+                                  } else {
+                                    dayStatsRef.update({
+                                      'Ventas por Medio.${widget.sale.paymentType}':
+                                          FieldValue.increment(
+                                              -widget.sale.total),
+                                    });
+                                    dayStatsRef.update({
+                                      'Ventas por Medio.$paymentType':
+                                          FieldValue.increment(
+                                              widget.sale.total),
+                                    });
+                                  }
+                                }
+                              } catch (error) {
+                                print(
+                                    'Error updating Total Sales Value: $error');
+                              }
+                            }
+
+                            //Register in Monthly Stats
+                            //Substract previus payment type // Add new
+                            var firestore = FirebaseFirestore.instance;
+                            var monthStatsRef = firestore
+                                .collection('ERP')
+                                .doc(widget.businessID)
+                                .collection(widget.sale.date.year.toString())
+                                .doc(widget.sale.date.month.toString())
+                                .collection('Stats')
+                                .doc('Monthly Stats');
+
+                            final doc = await monthStatsRef.get();
+
+                            try {
+                              if (doc.exists) {
+                                if (widget.sale.paymentType == 'Split') {
+                                } else {
+                                  monthStatsRef.update({
+                                    'Sales by Payment Type.${widget.sale.paymentType}':
+                                        FieldValue.increment(
+                                            -widget.sale.total),
+                                  });
+                                  monthStatsRef.update({
+                                    'Sales by Payment Type.$paymentType':
+                                        FieldValue.increment(widget.sale.total),
+                                  });
                                 }
                               }
-                              //If payment method was not in list
-                              if (!listUpdated) {
-                                salesByMedium.add({
-                                  'Type': paymentType,
-                                  'Amount': widget.sale.total
-                                });
-                              }
-
-                              DatabaseService().updateSalesinCashRegister(
-                                  widget.businessID,
-                                  dailyTransactions.openDate.toString(),
-                                  dailyTransactions.sales,
-                                  salesByMedium,
-                                  dailyTransactions.dailyTransactions);
+                            } catch (error) {
+                              print('Error updating Total Sales Value: $error');
                             }
 
                             Navigator.of(context).pop();

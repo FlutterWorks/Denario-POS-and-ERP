@@ -32,6 +32,16 @@ class TicketBloc {
     }
   };
 
+  ///Get Total
+  double get totalTicketAmount {
+    double sum = 0.0;
+    for (var item in ticketItems['Items']) {
+      sum += item['Price'] * item['Quantity'];
+    }
+    sum = sum - ticketItems['Discount'] - ticketItems['IVA'];
+    return sum;
+  }
+
   /// [retrieveOrder] removes items from the cart, back to the shop
   void retrieveOrder(orderName, paymentType, items, discount, tax, color,
       isOpenTable, orderID, isCounterOrder, orderType, clientAssigned, client) {
@@ -54,6 +64,13 @@ class TicketBloc {
   /// [changeOrderName] removes items from the cart, back to the shop
   void changeOrderName(orderName) {
     ticketItems['Order Name'] = orderName;
+
+    ticketStreamController.sink.add(ticketItems);
+  }
+
+  /// [changePaymentType] removes items from the cart, back to the shop
+  void changePaymentType(paymentType) {
+    ticketItems['Payment Type'] = paymentType;
 
     ticketStreamController.sink.add(ticketItems);
   }
@@ -157,6 +174,18 @@ class TicketBloc {
     ticketItems['Items'][i]['Total Price'] =
         ticketItems['Items'][i]['Price'] * ticketItems['Items'][i]['Quantity'];
 
+    ticketStreamController.sink.add(ticketItems);
+  }
+
+  //Edit subtotal amount
+  void setsubTotalAmount(double amount) {
+    ticketItems['Subtotal'] = amount;
+    ticketStreamController.sink.add(ticketItems);
+  }
+
+  //Edit total amount
+  void settotalAmount(double amount) {
+    ticketItems['Total'] = amount;
     ticketStreamController.sink.add(ticketItems);
   }
 

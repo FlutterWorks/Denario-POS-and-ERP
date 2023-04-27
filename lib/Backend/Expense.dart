@@ -19,6 +19,16 @@ class ExpenseBloc {
     'Total': 0,
   };
 
+  ///Get Total
+  double get totalExpenseAmount {
+    double sum = 0.0;
+    for (var item in expenseItems['Items']) {
+      sum += item['Price'] * item['Quantity'];
+    }
+    // sum = sum - expenseItems['Discount'] - expenseItems['IVA'];
+    return sum;
+  }
+
   /// [retrieveOrder] removes items from the cart, back to the shop
   void retrieveOrder(
       account, vendor, costtype, paymentType, items, expenseID, total) {

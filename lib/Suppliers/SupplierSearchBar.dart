@@ -19,21 +19,22 @@ class SupplierSearchBar extends StatelessWidget {
     }
 
     if (suppliers.length < 1) {
-      return Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-          width: 400,
-          decoration: BoxDecoration(
-            borderRadius: new BorderRadius.circular(12.0),
-            color: Colors.white,
-            boxShadow: <BoxShadow>[
-              new BoxShadow(
-                color: Colors.grey[350],
-                offset: new Offset(0, 0),
-                blurRadius: 10.0,
-              )
-            ],
-          ),
-          child: Text('No encontramos ninguno con este nombre'));
+      return SizedBox();
+      // Container(
+      //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      //     width: 400,
+      //     decoration: BoxDecoration(
+      //       borderRadius: new BorderRadius.circular(12.0),
+      //       color: Colors.white,
+      //       boxShadow: <BoxShadow>[
+      //         new BoxShadow(
+      //           color: Colors.grey[350],
+      //           offset: new Offset(0, 0),
+      //           blurRadius: 10.0,
+      //         )
+      //       ],
+      //     ),
+      //     child: Text('No encontramos ninguno con este nombre'));
     }
 
     return Container(

@@ -49,7 +49,6 @@ class _TicketViewState extends State<TicketView> {
   double subTotal;
   double tax;
   double discount;
-  double total;
   Color color = Colors.white;
   String ticketConcept;
   IconData ticketIcon = Icons.assignment_outlined;
@@ -64,7 +63,6 @@ class _TicketViewState extends State<TicketView> {
     subTotal = 0;
     tax = 0;
     discount = 0;
-    total = 0;
 
     super.initState();
   }
@@ -102,7 +100,7 @@ class _TicketViewState extends State<TicketView> {
             subTotal = snapshot.data["Subtotal"];
             tax = snapshot.data["IVA"];
             discount = snapshot.data["Discount"];
-            total = snapshot.data["Total"];
+            // total = snapshot.data["Total"];
             orderName = snapshot.data["Order Name"];
             color = snapshot.data["Color"];
 
@@ -111,7 +109,7 @@ class _TicketViewState extends State<TicketView> {
                   bloc.ticketItems['Items'][i]["Quantity"];
             }
 
-            total = (subTotal + ((subTotal * tax).round())) - discount;
+            // total = (subTotal + ((subTotal * tax).round())) - discount;
 
             return Padding(
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -193,7 +191,7 @@ class _TicketViewState extends State<TicketView> {
                                         subTotal,
                                         discount,
                                         tax,
-                                        total,
+                                        bloc.totalTicketAmount,
                                         snapshot.data["Items"],
                                         '',
                                         Colors.greenAccent.value,
@@ -215,7 +213,7 @@ class _TicketViewState extends State<TicketView> {
                                         subTotal,
                                         discount,
                                         tax,
-                                        total,
+                                        bloc.totalTicketAmount,
                                         snapshot.data["Items"],
                                         orderName,
                                         '',
@@ -245,7 +243,7 @@ class _TicketViewState extends State<TicketView> {
                                       subTotal,
                                       discount,
                                       tax,
-                                      total,
+                                      bloc.totalTicketAmount,
                                       snapshot.data["Items"],
                                       '',
                                       Colors.greenAccent.value,
@@ -266,7 +264,7 @@ class _TicketViewState extends State<TicketView> {
                                       subTotal,
                                       discount,
                                       tax,
-                                      total,
+                                      bloc.totalTicketAmount,
                                       snapshot.data["Items"],
                                       orderName,
                                       '',
@@ -457,7 +455,9 @@ class _TicketViewState extends State<TicketView> {
                             height: 40,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
+                                backgroundColor: (bloc.totalTicketAmount <= 0)
+                                    ? Colors.grey
+                                    : Colors.black,
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 shape: const RoundedRectangleBorder(
                                   borderRadius:
@@ -465,63 +465,69 @@ class _TicketViewState extends State<TicketView> {
                                 ),
                               ),
                               onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return MultiProvider(
-                                        providers: [
-                                          StreamProvider<
-                                                  DailyTransactions>.value(
-                                              initialData: null,
-                                              catchError: (_, err) => null,
-                                              value: DatabaseService()
-                                                  .dailyTransactions(
-                                                      widget.userProfile
-                                                          .activeBusiness,
-                                                      registerStatus
-                                                          .registerName)),
-                                          StreamProvider<MonthlyStats>.value(
-                                              initialData: null,
-                                              value: DatabaseService()
-                                                  .monthlyStatsfromSnapshot(
-                                                      widget.userProfile
-                                                          .activeBusiness)),
-                                          StreamProvider<UserData>.value(
-                                              initialData: null,
-                                              value: DatabaseService()
-                                                  .userProfile(uid)),
-                                        ],
-                                        child: ConfirmOrder(
-                                          total: total,
-                                          items: snapshot.data["Items"],
-                                          discount: discount,
-                                          orderDetail: orderDetail,
-                                          orderName: orderName,
-                                          subTotal: subTotal,
-                                          tax: tax,
-                                          controller: _orderNamecontroller,
-                                          clearVariables: clearVariables,
-                                          paymentTypes:
-                                              registerStatus.paymentTypes,
-                                          isTable: true,
-                                          tableCode: orderName,
-                                          businessID:
-                                              widget.userProfile.activeBusiness,
-                                          tablePageController:
-                                              widget.tableController,
-                                          isSavedOrder: false,
-                                          savedOrderID: null,
-                                          orderType:
-                                              snapshot.data["Order Type"],
-                                          onTableView: widget.onTableView,
-                                          register: registerStatus,
-                                        ),
-                                      );
-                                    });
+                                if (bloc.totalTicketAmount <= 0) {
+                                } else {
+                                  bloc.changePaymentType('Efectivo');
+                                  bloc.changeOrderName(orderName);
+                                  bloc.changeOrderType(ticketConcept);
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return MultiProvider(
+                                          providers: [
+                                            StreamProvider<
+                                                    DailyTransactions>.value(
+                                                initialData: null,
+                                                catchError: (_, err) => null,
+                                                value: DatabaseService()
+                                                    .dailyTransactions(
+                                                        widget.userProfile
+                                                            .activeBusiness,
+                                                        registerStatus
+                                                            .registerName)),
+                                            StreamProvider<MonthlyStats>.value(
+                                                initialData: null,
+                                                value: DatabaseService()
+                                                    .monthlyStatsfromSnapshot(
+                                                        widget.userProfile
+                                                            .activeBusiness)),
+                                            StreamProvider<UserData>.value(
+                                                initialData: null,
+                                                value: DatabaseService()
+                                                    .userProfile(uid)),
+                                          ],
+                                          child: ConfirmOrder(
+                                            total: bloc.totalTicketAmount,
+                                            items: snapshot.data["Items"],
+                                            discount: discount,
+                                            orderDetail: orderDetail,
+                                            orderName: orderName,
+                                            subTotal: subTotal,
+                                            tax: tax,
+                                            controller: _orderNamecontroller,
+                                            clearVariables: clearVariables,
+                                            paymentTypes:
+                                                registerStatus.paymentTypes,
+                                            isTable: true,
+                                            tableCode: orderName,
+                                            businessID: widget
+                                                .userProfile.activeBusiness,
+                                            tablePageController:
+                                                widget.tableController,
+                                            isSavedOrder: false,
+                                            savedOrderID: null,
+                                            orderType:
+                                                snapshot.data["Order Type"],
+                                            onTableView: widget.onTableView,
+                                            register: registerStatus,
+                                          ),
+                                        );
+                                      });
+                                }
                               },
                               child: Center(
                                   child: Text(
-                                      'Pagar ${formatCurrency.format(total)}',
+                                      'Pagar ${formatCurrency.format(bloc.totalTicketAmount)}',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w400))),
@@ -539,7 +545,7 @@ class _TicketViewState extends State<TicketView> {
             subTotal = snapshot.data["Subtotal"];
             tax = snapshot.data["IVA"];
             discount = snapshot.data["Discount"];
-            total = snapshot.data["Total"];
+            // total = snapshot.data["Total"];
             orderName = snapshot.data["Order Name"];
             color = snapshot.data["Color"];
 
@@ -548,7 +554,7 @@ class _TicketViewState extends State<TicketView> {
                   bloc.ticketItems['Items'][i]["Quantity"];
             }
 
-            total = (subTotal + ((subTotal * tax).round())) - discount;
+            // total = (subTotal + ((subTotal * tax).round())) - discount;
 
             if (snapshot.data["Order Type"] == 'Mostrador') {
               ticketConcept = 'Mostrador';
@@ -1001,7 +1007,7 @@ class _TicketViewState extends State<TicketView> {
                                   subTotal,
                                   discount,
                                   tax,
-                                  total,
+                                  bloc.totalTicketAmount,
                                   (orderDetail == null) ? [] : orderDetail,
                                   orderName,
                                   '',
@@ -1047,7 +1053,9 @@ class _TicketViewState extends State<TicketView> {
                             height: 40,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
+                                backgroundColor: (bloc.totalTicketAmount <= 0)
+                                    ? Colors.grey
+                                    : Colors.black,
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 shape: const RoundedRectangleBorder(
                                   borderRadius:
@@ -1055,90 +1063,96 @@ class _TicketViewState extends State<TicketView> {
                                 ),
                               ),
                               onPressed: () {
-                                //getServerStatus();
-                                //createAFIPinvoice();
-                                print(registerStatus.registerName);
-                                if (ticketConcept == 'Mostrador' ||
-                                    ticketConcept == 'Delivery' ||
-                                    ticketConcept == 'Mesa') {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return MultiProvider(
-                                          providers: [
-                                            StreamProvider<
-                                                    DailyTransactions>.value(
-                                                initialData: null,
-                                                catchError: (_, err) => null,
-                                                value: DatabaseService()
-                                                    .dailyTransactions(
-                                                        widget.userProfile
-                                                            .activeBusiness,
-                                                        registerStatus
-                                                            .registerName)),
-                                            StreamProvider<MonthlyStats>.value(
-                                                initialData: null,
-                                                value: DatabaseService()
-                                                    .monthlyStatsfromSnapshot(
-                                                        widget.userProfile
-                                                            .activeBusiness)),
-                                            StreamProvider<UserData>.value(
-                                                initialData: null,
-                                                value: DatabaseService()
-                                                    .userProfile(uid)),
-                                          ],
-                                          child: ConfirmOrder(
-                                            total: total,
-                                            items: snapshot.data["Items"],
-                                            discount: discount,
-                                            orderDetail: orderDetail,
-                                            orderName: orderName,
-                                            subTotal: subTotal,
-                                            tax: tax,
-                                            controller: _orderNamecontroller,
-                                            clearVariables: clearVariables,
-                                            paymentTypes:
-                                                registerStatus.paymentTypes,
-                                            isTable:
-                                                (snapshot.data["Order Type"] ==
-                                                        'Mesa')
-                                                    ? true
-                                                    : false,
-                                            tableCode:
-                                                (snapshot.data["Order Type"] ==
-                                                        'Mesa')
-                                                    ? orderName
-                                                    : null,
-                                            businessID: widget
-                                                .userProfile.activeBusiness,
-                                            tablePageController:
-                                                widget.tableController,
-                                            isSavedOrder:
-                                                (bloc.ticketItems['Order ID'] !=
-                                                        '')
-                                                    ? true
-                                                    : false,
-                                            savedOrderID:
-                                                bloc.ticketItems['Order ID'],
-                                            orderType:
-                                                snapshot.data["Order Type"],
-                                            onTableView: widget.onTableView,
-                                            register: registerStatus,
-                                          ),
-                                        );
-                                      });
+                                if (bloc.totalTicketAmount <= 0) {
                                 } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return ConfirmWastage(
-                                            total: total,
-                                            orderDetail: orderDetail,
-                                            items: snapshot.data["Items"],
-                                            controller: _orderNamecontroller,
-                                            clearVariables: clearVariables,
-                                            ticketConcept: ticketConcept);
-                                      });
+                                  //getServerStatus();
+                                  //createAFIPinvoice();
+                                  bloc.changePaymentType('Efectivo');
+                                  bloc.changeOrderName(orderName);
+                                  bloc.changeOrderType(ticketConcept);
+                                  if (ticketConcept == 'Mostrador' ||
+                                      ticketConcept == 'Delivery' ||
+                                      ticketConcept == 'Mesa') {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return MultiProvider(
+                                            providers: [
+                                              StreamProvider<
+                                                      DailyTransactions>.value(
+                                                  initialData: null,
+                                                  catchError: (_, err) => null,
+                                                  value: DatabaseService()
+                                                      .dailyTransactions(
+                                                          widget.userProfile
+                                                              .activeBusiness,
+                                                          registerStatus
+                                                              .registerName)),
+                                              StreamProvider<
+                                                      MonthlyStats>.value(
+                                                  initialData: null,
+                                                  value: DatabaseService()
+                                                      .monthlyStatsfromSnapshot(
+                                                          widget.userProfile
+                                                              .activeBusiness)),
+                                              StreamProvider<UserData>.value(
+                                                  initialData: null,
+                                                  value: DatabaseService()
+                                                      .userProfile(uid)),
+                                            ],
+                                            child: ConfirmOrder(
+                                              total: bloc.totalTicketAmount,
+                                              items: snapshot.data["Items"],
+                                              discount: discount,
+                                              orderDetail: orderDetail,
+                                              orderName: orderName,
+                                              subTotal: subTotal,
+                                              tax: tax,
+                                              controller: _orderNamecontroller,
+                                              clearVariables: clearVariables,
+                                              paymentTypes:
+                                                  registerStatus.paymentTypes,
+                                              isTable: (snapshot
+                                                          .data["Order Type"] ==
+                                                      'Mesa')
+                                                  ? true
+                                                  : false,
+                                              tableCode: (snapshot
+                                                          .data["Order Type"] ==
+                                                      'Mesa')
+                                                  ? orderName
+                                                  : null,
+                                              businessID: widget
+                                                  .userProfile.activeBusiness,
+                                              tablePageController:
+                                                  widget.tableController,
+                                              isSavedOrder: (bloc.ticketItems[
+                                                          'Order ID'] !=
+                                                      '')
+                                                  ? true
+                                                  : false,
+                                              savedOrderID:
+                                                  bloc.ticketItems['Order ID'],
+                                              orderType:
+                                                  snapshot.data["Order Type"],
+                                              onTableView: widget.onTableView,
+                                              register: registerStatus,
+                                            ),
+                                          );
+                                        });
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return ConfirmWastage(
+                                              total: bloc.totalTicketAmount,
+                                              orderDetail: orderDetail,
+                                              items: snapshot.data["Items"],
+                                              controller: _orderNamecontroller,
+                                              clearVariables: clearVariables,
+                                              ticketConcept: ticketConcept);
+                                        });
+                                  }
                                 }
                               },
                               child: Center(
@@ -1146,7 +1160,7 @@ class _TicketViewState extends State<TicketView> {
                                       (ticketConcept == 'Mostrador' ||
                                               ticketConcept == 'Delivery' ||
                                               ticketConcept == 'Mesa')
-                                          ? 'Pagar ${formatCurrency.format(total)}'
+                                          ? 'Pagar ${formatCurrency.format(bloc.totalTicketAmount)}'
                                           : 'Registrar',
                                       style: TextStyle(
                                           color: Colors.white,
@@ -1163,10 +1177,6 @@ class _TicketViewState extends State<TicketView> {
         stream: bloc.getStream,
         initialData: bloc.ticketItems,
         builder: (context, snapshot) {
-          subTotal = snapshot.data["Subtotal"];
-          tax = snapshot.data["IVA"];
-          discount = snapshot.data["Discount"];
-          total = snapshot.data["Total"];
           orderName = snapshot.data["Order Name"];
           color = snapshot.data["Color"];
 
@@ -1175,7 +1185,7 @@ class _TicketViewState extends State<TicketView> {
                 bloc.ticketItems['Items'][i]["Quantity"];
           }
 
-          total = (subTotal + ((subTotal * tax).round())) - discount;
+          // total = (subTotal + ((subTotal * tax).round())) - discount;
 
           if (snapshot.data["Order Type"] == 'Mostrador') {
             ticketConcept = 'Mostrador';
@@ -1694,7 +1704,7 @@ class _TicketViewState extends State<TicketView> {
                                       subTotal,
                                       discount,
                                       tax,
-                                      total,
+                                      bloc.totalTicketAmount,
                                       (snapshot.data["Items"] == null)
                                           ? []
                                           : snapshot.data["Items"],
@@ -1722,7 +1732,7 @@ class _TicketViewState extends State<TicketView> {
                                     subTotal,
                                     discount,
                                     tax,
-                                    total,
+                                    bloc.totalTicketAmount,
                                     (snapshot.data["Items"] == null)
                                         ? []
                                         : snapshot.data["Items"],
@@ -1777,7 +1787,7 @@ class _TicketViewState extends State<TicketView> {
                                     subTotal,
                                     discount,
                                     tax,
-                                    total,
+                                    bloc.totalTicketAmount,
                                     (snapshot.data["Items"] == null)
                                         ? []
                                         : snapshot.data["Items"],
@@ -1798,7 +1808,7 @@ class _TicketViewState extends State<TicketView> {
                                     subTotal,
                                     discount,
                                     tax,
-                                    total,
+                                    bloc.totalTicketAmount,
                                     (snapshot.data["Items"] == null)
                                         ? []
                                         : snapshot.data["Items"],
@@ -1825,7 +1835,7 @@ class _TicketViewState extends State<TicketView> {
                                   subTotal,
                                   discount,
                                   tax,
-                                  total,
+                                  bloc.totalTicketAmount,
                                   (snapshot.data["Items"] == null)
                                       ? []
                                       : snapshot.data["Items"],
@@ -1846,7 +1856,7 @@ class _TicketViewState extends State<TicketView> {
                                   subTotal,
                                   discount,
                                   tax,
-                                  total,
+                                  bloc.totalTicketAmount,
                                   (snapshot.data["Items"] == null)
                                       ? []
                                       : snapshot.data["Items"],
@@ -1884,7 +1894,9 @@ class _TicketViewState extends State<TicketView> {
                           height: 40,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
+                              backgroundColor: (bloc.totalTicketAmount <= 0)
+                                  ? Colors.grey
+                                  : Colors.black,
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               shape: const RoundedRectangleBorder(
                                 borderRadius:
@@ -1892,86 +1904,93 @@ class _TicketViewState extends State<TicketView> {
                               ),
                             ),
                             onPressed: () {
-                              //getServerStatus();
-                              //createAFIPinvoice();
-                              if (ticketConcept == 'Mostrador' ||
-                                  ticketConcept == 'Delivery' ||
-                                  ticketConcept == 'Mesa') {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return MultiProvider(
-                                        providers: [
-                                          StreamProvider<
-                                                  DailyTransactions>.value(
-                                              initialData: null,
-                                              catchError: (_, err) => null,
-                                              value: DatabaseService()
-                                                  .dailyTransactions(
-                                                      widget.userProfile
-                                                          .activeBusiness,
-                                                      registerStatus
-                                                          .registerName)),
-                                          StreamProvider<MonthlyStats>.value(
-                                              initialData: null,
-                                              value: DatabaseService()
-                                                  .monthlyStatsfromSnapshot(
-                                                      widget.userProfile
-                                                          .activeBusiness)),
-                                          StreamProvider<UserData>.value(
-                                              initialData: null,
-                                              value: DatabaseService()
-                                                  .userProfile(uid)),
-                                        ],
-                                        child: ConfirmOrder(
-                                          total: total,
-                                          items: snapshot.data["Items"],
-                                          discount: discount,
-                                          orderDetail: orderDetail,
-                                          orderName: orderName,
-                                          subTotal: subTotal,
-                                          tax: tax,
-                                          controller: _orderNamecontroller,
-                                          clearVariables: clearVariables,
-                                          paymentTypes:
-                                              registerStatus.paymentTypes,
-                                          isTable: (ticketConcept == 'Mesa')
-                                              ? true
-                                              : false,
-                                          tableCode:
-                                              (snapshot.data["Order Type"] ==
-                                                      'Mesa')
-                                                  ? orderName
-                                                  : null,
-                                          businessID:
-                                              widget.userProfile.activeBusiness,
-                                          tablePageController: null,
-                                          isSavedOrder:
-                                              (bloc.ticketItems['Order ID'] !=
-                                                      '')
-                                                  ? true
-                                                  : false,
-                                          savedOrderID:
-                                              bloc.ticketItems['Order ID'],
-                                          orderType:
-                                              snapshot.data["Order Type"],
-                                          onTableView: widget.onTableView,
-                                          register: registerStatus,
-                                        ),
-                                      );
-                                    });
+                              if (bloc.totalTicketAmount <= 0) {
                               } else {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return ConfirmWastage(
-                                          total: total,
-                                          orderDetail: orderDetail,
-                                          items: snapshot.data["Items"],
-                                          controller: _orderNamecontroller,
-                                          clearVariables: clearVariables,
-                                          ticketConcept: ticketConcept);
-                                    });
+                                //getServerStatus();
+                                //createAFIPinvoice();
+                                bloc.changePaymentType('Efectivo');
+                                bloc.changeOrderName(orderName);
+                                bloc.changeOrderType(ticketConcept);
+
+                                if (ticketConcept == 'Mostrador' ||
+                                    ticketConcept == 'Delivery' ||
+                                    ticketConcept == 'Mesa') {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return MultiProvider(
+                                          providers: [
+                                            StreamProvider<
+                                                    DailyTransactions>.value(
+                                                initialData: null,
+                                                catchError: (_, err) => null,
+                                                value: DatabaseService()
+                                                    .dailyTransactions(
+                                                        widget.userProfile
+                                                            .activeBusiness,
+                                                        registerStatus
+                                                            .registerName)),
+                                            StreamProvider<MonthlyStats>.value(
+                                                initialData: null,
+                                                value: DatabaseService()
+                                                    .monthlyStatsfromSnapshot(
+                                                        widget.userProfile
+                                                            .activeBusiness)),
+                                            StreamProvider<UserData>.value(
+                                                initialData: null,
+                                                value: DatabaseService()
+                                                    .userProfile(uid)),
+                                          ],
+                                          child: ConfirmOrder(
+                                            total: bloc.totalTicketAmount,
+                                            items: snapshot.data["Items"],
+                                            discount: discount,
+                                            orderDetail: orderDetail,
+                                            orderName: orderName,
+                                            subTotal: subTotal,
+                                            tax: tax,
+                                            controller: _orderNamecontroller,
+                                            clearVariables: clearVariables,
+                                            paymentTypes:
+                                                registerStatus.paymentTypes,
+                                            isTable: (ticketConcept == 'Mesa')
+                                                ? true
+                                                : false,
+                                            tableCode:
+                                                (snapshot.data["Order Type"] ==
+                                                        'Mesa')
+                                                    ? orderName
+                                                    : null,
+                                            businessID: widget
+                                                .userProfile.activeBusiness,
+                                            tablePageController: null,
+                                            isSavedOrder:
+                                                (bloc.ticketItems['Order ID'] !=
+                                                        '')
+                                                    ? true
+                                                    : false,
+                                            savedOrderID:
+                                                bloc.ticketItems['Order ID'],
+                                            orderType:
+                                                snapshot.data["Order Type"],
+                                            onTableView: widget.onTableView,
+                                            register: registerStatus,
+                                          ),
+                                        );
+                                      });
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return ConfirmWastage(
+                                            total: bloc.totalTicketAmount,
+                                            orderDetail: orderDetail,
+                                            items: snapshot.data["Items"],
+                                            controller: _orderNamecontroller,
+                                            clearVariables: clearVariables,
+                                            ticketConcept: ticketConcept);
+                                      });
+                                }
                               }
                             },
                             child: Center(
@@ -1979,7 +1998,7 @@ class _TicketViewState extends State<TicketView> {
                                     (ticketConcept == 'Mostrador' ||
                                             ticketConcept == 'Delivery' ||
                                             ticketConcept == 'Mesa')
-                                        ? 'Pagar ${formatCurrency.format(total)}'
+                                        ? 'Pagar ${formatCurrency.format(bloc.totalTicketAmount)}'
                                         : 'Registrar',
                                     style: TextStyle(
                                         color: Colors.white,
