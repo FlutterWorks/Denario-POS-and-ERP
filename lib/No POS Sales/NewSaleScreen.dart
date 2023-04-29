@@ -34,10 +34,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
   String saleStatus = 'Cobrado';
 
   String orderName;
-  double subTotal;
   double tax;
   double discount;
-  double total;
   Color color = Colors.white;
 
   List<TextEditingController> _controllers = [];
@@ -73,10 +71,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
           (DateTime.now().millisecond).toString();
       selectedIvoiceDate = DateTime.now();
       orderName = 'Sin Agregar';
-      subTotal = 0;
       tax = 0;
       discount = 0;
-      total = 0;
       clientController = new TextEditingController(text: '');
       invoiceController = new TextEditingController(text: invoiceNo);
       clientName = '';
@@ -94,10 +90,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
         (DateTime.now().millisecond).toString();
     selectedIvoiceDate = DateTime.now();
     orderName = 'Sin Agregar';
-    subTotal = 0;
     tax = 0;
     discount = 0;
-    total = 0;
     invoiceController = new TextEditingController(text: invoiceNo);
     clientController = new TextEditingController(text: '');
 
@@ -124,12 +118,6 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
         builder: (context, snapshot) {
           orderName = snapshot.data["Order Name"];
           color = snapshot.data["Color"];
-
-          for (var i = 0; i < bloc.ticketItems['Items'].length; i++) {
-            subTotal += bloc.ticketItems['Items'][i]["Price"] *
-                bloc.ticketItems['Items'][i]["Quantity"];
-          }
-
           return SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -163,7 +151,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                     ),
                   ],
                 ),
-
+                //Sales Fields
                 Container(
                   width: 900,
                   padding: EdgeInsets.all(40),
@@ -727,7 +715,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                             SizedBox(width: 25),
                             //Amount
                             Text(
-                              formatCurrency.format(subTotal),
+                              formatCurrency.format(bloc.subtotalTicketAmount),
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 18,
@@ -796,7 +784,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                             SizedBox(width: 25),
                             //Amount
                             Text(
-                              formatCurrency.format(total),
+                              formatCurrency.format(bloc.totalTicketAmount),
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 18,
@@ -824,10 +812,10 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                       builder: (context) {
                                         return ScheduleSaleDialog(
                                             widget.currentBusiness,
-                                            total,
+                                            bloc.totalTicketAmount,
                                             discount,
                                             tax,
-                                            subTotal,
+                                            bloc.subtotalTicketAmount,
                                             bloc.ticketItems['Items'],
                                             clientName,
                                             clearControllers);
@@ -893,7 +881,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                               orderDetail:
                                                   snapshot.data["Items"],
                                               orderName: orderName,
-                                              subTotal: subTotal,
+                                              subTotal:
+                                                  bloc.subtotalTicketAmount,
                                               tax: tax,
                                               controller: clientController,
                                               clearVariables: clearControllers,

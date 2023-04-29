@@ -597,10 +597,14 @@ class DatabaseService {
               ? doc['Featured']
               : false,
           expectedMargin: doc.data().toString().contains('Expected Margin')
-              ? doc['Expected Margin']
+              ? (doc['Expected Margin'] != null)
+                  ? doc['Expected Margin']
+                  : 0
               : 0,
           lowMarginAlert: doc.data().toString().contains('Low Margin Alert')
-              ? doc['Low Margin Alert']
+              ? (doc['Low Margin Alert'] != null)
+                  ? doc['Low Margin Alert']
+                  : 0
               : 0,
         );
       }).toList();
@@ -651,8 +655,8 @@ class DatabaseService {
       'Vegan': vegan,
       'Show': show,
       'Featured': featured,
-      'Expected Margin': expectedMargin,
-      'Low Margin Alert': lowMarginAlert
+      'Expected Margin': (expectedMargin == null) ? 0 : expectedMargin,
+      'Low Margin Alert': (lowMarginAlert == null) ? 0 : lowMarginAlert
     });
   }
 
@@ -2735,8 +2739,8 @@ class DatabaseService {
               : '',
           splitPaymentDetails:
               doc.data().toString().contains('Split Payment Details')
-                  ? doc['Split Payment Details']
-                  : {},
+                  ? doc['Split Payment Details'].toList()
+                  : [],
         );
       }).toList();
     } catch (e) {
@@ -3560,7 +3564,7 @@ class DatabaseService {
   // Future totalGaliaExp() async {
   //   final QuerySnapshot snapshot = await FirebaseFirestore.instance
   //       .collection('ERP')
-  //       .doc('PzrcDHtyl4T3vdlZusQlsMQrMRE3')
+  //       .doc('VTam7iYZhiWiAFs3IVRBaLB5s3m2')
   //       .collection('2023')
   //       .doc('4')
   //       .collection('Sales')

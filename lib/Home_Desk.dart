@@ -545,11 +545,25 @@ class _HomeDeskState extends State<HomeDesk> {
             actions: [
               ///TEST ODER ALERT
               // IconButton(
-              //     onPressed: () => DatabaseService().createOrderTest(),
+              //     onPressed: () => DatabaseService().totalGaliaExp(),
               //     icon: Icon(
               //       Icons.access_alarm,
               //       color: Colors.black,
               //     )),
+              //Business Name
+              Container(
+                height: double.infinity,
+                child: Center(
+                  child: Text(
+                    userProfile.businesses[businessIndexOnProfile].businessName,
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal),
+                  ),
+                ),
+              ),
+              //Profile Image
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),

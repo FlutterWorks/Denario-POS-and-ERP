@@ -20,6 +20,7 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
   String selectedCategory = '';
   String product = '';
   int price = 0;
+  TextEditingController productController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +167,7 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                         Expanded(
                           flex: 8,
                           child: TextFormField(
+                            controller: productController,
                             style: TextStyle(color: Colors.black, fontSize: 16),
                             cursorColor: Colors.grey,
                             autofocus: true,
@@ -186,9 +188,6 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                                 ),
                               ),
                             ),
-                            onChanged: (val) {
-                              setState(() => product = val);
-                            },
                           ),
                         ),
                         SizedBox(width: 10),
@@ -200,7 +199,7 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                             ),
                             onPressed: () {
                               bloc.addToCart({
-                                'Name': product,
+                                'Name': productController.text,
                                 'Category': selectedCategory,
                                 'Price': 0,
                                 'Quantity': 1,

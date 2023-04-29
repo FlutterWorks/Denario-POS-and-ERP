@@ -32,6 +32,15 @@ class TicketBloc {
     }
   };
 
+  ///Get SubTotal
+  double get subtotalTicketAmount {
+    double sum = 0.0;
+    for (var item in ticketItems['Items']) {
+      sum += item['Price'] * item['Quantity'];
+    }
+    return sum;
+  }
+
   ///Get Total
   double get totalTicketAmount {
     double sum = 0.0;

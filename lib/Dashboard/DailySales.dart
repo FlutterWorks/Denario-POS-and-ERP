@@ -16,9 +16,7 @@ class DailySales extends StatelessWidget {
     final dailyTransactions = Provider.of<DailyTransactions>(context);
     final userProfile = Provider.of<UserData>(context);
 
-    if (userProfile == null ||
-        registerStatus == null ||
-        dailyTransactions == null) {
+    if (userProfile == null || registerStatus == null) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.42,
         height: 400,
@@ -185,18 +183,21 @@ class DailySales extends StatelessWidget {
 
                                     ///Text
                                     Text(
-                                      (dailyTransactions.salesByMedium[
-                                                      registerStatus
-                                                              .paymentTypes[i]
-                                                          ['Type']] !=
-                                                  null &&
-                                              dailyTransactions.salesByMedium[
-                                                      registerStatus
-                                                              .paymentTypes[i]
-                                                          ['Type']] >
-                                                  0)
-                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium[registerStatus.paymentTypes[i]['Type']])}'
-                                          : '${formatCurrency.format(0)}',
+                                      (dailyTransactions == null)
+                                          ? '${formatCurrency.format(0)}'
+                                          : (dailyTransactions.salesByMedium[
+                                                          registerStatus
+                                                                  .paymentTypes[
+                                                              i]['Type']] !=
+                                                      null &&
+                                                  dailyTransactions
+                                                              .salesByMedium[
+                                                          registerStatus
+                                                                  .paymentTypes[
+                                                              i]['Type']] >
+                                                      0)
+                                              ? '${formatCurrency.format(dailyTransactions.salesByMedium[registerStatus.paymentTypes[i]['Type']])}'
+                                              : '${formatCurrency.format(0)}',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       softWrap: true,
