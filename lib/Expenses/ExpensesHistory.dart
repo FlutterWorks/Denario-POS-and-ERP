@@ -225,7 +225,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                 SizedBox(width: 20),
                 //Proveedor
                 Container(
-                  width: 250,
+                  width: 200,
                   height: 45,
                   child: TextFormField(
                     controller: supplierController,
@@ -272,7 +272,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                 SizedBox(width: 20),
                 //Medio de pago
                 Container(
-                  width: 250,
+                  width: 200,
                   height: 45,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey[350]),

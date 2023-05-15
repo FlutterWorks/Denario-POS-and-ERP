@@ -55,7 +55,7 @@ class _PnlDeskState extends State<PnlDesk> {
                   Spacer(),
                   //Month selection
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(25),

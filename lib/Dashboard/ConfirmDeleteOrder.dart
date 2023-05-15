@@ -74,8 +74,8 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                         var docRef = firestore
                             .collection('ERP')
                             .doc(widget.businessID)
-                            .collection(year)
-                            .doc(month);
+                            .collection(widget.sale.date.year.toString())
+                            .doc(widget.sale.date.month.toString());
 
                         final doc = await docRef.get();
 
@@ -124,7 +124,8 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                             widget.sale.transactionID + '-1',
                             widget.sale.cashRegister,
                             true,
-                            widget.sale.splitPaymentDetails);
+                            widget.sale.splitPaymentDetails,
+                            widget.sale.orderType);
 
                         /////Save Sales and Order Categories to database
                         ////////Update each Account for the month based on order's categories

@@ -479,7 +479,8 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                               widget.order.id,
                                               '',
                                               false,
-                                              []);
+                                              [],
+                                              'Encargo');
 
                                           /////Save Sales and Order Categories to database
                                           DatabaseService().saveOrderType(

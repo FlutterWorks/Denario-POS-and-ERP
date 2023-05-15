@@ -45,9 +45,10 @@ class _OrderAlertState extends State<OrderAlert> {
 
   @override
   void dispose() {
-    super.dispose();
+    audioPlayer.stop();
     audioPlayer.release();
     audioPlayer.dispose();
+    super.dispose();
     // audioCache.clearAll();
   }
 

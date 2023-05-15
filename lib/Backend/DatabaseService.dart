@@ -861,7 +861,8 @@ class DatabaseService {
         invoiceNO,
         (cashRegister == null) ? 'Independiente' : cashRegister,
         false,
-        splitPaymentDetails);
+        splitPaymentDetails,
+        orderType);
 
     // ////////////////////////Update Accounts (sales and categories)
 
@@ -1250,7 +1251,8 @@ class DatabaseService {
       transactionID,
       String currentCashRegister,
       bool reversed,
-      List splitPaymentDetails) async {
+      List splitPaymentDetails,
+      orderType) async {
     return await FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -1273,7 +1275,8 @@ class DatabaseService {
       'Transaction ID': transactionID,
       'Cash Register': currentCashRegister,
       'Reversed': reversed,
-      'Split Payment Details': splitPaymentDetails
+      'Split Payment Details': splitPaymentDetails,
+      'Order Type': orderType
     });
   }
 
