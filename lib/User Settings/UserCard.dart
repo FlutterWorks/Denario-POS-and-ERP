@@ -39,23 +39,25 @@ class UserCard extends StatelessWidget {
           child: Container(
             height: 50,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 //Pic
-                Container(
-                    height: 35,
-                    width: 35,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.grey.shade300),
-                        color: Colors.grey,
-                        image: DecorationImage(
-                            image: NetworkImage(userProfile.profileImage),
-                            fit: BoxFit.cover))),
-                SizedBox(width: 10),
+                SizedBox(
+                  width: 100,
+                  child: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey.shade300),
+                          color: Colors.grey,
+                          image: DecorationImage(
+                              image: NetworkImage(userProfile.profileImage),
+                              fit: BoxFit.scaleDown))),
+                ),
                 //Name
                 Container(
-                  width: 200,
+                  width: 100,
                   child: Center(
                       child: Text(
                     userProfile.name,
@@ -63,18 +65,16 @@ class UserCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   )),
                 ),
-                SizedBox(width: 10),
                 //Phone
                 Container(
-                  width: 200,
+                  width: 100,
                   child: Center(
                       child: Text(userProfile.phone.toString(),
                           maxLines: 1, overflow: TextOverflow.ellipsis)),
                 ),
-                SizedBox(width: 10),
                 //Rol
                 Container(
-                  width: 200,
+                  width: 100,
                   child: Center(
                       child: Text(userProfile.businesses[index].roleInBusiness,
                           maxLines: 1, overflow: TextOverflow.ellipsis)),

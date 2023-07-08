@@ -173,9 +173,12 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
               //Day and open?
               Row(
                 children: [
-                  Text(
-                    daysOfWeek[i],
-                    style: TextStyle(color: Colors.black, fontSize: 14),
+                  Container(
+                    width: 75,
+                    child: Text(
+                      daysOfWeek[i],
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                    ),
                   ),
                   SizedBox(width: 10),
                   Switch(
@@ -197,7 +200,7 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
               //Time
               (businessSchedule[i]['Opens'])
                   ? Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         //Open

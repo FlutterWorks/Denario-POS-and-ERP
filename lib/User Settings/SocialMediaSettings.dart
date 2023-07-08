@@ -100,9 +100,12 @@ class _SocialMediaSettingsState extends State<SocialMediaSettings> {
               //Name/Active
               Row(
                 children: [
-                  Text(
-                    socialMedia[i]['Social Media'],
-                    style: TextStyle(color: Colors.black, fontSize: 14),
+                  Container(
+                    width: 75,
+                    child: Text(
+                      socialMedia[i]['Social Media'],
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                    ),
                   ),
                   SizedBox(width: 10),
                   Switch(

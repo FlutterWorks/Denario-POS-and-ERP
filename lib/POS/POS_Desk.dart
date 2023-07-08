@@ -10,7 +10,7 @@ import 'package:denario/Models/Tables.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/POS/CounterViewDesktop.dart';
 import 'package:denario/POS/PlateSelection_Desktop.dart';
-import 'package:denario/POS/TablesViewDesk.dart';
+import 'package:denario/POS/TablesMapDesk.dart';
 import 'package:denario/POS/TicketView.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -302,7 +302,7 @@ class _POSDeskState extends State<POSDesk> {
                     Expanded(
                         child: Container(
                             child: (selectedTag == 'Mesas')
-                                ? TablesViewDesktop(
+                                ? TablesMapDesktop(
                                     userProfile.activeBusiness, tableController)
                                 : CounterViewDesktop(userProfile.activeBusiness,
                                     tableController))),

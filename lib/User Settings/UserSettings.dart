@@ -39,13 +39,18 @@ class _UserSettingsState extends State<UserSettings> {
       height: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
+            //Pages
+            PageView(controller: _controller, children: [
+              UserProfileSettings(userProfile.name, userProfile.phone,
+                  userProfile.profileImage, userProfile.uid),
+              UserBusinessSettings(userProfile.businesses),
+            ]),
             //Mi perfil/Negocio selection
             Container(
               height: 50,
-              width: double.infinity,
+              width: 200,
               child: ListView.builder(
                   shrinkWrap: true,
                   physics: BouncingScrollPhysics(),
@@ -89,15 +94,6 @@ class _UserSettingsState extends State<UserSettings> {
                     );
                   }),
             ),
-            SizedBox(height: 20),
-            //Pages
-            Expanded(
-                child: Container(
-                    child: PageView(controller: _controller, children: [
-              UserProfileSettings(userProfile.name, userProfile.phone,
-                  userProfile.profileImage, userProfile.uid),
-              UserBusinessSettings(userProfile.businesses),
-            ]))),
           ],
         ),
       ),

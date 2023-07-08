@@ -1,17 +1,73 @@
+import 'package:denario/Backend/DatabaseService.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StoreConfig extends StatefulWidget {
+  final String businessID;
   final String storeLink;
-  const StoreConfig(this.storeLink, {Key key}) : super(key: key);
+  final String backgroundImage;
+  final List visibleStoreCategories;
+  final List businessCategories;
+  const StoreConfig(this.businessID, this.storeLink, this.backgroundImage,
+      this.visibleStoreCategories, this.businessCategories,
+      {Key key})
+      : super(key: key);
 
   @override
   State<StoreConfig> createState() => _StoreConfigState();
 }
 
 class _StoreConfigState extends State<StoreConfig> {
-  List categories = ['Pan', 'Cafe', 'Póstres', 'Bebidas'];
+  List initialCategories;
   List selectedCategories = [];
+
+  Uint8List webImage = Uint8List(8);
+  String downloadUrl;
+  bool changedImage = false;
+
+  Future getImage() async {
+    XFile selectedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (selectedImage != null) {
+      Uint8List uploadFile = await selectedImage.readAsBytes();
+      setState(() {
+        webImage = uploadFile;
+        changedImage = true;
+      });
+    }
+  }
+
+  Future uploadPic(businessID) async {
+    ////Upload to Clod Storage
+
+    String fileName = 'Business Images/' + businessID + ' Store Background.png';
+    var ref = FirebaseStorage.instance.ref().child(fileName);
+
+    TaskSnapshot uploadTask = await ref.putData(webImage);
+
+    ///Save to Firestore
+    if (uploadTask.state == TaskState.success) {
+      downloadUrl = await uploadTask.ref.getDownloadURL();
+    }
+  }
+
+  bool isHovered = false;
+
+  @override
+  void initState() {
+    initialCategories = List.from(widget.visibleStoreCategories);
+
+    if (widget.visibleStoreCategories.contains('All')) {
+      selectedCategories = List.from(widget.businessCategories);
+    } else {
+      selectedCategories = List.from(widget.visibleStoreCategories);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -82,18 +138,55 @@ class _StoreConfigState extends State<StoreConfig> {
                 ),
                 SizedBox(height: 20),
                 //Image
-                Text(
-                  'Imagen de fondo',
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600),
+                Row(
+                  children: [
+                    Text(
+                      'Imagen de fondo',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Spacer(),
+                  ],
                 ),
                 SizedBox(height: 12),
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  color: Colors.blue,
+                MouseRegion(
+                  onEnter: (event) => setState(() => isHovered = true),
+                  onExit: (event) => setState(() => isHovered = false),
+                  child: InkWell(
+                    onTap: getImage,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                            height: 250,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                image: DecorationImage(
+                                    colorFilter: isHovered
+                                        ? ColorFilter.mode(
+                                            Colors.black.withOpacity(0.5),
+                                            BlendMode.dstATop,
+                                          )
+                                        : null,
+                                    image: (changedImage)
+                                        ? Image.memory(
+                                            webImage,
+                                            fit: BoxFit.cover,
+                                          ).image
+                                        : NetworkImage(widget.backgroundImage),
+                                    fit: BoxFit.cover))),
+                        if (isHovered)
+                          Icon(
+                            Icons.edit,
+                            color: Colors.black,
+                            size: 35, // Adjust the size of the icon as needed
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(height: 20),
                 //Categories
@@ -106,7 +199,7 @@ class _StoreConfigState extends State<StoreConfig> {
                 ),
                 SizedBox(width: 12),
                 ListView.builder(
-                    itemCount: categories.length,
+                    itemCount: widget.businessCategories.length,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: ((context, i) {
@@ -117,27 +210,29 @@ class _StoreConfigState extends State<StoreConfig> {
                             IconButton(
                                 onPressed: () {
                                   if (selectedCategories
-                                      .contains(categories[i])) {
+                                      .contains(widget.businessCategories[i])) {
                                     setState(() {
-                                      selectedCategories.remove(categories[i]);
+                                      selectedCategories
+                                          .remove(widget.businessCategories[i]);
                                     });
                                   } else {
                                     setState(() {
-                                      selectedCategories.add(categories[i]);
+                                      selectedCategories
+                                          .add(widget.businessCategories[i]);
                                     });
                                   }
                                 },
-                                icon:
-                                    (selectedCategories.contains(categories[i]))
-                                        ? Icon(
-                                            Icons.check_box,
-                                            color: Colors.greenAccent[400],
-                                          )
-                                        : const Icon(
-                                            Icons.check_box_outline_blank)),
+                                icon: (selectedCategories
+                                        .contains(widget.businessCategories[i]))
+                                    ? Icon(
+                                        Icons.check_box,
+                                        color: Colors.greenAccent[400],
+                                      )
+                                    : const Icon(
+                                        Icons.check_box_outline_blank)),
                             const SizedBox(width: 10),
                             Text(
-                              categories[i],
+                              widget.businessCategories[i],
                               style: const TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 14,
@@ -153,7 +248,23 @@ class _StoreConfigState extends State<StoreConfig> {
                   style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.grey,
                       backgroundColor: Colors.black),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (changedImage) {
+                      uploadPic(widget.businessID).then((value) =>
+                          DatabaseService().updateBusinessStoreConfig(
+                            widget.businessID,
+                            downloadUrl,
+                            selectedCategories,
+                          ));
+                    } else {
+                      DatabaseService().updateBusinessStoreConfig(
+                          widget.businessID,
+                          widget.backgroundImage,
+                          selectedCategories);
+                    }
+
+                    Navigator.of(context).pop();
+                  },
                   child: Container(
                     width: 100,
                     height: 40,

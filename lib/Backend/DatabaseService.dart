@@ -97,6 +97,17 @@ class DatabaseService {
     });
   }
 
+  Future updateBusinessStoreConfig(String businessID,
+      String catalogBackgroundImage, List visibleStoreCategories) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .update({
+      'Catalog Background Image': catalogBackgroundImage,
+      'Visible Store Categories': visibleStoreCategories,
+    });
+  }
+
   Future changeActiveBusiness(String businessID) async {
     final User user = FirebaseAuth.instance.currentUser;
     final String uid = user.uid.toString();
@@ -150,39 +161,44 @@ class DatabaseService {
   BusinessProfile _userBusinessProfileFromSnapshot(DocumentSnapshot snapshot) {
     try {
       return BusinessProfile(
-          businessID: snapshot.data().toString().contains('Business ID')
-              ? snapshot['Business ID']
-              : '',
-          businessName: snapshot.data().toString().contains('Business Name')
-              ? snapshot['Business Name']
-              : '',
-          businessField: snapshot.data().toString().contains('Business Field')
-              ? snapshot['Business Field']
-              : '',
-          businessImage: snapshot.data().toString().contains('Business Image')
-              ? snapshot['Business Image']
-              : '',
-          businessSize: snapshot.data().toString().contains('Business Size')
-              ? snapshot['Business Size']
-              : 0,
-          businessLocation:
-              snapshot.data().toString().contains('Business Location')
-                  ? snapshot['Business Location']
-                  : '',
-          businessUsers: snapshot.data().toString().contains('Business Users')
-              ? snapshot['Business Users']
-              : [],
-          businessBackgroundImage:
-              snapshot.data().toString().contains('Catalog Background Image')
-                  ? snapshot['Catalog Background Image']
-                  : '',
-          businessSchedule:
-              snapshot.data().toString().contains('Business Schedule')
-                  ? snapshot['Business Schedule']
-                  : [],
-          socialMedia: snapshot.data().toString().contains('Social Media')
-              ? snapshot['Social Media']
-              : []);
+        businessID: snapshot.data().toString().contains('Business ID')
+            ? snapshot['Business ID']
+            : '',
+        businessName: snapshot.data().toString().contains('Business Name')
+            ? snapshot['Business Name']
+            : '',
+        businessField: snapshot.data().toString().contains('Business Field')
+            ? snapshot['Business Field']
+            : '',
+        businessImage: snapshot.data().toString().contains('Business Image')
+            ? snapshot['Business Image']
+            : '',
+        businessSize: snapshot.data().toString().contains('Business Size')
+            ? snapshot['Business Size']
+            : 0,
+        businessLocation:
+            snapshot.data().toString().contains('Business Location')
+                ? snapshot['Business Location']
+                : '',
+        businessUsers: snapshot.data().toString().contains('Business Users')
+            ? snapshot['Business Users']
+            : [],
+        businessBackgroundImage:
+            snapshot.data().toString().contains('Catalog Background Image')
+                ? snapshot['Catalog Background Image']
+                : '',
+        businessSchedule:
+            snapshot.data().toString().contains('Business Schedule')
+                ? snapshot['Business Schedule']
+                : [],
+        socialMedia: snapshot.data().toString().contains('Social Media')
+            ? snapshot['Social Media']
+            : [],
+        visibleStoreCategories:
+            snapshot.data().toString().contains('Visible Store Categories')
+                ? snapshot['Visible Store Categories']
+                : ['All'],
+      );
     } catch (e) {
       print(e);
       return null;
@@ -276,7 +292,8 @@ class DatabaseService {
           'Close': {'Hour': 20, 'Minute': 00},
           'Opens': true
         },
-      ]
+      ],
+      'Visible Store Categories': ['All']
     });
   }
 
@@ -1828,7 +1845,20 @@ class DatabaseService {
                 doc.data().toString().contains('Items') ? doc['Items'] : [],
             client: doc.data().toString().contains('Assigned Client')
                 ? doc['Assigned Client']
-                : {});
+                : {},
+            //Draggable section
+            isOccupied: doc.data().toString().contains('Occupied')
+                ? doc['Occupied']
+                : false,
+            shape: doc.data().toString().contains('Shape')
+                ? doc['Shape']
+                : 'Square',
+            x: doc.data().toString().contains('X Axis') ? doc['X Axis'] : 0,
+            y: doc.data().toString().contains('Y Axis') ? doc['Y Axis'] : 0,
+            tableSize: doc.data().toString().contains('Table Size')
+                ? doc['Table Size']
+                : 75,
+            docID: doc.id);
       }).toList();
     } catch (e) {
       print(e);
@@ -1847,29 +1877,27 @@ class DatabaseService {
   }
 
   //Create Table
-  Future createTable(
-    businessID,
-    tableName,
-  ) async {
+  Future createTable(businessID, Map<String, dynamic> table) async {
     return await FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
         .collection('Tables')
-        .doc('Table ' + tableName)
-        .set({
-      'Code': tableName,
-      'Assigned Order': '',
-      'Open': false,
-      'Open Since': DateTime.now(),
-      'People': 0,
-      'Discount': 0,
-      'IVA': 0,
-      'Items': [],
-      'Payment Type': '',
-      'Subtotal': 0,
-      'Total': 0,
-      'Color': Colors.white.value,
-      'Assigned Client': {}
+        .doc('Table ' + table['Code'])
+        .set(table);
+  }
+
+  Future updateExistingTable(String businessID, String tableID,
+      String tableCode, double x, double y, double tableSize) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .collection('Tables')
+        .doc(tableID)
+        .update({
+      'Code': tableCode,
+      'X Axis': x,
+      'Y Axis': y,
+      'Table Size': tableSize
     });
   }
 
@@ -1901,6 +1929,15 @@ class DatabaseService {
       'Open': isOpen,
       'Assigned Client': assignedClient
     });
+  }
+
+  Future deleteTable(String businessID, String tableDocID) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .collection('Tables')
+        .doc(tableDocID)
+        .delete();
   }
 
   ////////////////////////// EXPENSES ///////////////////////

@@ -1,6 +1,5 @@
 import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Tables.dart';
-import 'package:denario/POS/CreateTableDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +16,7 @@ class _TablesViewDesktopState extends State<TablesViewDesktop> {
   bool productExists = false;
   int itemIndex;
   final formatCurrency = new NumberFormat.simpleCurrency();
+
   @override
   Widget build(BuildContext context) {
     final tables = Provider.of<List<Tables>>(context);
@@ -138,11 +138,11 @@ class _TablesViewDesktopState extends State<TablesViewDesktop> {
                   ),
                   onPressed: () {
                     //Dialog to create table
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CreateTableDialog(widget.businessID);
-                        });
+                    // showDialog(
+                    //     context: context,
+                    //     builder: (context) {
+                    //       return CreateTableDialog(widget.businessID);
+                    //     });
                   },
                   child: Center(
                       child: Icon(
