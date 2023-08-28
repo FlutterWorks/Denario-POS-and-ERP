@@ -45,7 +45,8 @@ class _UserSettingsState extends State<UserSettings> {
             PageView(controller: _controller, children: [
               UserProfileSettings(userProfile.name, userProfile.phone,
                   userProfile.profileImage, userProfile.uid),
-              UserBusinessSettings(userProfile.businesses),
+              UserBusinessSettings(
+                  userProfile.businesses, userProfile.activeBusiness),
             ]),
             //Mi perfil/Negocio selection
             Container(

@@ -17,16 +17,23 @@ class Wrapper extends StatefulWidget {
 
 class _WrapperState extends State<Wrapper> {
   User user;
+  bool loading = true;
 
   @override
   void initState() {
-    _auth.userChanges().listen((event) => setState(() => user = event));
+    _auth.userChanges().listen((event) => setState(() {
+          user = event;
+          loading = false;
+        }));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (user == null && FirebaseAuth.instance.currentUser == null) {
+    if (loading) {
+      // Show a loading widget while the data is being fetched
+      return Loading();
+    } else if (user == null && FirebaseAuth.instance.currentUser == null) {
       return Authenticate();
     } else if (user != null) {
       if (user.displayName == null || user.displayName == '') {

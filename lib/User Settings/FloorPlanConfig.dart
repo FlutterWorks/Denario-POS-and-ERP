@@ -152,10 +152,6 @@ class _FloorPlanNotifierState extends State<FloorPlanNotifier> {
           ],
         ),
         body: FloorPlanning(widget.businessID, baseSize, tablesNotifier),
-        // ChangeNotifierProvider(
-        //   create: (_) => _tablesNotifier,
-        //   child: FloorPlanning(widget.businessID, baseSize),
-        // ),
         floatingActionButton: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,

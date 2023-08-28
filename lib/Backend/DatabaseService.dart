@@ -198,6 +198,30 @@ class DatabaseService {
             snapshot.data().toString().contains('Visible Store Categories')
                 ? snapshot['Visible Store Categories']
                 : ['All'],
+        paymentMethods: snapshot.data().toString().contains('Payment Types')
+            ? snapshot['Payment Types']
+            : [
+                {
+                  'Method': 'Efectivo',
+                  'Image':
+                      'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-cash-100.png?alt=media&token=9d58b0f5-dcff-4ecb-bc8c-ffc51d05dc94'
+                },
+                {
+                  'Method': 'Tarjeta de Débito',
+                  'Image':
+                      'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-credit-card-80.png?alt=media&token=b349ec08-93ea-4120-91b8-c1b0a643c7da'
+                },
+                {
+                  'Method': 'QR',
+                  'Image':
+                      'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-qr-code-96.png?alt=media&token=a3a9d2f5-3ba6-4775-aaf9-a22159997694'
+                },
+                {
+                  'Method': 'Transferencia Bancaria',
+                  'Image':
+                      'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-bank-transfer-58.png?alt=media&token=71680c7e-a20c-4601-ba2d-3ea792c7c550'
+                },
+              ],
       );
     } catch (e) {
       print(e);
@@ -234,17 +258,22 @@ class DatabaseService {
         {
           'Type': 'Efectivo',
           'Image':
-              'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/Cafe%20Galia%2FPayment%20Methods%2FCash.png?alt=media&token=e3b93145-f373-4e89-8b00-6d11d2fa9128'
+              'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-cash-100.png?alt=media&token=9d58b0f5-dcff-4ecb-bc8c-ffc51d05dc94'
         },
         {
-          'Type': 'MercadoPago',
+          'Type': 'QR',
           'Image':
-              'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/Cafe%20Galia%2FPayment%20Methods%2FMP.png?alt=media&token=f0713cdc-fccf-4588-bfdd-dbda04a50c1f'
+              'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-qr-code-96.png?alt=media&token=a3a9d2f5-3ba6-4775-aaf9-a22159997694'
+        },
+        {
+          'Type': 'Tarjeta de Débito',
+          'Image':
+              'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-credit-card-80.png?alt=media&token=b349ec08-93ea-4120-91b8-c1b0a643c7da'
         },
         {
           'Type': 'Transferencia Bancaria',
           'Image':
-              'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/Cafe%20Galia%2FPayment%20Methods%2FBank.png?alt=media&token=db55ea11-f917-4f1c-989a-fbc9b36fbbbd'
+              'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-bank-transfer-58.png?alt=media&token=71680c7e-a20c-4601-ba2d-3ea792c7c550'
         }
       ],
       'Business Name': businessName,
@@ -305,6 +334,15 @@ class DatabaseService {
         .update({
       'Business Users': FieldValue.arrayUnion([uid])
     });
+  }
+
+  //Add user to Business Profile
+  Future updateBusinessPaymentTypes(
+      String businessID, List paymentTypes) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .update({'Payment Types': paymentTypes});
   }
 
   //Create Business Categories
@@ -2587,6 +2625,79 @@ class DatabaseService {
     }
   }
 
+  List<DailyTransactions> _specificDayTransactionsFromSnapshot(
+      QuerySnapshot snapshot) {
+    try {
+      return snapshot.docs.map((doc) {
+        return DailyTransactions(
+          openDate: doc.data().toString().contains('Fecha Apertura')
+              ? doc['Fecha Apertura'].toDate()
+              : DateTime.now(),
+          closeDate: doc.data().toString().contains('Fecha Cierre')
+              ? doc['Fecha Cierre'].toDate()
+              : DateTime.now(),
+          user: doc.data().toString().contains('Usuario') ? doc['Usuario'] : '',
+          initialAmount: doc.data().toString().contains('Monto Inicial')
+              ? doc['Monto Inicial']
+              : 0,
+          isOpen: doc.data().toString().contains('Abierto')
+              ? doc['Abierto']
+              : false,
+          dailyTransactions:
+              doc.data().toString().contains('Transacciones del Día')
+                  ? doc['Transacciones del Día']
+                  : 0,
+          registerTransactionList:
+              doc.data().toString().contains('Detalle de Ingresos y Egresos')
+                  ? doc['Detalle de Ingresos y Egresos']
+                  : [],
+          sales: doc.data().toString().contains('Ventas') ? doc['Ventas'] : 0,
+          inflows:
+              doc.data().toString().contains('Ingresos') ? doc['Ingresos'] : 0,
+          outflows:
+              doc.data().toString().contains('Egresos') ? doc['Egresos'] : 0,
+          closeAmount: doc.data().toString().contains('Monto al Cierre')
+              ? doc['Monto al Cierre']
+              : 0,
+          salesByMedium: doc.data().toString().contains('Ventas por Medio')
+              ? (doc['Ventas por Medio'].runtimeType == List)
+                  ? {}
+                  : doc['Ventas por Medio']
+              : {},
+          totalItemsSold: doc.data().toString().contains('Total Items Sold')
+              ? doc['Total Items Sold']
+              : 0,
+          totalSalesCount: doc.data().toString().contains('Total Sales Count')
+              ? doc['Total Sales Count']
+              : 0,
+          salesCountbyProduct:
+              doc.data().toString().contains('Sales Count by Product')
+                  ? doc['Sales Count by Product']
+                  : {},
+          salesCountbyCategory:
+              doc.data().toString().contains('Sales Count by Category')
+                  ? doc['Sales Count by Category']
+                  : {},
+          salesAmountbyProduct:
+              doc.data().toString().contains('Sales Amount by Product')
+                  ? doc['Sales Amount by Product']
+                  : {},
+          salesAmountbyCategory:
+              doc.data().toString().contains('Sales Amount by Category')
+                  ? doc['Sales Amount by Category']
+                  : {},
+          salesbyOrderType:
+              doc.data().toString().contains('Sales by Order Type')
+                  ? doc['Sales by Order Type']
+                  : {},
+        );
+      }).toList();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   //Daily  Stream (Costo de Ventas)
   Stream<DailyTransactions> dailyTransactions(
       businessID, String openRegister) async* {
@@ -2601,6 +2712,24 @@ class DatabaseService {
         .doc(openRegister)
         .snapshots()
         .map(_dailyTransactionsFromSnapshot);
+  }
+
+  Stream<List<DailyTransactions>> specificDailyTransactions(
+      businessID, String year, String month, DateTime selectedDate) async* {
+    yield* FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .collection(year)
+        .doc(month)
+        .collection('Daily')
+        .where('Fecha Apertura',
+            isGreaterThanOrEqualTo: DateTime(selectedDate.year,
+                selectedDate.month, selectedDate.day, 00, 00))
+        .where('Fecha Apertura',
+            isLessThanOrEqualTo: DateTime(selectedDate.year, selectedDate.month,
+                selectedDate.day, 23, 59, 59))
+        .snapshots()
+        .map(_specificDayTransactionsFromSnapshot);
   }
 
   // Daily Transactions List from snapshot
@@ -2810,6 +2939,8 @@ class DatabaseService {
         .map(_salesFromSnapshot);
   }
 
+  //Limited sales list reversed
+
   //Filtered Sales
   Stream<List<Sales>> filteredSalesList(String businessID, DateTime dateFrom,
       DateTime dateTo, String paymentMethod) async* {
@@ -2977,6 +3108,10 @@ class DatabaseService {
         salesbyOrderType:
             snapshot.data().toString().contains('Sales by Order Type')
                 ? snapshot['Sales by Order Type']
+                : {},
+        salesByMedium:
+            snapshot.data().toString().contains('Sales by Payment Type')
+                ? snapshot['Sales by Payment Type']
                 : {},
       );
     } catch (e) {

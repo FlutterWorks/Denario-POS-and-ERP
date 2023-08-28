@@ -117,6 +117,15 @@ class TablesNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void editTable(Tables table, int tableIndex) {
+    tables[tableIndex] = table;
+    notifyListeners();
+  }
+
+  void basicTest(int i) {
+    print(i);
+  }
+
   void removeTable(Tables table) {
     tables.remove(table);
     notifyListeners();

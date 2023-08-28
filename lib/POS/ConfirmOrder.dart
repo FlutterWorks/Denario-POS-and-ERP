@@ -611,39 +611,46 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 3.0),
-                                        child: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              paymentType = widget
-                                                  .paymentTypes[i]['Type'];
-                                            });
-                                            bloc.changePaymentType(
-                                                widget.paymentTypes[i]['Type']);
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Container(
-                                              height: 45,
-                                              width: 45,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(8)),
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: (paymentType ==
-                                                              widget.paymentTypes[
-                                                                  i]['Type'])
-                                                          ? Colors.green
-                                                          : Colors.white10,
-                                                      width: 2),
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
+                                        child: Container(
+                                          height: 60,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                            border: Border.all(
+                                                color: (paymentType ==
                                                         widget.paymentTypes[i]
-                                                            ['Image']),
-                                                    fit: BoxFit.cover,
-                                                  )),
-                                            ),
+                                                            ['Type'])
+                                                    ? Colors.greenAccent
+                                                    : Colors.white10,
+                                                width: 1.5),
+                                          ),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                paymentType = widget
+                                                    .paymentTypes[i]['Type'];
+                                              });
+                                              bloc.changePaymentType(widget
+                                                  .paymentTypes[i]['Type']);
+                                            },
+                                            child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Image(
+                                                  image: NetworkImage(
+                                                      widget.paymentTypes[i]
+                                                          ['Image']),
+                                                  fit: BoxFit.scaleDown,
+                                                )
+                                                // Container(
+                                                //     decoration: BoxDecoration(
+                                                //         image: DecorationImage(
+                                                //   image: NetworkImage(widget
+                                                //       .paymentTypes[i]['Image']),
+                                                //   fit: BoxFit.cover,
+                                                // ))),
+                                                ),
                                           ),
                                         ),
                                       );

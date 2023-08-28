@@ -27,9 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
         color: Colors.white,
         child: Center(
             child: Container(
-          height: 150,
+          height: 200,
           child: Image(
-            image: AssetImage('images/Denario Tag.png'),
+            image: AssetImage('images/Denario Logo.png'),
             fit: BoxFit.fitHeight,
           ),
         )),

@@ -46,6 +46,7 @@ class BusinessProfile {
   final String businessBackgroundImage;
   final List socialMedia;
   final List visibleStoreCategories;
+  final List paymentMethods;
 
   BusinessProfile(
       {this.businessID,
@@ -59,7 +60,8 @@ class BusinessProfile {
       this.businessBackgroundImage,
       this.businessSchedule,
       this.socialMedia,
-      this.visibleStoreCategories});
+      this.visibleStoreCategories,
+      this.paymentMethods});
 }
 
 // class BusinessUsers {

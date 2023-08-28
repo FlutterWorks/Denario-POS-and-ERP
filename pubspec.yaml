@@ -74,13 +74,14 @@ flutter:
     - images/PedidosYA.png
     - images/EmptyState.png
     - images/EmptyWallet.jpg
-    - images/Denario Tag.png
+    - images/Denario Logo.png
     - images/Payable.jpg
     - images/Facebook.png
     - images/Instagram.png
     - images/Google.png
     - images/Whatsapp.png
     - images/Twitter.png
+    - images/AuthBackground.jpeg
   #List of sound effects
     - sounds/service-bell-ring.mp3
 

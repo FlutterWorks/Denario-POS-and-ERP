@@ -250,15 +250,15 @@ class _HomeDeskState extends State<HomeDesk> {
             : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
         SizedBox(height: 20),
-        screenNavigator('Gastos', Icons.multiline_chart, 3),
+        screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
         SizedBox(height: 20),
-        screenNavigator('Productos', Icons.assignment, 4),
+        screenNavigator('Gastos', Icons.multiline_chart, 4),
         SizedBox(height: 20),
-        screenNavigator('Proveedores', Icons.local_shipping_outlined, 5),
+        screenNavigator('Productos', Icons.assignment, 5),
         SizedBox(height: 20),
-        screenNavigator('Insumos', Icons.shopping_basket_outlined, 6),
+        screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
         SizedBox(height: 20),
-        screenNavigator('Stats', Icons.query_stats_outlined, 7),
+        screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
         SizedBox(height: 20),
         screenNavigator('PnL', Icons.data_usage, 8)
       ];
@@ -283,6 +283,10 @@ class _HomeDeskState extends State<HomeDesk> {
           return MaterialPageRoute(builder: (context) => ScheduleDesk());
         }),
         Navigator(onGenerateRoute: (routeSettings) {
+          return MaterialPageRoute(
+              builder: (context) => StatsDesk(userProfile.activeBusiness));
+        }),
+        Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) => ExpensesDesk('Dueñ@'));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
@@ -300,9 +304,6 @@ class _HomeDeskState extends State<HomeDesk> {
           return MaterialPageRoute(
               builder: (context) => SuppliesDesk(userProfile.activeBusiness,
                   categoriesProvider.categoryList, userBusiness.businessField));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => StatsDesk());
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) => PnlDesk());
@@ -332,15 +333,15 @@ class _HomeDeskState extends State<HomeDesk> {
             : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
         SizedBox(height: 20),
-        screenNavigator('Gastos', Icons.multiline_chart, 3),
+        screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
         SizedBox(height: 20),
-        screenNavigator('Productos', Icons.assignment, 4),
+        screenNavigator('Gastos', Icons.multiline_chart, 4),
         SizedBox(height: 20),
-        screenNavigator('Proveedores', Icons.local_shipping_outlined, 5),
+        screenNavigator('Productos', Icons.assignment, 5),
         SizedBox(height: 20),
-        screenNavigator('Insumos', Icons.shopping_basket_outlined, 6),
+        screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
         SizedBox(height: 20),
-        screenNavigator('Stats', Icons.query_stats_outlined, 7),
+        screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
       ];
       pageNavigators = [
         Navigator(onGenerateRoute: (routeSettings) {
@@ -364,6 +365,10 @@ class _HomeDeskState extends State<HomeDesk> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
+              builder: (context) => StatsDesk(userProfile.activeBusiness));
+        }),
+        Navigator(onGenerateRoute: (routeSettings) {
+          return MaterialPageRoute(
               builder: (context) => ExpensesDesk('Encargad@'));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
@@ -381,9 +386,6 @@ class _HomeDeskState extends State<HomeDesk> {
           return MaterialPageRoute(
               builder: (context) => SuppliesDesk(userProfile.activeBusiness,
                   categoriesProvider.categoryList, userBusiness.businessField));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => StatsDesk());
         }),
       ];
     } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
@@ -440,13 +442,20 @@ class _HomeDeskState extends State<HomeDesk> {
     } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
         'Contador(a)') {
       navigationBarItems = [
-        screenNavigator('Stats', Icons.query_stats_outlined, 1),
+        screenNavigator('Ventas', Icons.insert_chart_outlined, 1),
+        SizedBox(height: 20),
+        screenNavigator('Gastos', Icons.multiline_chart, 4),
         SizedBox(height: 20),
         screenNavigator('PnL', Icons.data_usage, 2),
       ];
       pageNavigators = [
         Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => StatsDesk());
+          return MaterialPageRoute(
+              builder: (context) => StatsDesk(userProfile.activeBusiness));
+        }),
+        Navigator(onGenerateRoute: (routeSettings) {
+          return MaterialPageRoute(
+              builder: (context) => ExpensesDesk('Encargad@'));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) => PnlDesk());
@@ -522,11 +531,10 @@ class _HomeDeskState extends State<HomeDesk> {
             backgroundColor: Colors.white,
             title: Center(
               child: Container(
-                height: 100,
-                width: 200,
+                height: 120,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('images/Denario Tag.png'))),
+                        image: AssetImage('images/Denario Logo.png'))),
               ),
             ),
             leading: showUserSettings

@@ -17,8 +17,9 @@ class FloorPlanning extends StatefulWidget {
 
 class _FloorPlanningState extends State<FloorPlanning> {
   TablesNotifier _tablesNotifier;
+  bool isHovered = false;
 
-  Widget _buildTableWidget(Tables table) {
+  Widget _buildTableWidget(TablesNotifier tablesNotifier, Tables table, int i) {
     switch (table.shape) {
       case 'Square':
         return GestureDetector(
@@ -29,7 +30,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
                   return ChangeNotifierProvider(
                       create: (_) => _tablesNotifier,
                       child: EditTableDialog(
-                          widget.businessID, table, widget.tablesNotifier));
+                          widget.businessID, table, widget.tablesNotifier, i));
                 });
           },
           child: Container(
@@ -71,7 +72,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
                   return ChangeNotifierProvider(
                       create: (_) => _tablesNotifier,
                       child: EditTableDialog(
-                          widget.businessID, table, widget.tablesNotifier));
+                          widget.businessID, table, widget.tablesNotifier, i));
                 });
           },
           child: Container(
@@ -103,47 +104,141 @@ class _FloorPlanningState extends State<FloorPlanning> {
             ),
           ),
         );
-      case 'Rectangle':
-        return GestureDetector(
-          onLongPress: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return ChangeNotifierProvider(
-                      create: (_) => _tablesNotifier,
-                      child: EditTableDialog(
-                          widget.businessID, table, widget.tablesNotifier));
-                });
-          },
-          child: Container(
-            width: widget.baseSize * 2,
-            height: widget.baseSize,
-            decoration: BoxDecoration(
-              borderRadius: new BorderRadius.circular(12.0),
-              color: Colors.white,
-              boxShadow: <BoxShadow>[
-                new BoxShadow(
-                  color: Colors.grey[350],
-                  offset: Offset(0.0, 0.0),
-                  blurRadius: 10.0,
-                )
-              ],
-            ),
-            child: Center(
-              child: Text(
-                table.table,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                softWrap: true,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800),
+      case 'Wide Rectangle':
+        return MouseRegion(
+          onEnter: (event) => setState(() => isHovered = true),
+          onExit: (event) => setState(() => isHovered = false),
+          child: GestureDetector(
+            onLongPress: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ChangeNotifierProvider(
+                        create: (_) => _tablesNotifier,
+                        child: EditTableDialog(widget.businessID, table,
+                            widget.tablesNotifier, i));
+                  });
+            },
+            child: Container(
+              width: widget.baseSize * 2,
+              height: widget.baseSize,
+              decoration: BoxDecoration(
+                borderRadius: new BorderRadius.circular(12.0),
+                color: Colors.white,
+                boxShadow: <BoxShadow>[
+                  new BoxShadow(
+                    color: Colors.grey[350],
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 10.0,
+                  )
+                ],
+              ),
+              child: Stack(
+                children: [
+                  // isHovered
+                  // ? Align(
+                  //     alignment: Alignment.topRight,
+                  //     child: IconButton(
+                  //       onPressed: () {
+                  //         setState(() {
+                  //           table.shape = 'Tall Rectangle';
+                  //         });
+                  //         tablesNotifier
+                  //           ..editTable(table,
+                  //               tablesNotifier.tables.indexOf(table));
+                  //       },
+                  //       icon: Icon(Icons.autorenew),
+                  //       iconSize: 14,
+                  //       color: Colors.black,
+                  //     ),
+                  //   )
+                  // : Container(),
+                  Center(
+                    child: Text(
+                      table.table,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         );
+      case 'Tall Rectangle':
+        return MouseRegion(
+          onEnter: (event) => setState(() => isHovered = true),
+          onExit: (event) => setState(() => isHovered = false),
+          child: GestureDetector(
+            onLongPress: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ChangeNotifierProvider(
+                        create: (_) => _tablesNotifier,
+                        child: EditTableDialog(widget.businessID, table,
+                            widget.tablesNotifier, i));
+                  });
+            },
+            child: Container(
+              width: widget.baseSize,
+              height: widget.baseSize * 2,
+              decoration: BoxDecoration(
+                borderRadius: new BorderRadius.circular(12.0),
+                color: Colors.white,
+                boxShadow: <BoxShadow>[
+                  new BoxShadow(
+                    color: Colors.grey[350],
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 10.0,
+                  )
+                ],
+              ),
+              child: Stack(
+                children: [
+                  // isHovered
+                  //     ? Align(
+                  //         alignment: Alignment.topRight,
+                  //         child: IconButton(
+                  //           onPressed: () {
+                  //             setState(() {
+                  //               table.shape = 'Wide Rectangle';
+                  //             });
+                  //             tablesNotifier
+                  //               ..editTable(table,
+                  //                   tablesNotifier.tables.indexOf(table));
+                  //           },
+                  //           icon: Icon(Icons.autorenew),
+                  //           iconSize: 14,
+                  //           color: Colors.black,
+                  //         ),
+                  //       )
+                  //     : Container(),
+                  Center(
+                    child: Text(
+                      table.table,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
       default:
         return Container();
     }
@@ -166,8 +261,11 @@ class _FloorPlanningState extends State<FloorPlanning> {
                   top: MediaQuery.of(context).size.height * table.y,
                   child: Draggable(
                     data: table,
-                    child: _buildTableWidget(table),
-                    feedback: _buildTableWidget(table),
+                    child: _buildTableWidget(
+                        tablesNotifier, table, tables.indexOf(table)),
+                    feedback: Material(
+                        child: _buildTableWidget(tablesNotifier, table,
+                            tables.indexOf(table))), //_buildTableWidget(table),
                     childWhenDragging: Container(),
                     onDragEnd: (details) {
                       setState(() {

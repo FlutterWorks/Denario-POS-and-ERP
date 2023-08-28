@@ -7,6 +7,7 @@ import 'package:denario/Models/User.dart';
 import 'package:denario/User%20Settings/AddUserDialog.dart';
 import 'package:denario/User%20Settings/BusinessScheduleSettings.dart';
 import 'package:denario/User%20Settings/FloorPlanConfig.dart';
+import 'package:denario/User%20Settings/PaymentMethodDialog.dart';
 import 'package:denario/User%20Settings/SocialMediaSettings.dart';
 import 'package:denario/User%20Settings/StoreConfig.dart';
 import 'package:denario/User%20Settings/UserCard.dart';
@@ -674,7 +675,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                               ),
                             ),
                           ),
-                          //Tables
+                          //Business Config
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
@@ -692,26 +693,38 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                   )
                                 ],
                               ),
-                              child: Row(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Configuración del salón',
+                                    'Configuración del negocio',
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600),
                                   ),
-                                  Spacer(),
-                                  IconButton(
-                                      tooltip: 'Editar',
-                                      iconSize: 14,
-                                      splashRadius: 15,
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    StreamProvider<
+                                  SizedBox(height: 20),
+                                  //Tables
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Configuración del salón',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                          tooltip: 'Editar',
+                                          iconSize: 14,
+                                          splashRadius: 15,
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => StreamProvider<
                                                             List<Tables>>.value(
                                                         initialData: [],
                                                         value: DatabaseService()
@@ -721,8 +734,39 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                                         child: FloorPlanConfig(
                                                             userBusiness
                                                                 .businessID))));
-                                      },
-                                      icon: Icon(Icons.edit)),
+                                          },
+                                          icon: Icon(Icons.edit)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  //Payment Methods
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Métodos de pago',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                          tooltip: 'Editar',
+                                          iconSize: 14,
+                                          splashRadius: 15,
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return PaymentMethodDialog(
+                                                      userBusiness.businessID,
+                                                      userBusiness
+                                                          .paymentMethods);
+                                                });
+                                          },
+                                          icon: Icon(Icons.edit)),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),

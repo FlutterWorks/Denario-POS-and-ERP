@@ -157,7 +157,7 @@ class DailySales extends StatelessWidget {
                                       : 3,
                               crossAxisSpacing: 10.0,
                               mainAxisSpacing: 5.0,
-                              childAspectRatio: 1,
+                              childAspectRatio: 1.25,
                             ),
                             scrollDirection: Axis.vertical,
                             itemCount: registerStatus.paymentTypes.length,

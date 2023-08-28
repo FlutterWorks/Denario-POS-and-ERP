@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 
 class UserBusinessSettings extends StatefulWidget {
   final List<UserBusinessData> userBusinesses;
-  UserBusinessSettings(this.userBusinesses);
+  final String activeBusiness;
+  UserBusinessSettings(this.userBusinesses, this.activeBusiness);
 
   @override
   State<UserBusinessSettings> createState() => _UserBusinessSettingsState();
@@ -22,7 +23,14 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
 
   @override
   void initState() {
-    selectedBusiness = widget.userBusinesses[0].businessName;
+    //Find current business's index
+    for (var i = 0; i < widget.userBusinesses.length; i++) {
+      if (widget.userBusinesses[i].businessID == widget.activeBusiness) {
+        selectedBusinessIndex = i;
+      }
+    }
+    selectedBusiness =
+        widget.userBusinesses[selectedBusinessIndex].businessName;
     super.initState();
   }
 

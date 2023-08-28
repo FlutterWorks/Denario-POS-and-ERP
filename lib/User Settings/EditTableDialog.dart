@@ -1,18 +1,15 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Models/Tables.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EditTableDialog extends StatefulWidget {
   final String businessID;
   final Tables currentTable;
   final TablesNotifier tablesNotifier;
+  final int tableIndex;
 
   EditTableDialog(
-    this.businessID,
-    this.currentTable,
-    this.tablesNotifier,
-  );
+      this.businessID, this.currentTable, this.tablesNotifier, this.tableIndex);
   @override
   _EditTableDialogState createState() => _EditTableDialogState();
 }
@@ -22,22 +19,71 @@ class _EditTableDialogState extends State<EditTableDialog> {
   String _selectedShape;
   final _formKey = GlobalKey<FormState>();
 
+  List shapeList = ['Square', 'Circle', 'Wide Rectangle', 'Tall Rectangle'];
+
+  Widget tableShapeIcon(shape) {
+    switch (shape) {
+      case 'Square':
+        return Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Colors.white,
+            border: Border.all(color: Colors.black, width: 1.5),
+          ),
+        );
+      case 'Circle':
+        return Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            border: Border.all(color: Colors.black, width: 1.5),
+          ),
+        );
+      case 'Wide Rectangle':
+        return Container(
+          height: 25,
+          width: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Colors.white,
+            border: Border.all(color: Colors.black, width: 1.5),
+          ),
+        );
+      case 'Tall Rectangle':
+        return Container(
+          height: 50,
+          width: 25,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Colors.white,
+            border: Border.all(color: Colors.black, width: 1.5),
+          ),
+        );
+      default:
+        return Container();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    tableName = widget.currentTable.table;
     _selectedShape = widget.currentTable.shape;
   }
 
   @override
   Widget build(BuildContext context) {
-    final oldtablesNotifier = Provider.of<TablesNotifier>(context);
     return SingleChildScrollView(
       child: Dialog(
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
         child: Container(
             width: 400,
-            height: 300,
+            height: 400,
             constraints: BoxConstraints(minHeight: 350),
             padding: EdgeInsets.all(20),
             child: Form(
@@ -112,41 +158,57 @@ class _EditTableDialogState extends State<EditTableDialog> {
                   SizedBox(height: 10),
                   //Shape
                   Container(
-                    width: 200,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[350]),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: DropdownButton(
-                      isExpanded: true,
-                      underline: SizedBox(),
-                      hint: Text(
-                        'Método de pago',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: Colors.black),
-                      ),
+                    width: double.infinity,
+                    child: Text(
+                      'Forma',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
                           fontSize: 16,
-                          color: Colors.black),
-                      value: _selectedShape,
-                      items: ['Square', 'Circle', 'Rectangle']
-                          .map((shape) => DropdownMenuItem(
-                                value: shape,
-                                child: Text(shape),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedShape = value;
-                        });
-                      },
+                          fontWeight: FontWeight.w400),
                     ),
                   ),
+                  SizedBox(height: 10),
+                  Container(
+                    height: 60,
+                    child: Center(
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: shapeList.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, i) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 3.0),
+                              child: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                  border: Border.all(
+                                      color: (_selectedShape == shapeList[i])
+                                          ? Colors.greenAccent
+                                          : Colors.white10,
+                                      width: 1.5),
+                                ),
+                                child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedShape = shapeList[i];
+                                      });
+                                    },
+                                    child: Center(
+                                        child: tableShapeIcon(shapeList[i]))),
+                              ),
+                            );
+                          }),
+                    ),
+                  ),
+
                   Spacer(),
                   //Save Button
                   Row(
@@ -244,12 +306,13 @@ class _EditTableDialogState extends State<EditTableDialog> {
                                       client: {},
                                       isOccupied: false,
                                       shape: _selectedShape,
-                                      x: 0.5,
-                                      y: 0.5,
+                                      x: widget.currentTable.x,
+                                      y: widget.currentTable.y,
                                       tableSize: 0.009744,
                                       docID: '');
 
-                                  oldtablesNotifier.addTable(newTable);
+                                  widget.tablesNotifier
+                                    ..editTable(newTable, widget.tableIndex);
                                   Navigator.of(context).pop();
                                 }
                               },

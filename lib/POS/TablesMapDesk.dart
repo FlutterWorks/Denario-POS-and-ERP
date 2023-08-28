@@ -41,16 +41,20 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                   tableBaseSize = (table.tableSize *
                           ((MediaQuery.of(context).size.height - 120) *
                               (MediaQuery.of(context).size.width - 36))) /
-                      100;
+                      90;
 
                   if (table.shape == 'Circle') {
                     tableHeight = tableBaseSize;
                     tableWidth = tableBaseSize;
                     tableShape = 'Circle';
-                  } else if (table.shape == 'Rectangle') {
+                  } else if (table.shape == 'Wide Rectangle') {
                     tableHeight = tableBaseSize;
                     tableWidth = tableBaseSize * 2;
-                    tableShape = 'Rectangle';
+                    tableShape = 'Wide Rectangle';
+                  } else if (table.shape == 'Tall Rectangle') {
+                    tableHeight = tableBaseSize * 2;
+                    tableWidth = tableBaseSize;
+                    tableShape = 'Tall Rectangle';
                   } else {
                     tableHeight = tableBaseSize;
                     tableWidth = tableBaseSize;
@@ -58,7 +62,7 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                   }
 
                   return Positioned(
-                      left: (MediaQuery.of(context).size.width - 36) * table.x,
+                      left: (MediaQuery.of(context).size.width - 150) * table.x,
                       top: (MediaQuery.of(context).size.height - 120) * table.y,
                       child: Container(
                         height: tableHeight,
