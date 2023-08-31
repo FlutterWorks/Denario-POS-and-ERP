@@ -27,11 +27,11 @@ class StatsByPaymentMethods extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    //Producto
+                    //Payment Type
                     Container(
                         width: 150,
                         child: Text(
-                          '${paymentMethods[i]}',
+                          '${paymentMethods[i]['Type']}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

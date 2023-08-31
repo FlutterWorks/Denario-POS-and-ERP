@@ -43,7 +43,38 @@ class _MonthStatsState extends State<MonthStats> {
           salesbyOrderType: monthlyStats.salesbyOrderType);
 
       if (dayStats == null) {
-        return Container();
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //Image
+            Container(
+              height: 200,
+              width: 200,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  color: Colors.white,
+                  image: DecorationImage(
+                    image: AssetImage('images/Sales_Empty State.png'),
+                    fit: BoxFit.cover,
+                  )),
+            ),
+            //Title
+            Text(
+              'Nada por acá',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            //Subtitle
+            Text(
+              'La información sobre tus ventas se verá en esta sección',
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400),
+            )
+          ],
+        );
       }
 
       var productsList = monthlyStats.salesAmountbyProduct.keys.toList();

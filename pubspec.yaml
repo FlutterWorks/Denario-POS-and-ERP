@@ -82,6 +82,7 @@ flutter:
     - images/Whatsapp.png
     - images/Twitter.png
     - images/AuthBackground.jpeg
+    - images/Sales_Empty State.png
   #List of sound effects
     - sounds/service-bell-ring.mp3
 

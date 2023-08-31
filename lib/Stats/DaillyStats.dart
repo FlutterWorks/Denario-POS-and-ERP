@@ -129,7 +129,44 @@ class _DailyStatsState extends State<DailyStats> {
       }
 
       if (dayStats == null) {
-        return Container();
+        return Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 30),
+              //Image
+              Container(
+                height: 150,
+                width: 150,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    color: Colors.white,
+                    image: DecorationImage(
+                      image: AssetImage('images/Sales_Empty State.png'),
+                      fit: BoxFit.cover,
+                    )),
+              ),
+              SizedBox(height: 20),
+              //Title
+              Text(
+                'Nada por acá',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              //Subtitle
+              Text(
+                'La información sobre tus ventas se verá en esta sección',
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400),
+              )
+            ],
+          ),
+        );
       }
 
       if (MediaQuery.of(context).size.width > 950) {
