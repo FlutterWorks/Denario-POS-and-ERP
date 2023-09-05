@@ -321,7 +321,7 @@ class _TicketViewState extends State<TicketView> {
                                   padding: const EdgeInsets.only(bottom: 5.0),
                                   child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -395,9 +395,12 @@ class _TicketViewState extends State<TicketView> {
                                         ),
                                         //Amount
                                         Spacer(),
-                                        Text(formatCurrency.format(
-                                            cartList[i]['Total Price'])),
-                                        SizedBox(width: 10),
+                                        Container(
+                                          constraints:
+                                                  BoxConstraints(maxWidth: 150),
+                                          child: Text(formatCurrency.format(
+                                              cartList[i]['Total Price']), overflow: TextOverflow.ellipsis,),
+                                        ),
                                         //Delete
                                         IconButton(
                                             onPressed: () => bloc
@@ -841,7 +844,7 @@ class _TicketViewState extends State<TicketView> {
                                             const EdgeInsets.only(bottom: 5.0),
                                         child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                                MainAxisAlignment.spaceBetween,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
@@ -921,9 +924,12 @@ class _TicketViewState extends State<TicketView> {
                                               ),
                                               //Amount
                                               Spacer(),
-                                              Text(formatCurrency.format(
-                                                  cartList[i]['Total Price'])),
-                                              SizedBox(width: 10),
+                                              Container(
+                                          constraints:
+                                                  BoxConstraints(maxWidth: 150),
+                                          child: Text(formatCurrency.format(
+                                              cartList[i]['Total Price']), overflow: TextOverflow.ellipsis,),
+                                        ),
                                               //Delete
                                               IconButton(
                                                   onPressed: () =>
@@ -1526,7 +1532,7 @@ class _TicketViewState extends State<TicketView> {
                                           const EdgeInsets.only(bottom: 5.0),
                                       child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                              MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
@@ -1607,9 +1613,13 @@ class _TicketViewState extends State<TicketView> {
                                             ),
                                             //Amount
                                             SizedBox(width: 10),
-                                            Text(formatCurrency.format(
-                                                cartList[i]['Total Price'])),
-                                            SizedBox(width: 10),
+                                            Container(
+                                          constraints:
+                                                  BoxConstraints(maxWidth: 150),
+                                          child: Text(formatCurrency.format(
+                                              cartList[i]['Total Price']),overflow: TextOverflow.ellipsis,),
+                                        ),
+                                            
                                             //Delete
                                             IconButton(
                                                 padding: EdgeInsets.all(2),

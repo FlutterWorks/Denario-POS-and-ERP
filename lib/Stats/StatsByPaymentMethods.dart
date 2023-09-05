@@ -42,9 +42,10 @@ class StatsByPaymentMethods extends StatelessWidget {
                         width: 120,
                         child: Center(
                           child: Text(
-                            (dayStats.salesByMedium[(paymentMethods[i])] !=
+                            (dayStats.salesByMedium[(paymentMethods[i]
+                                        ['Type'])] !=
                                     null)
-                                ? '${formatCurrency.format(dayStats.salesByMedium[(paymentMethods[i])])}'
+                                ? '${formatCurrency.format(dayStats.salesByMedium[(paymentMethods[i]['Type'])])}'
                                 : '${formatCurrency.format(0)}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

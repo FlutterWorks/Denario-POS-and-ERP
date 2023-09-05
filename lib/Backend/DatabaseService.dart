@@ -3014,9 +3014,38 @@ class DatabaseService {
         .doc(month)
         .collection('Sales')
         .orderBy("Date", descending: true)
-        .limit(8)
+        .limit(15)
         .snapshots()
         .map(_salesFromSnapshot);
+  }
+
+  Stream<List<Sales>> shortFilteredSalesList(
+      String businessID, DateTime dateFrom, DateTime dateTo) async* {
+    if (dateTo == null) {
+      yield* FirebaseFirestore.instance
+          .collection('ERP')
+          .doc(businessID)
+          .collection(dateFrom.year.toString())
+          .doc(dateFrom.month.toString())
+          .collection('Sales')
+          .where('Date', isGreaterThanOrEqualTo: dateFrom)
+          .where('Date', isLessThan: DateTime.now())
+          .orderBy("Date", descending: true)
+          .snapshots()
+          .map(_salesFromSnapshot);
+    } else {
+      yield* FirebaseFirestore.instance
+          .collection('ERP')
+          .doc(businessID)
+          .collection(dateFrom.year.toString())
+          .doc(dateFrom.month.toString())
+          .collection('Sales')
+          .where('Date', isGreaterThanOrEqualTo: dateFrom)
+          .where('Date', isLessThanOrEqualTo: dateTo)
+          // .where('Order Name', isEqualTo: '1')
+          .snapshots()
+          .map(_salesFromSnapshot);
+    }
   }
 
   //Edit Sale Payment Method
