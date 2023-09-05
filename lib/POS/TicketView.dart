@@ -397,9 +397,12 @@ class _TicketViewState extends State<TicketView> {
                                         Spacer(),
                                         Container(
                                           constraints:
-                                                  BoxConstraints(maxWidth: 150),
-                                          child: Text(formatCurrency.format(
-                                              cartList[i]['Total Price']), overflow: TextOverflow.ellipsis,),
+                                              BoxConstraints(maxWidth: 150),
+                                          child: Text(
+                                            formatCurrency.format(
+                                                cartList[i]['Total Price']),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                         //Delete
                                         IconButton(
@@ -450,7 +453,11 @@ class _TicketViewState extends State<TicketView> {
                         children: [
                           //PopUp Menu
                           MoreTicketPopUp(
-                              categoriesProvider: categoriesProvider),
+                            widget.userProfile.activeBusiness,
+                            categoriesProvider: categoriesProvider,
+                            insideTable: true,
+                            tables: tables,
+                          ),
                           SizedBox(width: 10),
                           //Pagar
                           Expanded(
@@ -925,11 +932,16 @@ class _TicketViewState extends State<TicketView> {
                                               //Amount
                                               Spacer(),
                                               Container(
-                                          constraints:
-                                                  BoxConstraints(maxWidth: 150),
-                                          child: Text(formatCurrency.format(
-                                              cartList[i]['Total Price']), overflow: TextOverflow.ellipsis,),
-                                        ),
+                                                constraints: BoxConstraints(
+                                                    maxWidth: 150),
+                                                child: Text(
+                                                  formatCurrency.format(
+                                                      cartList[i]
+                                                          ['Total Price']),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
                                               //Delete
                                               IconButton(
                                                   onPressed: () =>
@@ -1050,8 +1062,8 @@ class _TicketViewState extends State<TicketView> {
                           ),
                           SizedBox(width: 10),
                           //PopUp Menu
-                          MoreTicketPopUp(
-                              categoriesProvider: categoriesProvider),
+                          MoreTicketPopUp(widget.userProfile.activeBusiness,
+                              categoriesProvider: categoriesProvider, insideTable: false, tables: null,),
                           SizedBox(width: 10),
                           //Pagar
                           Expanded(
@@ -1266,10 +1278,9 @@ class _TicketViewState extends State<TicketView> {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return SelectTableDialog(
-                                            widget.userProfile,
-                                            _orderNamecontroller,
-                                            tables);
+                                        return SelectTableDialog(tables, false, widget.userProfile.activeBusiness,
+                                            orderNameController:
+                                                _orderNamecontroller);
                                       });
                                   // });
                                   break;
@@ -1614,12 +1625,15 @@ class _TicketViewState extends State<TicketView> {
                                             //Amount
                                             SizedBox(width: 10),
                                             Container(
-                                          constraints:
+                                              constraints:
                                                   BoxConstraints(maxWidth: 150),
-                                          child: Text(formatCurrency.format(
-                                              cartList[i]['Total Price']),overflow: TextOverflow.ellipsis,),
-                                        ),
-                                            
+                                              child: Text(
+                                                formatCurrency.format(
+                                                    cartList[i]['Total Price']),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+
                                             //Delete
                                             IconButton(
                                                 padding: EdgeInsets.all(2),
@@ -1896,7 +1910,7 @@ class _TicketViewState extends State<TicketView> {
                         ),
                         SizedBox(width: 10),
                         //PopUp Menu
-                        MoreTicketPopUp(categoriesProvider: categoriesProvider),
+                        MoreTicketPopUp(widget.userProfile.activeBusiness,categoriesProvider: categoriesProvider, insideTable: false, tables: null,),
                         SizedBox(width: 10),
                         //Pagar
                         Expanded(

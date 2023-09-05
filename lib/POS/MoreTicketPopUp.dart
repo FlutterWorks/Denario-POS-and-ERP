@@ -1,13 +1,20 @@
 import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/POS/DiscountDialog.dart';
+import 'package:denario/POS/SelectTableDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../Models/Tables.dart';
+
 class MoreTicketPopUp extends StatefulWidget {
   final CategoryList categoriesProvider;
+  final bool insideTable;
+  final List<Tables> tables;
+  final String activeBusiness;
 
-  MoreTicketPopUp({this.categoriesProvider});
+  MoreTicketPopUp(this.activeBusiness,
+      {this.categoriesProvider, this.insideTable, this.tables});
 
   @override
   _MoreTicketPopUpState createState() => _MoreTicketPopUpState();
@@ -456,54 +463,81 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                     });
                   });
               break;
+            case 3:
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SelectTableDialog(
+                        widget.tables, true, widget.activeBusiness);
+                  });
           }
         },
-        itemBuilder: (context) => [
-              //Discount
-              PopupMenuItem<int>(
-                value: 0,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.local_offer,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                    SizedBox(width: 10),
-                    Text("Descuento")
-                  ],
-                ),
+        itemBuilder: (context) {
+          List<PopupMenuItem<int>> items = [
+            //Discount
+            PopupMenuItem<int>(
+              value: 0,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.local_offer,
+                    color: Colors.black,
+                    size: 16,
+                  ),
+                  SizedBox(width: 10),
+                  Text("Descuento")
+                ],
               ),
-              //Tax
-              PopupMenuItem<int>(
-                value: 1,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.splitscreen,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                    SizedBox(width: 10),
-                    Text("Impuesto")
-                  ],
-                ),
+            ),
+            //Tax
+            PopupMenuItem<int>(
+              value: 1,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.splitscreen,
+                    color: Colors.black,
+                    size: 16,
+                  ),
+                  SizedBox(width: 10),
+                  Text("Impuesto")
+                ],
               ),
-              //Custom item
-              PopupMenuItem<int>(
-                value: 2,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.add,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                    SizedBox(width: 10),
-                    Text("Agregar item")
-                  ],
-                ),
+            ),
+            //Custom item
+            PopupMenuItem<int>(
+              value: 2,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.add,
+                    color: Colors.black,
+                    size: 16,
+                  ),
+                  SizedBox(width: 10),
+                  Text("Agregar item")
+                ],
               ),
-            ]);
+            ),
+          ];
+
+          //Change tables
+          if (widget.insideTable)
+            items.add(PopupMenuItem<int>(
+              value: 3,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.swap_horiz,
+                    color: Colors.black,
+                    size: 16,
+                  ),
+                  SizedBox(width: 10),
+                  Text("Mover mesa")
+                ],
+              ),
+            ));
+          return items;
+        });
   }
 }

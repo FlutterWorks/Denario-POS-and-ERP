@@ -201,8 +201,8 @@ class _POSDeskState extends State<POSDesk> {
                       children: [
                         //Tag selection
                         Container(
-                          height: 50,
-                          width: 500,
+                          height: 35,
+                          width: 300,
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: BouncingScrollPhysics(),
@@ -212,7 +212,7 @@ class _POSDeskState extends State<POSDesk> {
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
                                   child: Container(
-                                    width: 200,
+                                    width: 120,
                                     child: TextButton(
                                       style: ElevatedButton.styleFrom(
                                         foregroundColor: Colors.black,
@@ -220,7 +220,7 @@ class _POSDeskState extends State<POSDesk> {
                                             (selectedTag == tableViewTags[i])
                                                 ? Colors.black
                                                 : Colors.transparent,
-                                        minimumSize: Size(50, 50),
+                                        minimumSize: Size(50, 35),
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -251,7 +251,7 @@ class _POSDeskState extends State<POSDesk> {
                         Spacer(),
                         //Change to product view
                         Container(
-                          height: 50,
+                          height: 35,
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.black,
@@ -463,7 +463,7 @@ class _POSDeskState extends State<POSDesk> {
                                                   subTotal,
                                                   discount,
                                                   tax,
-                                                  total,
+                                                  bloc.totalTicketAmount,
                                                   snapshot.data["Items"],
                                                   '',
                                                   Colors.greenAccent.value,
@@ -487,13 +487,13 @@ class _POSDeskState extends State<POSDesk> {
                                                   subTotal,
                                                   discount,
                                                   tax,
-                                                  total,
+                                                  bloc.totalTicketAmount,
                                                   snapshot.data["Items"],
                                                   orderName,
                                                   '',
                                                   color.value,
                                                   true,
-                                                  'Table Order',
+                                                  'Mesa',
                                                   {
                                                     'Name': snapshot
                                                         .data['Client']['Name'],
@@ -520,7 +520,7 @@ class _POSDeskState extends State<POSDesk> {
                                                 subTotal,
                                                 discount,
                                                 tax,
-                                                total,
+                                                bloc.totalTicketAmount,
                                                 snapshot.data["Items"],
                                                 '',
                                                 Colors.greenAccent.value,
@@ -543,7 +543,7 @@ class _POSDeskState extends State<POSDesk> {
                                                 subTotal,
                                                 discount,
                                                 tax,
-                                                total,
+                                                bloc.totalTicketAmount,
                                                 snapshot.data["Items"],
                                                 orderName,
                                                 '',
@@ -574,7 +574,7 @@ class _POSDeskState extends State<POSDesk> {
                                       SizedBox(width: 10),
                                       Expanded(
                                         child: Container(
-                                          height: 50,
+                                          height: 35,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
@@ -600,7 +600,7 @@ class _POSDeskState extends State<POSDesk> {
                                                               ? Colors.black
                                                               : Colors
                                                                   .transparent,
-                                                      minimumSize: Size(50, 50),
+                                                      minimumSize: Size(50, 35),
                                                     ),
                                                     onPressed: () {
                                                       setState(() {
@@ -705,7 +705,7 @@ class _POSDeskState extends State<POSDesk> {
                             //categories
                             Expanded(
                               child: Container(
-                                height: 50,
+                                height: 35,
                                 width: MediaQuery.of(context).size.width * 0.7,
                                 child: ListView.builder(
                                     shrinkWrap: true,
@@ -723,7 +723,7 @@ class _POSDeskState extends State<POSDesk> {
                                                 (category == categories[i])
                                                     ? Colors.black
                                                     : Colors.transparent,
-                                            minimumSize: Size(50, 50),
+                                            minimumSize: Size(50, 35),
                                           ),
                                           onPressed: () {
                                             setState(() {
@@ -757,7 +757,7 @@ class _POSDeskState extends State<POSDesk> {
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Container(
-                                height: 50,
+                                height: 35,
                                 child: OutlinedButton(
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: Colors.black,

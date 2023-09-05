@@ -32,8 +32,11 @@ class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
             shrinkWrap: true,
             physics: BouncingScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount:
-                  (MediaQuery.of(context).size.width > 1100) ? 5 : 3,
+              crossAxisCount: (MediaQuery.of(context).size.width > 1100)
+                  ? 5
+                  : (MediaQuery.of(context).size.width > 950)
+                      ? 4
+                      : 3,
               crossAxisSpacing: 15.0,
               mainAxisSpacing: 15.0,
               childAspectRatio: 1,
