@@ -214,7 +214,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                           ],
                                           child: Scaffold(
                                               body: NewSaleScreen(
-                                                  widget.businessID, true)),
+                                            widget.businessID,
+                                            fromPOS: true,
+                                          )),
                                         ))),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -699,7 +701,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         false,
                                         [],
                                         invoiceNo,
-                                        widget.register.registerName,
+                                        (widget.register == null)
+                                            ? 'Indpendiente'
+                                            : widget.register.registerName,
                                         widget.isTable,
                                         widget.tableCode,
                                         widget.isSavedOrder,

@@ -122,8 +122,9 @@ class NoPOSDashboard extends StatelessWidget {
                                                                   currentBusiness),
                                                           initialData: null,
                                                           child: NewSaleScreen(
-                                                              currentBusiness,
-                                                              false),
+                                                            currentBusiness,
+                                                            fromPOS: false,
+                                                          ),
                                                         ))),
                                             child: Container(
                                               width: 120,

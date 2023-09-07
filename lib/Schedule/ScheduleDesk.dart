@@ -123,9 +123,9 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                               ],
                                               child: Scaffold(
                                                   body: NewSaleScreen(
-                                                      userProfile
-                                                          .activeBusiness,
-                                                      false)),
+                                                userProfile.activeBusiness,
+                                                fromPOS: false,
+                                              )),
                                             )));
                               },
                               child: Padding(

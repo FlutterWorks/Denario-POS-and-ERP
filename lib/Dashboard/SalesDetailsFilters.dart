@@ -98,7 +98,9 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                     ],
                                     child: Scaffold(
                                         body: NewSaleScreen(
-                                            widget.currentBusiness, false)),
+                                      widget.currentBusiness,
+                                      fromPOS: false,
+                                    )),
                                   )));
                     },
                     child: Padding(

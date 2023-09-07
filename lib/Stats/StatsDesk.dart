@@ -1,4 +1,5 @@
 import 'package:denario/Backend/DatabaseService.dart';
+import 'package:denario/Dashboard/SalesDetailsFilters.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Stats/DaillyStats.dart';
 import 'package:denario/Stats/MonthlyStats.dart';
@@ -7,7 +8,8 @@ import 'package:provider/provider.dart';
 
 class StatsDesk extends StatefulWidget {
   final String businessID;
-  StatsDesk(this.businessID);
+  final CashRegister registerStatus;
+  StatsDesk(this.businessID, this.registerStatus);
   @override
   _StatsDeskState createState() => _StatsDeskState();
 }
@@ -91,7 +93,7 @@ class _StatsDeskState extends State<StatsDesk>
                     //Today
                     Container(
                       height: 35,
-                      width: 120,
+                      width: 100,
                       child: ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: (!showMonthlyStats &&
@@ -119,8 +121,7 @@ class _StatsDeskState extends State<StatsDesk>
                             });
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
+                            padding: const EdgeInsets.all(5),
                             child: Center(
                               child: Text(
                                 'Hoy',
@@ -138,7 +139,7 @@ class _StatsDeskState extends State<StatsDesk>
                     //Month
                     Container(
                       height: 35,
-                      width: 120,
+                      width: 100,
                       child: ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: (showMonthlyStats)
@@ -166,8 +167,7 @@ class _StatsDeskState extends State<StatsDesk>
                             });
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
+                            padding: const EdgeInsets.all(5),
                             child: Center(
                               child: Text(
                                 'Mes',
@@ -184,7 +184,7 @@ class _StatsDeskState extends State<StatsDesk>
                     //Ir a fecha
                     Container(
                       height: 35,
-                      width: 120,
+                      width: 100,
                       child: ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: (!showMonthlyStats &&
@@ -241,8 +241,7 @@ class _StatsDeskState extends State<StatsDesk>
                             });
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
+                            padding: const EdgeInsets.all(5),
                             child: Center(
                               child: Text(
                                 'Ir a fecha',
@@ -252,6 +251,44 @@ class _StatsDeskState extends State<StatsDesk>
                                             color: Colors.white, fontSize: 12)
                                         : TextStyle(
                                             color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          )),
+                    ),
+                    SizedBox(width: 20),
+                    //All
+                    Container(
+                      height: 35,
+                      width: 100,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            overlayColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.hovered))
+                                  return Colors.grey;
+                                if (states.contains(MaterialState.focused) ||
+                                    states.contains(MaterialState.pressed))
+                                  return Colors.grey.shade300;
+                                return null; // Defer to the widget's default.
+                              },
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SalesDetailsFilters(
+                                      widget.businessID,
+                                      widget.registerStatus))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Center(
+                              child: Text(
+                                'Todas',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
                               ),
                             ),
                           )),

@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 class NewSaleScreen extends StatefulWidget {
   final String currentBusiness;
   final bool fromPOS;
-  NewSaleScreen(this.currentBusiness, this.fromPOS);
+  NewSaleScreen(this.currentBusiness, {this.fromPOS});
 
   @override
   State<NewSaleScreen> createState() => _NewSaleScreenState();
@@ -118,6 +118,9 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
         builder: (context, snapshot) {
           orderName = snapshot.data["Order Name"];
           color = snapshot.data["Color"];
+
+          clientController.text = orderName;
+
           return SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -131,8 +134,13 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                       padding: const EdgeInsets.fromLTRB(20, 30, 20, 30),
                       child: IconButton(
                           onPressed: () {
-                            bloc.removeAllFromCart();
-                            Navigator.of(context).pop();
+                            if (widget.fromPOS) {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                            } else {
+                              bloc.removeAllFromCart();
+                              Navigator.of(context).pop();
+                            }
                           },
                           icon: Icon(Icons.arrow_back),
                           iconSize: 20.0),
@@ -281,6 +289,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                         TextSelection.fromPosition(TextPosition(
                                             offset:
                                                 clientController.text.length));
+                                    bloc.changeOrderName(val);
                                   });
                                 },
                               ),

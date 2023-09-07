@@ -284,7 +284,8 @@ class _HomeDeskState extends State<HomeDesk> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => StatsDesk(userProfile.activeBusiness));
+              builder: (context) =>
+                  StatsDesk(userProfile.activeBusiness, registerStatus));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) => ExpensesDesk('Dueñ@'));
@@ -365,7 +366,8 @@ class _HomeDeskState extends State<HomeDesk> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => StatsDesk(userProfile.activeBusiness));
+              builder: (context) =>
+                  StatsDesk(userProfile.activeBusiness, registerStatus));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
@@ -451,7 +453,8 @@ class _HomeDeskState extends State<HomeDesk> {
       pageNavigators = [
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => StatsDesk(userProfile.activeBusiness));
+              builder: (context) =>
+                  StatsDesk(userProfile.activeBusiness, registerStatus));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
