@@ -444,8 +444,10 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                     DateTime.now()
                                                         .year
                                                         .toString()),
-                                            child: ExpenseList(
-                                                userProfile.activeBusiness),
+                                            child: Expanded(
+                                              child: ExpenseList(
+                                                  userProfile.activeBusiness),
+                                            ),
                                           ),
                                     // ExpenseList(userProfile.activeBusiness)
                                   ]),
