@@ -73,7 +73,7 @@ class DailyDesk extends StatelessWidget {
                       )
                     ],
                   ),
-                  height: 500,
+                  height: 400,
                   child: DailyCashBalancing()),
               SizedBox(height: 15),
               //Daily Sales

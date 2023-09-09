@@ -82,7 +82,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                               icon: Icon(Icons.arrow_back)),
                           SizedBox(width: 25),
                           Text(
-                            'Historial de ventas',
+                            'Historial de Gastos',
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
