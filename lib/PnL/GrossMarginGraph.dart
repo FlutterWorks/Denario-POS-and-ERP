@@ -80,116 +80,134 @@ class GrossMarginGraphState extends State<GrossMarginGraph> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.5,
-      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          //Title
-          Text(
-            'Gross Margin by Category',
-            style: TextStyle(color: Colors.black, fontSize: 18),
-          ),
-          const SizedBox(
-            height: 38,
-          ),
-          //Graph
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: BarChart(
-                BarChartData(
-                  maxY: 500000,
-                  gridData: FlGridData(show: false),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    topTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                      showTitles: true,
-                      // getTextStyles: (value) => const TextStyle(
-                      //     color: Color(0xff7589a2),
-                      //     fontWeight: FontWeight.bold,
-                      //     fontSize: 12),
-                      //margin: 20,
-                      getTitlesWidget: (double value, meta) {
-                        List<String> titles = [
-                          "Café",
-                          "Postres",
-                          "Panadería",
-                          "Platos",
-                          "Bebidas",
-                          "Promos",
-                          "Otros"
-                        ];
+      height: MediaQuery.of(context).size.height * 0.6,
+      constraints: BoxConstraints(minHeight: 300),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: <BoxShadow>[
+          new BoxShadow(
+            color: Colors.grey[350],
+            offset: Offset(0.0, 0.0),
+            blurRadius: 10.0,
+          )
+        ],
+      ),
+      child: Center(
+        child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 0.5,
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              //Title
+              Text(
+                'Gross Margin by Category',
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
+              const SizedBox(
+                height: 38,
+              ),
+              //Graph
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: BarChart(
+                    BarChartData(
+                      maxY: 500000,
+                      gridData: FlGridData(show: false),
+                      titlesData: FlTitlesData(
+                        show: true,
+                        topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                          showTitles: true,
+                          // getTextStyles: (value) => const TextStyle(
+                          //     color: Color(0xff7589a2),
+                          //     fontWeight: FontWeight.bold,
+                          //     fontSize: 12),
+                          //margin: 20,
+                          getTitlesWidget: (double value, meta) {
+                            List<String> titles = [
+                              "Café",
+                              "Postres",
+                              "Panadería",
+                              "Platos",
+                              "Bebidas",
+                              "Promos",
+                              "Otros"
+                            ];
 
-                        Widget text = Text(
-                          titles[value.toInt()],
-                          style: const TextStyle(
-                            color: Color(0xff7589a2),
-                            fontWeight: FontWeight.normal,
-                            fontSize: 14,
-                          ),
-                        );
+                            Widget text = Text(
+                              titles[value.toInt()],
+                              style: const TextStyle(
+                                color: Color(0xff7589a2),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14,
+                              ),
+                            );
 
-                        return SideTitleWidget(
-                          axisSide: meta.axisSide,
-                          space: 8, //margin top
-                          child: text,
-                        );
-                      },
-                    )),
-                    rightTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    // leftTitles: AxisTitles(
-                    //   sideTitles: SideTitles(
-                    //     showTitles: true,
-                    //     reservedSize: 5,
-                    //     getTitlesWidget: (value, meta) {
-                    //       const style = TextStyle(
-                    //         color: Color(0xff7589a2),
-                    //         fontWeight: FontWeight.normal,
-                    //         fontSize: 14,
-                    //       );
-                    //       String text;
+                            return SideTitleWidget(
+                              axisSide: meta.axisSide,
+                              space: 8, //margin top
+                              child: text,
+                            );
+                          },
+                        )),
+                        rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        // leftTitles: AxisTitles(
+                        //   sideTitles: SideTitles(
+                        //     showTitles: true,
+                        //     reservedSize: 5,
+                        //     getTitlesWidget: (value, meta) {
+                        //       const style = TextStyle(
+                        //         color: Color(0xff7589a2),
+                        //         fontWeight: FontWeight.normal,
+                        //         fontSize: 14,
+                        //       );
+                        //       String text;
 
-                    //       if (value == 10000) {
-                    //         text = '10k';
-                    //       } else if (value == 50000) {
-                    //         text = '50K';
-                    //       } else if (value == 150000) {
-                    //         text = '150K';
-                    //       } else if (value == 300000) {
-                    //         text = '300K';
-                    //       } else {
-                    //         return Container();
-                    //       }
+                        //       if (value == 10000) {
+                        //         text = '10k';
+                        //       } else if (value == 50000) {
+                        //         text = '50K';
+                        //       } else if (value == 150000) {
+                        //         text = '150K';
+                        //       } else if (value == 300000) {
+                        //         text = '300K';
+                        //       } else {
+                        //         return Container();
+                        //       }
 
-                    //       return SideTitleWidget(
-                    //         axisSide: meta.axisSide,
-                    //         space: 0,
-                    //         child: Container(
-                    //             width: 50, child: Text(text, style: style)),
-                    //       );
-                    //     },
-                    //   ),
-                    // )
+                        //       return SideTitleWidget(
+                        //         axisSide: meta.axisSide,
+                        //         space: 0,
+                        //         child: Container(
+                        //             width: 50, child: Text(text, style: style)),
+                        //       );
+                        //     },
+                        //   ),
+                        // )
+                      ),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      barGroups: showingBarGroups,
+                    ),
                   ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  barGroups: showingBarGroups,
                 ),
               ),
-            ),
+              const SizedBox(
+                height: 12,
+              ),
+            ],
           ),
-          const SizedBox(
-            height: 12,
-          ),
-        ],
+        ),
       ),
     );
   }

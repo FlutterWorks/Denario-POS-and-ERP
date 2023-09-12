@@ -58,8 +58,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
           pinned: false,
           automaticallyImplyLeading: false,
           actions: <Widget>[Container()],
-          expandedHeight:
-              (MediaQuery.of(context).size.width > 1175) ? 150 : 200,
+          expandedHeight: (MediaQuery.of(context).size.width > 800) ? 150 : 200,
           flexibleSpace: FlexibleSpaceBar(
             background: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -140,7 +139,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                         ]),
                   ),
                   //Filters
-                  (MediaQuery.of(context).size.width > 1175)
+                  (MediaQuery.of(context).size.width > 800)
                       ? Container(
                           height: 70,
                           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -425,8 +424,9 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                           ),
                         )
                       : Container(
-                          height: 70,
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          height: 120,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(25),
@@ -438,271 +438,291 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                               )
                             ],
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
                             children: [
-                              //Fecha
-                              Container(
-                                width: 150,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey[350]),
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                padding: EdgeInsets.all(12),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      DateFormat('dd/MM/yyyy').format(initDate),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  //Fecha
+                                  Container(
+                                    width: 150,
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Colors.grey[350]),
+                                      borderRadius: BorderRadius.circular(12.0),
                                     ),
-                                    Spacer(),
-                                    Container(
-                                      height: 20,
-                                      width: 20,
-                                      child: IconButton(
-                                        splashRadius: 1,
-                                        onPressed: () async {
-                                          DateTime pickedDate =
-                                              await showDatePicker(
-                                                  context: context,
-                                                  initialDate: initDate,
-                                                  firstDate: DateTime.now()
-                                                      .subtract(
-                                                          Duration(days: 730)),
-                                                  lastDate: DateTime.now(),
-                                                  builder: ((context, child) {
-                                                    return Theme(
-                                                        data: Theme.of(context)
-                                                            .copyWith(
-                                                          colorScheme:
-                                                              ColorScheme.light(
-                                                            primary: Colors
-                                                                .black, // header background color
-                                                            onPrimary: Colors
-                                                                .white, // header text color
-                                                            onSurface: Colors
-                                                                .black, // body text color
-                                                          ),
-                                                          textButtonTheme:
-                                                              TextButtonThemeData(
-                                                            style: TextButton
-                                                                .styleFrom(
-                                                              foregroundColor:
-                                                                  Colors
-                                                                      .black, // button text color
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        child: child);
-                                                  }));
-                                          setState(() {
-                                            if (pickedDate != null) {
-                                              initDate = pickedDate;
-                                              endDate = DateTime(
-                                                  pickedDate.year,
-                                                  pickedDate.month + 1,
-                                                  0);
-                                              filtered = true;
-                                            }
-                                          });
-                                        },
-                                        padding: EdgeInsets.all(0),
-                                        tooltip: 'Selecciona un fecha inicial',
-                                        iconSize: 18,
-                                        icon: Icon(Icons.calendar_month),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Container(
-                                  width: 150,
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey[350]),
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                  padding: EdgeInsets.all(12),
-                                  child: //(DateTime.now().difference(initDate).inDays > 1)
-                                      // ?
-                                      Row(
-                                    children: [
-                                      Text(
-                                        (endDate == null)
-                                            ? 'Hasta fecha'
-                                            : DateFormat('dd/MM/yyyy')
-                                                .format(endDate),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 16),
-                                      ),
-                                      Spacer(),
-                                      Container(
-                                        height: 20,
-                                        width: 20,
-                                        child: IconButton(
-                                          splashRadius: 1,
-                                          onPressed: () async {
-                                            DateTime pickedDate =
-                                                await showDatePicker(
-                                                    context: context,
-                                                    initialDate: initDate
-                                                        .add(Duration(days: 1)),
-                                                    firstDate: initDate,
-                                                    lastDate: DateTime(
-                                                        initDate.year,
-                                                        initDate.month + 1,
-                                                        0),
-                                                    builder: ((context, child) {
-                                                      return Theme(
-                                                          data:
-                                                              Theme.of(context)
-                                                                  .copyWith(
-                                                            colorScheme:
-                                                                ColorScheme
-                                                                    .light(
-                                                              primary: Colors
-                                                                  .black, // header background color
-                                                              onPrimary: Colors
-                                                                  .white, // header text color
-                                                              onSurface: Colors
-                                                                  .black, // body text color
-                                                            ),
-                                                            textButtonTheme:
-                                                                TextButtonThemeData(
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                foregroundColor:
-                                                                    Colors
-                                                                        .black, // button text color
+                                    padding: EdgeInsets.all(12),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          DateFormat('dd/MM/yyyy')
+                                              .format(initDate),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 16),
+                                        ),
+                                        Spacer(),
+                                        Container(
+                                          height: 20,
+                                          width: 20,
+                                          child: IconButton(
+                                            splashRadius: 1,
+                                            onPressed: () async {
+                                              DateTime pickedDate =
+                                                  await showDatePicker(
+                                                      context: context,
+                                                      initialDate: initDate,
+                                                      firstDate: DateTime.now()
+                                                          .subtract(Duration(
+                                                              days: 730)),
+                                                      lastDate: DateTime.now(),
+                                                      builder:
+                                                          ((context, child) {
+                                                        return Theme(
+                                                            data: Theme.of(
+                                                                    context)
+                                                                .copyWith(
+                                                              colorScheme:
+                                                                  ColorScheme
+                                                                      .light(
+                                                                primary: Colors
+                                                                    .black, // header background color
+                                                                onPrimary: Colors
+                                                                    .white, // header text color
+                                                                onSurface: Colors
+                                                                    .black, // body text color
+                                                              ),
+                                                              textButtonTheme:
+                                                                  TextButtonThemeData(
+                                                                style: TextButton
+                                                                    .styleFrom(
+                                                                  foregroundColor:
+                                                                      Colors
+                                                                          .black, // button text color
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                          child: child);
-                                                    }));
-                                            setState(() {
-                                              if (pickedDate != null) {
-                                                endDate = pickedDate.add(
-                                                    Duration(
-                                                        hours: 23,
-                                                        minutes: 59));
-                                                filtered = true;
-                                              }
-                                            });
-                                          },
-                                          padding: EdgeInsets.all(0),
-                                          tooltip: 'Selecciona un fecha final',
-                                          iconSize: 18,
-                                          icon: Icon(Icons.calendar_month),
-                                        ),
-                                      )
-                                    ],
-                                  )),
-                              SizedBox(width: 20),
-
-                              //Medio de pago
-                              Container(
-                                width: 250,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey[350]),
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: DropdownButton(
-                                  isExpanded: true,
-                                  underline: SizedBox(),
-                                  hint: Text(
-                                    'Método de pago',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16,
-                                        color: Colors.black),
-                                  ),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                  value: paymentType,
-                                  items: paymentTypes.map((i) {
-                                    return new DropdownMenuItem(
-                                      value: i,
-                                      child: new Text(i),
-                                    );
-                                  }).toList(),
-                                  onChanged: (x) {
-                                    setState(() {
-                                      paymentType = x;
-                                      filtered = true;
-                                    });
-                                  },
-                                ),
-                              ),
-
-                              Spacer(),
-                              //Boton de filtrar
-                              Container(
-                                height: 40,
-                                width: 40,
-                                child: Tooltip(
-                                  message: 'Quitar filtros',
-                                  child: OutlinedButton(
-                                    style: ButtonStyle(
-                                      padding: MaterialStateProperty.all<
-                                              EdgeInsetsGeometry>(
-                                          EdgeInsets.all(5)),
-                                      alignment: Alignment.center,
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.white70),
-                                      overlayColor: MaterialStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<MaterialState> states) {
-                                          if (states
-                                              .contains(MaterialState.hovered))
-                                            return Colors.grey.shade300;
-                                          if (states.contains(
-                                                  MaterialState.focused) ||
-                                              states.contains(
-                                                  MaterialState.pressed))
-                                            return Colors.white;
-                                          return null; // Defer to the widget's default.
-                                        },
-                                      ),
+                                                            child: child);
+                                                      }));
+                                              setState(() {
+                                                if (pickedDate != null) {
+                                                  initDate = pickedDate;
+                                                  endDate = DateTime(
+                                                      pickedDate.year,
+                                                      pickedDate.month + 1,
+                                                      0);
+                                                  filtered = true;
+                                                }
+                                              });
+                                            },
+                                            padding: EdgeInsets.all(0),
+                                            tooltip:
+                                                'Selecciona un fecha inicial',
+                                            iconSize: 18,
+                                            icon: Icon(Icons.calendar_month),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        paymentType = 'Todos';
-                                        initDate = DateTime(
+                                  ),
+                                  SizedBox(width: 10),
+                                  Container(
+                                      width: 150,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: Colors.grey[350]),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      padding: EdgeInsets.all(12),
+                                      child: //(DateTime.now().difference(initDate).inDays > 1)
+                                          // ?
+                                          Row(
+                                        children: [
+                                          Text(
+                                            (endDate == null)
+                                                ? 'Hasta fecha'
+                                                : DateFormat('dd/MM/yyyy')
+                                                    .format(endDate),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16),
+                                          ),
+                                          Spacer(),
+                                          Container(
+                                            height: 20,
+                                            width: 20,
+                                            child: IconButton(
+                                              splashRadius: 1,
+                                              onPressed: () async {
+                                                DateTime pickedDate =
+                                                    await showDatePicker(
+                                                        context: context,
+                                                        initialDate: initDate
+                                                            .add(Duration(
+                                                                days: 1)),
+                                                        firstDate: initDate,
+                                                        lastDate: DateTime(
+                                                            initDate.year,
+                                                            initDate.month + 1,
+                                                            0),
+                                                        builder:
+                                                            ((context, child) {
+                                                          return Theme(
+                                                              data: Theme.of(
+                                                                      context)
+                                                                  .copyWith(
+                                                                colorScheme:
+                                                                    ColorScheme
+                                                                        .light(
+                                                                  primary: Colors
+                                                                      .black, // header background color
+                                                                  onPrimary: Colors
+                                                                      .white, // header text color
+                                                                  onSurface: Colors
+                                                                      .black, // body text color
+                                                                ),
+                                                                textButtonTheme:
+                                                                    TextButtonThemeData(
+                                                                  style: TextButton
+                                                                      .styleFrom(
+                                                                    foregroundColor:
+                                                                        Colors
+                                                                            .black, // button text color
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              child: child);
+                                                        }));
+                                                setState(() {
+                                                  if (pickedDate != null) {
+                                                    endDate = pickedDate.add(
+                                                        Duration(
+                                                            hours: 23,
+                                                            minutes: 59));
+                                                    filtered = true;
+                                                  }
+                                                });
+                                              },
+                                              padding: EdgeInsets.all(0),
+                                              tooltip:
+                                                  'Selecciona un fecha final',
+                                              iconSize: 18,
+                                              icon: Icon(Icons.calendar_month),
+                                            ),
+                                          )
+                                        ],
+                                      )),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  //Medio de pago
+                                  Container(
+                                    width: 250,
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Colors.grey[350]),
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 12),
+                                    child: DropdownButton(
+                                      isExpanded: true,
+                                      underline: SizedBox(),
+                                      hint: Text(
+                                        'Método de pago',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+                                            color: Colors.black),
+                                      ),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16,
+                                          color: Colors.black),
+                                      value: paymentType,
+                                      items: paymentTypes.map((i) {
+                                        return new DropdownMenuItem(
+                                          value: i,
+                                          child: new Text(i),
+                                        );
+                                      }).toList(),
+                                      onChanged: (x) {
+                                        setState(() {
+                                          paymentType = x;
+                                          filtered = true;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 20),
+                                  //Boton de filtrar
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    child: Tooltip(
+                                      message: 'Quitar filtros',
+                                      child: OutlinedButton(
+                                        style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<
+                                                  EdgeInsetsGeometry>(
+                                              EdgeInsets.all(5)),
+                                          alignment: Alignment.center,
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white70),
+                                          overlayColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                            (Set<MaterialState> states) {
+                                              if (states.contains(
+                                                  MaterialState.hovered))
+                                                return Colors.grey.shade300;
+                                              if (states.contains(
+                                                      MaterialState.focused) ||
+                                                  states.contains(
+                                                      MaterialState.pressed))
+                                                return Colors.white;
+                                              return null; // Defer to the widget's default.
+                                            },
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            paymentType = 'Todos';
+                                            initDate = DateTime(
+                                                    DateTime.now().year,
+                                                    DateTime.now().month,
+                                                    DateTime.now().day,
+                                                    0,
+                                                    0,
+                                                    0)
+                                                .subtract(Duration(days: 1));
+                                            endDate = DateTime(
                                                 DateTime.now().year,
                                                 DateTime.now().month,
                                                 DateTime.now().day,
-                                                0,
-                                                0,
-                                                0)
-                                            .subtract(Duration(days: 1));
-                                        endDate = DateTime(
-                                            DateTime.now().year,
-                                            DateTime.now().month,
-                                            DateTime.now().day,
-                                            23,
-                                            59,
-                                            59);
-                                        filtered = false;
-                                      });
-                                    },
-                                    child: Center(
-                                        child: Icon(
-                                      Icons.filter_alt_off_outlined,
-                                      color: Colors.black,
-                                      size: 18,
-                                    )),
+                                                23,
+                                                59,
+                                                59);
+                                            filtered = false;
+                                          });
+                                        },
+                                        child: Center(
+                                            child: Icon(
+                                          Icons.filter_alt_off_outlined,
+                                          color: Colors.black,
+                                          size: 18,
+                                        )),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
@@ -721,70 +741,75 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
           flexibleSpace: SizedBox(
             width: double.infinity,
             height: 50,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //Fecha
-                Container(
-                    width: 50,
-                    child: Text(
-                      'Fecha',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black54),
-                    )),
-                //Hora
-                Container(
-                    width: 75,
-                    child: Text(
-                      'Hora',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black54),
-                    )),
-
-                //Nombre
-                Container(
-                    width: 120,
-                    child: Text(
-                      'Cliente',
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black54),
-                    )),
-
-                //Payment Type
-                Container(
-                    width: 120,
-                    child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  //Fecha
+                  Container(
+                      width: 50,
                       child: Text(
-                        'Medio de pago',
+                        'Fecha',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.black54),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )),
-                //Total
-                Container(
-                    width: 70,
-                    child: Center(
+                      )),
+                  //Hora
+                  Container(
+                      width: 75,
                       child: Text(
-                        'Total',
+                        'Hora',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.black54),
+                      )),
+
+                  //Nombre
+                  Container(
+                      width: 120,
+                      child: Text(
+                        'Cliente',
+                        textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                      ),
-                    )),
-                //More Button
-                SizedBox(width: 45)
-              ],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black54),
+                      )),
+
+                  //Payment Type
+                  Container(
+                      width: 120,
+                      child: Center(
+                        child: Text(
+                          'Medio de pago',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )),
+                  //Total
+                  Container(
+                      width: 70,
+                      child: Center(
+                        child: Text(
+                          'Total',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )),
+                  //More Button
+                  SizedBox(width: 45)
+                ],
+              ),
             ),
           ),
         ),

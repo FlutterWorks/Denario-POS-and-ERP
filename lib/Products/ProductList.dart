@@ -99,37 +99,85 @@ class ProductList extends StatelessWidget {
                                     BorderRadius.all(Radius.circular(25)),
                                 color: Colors.grey.shade300)),
                     //Nombre
-                    Container(
-                        width: 150,
-                        child: Text(
-                          products[i].product,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.black),
-                        )),
+                    (MediaQuery.of(context).size.width > 975)
+                        ? Container(
+                            width: 150,
+                            child: Text(
+                              products[i].product,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ))
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              (MediaQuery.of(context).size.width <= 800)
+                                  ? Container(
+                                      width: 150,
+                                      child: Text(
+                                        products[i].code,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.black54),
+                                      ))
+                                  : SizedBox(),
+                              (MediaQuery.of(context).size.width <= 800)
+                                  ? SizedBox(height: 5)
+                                  : SizedBox(),
+                              Container(
+                                  width: 150,
+                                  child: Text(
+                                    products[i].product,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  )),
+                              SizedBox(height: 5),
+                              Container(
+                                  width: 150,
+                                  child: Text(
+                                    products[i].category,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 11),
+                                  ))
+                            ],
+                          ),
                     //Código
-                    Container(
-                        width: 100,
-                        child: Text(
-                          products[i].code,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black54),
-                        )),
+                    (MediaQuery.of(context).size.width > 800)
+                        ? Container(
+                            width: 100,
+                            child: Text(
+                              products[i].code,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black54),
+                            ))
+                        : SizedBox(),
 
                     //Categoria
-                    Container(
-                        width: 150,
-                        child: Text(
-                          products[i].category,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
-                        )),
+                    (MediaQuery.of(context).size.width > 975)
+                        ? Container(
+                            width: 150,
+                            child: Text(
+                              products[i].category,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.black),
+                            ))
+                        : SizedBox(),
 
                     //Precio
                     Container(
@@ -169,17 +217,6 @@ class ProductList extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )),
-                    //More Button
-                    IconButton(
-                      icon: Icon(Icons.edit, color: Colors.black, size: 20),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NewProduct(businessID,
-                                    categories, businessField, products[i])));
-                      },
-                    )
                   ],
                 ),
               ),

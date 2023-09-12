@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:denario/PnL/GrossMarginGraph.dart';
 import 'package:denario/PnL/PnLCard.dart';
 import 'package:denario/PnL/PnlMargins.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,19 @@ class PnL extends StatelessWidget {
         .get();
     return docRef;
   }
+
+  double cafeVentas;
+  double cafeCostos;
+  double postresVentas;
+  double postresCostos;
+  double panVentas;
+  double panCostos;
+  double platosVentas;
+  double platosCostos;
+  double bebidasVentas;
+  double bebidasCostos;
+  double promosVentas;
+  double otrosCostos;
 
   // @override
   // void initState() {
@@ -109,25 +123,121 @@ class PnL extends StatelessWidget {
                 totalGastosdelLocal -
                 totalOtrosGastos;
 
+            try {
+              cafeVentas = snapshot.data['Ventas de Café'];
+            } catch (e) {
+              cafeVentas = 0;
+            }
+            try {
+              cafeCostos = snapshot.data['Costos de Café'];
+            } catch (e) {
+              cafeCostos = 0;
+            }
+            try {
+              postresVentas = snapshot.data['Ventas de Postres'];
+            } catch (e) {
+              postresVentas = 0;
+            }
+            try {
+              postresCostos = snapshot.data['Costos de Postres'];
+            } catch (e) {
+              postresCostos = 0;
+            }
+            try {
+              panVentas = snapshot.data['Ventas de Panadería'];
+            } catch (e) {
+              panVentas = 0;
+            }
+            try {
+              panCostos = snapshot.data['Costos de Panadería'];
+            } catch (e) {
+              panCostos = 0;
+            }
+            try {
+              platosVentas = snapshot.data['Ventas de Platos'];
+            } catch (e) {
+              platosVentas = 0;
+            }
+            try {
+              platosCostos = snapshot.data['Costos de Platos'];
+            } catch (e) {
+              platosCostos = 0;
+            }
+            try {
+              bebidasVentas = snapshot.data['Ventas de Bebidas'];
+            } catch (e) {
+              bebidasVentas = 0;
+            }
+            try {
+              bebidasCostos = snapshot.data['Costos de Bebidas'];
+            } catch (e) {
+              bebidasCostos = 0;
+            }
+            try {
+              promosVentas = snapshot.data['Ventas de Promos'];
+            } catch (e) {
+              promosVentas = 0;
+            }
+            try {
+              otrosCostos = snapshot.data['Otros Costos'];
+            } catch (e) {
+              otrosCostos = 0;
+            }
+
             return Container(
               width: MediaQuery.of(context).size.width * 0.9,
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    //Margins and Graphs
-                    PnlMargins(
-                      grossMargin: grossMargin,
-                      gross: gross,
-                      operatingMargin: operatingMargin,
-                      operating: operating,
-                      profitMargin: profitMargin,
-                      profit: profit,
-                      snapshot: snapshot,
-                    ),
-                    //PnL Card
-                    PnLCard(pnlAccountGroups, pnlMapping, snapshot),
-                  ]),
+              child: (MediaQuery.of(context).size.width > 1100)
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                          //Margins and Graphs
+                          PnlMargins(
+                            grossMargin: grossMargin,
+                            gross: gross,
+                            operatingMargin: operatingMargin,
+                            operating: operating,
+                            profitMargin: profitMargin,
+                            profit: profit,
+                            snapshot: snapshot,
+                          ),
+                          //PnL Card
+                          PnLCard(pnlAccountGroups, pnlMapping, snapshot),
+                        ])
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                          //PnL Card
+                          PnLCard(pnlAccountGroups, pnlMapping, snapshot),
+                          SizedBox(height: 20),
+                          //Margins
+                          PnlMargins(
+                            grossMargin: grossMargin,
+                            gross: gross,
+                            operatingMargin: operatingMargin,
+                            operating: operating,
+                            profitMargin: profitMargin,
+                            profit: profit,
+                            snapshot: snapshot,
+                          ),
+                          SizedBox(height: 20),
+                          //Graph
+                          GrossMarginGraph(
+                            cafeVentas: cafeVentas,
+                            cafeCostos: cafeCostos,
+                            postresVentas: postresVentas,
+                            postresCostos: postresCostos,
+                            panVentas: panVentas,
+                            panCostos: panCostos,
+                            platosVentas: platosVentas,
+                            platosCostos: platosCostos,
+                            bebidasVentas: bebidasVentas,
+                            bebidasCostos: bebidasCostos,
+                            promosVentas: promosVentas,
+                            otrosCostos: otrosCostos,
+                          )
+                        ]),
             );
           } else {
             return Center();

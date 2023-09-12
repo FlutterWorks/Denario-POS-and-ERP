@@ -1,4 +1,3 @@
-import 'package:denario/PnL/GrossMarginGraph.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -90,160 +89,40 @@ class _PnlMarginsState extends State<PnlMargins> {
     );
   }
 
-  double cafeVentas;
-  double cafeCostos;
-  double postresVentas;
-  double postresCostos;
-  double panVentas;
-  double panCostos;
-  double platosVentas;
-  double platosCostos;
-  double bebidasVentas;
-  double bebidasCostos;
-  double promosVentas;
-  double otrosCostos;
-
   @override
   Widget build(BuildContext context) {
-    try {
-      cafeVentas = widget.snapshot.data['Ventas de Café'];
-    } catch (e) {
-      cafeVentas = 0;
-    }
-    try {
-      cafeCostos = widget.snapshot.data['Costos de Café'];
-    } catch (e) {
-      cafeCostos = 0;
-    }
-    try {
-      postresVentas = widget.snapshot.data['Ventas de Postres'];
-    } catch (e) {
-      postresVentas = 0;
-    }
-    try {
-      postresCostos = widget.snapshot.data['Costos de Postres'];
-    } catch (e) {
-      postresCostos = 0;
-    }
-    try {
-      panVentas = widget.snapshot.data['Ventas de Panadería'];
-    } catch (e) {
-      panVentas = 0;
-    }
-    try {
-      panCostos = widget.snapshot.data['Costos de Panadería'];
-    } catch (e) {
-      panCostos = 0;
-    }
-    try {
-      platosVentas = widget.snapshot.data['Ventas de Platos'];
-    } catch (e) {
-      platosVentas = 0;
-    }
-    try {
-      platosCostos = widget.snapshot.data['Costos de Platos'];
-    } catch (e) {
-      platosCostos = 0;
-    }
-    try {
-      bebidasVentas = widget.snapshot.data['Ventas de Bebidas'];
-    } catch (e) {
-      bebidasVentas = 0;
-    }
-    try {
-      bebidasCostos = widget.snapshot.data['Costos de Bebidas'];
-    } catch (e) {
-      bebidasCostos = 0;
-    }
-    try {
-      promosVentas = widget.snapshot.data['Ventas de Promos'];
-    } catch (e) {
-      promosVentas = 0;
-    }
-    try {
-      otrosCostos = widget.snapshot.data['Otros Costos'];
-    } catch (e) {
-      otrosCostos = 0;
-    }
-
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              //Margins
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  //Gross Margin
-                  marginBox(
-                      'Gross Margin',
-                      (!widget.grossMargin.isNaN &&
-                              !widget.grossMargin.isInfinite)
-                          ? widget.grossMargin
-                          : 0,
-                      widget.gross,
-                      context),
-                  Spacer(),
-                  //Op. Margin
-                  marginBox(
-                      'Operating Margin',
-                      (!widget.operatingMargin.isNaN &&
-                              !widget.operatingMargin.isInfinite)
-                          ? widget.operatingMargin
-                          : 0,
-                      widget.operating,
-                      context),
-                  Spacer(),
-                  //Profit Margin
-                  marginBox(
-                      'Profit Margin',
-                      (!widget.profitMargin.isNaN &&
-                              !widget.profitMargin.isInfinite)
-                          ? widget.profitMargin
-                          : 0,
-                      widget.profit,
-                      context),
-                ],
-              ),
-              SizedBox(height: 20),
-              //Graph
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.6,
-                constraints: BoxConstraints(minHeight: 300),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: <BoxShadow>[
-                    new BoxShadow(
-                      color: Colors.grey[350],
-                      offset: Offset(0.0, 0.0),
-                      blurRadius: 10.0,
-                    )
-                  ],
-                ),
-                child: Center(
-                    child: GrossMarginGraph(
-                  cafeVentas: cafeVentas,
-                  cafeCostos: cafeCostos,
-                  postresVentas: postresVentas,
-                  postresCostos: postresCostos,
-                  panVentas: panVentas,
-                  panCostos: panCostos,
-                  platosVentas: platosVentas,
-                  platosCostos: platosCostos,
-                  bebidasVentas: bebidasVentas,
-                  bebidasCostos: bebidasCostos,
-                  promosVentas: promosVentas,
-                  otrosCostos: otrosCostos,
-                )),
-              )
-            ]),
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        //Gross Margin
+        marginBox(
+            'Gross Margin',
+            (!widget.grossMargin.isNaN && !widget.grossMargin.isInfinite)
+                ? widget.grossMargin
+                : 0,
+            widget.gross,
+            context),
+        Spacer(),
+        //Op. Margin
+        marginBox(
+            'Operating Margin',
+            (!widget.operatingMargin.isNaN &&
+                    !widget.operatingMargin.isInfinite)
+                ? widget.operatingMargin
+                : 0,
+            widget.operating,
+            context),
+        Spacer(),
+        //Profit Margin
+        marginBox(
+            'Profit Margin',
+            (!widget.profitMargin.isNaN && !widget.profitMargin.isInfinite)
+                ? widget.profitMargin
+                : 0,
+            widget.profit,
+            context),
+      ],
     );
   }
 }

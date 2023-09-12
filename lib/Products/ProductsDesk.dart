@@ -675,27 +675,31 @@ class _ProductDeskState extends State<ProductDesk> {
                         fontWeight: FontWeight.bold, color: Colors.black54),
                   )),
               //Código
-              Container(
-                  width: 100,
-                  child: Text(
-                    'Código',
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black54),
-                  )),
+              (MediaQuery.of(context).size.width > 800)
+                  ? Container(
+                      width: 100,
+                      child: Text(
+                        'Código',
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black54),
+                      ))
+                  : SizedBox(),
 
               //Categoria
-              Container(
-                  width: 150,
-                  child: Text(
-                    'Categoría',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black54),
-                  )),
+              (MediaQuery.of(context).size.width > 975)
+                  ? Container(
+                      width: 150,
+                      child: Text(
+                        'Categoría',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black54),
+                      ))
+                  : SizedBox(),
 
               //Precio
               Container(
@@ -731,9 +735,6 @@ class _ProductDeskState extends State<ProductDesk> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   )),
-
-              //More Button
-              SizedBox(width: 35)
             ],
           ),
         ),

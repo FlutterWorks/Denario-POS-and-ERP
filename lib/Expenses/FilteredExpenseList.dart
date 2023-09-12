@@ -51,122 +51,160 @@ class FilteredExpenseList extends StatelessWidget {
         }
       }
 
-      return Container(
-        color: i.isOdd ? Colors.grey[100] : Colors.white,
-        width: double.infinity,
-        padding: EdgeInsets.all(5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //Fecha
-            Container(
-                width: 100,
-                child: Text(
-                  DateFormat.MMMd().format(expensesList[i].date).toString() +
-                      " | " +
-                      DateFormat('HH:mm')
-                          .format(expensesList[i].date)
-                          .toString(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                  ),
-                  textAlign: TextAlign.center,
-                )),
-            //CostType
-            Container(
-                width: 150,
-                child: Column(
-                  children: [
-                    Text(
-                      '${expensesList[i].costType}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 3),
-                    Text(
-                      '$account',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 11,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                )),
-            //Vendor
-            Container(
-                width: 120,
-                child: Text(
-                  '${expensesList[i].vendor}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                )),
-            //Product
-            Container(
-                width: 120,
-                child: Text(
-                  (expensesList[i].items.isEmpty)
-                      ? 'Sin descripción'
-                      : (expensesList[i].items.length > 1)
-                          ? 'Varios'
-                          : (expensesList[i].items[0].product == '')
-                              ? 'Sin descripción'
-                              : '${expensesList[i].items[0].product}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                )),
-            //Payment Type
-            Container(
-                width: 120,
-                child: Center(
+      return TextButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return StreamProvider<DailyTransactions>.value(
+                    initialData: null,
+                    value: DatabaseService().dailyTransactions(
+                        businessID, registerStatus.registerName),
+                    child: SingleExpenseDialog(
+                        expensesList[i], businessID, registerStatus));
+              });
+        },
+        child: Container(
+          color: i.isOdd ? Colors.grey[100] : Colors.white,
+          width: double.infinity,
+          padding: EdgeInsets.all(5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //Fecha
+              Container(
+                  width: 100,
                   child: Text(
-                    '${expensesList[i].paymentType}',
-                    style: TextStyle(color: Colors.grey),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                )),
-            //Total
-            Container(
-                width: 70,
-                child: Center(
-                  child: Text(
-                    '${formatCurrency.format(expensesList[i].total)}',
+                    DateFormat.MMMd().format(expensesList[i].date).toString() +
+                        " | " +
+                        DateFormat('HH:mm')
+                            .format(expensesList[i].date)
+                            .toString(),
                     style: TextStyle(
-                        fontWeight: FontWeight.w800, color: Colors.black),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                        fontWeight: FontWeight.normal, color: Colors.black),
                     textAlign: TextAlign.center,
-                  ),
-                )),
-            //More Button
-            IconButton(
-              icon: Icon(Icons.search, color: Colors.black, size: 20),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return StreamProvider<DailyTransactions>.value(
-                          initialData: null,
-                          value: DatabaseService().dailyTransactions(
-                              businessID, registerStatus.registerName),
-                          child: SingleExpenseDialog(
-                              expensesList[i], businessID, registerStatus));
-                    });
-              },
-            )
-          ],
+                  )),
+              //CostType
+              Container(
+                  width: 150,
+                  child: Column(
+                    children: [
+                      Text(
+                        '${expensesList[i].costType}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 3),
+                      Text(
+                        '$account',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  )),
+              //Vendor
+              (MediaQuery.of(context).size.width > 850)
+                  ? Container(
+                      width: 120,
+                      child: Text(
+                        '${expensesList[i].vendor}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black),
+                      ))
+                  : Column(
+                      children: [
+                        Container(
+                            width: 120,
+                            child: Text(
+                              '${expensesList[i].vendor}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            )),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                            width: 120,
+                            child: Text(
+                              (expensesList[i].items.isEmpty)
+                                  ? 'Sin descripción'
+                                  : (expensesList[i].items.length > 1)
+                                      ? 'Varios'
+                                      : (expensesList[i].items[0].product == '')
+                                          ? 'Sin descripción'
+                                          : '${expensesList[i].items[0].product}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 11,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            )),
+                      ],
+                    ),
+              //Product
+              (MediaQuery.of(context).size.width > 850)
+                  ? Container(
+                      width: 120,
+                      child: Text(
+                        (expensesList[i].items.isEmpty)
+                            ? 'Sin descripción'
+                            : (expensesList[i].items.length > 1)
+                                ? 'Varios'
+                                : (expensesList[i].items[0].product == '')
+                                    ? 'Sin descripción'
+                                    : '${expensesList[i].items[0].product}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black),
+                      ))
+                  : SizedBox(),
+              //Payment Type
+              Container(
+                  width: 120,
+                  child: Center(
+                    child: Text(
+                      '${expensesList[i].paymentType}',
+                      style: TextStyle(color: Colors.grey),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+              //Total
+              Container(
+                  width: 100,
+                  child: Center(
+                    child: Text(
+                      '${formatCurrency.format(expensesList[i].total)}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800, color: Colors.black),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+            ],
+          ),
         ),
       );
     }, childCount: expensesList.length));
