@@ -33,8 +33,10 @@ class _PnlMarginsState extends State<PnlMargins> {
   Widget marginBox(String marginName, double marginPercentage,
       double marginNumber, BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.18,
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      padding: EdgeInsets.symmetric(
+          horizontal: (MediaQuery.of(context).size.width > 800) ? 30 : 20,
+          vertical: 15),
+      width: (MediaQuery.of(context).size.width > 800) ? 200 : 170,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
@@ -69,60 +71,67 @@ class _PnlMarginsState extends State<PnlMargins> {
             ),
             SizedBox(height: 10),
             //Margin
-            Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  //Number
-                  Text(
-                    '${marginPercentage.toStringAsFixed(0)}',
-                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
-                  ),
-                  SizedBox(width: 5),
-                  //%
-                  Text(
-                    '%',
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
-                  ),
-                ]),
+            Container(
+              width: double.infinity,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    //Number
+                    Text(
+                      '${marginPercentage.toStringAsFixed(0)}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
+                    ),
+                    SizedBox(width: 5),
+                    //%
+                    Text(
+                      '%',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+                    ),
+                  ]),
+            ),
           ]),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        //Gross Margin
-        marginBox(
-            'Gross Margin',
-            (!widget.grossMargin.isNaN && !widget.grossMargin.isInfinite)
-                ? widget.grossMargin
-                : 0,
-            widget.gross,
-            context),
-        Spacer(),
-        //Op. Margin
-        marginBox(
-            'Operating Margin',
-            (!widget.operatingMargin.isNaN &&
-                    !widget.operatingMargin.isInfinite)
-                ? widget.operatingMargin
-                : 0,
-            widget.operating,
-            context),
-        Spacer(),
-        //Profit Margin
-        marginBox(
-            'Profit Margin',
-            (!widget.profitMargin.isNaN && !widget.profitMargin.isInfinite)
-                ? widget.profitMargin
-                : 0,
-            widget.profit,
-            context),
-      ],
+    return Container(
+      width: double.infinity,
+      height: 120,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          //Gross Margin
+          marginBox(
+              'Gross Margin',
+              (!widget.grossMargin.isNaN && !widget.grossMargin.isInfinite)
+                  ? widget.grossMargin
+                  : 0,
+              widget.gross,
+              context),
+          //Op. Margin
+          marginBox(
+              'Operating Margin',
+              (!widget.operatingMargin.isNaN &&
+                      !widget.operatingMargin.isInfinite)
+                  ? widget.operatingMargin
+                  : 0,
+              widget.operating,
+              context),
+          //Profit Margin
+          marginBox(
+              'Profit Margin',
+              (!widget.profitMargin.isNaN && !widget.profitMargin.isInfinite)
+                  ? widget.profitMargin
+                  : 0,
+              widget.profit,
+              context),
+        ],
+      ),
     );
   }
 }

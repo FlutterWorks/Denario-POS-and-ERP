@@ -20,7 +20,7 @@ class _PnLCardState extends State<PnLCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.3,
+      width: double.infinity,
       padding: EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -74,7 +74,6 @@ class _PnLCardState extends State<PnLCard> {
             children: [
               //Sub Accounts
               Container(
-                width: MediaQuery.of(context).size.width * 0.28,
                 padding: EdgeInsets.all(5),
                 child: ListView.builder(
                     shrinkWrap: true,

@@ -4,7 +4,7 @@ import 'package:denario/PnL/PnLCard.dart';
 import 'package:denario/PnL/PnlMargins.dart';
 import 'package:flutter/material.dart';
 
-class PnL extends StatelessWidget {
+class PnL extends StatefulWidget {
   final List pnlAccountGroups;
   final Map<dynamic, dynamic> pnlMapping;
   final int pnlMonth;
@@ -18,24 +18,25 @@ class PnL extends StatelessWidget {
       this.pnlYear,
       this.activeBusiness});
 
+  @override
+  State<PnL> createState() => _PnLState();
+}
+
+class _PnLState extends State<PnL> {
 //   @override
-//   _PnLState createState() => _PnLState();
-// }
-
-// class _PnLState extends State<PnL> {
-//   final formatCurrency = new NumberFormat.simpleCurrency();
-
   Future currentValue() async {
     var firestore = FirebaseFirestore.instance;
 
     var docRef = firestore
         .collection('ERP')
-        .doc(activeBusiness)
-        .collection((pnlYear).toString())
-        .doc((pnlMonth).toString())
+        .doc(widget.activeBusiness)
+        .collection((widget.pnlYear).toString())
+        .doc((widget.pnlMonth).toString())
         .get();
     return docRef;
   }
+
+  Future currentValuesBuilt;
 
   double cafeVentas;
   double cafeCostos;
@@ -50,16 +51,17 @@ class PnL extends StatelessWidget {
   double promosVentas;
   double otrosCostos;
 
-  // @override
-  // void initState() {
-  //   currentValuesBuilt = currentValue();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    currentValuesBuilt = currentValue();
+    super.initState();
+  }
 
+  // @override
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: currentValue(),
+        future: currentValuesBuilt,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             double totalVentas;
@@ -186,31 +188,54 @@ class PnL extends StatelessWidget {
 
             return Container(
               width: MediaQuery.of(context).size.width * 0.9,
-              child: (MediaQuery.of(context).size.width > 1100)
+              child: (MediaQuery.of(context).size.width > 1150)
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                           //Margins and Graphs
-                          PnlMargins(
-                            grossMargin: grossMargin,
-                            gross: gross,
-                            operatingMargin: operatingMargin,
-                            operating: operating,
-                            profitMargin: profitMargin,
-                            profit: profit,
-                            snapshot: snapshot,
+                          Expanded(
+                            child: Column(
+                              children: [
+                                PnlMargins(
+                                  grossMargin: grossMargin,
+                                  gross: gross,
+                                  operatingMargin: operatingMargin,
+                                  operating: operating,
+                                  profitMargin: profitMargin,
+                                  profit: profit,
+                                  snapshot: snapshot,
+                                ),
+                                SizedBox(height: 15),
+                                GrossMarginGraph(
+                                  cafeVentas: cafeVentas,
+                                  cafeCostos: cafeCostos,
+                                  postresVentas: postresVentas,
+                                  postresCostos: postresCostos,
+                                  panVentas: panVentas,
+                                  panCostos: panCostos,
+                                  platosVentas: platosVentas,
+                                  platosCostos: platosCostos,
+                                  bebidasVentas: bebidasVentas,
+                                  bebidasCostos: bebidasCostos,
+                                  promosVentas: promosVentas,
+                                  otrosCostos: otrosCostos,
+                                )
+                              ],
+                            ),
                           ),
+                          SizedBox(width: 20),
                           //PnL Card
-                          PnLCard(pnlAccountGroups, pnlMapping, snapshot),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            child: PnLCard(widget.pnlAccountGroups,
+                                widget.pnlMapping, snapshot),
+                          ),
                         ])
                   : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                          //PnL Card
-                          PnLCard(pnlAccountGroups, pnlMapping, snapshot),
-                          SizedBox(height: 20),
                           //Margins
                           PnlMargins(
                             grossMargin: grossMargin,
@@ -221,6 +246,10 @@ class PnL extends StatelessWidget {
                             profit: profit,
                             snapshot: snapshot,
                           ),
+                          SizedBox(height: 20),
+                          //PnL Card
+                          PnLCard(widget.pnlAccountGroups, widget.pnlMapping,
+                              snapshot),
                           SizedBox(height: 20),
                           //Graph
                           GrossMarginGraph(
