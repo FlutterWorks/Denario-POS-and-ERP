@@ -42,73 +42,99 @@ class SuppliesList extends StatelessWidget {
             } else {
               description = supplies[i].suppliers.first;
             }
-            return Container(
-              color: i.isOdd ? Colors.grey[100] : Colors.white,
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 5),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //Suppliers
-                  Container(
-                      width: 150,
-                      child: Text(
-                        description,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
-                      )),
-                  //Nombre
-                  Container(
-                      width: 150,
-                      child: Text(
-                        supplies[i].supply,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
-                      )),
-                  //QTY
-                  Container(
-                      width: 150,
-                      child: Text(
-                        supplies[i].qty.toString(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
-                      )),
-                  //Unit
-                  Container(
-                      width: 100,
-                      child: Text(
-                        supplies[i].unit,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
-                      )),
-                  //Precio
-                  Container(
-                      width: 150,
-                      child: Text(
-                        '${formatCurrency.format(supplies[i].price)}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.black),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      )),
-                  //More Button
-                  IconButton(
-                    icon: Icon(Icons.edit, color: Colors.black, size: 20),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  NewSupply(currentBusiness, supplies[i])));
-                    },
-                  )
-                ],
+            return TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            NewSupply(currentBusiness, supplies[i])));
+              },
+              child: Container(
+                color: i.isOdd ? Colors.grey[100] : Colors.white,
+                width: double.infinity,
+                height: 50,
+                padding: EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //Suppliers
+                    (MediaQuery.of(context).size.width > 950)
+                        ? Container(
+                            width: 150,
+                            child: Text(
+                              description,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.black),
+                            ))
+                        : SizedBox(),
+                    //Nombre
+                    (MediaQuery.of(context).size.width > 950)
+                        ? Container(
+                            width: 150,
+                            child: Text(
+                              supplies[i].supply,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.black),
+                            ))
+                        : Column(
+                            children: [
+                              Container(
+                                  width: 150,
+                                  child: Text(
+                                    supplies[i].supply,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                              SizedBox(height: 5),
+                              Container(
+                                  width: 150,
+                                  child: Text(
+                                    description,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 11),
+                                  ))
+                            ],
+                          ),
+                    //QTY
+                    Container(
+                        width: 150,
+                        child: Text(
+                          supplies[i].qty.toString(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                        )),
+                    //Unit
+                    Container(
+                        width: 100,
+                        child: Text(
+                          supplies[i].unit,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                        )),
+                    //Precio
+                    Container(
+                        width: 150,
+                        child: Text(
+                          '${formatCurrency.format(supplies[i].price)}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                  ],
+                ),
               ),
             );
           } else if (supplies.length < limitSearch) {
