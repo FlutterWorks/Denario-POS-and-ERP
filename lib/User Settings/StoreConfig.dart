@@ -74,7 +74,9 @@ class _StoreConfigState extends State<StoreConfig> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       child: Container(
         height: 500,
-        width: MediaQuery.of(context).size.width * 0.5,
+        width: (MediaQuery.of(context).size.width > 900)
+            ? MediaQuery.of(context).size.width * 0.5
+            : MediaQuery.of(context).size.width * 0.8,
         padding: EdgeInsets.all(20),
         child: ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),

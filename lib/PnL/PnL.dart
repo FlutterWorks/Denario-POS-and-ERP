@@ -207,20 +207,7 @@ class _PnLState extends State<PnL> {
                                   snapshot: snapshot,
                                 ),
                                 SizedBox(height: 15),
-                                GrossMarginGraph(
-                                  cafeVentas: cafeVentas,
-                                  cafeCostos: cafeCostos,
-                                  postresVentas: postresVentas,
-                                  postresCostos: postresCostos,
-                                  panVentas: panVentas,
-                                  panCostos: panCostos,
-                                  platosVentas: platosVentas,
-                                  platosCostos: platosCostos,
-                                  bebidasVentas: bebidasVentas,
-                                  bebidasCostos: bebidasCostos,
-                                  promosVentas: promosVentas,
-                                  otrosCostos: otrosCostos,
-                                )
+                                GrossMarginGraph(widget.activeBusiness)
                               ],
                             ),
                           ),
@@ -253,18 +240,7 @@ class _PnLState extends State<PnL> {
                           SizedBox(height: 20),
                           //Graph
                           GrossMarginGraph(
-                            cafeVentas: cafeVentas,
-                            cafeCostos: cafeCostos,
-                            postresVentas: postresVentas,
-                            postresCostos: postresCostos,
-                            panVentas: panVentas,
-                            panCostos: panCostos,
-                            platosVentas: platosVentas,
-                            platosCostos: platosCostos,
-                            bebidasVentas: bebidasVentas,
-                            bebidasCostos: bebidasCostos,
-                            promosVentas: promosVentas,
-                            otrosCostos: otrosCostos,
+                            widget.activeBusiness,
                           )
                         ]),
             );

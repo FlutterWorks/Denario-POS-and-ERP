@@ -706,38 +706,41 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                   ),
                                   SizedBox(height: 20),
                                   //Tables
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Configuración del salón',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      Spacer(),
-                                      IconButton(
-                                          tooltip: 'Editar',
-                                          iconSize: 14,
-                                          splashRadius: 15,
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => StreamProvider<
-                                                            List<Tables>>.value(
-                                                        initialData: [],
-                                                        value: DatabaseService()
-                                                            .tableList(
-                                                                userBusiness
-                                                                    .businessID),
-                                                        child: FloorPlanConfig(
-                                                            userBusiness
-                                                                .businessID))));
-                                          },
-                                          icon: Icon(Icons.edit)),
-                                    ],
-                                  ),
+                                  (MediaQuery.of(context).size.width > 900)
+                                      ? Row(
+                                          children: [
+                                            Text(
+                                              'Configuración del salón',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                            Spacer(),
+                                            IconButton(
+                                                tooltip: 'Editar',
+                                                iconSize: 14,
+                                                splashRadius: 15,
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => StreamProvider<
+                                                                  List<
+                                                                      Tables>>.value(
+                                                              initialData: [],
+                                                              value: DatabaseService()
+                                                                  .tableList(
+                                                                      userBusiness
+                                                                          .businessID),
+                                                              child: FloorPlanConfig(
+                                                                  userBusiness
+                                                                      .businessID))));
+                                                },
+                                                icon: Icon(Icons.edit)),
+                                          ],
+                                        )
+                                      : SizedBox(),
                                   SizedBox(height: 10),
                                   //Payment Methods
                                   Row(

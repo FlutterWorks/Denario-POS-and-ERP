@@ -30,7 +30,6 @@ class _MonthStatsState extends State<MonthStats> {
 
   @override
   Widget build(BuildContext context) {
-    final formatCurrency = new NumberFormat.simpleCurrency();
     final monthlyStats = Provider.of<MonthlyStats>(context);
     final categoriesProvider = Provider.of<CategoryList>(context);
     final registerStatus = Provider.of<CashRegister>(context);
@@ -83,8 +82,6 @@ class _MonthStatsState extends State<MonthStats> {
           ],
         );
       }
-
-      var productsList = monthlyStats.salesAmountbyProduct.keys.toList();
 
       if (MediaQuery.of(context).size.width > 950) {
         return Container(

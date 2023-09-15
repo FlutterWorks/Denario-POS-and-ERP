@@ -70,284 +70,513 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        //Space
-        Expanded(flex: 2, child: Container()),
-        Expanded(
-          flex: 6,
-          child: ScrollConfiguration(
-            behavior:
-                ScrollConfiguration.of(context).copyWith(scrollbars: false),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Container(
-                  width: 300,
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: <BoxShadow>[
-                      new BoxShadow(
-                        color: Colors.grey[350],
-                        offset: new Offset(0, 0),
-                        blurRadius: 10.0,
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //Title
-                      Text(
-                        'Información Personal',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 30),
-                      //Pic
-                      Container(
-                          height: 100,
-                          width: 220,
-                          child: (webImage.length == 8)
-                              ? Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: Colors.grey.shade300),
-                                      color: Colors.grey,
-                                      image: DecorationImage(
-                                          image: NetworkImage(pic),
-                                          fit: BoxFit.scaleDown)))
-                              : Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: Colors.grey.shade300),
-                                      color: Colors.grey,
-                                      image: DecorationImage(
-                                          image: Image.memory(
-                                        webImage,
-                                        fit: BoxFit.scaleDown,
-                                      ).image)),
-                                )),
-                      SizedBox(height: 10),
-                      //Button
-                      TextButton(
-                        style:
-                            TextButton.styleFrom(foregroundColor: Colors.black),
-                        onPressed: getImage,
-                        child: Container(
-                          height: 40,
-                          width: 100,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2.0, horizontal: 10),
-                          child: Center(
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Icon(
-                                    Icons.edit,
-                                    color: Colors.black,
-                                    size: 15,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    'Editar',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ]),
-                          ),
+    if (MediaQuery.of(context).size.width > 900) {
+      return Row(
+        children: [
+          //Space
+          Expanded(flex: 2, child: Container()),
+          Expanded(
+            flex: 6,
+            child: ScrollConfiguration(
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Container(
+                    width: 300,
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: <BoxShadow>[
+                        new BoxShadow(
+                          color: Colors.grey[350],
+                          offset: new Offset(0, 0),
+                          blurRadius: 10.0,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //Title
+                        Text(
+                          'Información Personal',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      //Form
-                      Container(
-                        width: 400,
-                        height: 200,
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              //Nombre
-                              TextFormField(
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                                validator: (val) =>
-                                    val.isEmpty ? "Agrega un nombre" : null,
-                                autofocus: true,
-                                cursorColor: Colors.grey,
-                                cursorHeight: 25,
-                                focusNode: _nameNode,
-                                initialValue: widget.userName,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  label: Text('Nombre'),
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                  prefixIcon: Icon(
-                                    Icons.person_outline,
-                                    color: Colors.grey,
-                                  ),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent[700],
-                                      fontSize: 12),
-                                  border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.grey,
+                        SizedBox(height: 30),
+                        //Pic
+                        Container(
+                            height: 100,
+                            width: 220,
+                            child: (webImage.length == 8)
+                                ? Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
+                                        color: Colors.grey,
+                                        image: DecorationImage(
+                                            image: NetworkImage(pic),
+                                            fit: BoxFit.scaleDown)))
+                                : Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
+                                        color: Colors.grey,
+                                        image: DecorationImage(
+                                            image: Image.memory(
+                                          webImage,
+                                          fit: BoxFit.scaleDown,
+                                        ).image)),
+                                  )),
+                        SizedBox(height: 10),
+                        //Button
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              foregroundColor: Colors.black),
+                          onPressed: getImage,
+                          child: Container(
+                            height: 40,
+                            width: 100,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2.0, horizontal: 10),
+                            child: Center(
+                              child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.black,
+                                      size: 15,
                                     ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.green,
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'Editar',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400),
                                     ),
-                                  ),
-                                ),
-                                onFieldSubmitted: (term) {
-                                  _nameNode.unfocus();
-                                  FocusScope.of(context).requestFocus(_tlfNode);
-                                },
-                                onChanged: (val) {
-                                  setState(() => name = val);
-                                },
-                              ),
-                              //Whatsapp
-                              SizedBox(height: 25),
-                              TextFormField(
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(10),
-                                ],
-                                validator: (val) => val.isEmpty
-                                    ? "Agrega un celular válido"
-                                    : (val.length == 10)
-                                        ? null
-                                        : "El número de celular debe tener 10 caracteres",
-                                cursorColor: Colors.grey,
-                                cursorHeight: 25,
-                                focusNode: _tlfNode,
-                                initialValue: widget.userPhone.toString(),
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  label: Text('Teléfono'),
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                  prefixIcon: Icon(
-                                    Icons.phone,
-                                    color: Colors.grey,
-                                  ),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent[700],
-                                      fontSize: 12),
-                                  border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                                onFieldSubmitted: (term) {
-                                  _tlfNode.unfocus();
-                                },
-                                onChanged: (val) {
-                                  setState(() => phone = int.parse('11' + val));
-                                },
-                              ),
-                              SizedBox(height: 25),
-                              //UID
-                              Text(
-                                'UID: ${widget.uid}',
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.grey[700],
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      //Button
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.grey,
-                            backgroundColor: Colors.black),
-                        onPressed: () {
-                          if (name == '') {
-                            name = widget.userName;
-                          }
-                          if (phone == 0) {
-                            phone = widget.userPhone;
-                          }
-                          if (changedImage) {
-                            uploadPic().then((value) => DatabaseService()
-                                .updateUserProfile(name, phone, downloadUrl));
-                          } else {
-                            DatabaseService().updateUserProfile(
-                                name, phone, widget.profileImage);
-                            AuthService().updateUserData(name);
-                          }
-
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => Wrapper()));
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 40,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2.0, horizontal: 10),
-                          child: Center(
-                            child: Text(
-                              'Guardar',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400),
+                                  ]),
                             ),
                           ),
                         ),
-                      ),
-                      //Reset email
-                      //Reset Password
-                    ],
+                        SizedBox(height: 20),
+                        //Form
+                        Container(
+                          width: 400,
+                          height: 200,
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                //Nombre
+                                TextFormField(
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 14),
+                                  validator: (val) =>
+                                      val.isEmpty ? "Agrega un nombre" : null,
+                                  autofocus: true,
+                                  cursorColor: Colors.grey,
+                                  cursorHeight: 25,
+                                  focusNode: _nameNode,
+                                  initialValue: widget.userName,
+                                  textInputAction: TextInputAction.next,
+                                  decoration: InputDecoration(
+                                    label: Text('Nombre'),
+                                    labelStyle: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
+                                    prefixIcon: Icon(
+                                      Icons.person_outline,
+                                      color: Colors.grey,
+                                    ),
+                                    errorStyle: TextStyle(
+                                        color: Colors.redAccent[700],
+                                        fontSize: 12),
+                                    border: new OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      borderSide: new BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      borderSide: new BorderSide(
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ),
+                                  onFieldSubmitted: (term) {
+                                    _nameNode.unfocus();
+                                    FocusScope.of(context)
+                                        .requestFocus(_tlfNode);
+                                  },
+                                  onChanged: (val) {
+                                    setState(() => name = val);
+                                  },
+                                ),
+                                //Whatsapp
+                                SizedBox(height: 25),
+                                TextFormField(
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 14),
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
+                                  validator: (val) => val.isEmpty
+                                      ? "Agrega un celular válido"
+                                      : (val.length == 10)
+                                          ? null
+                                          : "El número de celular debe tener 10 caracteres",
+                                  cursorColor: Colors.grey,
+                                  cursorHeight: 25,
+                                  focusNode: _tlfNode,
+                                  initialValue: widget.userPhone.toString(),
+                                  textInputAction: TextInputAction.next,
+                                  decoration: InputDecoration(
+                                    label: Text('Teléfono'),
+                                    labelStyle: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
+                                    prefixIcon: Icon(
+                                      Icons.phone,
+                                      color: Colors.grey,
+                                    ),
+                                    errorStyle: TextStyle(
+                                        color: Colors.redAccent[700],
+                                        fontSize: 12),
+                                    border: new OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      borderSide: new BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      borderSide: new BorderSide(
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ),
+                                  onFieldSubmitted: (term) {
+                                    _tlfNode.unfocus();
+                                  },
+                                  onChanged: (val) {
+                                    setState(
+                                        () => phone = int.parse('11' + val));
+                                  },
+                                ),
+                                SizedBox(height: 25),
+                                //UID
+                                Text(
+                                  'UID: ${widget.uid}',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.grey[700],
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        //Button
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.grey,
+                              backgroundColor: Colors.black),
+                          onPressed: () {
+                            if (name == '') {
+                              name = widget.userName;
+                            }
+                            if (phone == 0) {
+                              phone = widget.userPhone;
+                            }
+                            if (changedImage) {
+                              uploadPic().then((value) => DatabaseService()
+                                  .updateUserProfile(name, phone, downloadUrl));
+                            } else {
+                              DatabaseService().updateUserProfile(
+                                  name, phone, widget.profileImage);
+                              AuthService().updateUserData(name);
+                            }
+
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) => Wrapper()));
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 40,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2.0, horizontal: 10),
+                            child: Center(
+                              child: Text(
+                                'Guardar',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          ),
+                        ),
+                        //Reset email
+                        //Reset Password
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        //Space
-        Expanded(flex: 2, child: Container()),
-      ],
-    );
+          //Space
+          Expanded(flex: 2, child: Container()),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          //Title
+          Text(
+            'Información Personal',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 30),
+          //Pic
+          Container(
+              height: 100,
+              width: 220,
+              child: (webImage.length == 8)
+                  ? Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey.shade300),
+                          color: Colors.grey,
+                          image: DecorationImage(
+                              image: NetworkImage(pic), fit: BoxFit.scaleDown)))
+                  : Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey.shade300),
+                          color: Colors.grey,
+                          image: DecorationImage(
+                              image: Image.memory(
+                            webImage,
+                            fit: BoxFit.scaleDown,
+                          ).image)),
+                    )),
+          SizedBox(height: 10),
+          //Button
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: Colors.black),
+            onPressed: getImage,
+            child: Container(
+              height: 40,
+              width: 100,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10),
+              child: Center(
+                child:
+                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                    size: 15,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    'Editar',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ]),
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          //Form
+          Container(
+            width: 400,
+            height: 200,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  //Nombre
+                  TextFormField(
+                    style: TextStyle(color: Colors.black, fontSize: 14),
+                    validator: (val) => val.isEmpty ? "Agrega un nombre" : null,
+                    autofocus: true,
+                    cursorColor: Colors.grey,
+                    cursorHeight: 25,
+                    focusNode: _nameNode,
+                    initialValue: widget.userName,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      label: Text('Nombre'),
+                      labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                      prefixIcon: Icon(
+                        Icons.person_outline,
+                        color: Colors.grey,
+                      ),
+                      errorStyle:
+                          TextStyle(color: Colors.redAccent[700], fontSize: 12),
+                      border: new OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(12.0),
+                        borderSide: new BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(12.0),
+                        borderSide: new BorderSide(
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                    onFieldSubmitted: (term) {
+                      _nameNode.unfocus();
+                      FocusScope.of(context).requestFocus(_tlfNode);
+                    },
+                    onChanged: (val) {
+                      setState(() => name = val);
+                    },
+                  ),
+                  //Whatsapp
+                  SizedBox(height: 25),
+                  TextFormField(
+                    style: TextStyle(color: Colors.black, fontSize: 14),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+                    validator: (val) => val.isEmpty
+                        ? "Agrega un celular válido"
+                        : (val.length == 10)
+                            ? null
+                            : "El número de celular debe tener 10 caracteres",
+                    cursorColor: Colors.grey,
+                    cursorHeight: 25,
+                    focusNode: _tlfNode,
+                    initialValue: widget.userPhone.toString(),
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      label: Text('Teléfono'),
+                      labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: Colors.grey,
+                      ),
+                      errorStyle:
+                          TextStyle(color: Colors.redAccent[700], fontSize: 12),
+                      border: new OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(12.0),
+                        borderSide: new BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(12.0),
+                        borderSide: new BorderSide(
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                    onFieldSubmitted: (term) {
+                      _tlfNode.unfocus();
+                    },
+                    onChanged: (val) {
+                      setState(() => phone = int.parse('11' + val));
+                    },
+                  ),
+                  SizedBox(height: 25),
+                  //UID
+                  Text(
+                    'UID: ${widget.uid}',
+                    style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey[700],
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          //Button
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.grey, backgroundColor: Colors.black),
+            onPressed: () {
+              if (name == '') {
+                name = widget.userName;
+              }
+              if (phone == 0) {
+                phone = widget.userPhone;
+              }
+              if (changedImage) {
+                uploadPic().then((value) => DatabaseService()
+                    .updateUserProfile(name, phone, downloadUrl));
+              } else {
+                DatabaseService()
+                    .updateUserProfile(name, phone, widget.profileImage);
+                AuthService().updateUserData(name);
+              }
+
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => Wrapper()));
+            },
+            child: Container(
+              width: 100,
+              height: 40,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10),
+              child: Center(
+                child: Text(
+                  'Guardar',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+          ),
+          //Reset email
+          //Reset Password
+        ],
+      );
+    }
   }
 }
