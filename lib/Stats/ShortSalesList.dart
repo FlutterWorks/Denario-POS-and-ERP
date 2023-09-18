@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Dashboard/SalesDetailsFilters.dart';
 import 'package:denario/Dashboard/SingleSaleDialog.dart';

@@ -9,7 +9,6 @@ import 'package:denario/Stats/StatsByPaymentMethods.dart';
 import 'package:denario/Stats/StatsByProducts.dart';
 import 'package:denario/Stats/TotalsSummary.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class MonthStats extends StatefulWidget {

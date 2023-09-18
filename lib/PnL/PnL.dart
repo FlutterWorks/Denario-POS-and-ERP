@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:denario/Models/Categories.dart';
 import 'package:denario/PnL/GrossMarginGraph.dart';
 import 'package:denario/PnL/PnLCard.dart';
 import 'package:denario/PnL/PnlMargins.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PnL extends StatefulWidget {
   final List pnlAccountGroups;
@@ -38,18 +40,7 @@ class _PnLState extends State<PnL> {
 
   Future currentValuesBuilt;
 
-  double cafeVentas;
-  double cafeCostos;
-  double postresVentas;
-  double postresCostos;
-  double panVentas;
-  double panCostos;
-  double platosVentas;
-  double platosCostos;
-  double bebidasVentas;
-  double bebidasCostos;
-  double promosVentas;
-  double otrosCostos;
+  List categoriesList = [];
 
   @override
   void initState() {
@@ -60,6 +51,15 @@ class _PnLState extends State<PnL> {
   // @override
   @override
   Widget build(BuildContext context) {
+    final categoriesProvider = Provider.of<CategoryList>(context);
+
+    if (categoriesProvider == null) {
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.6,
+        width: double.infinity,
+      );
+    }
+
     return FutureBuilder(
         future: currentValuesBuilt,
         builder: (context, snapshot) {
@@ -125,67 +125,6 @@ class _PnLState extends State<PnL> {
                 totalGastosdelLocal -
                 totalOtrosGastos;
 
-            try {
-              cafeVentas = snapshot.data['Ventas de Café'];
-            } catch (e) {
-              cafeVentas = 0;
-            }
-            try {
-              cafeCostos = snapshot.data['Costos de Café'];
-            } catch (e) {
-              cafeCostos = 0;
-            }
-            try {
-              postresVentas = snapshot.data['Ventas de Postres'];
-            } catch (e) {
-              postresVentas = 0;
-            }
-            try {
-              postresCostos = snapshot.data['Costos de Postres'];
-            } catch (e) {
-              postresCostos = 0;
-            }
-            try {
-              panVentas = snapshot.data['Ventas de Panadería'];
-            } catch (e) {
-              panVentas = 0;
-            }
-            try {
-              panCostos = snapshot.data['Costos de Panadería'];
-            } catch (e) {
-              panCostos = 0;
-            }
-            try {
-              platosVentas = snapshot.data['Ventas de Platos'];
-            } catch (e) {
-              platosVentas = 0;
-            }
-            try {
-              platosCostos = snapshot.data['Costos de Platos'];
-            } catch (e) {
-              platosCostos = 0;
-            }
-            try {
-              bebidasVentas = snapshot.data['Ventas de Bebidas'];
-            } catch (e) {
-              bebidasVentas = 0;
-            }
-            try {
-              bebidasCostos = snapshot.data['Costos de Bebidas'];
-            } catch (e) {
-              bebidasCostos = 0;
-            }
-            try {
-              promosVentas = snapshot.data['Ventas de Promos'];
-            } catch (e) {
-              promosVentas = 0;
-            }
-            try {
-              otrosCostos = snapshot.data['Otros Costos'];
-            } catch (e) {
-              otrosCostos = 0;
-            }
-
             return Container(
               width: MediaQuery.of(context).size.width * 0.9,
               child: (MediaQuery.of(context).size.width > 1150)
@@ -207,7 +146,8 @@ class _PnLState extends State<PnL> {
                                   snapshot: snapshot,
                                 ),
                                 SizedBox(height: 15),
-                                GrossMarginGraph(widget.activeBusiness)
+                                GrossMarginGraph(widget.activeBusiness,
+                                    snapshot, categoriesProvider)
                               ],
                             ),
                           ),
@@ -239,9 +179,8 @@ class _PnLState extends State<PnL> {
                               snapshot),
                           SizedBox(height: 20),
                           //Graph
-                          GrossMarginGraph(
-                            widget.activeBusiness,
-                          )
+                          GrossMarginGraph(widget.activeBusiness, snapshot,
+                              categoriesProvider)
                         ]),
             );
           } else {
