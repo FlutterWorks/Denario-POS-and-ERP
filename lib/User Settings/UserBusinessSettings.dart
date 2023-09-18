@@ -18,6 +18,7 @@ class UserBusinessSettings extends StatefulWidget {
 
 class _UserBusinessSettingsState extends State<UserBusinessSettings> {
   String selectedBusiness = '';
+  String selectedBusinessID = '';
   int selectedBusinessIndex = 0;
   final controller = PageController();
 
@@ -31,6 +32,8 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
     }
     selectedBusiness =
         widget.userBusinesses[selectedBusinessIndex].businessName;
+    selectedBusinessID =
+        widget.userBusinesses[selectedBusinessIndex].businessID;
     super.initState();
   }
 
@@ -62,15 +65,15 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                   providers: [
                     StreamProvider<BusinessProfile>.value(
                         initialData: null,
-                        value: DatabaseService().userBusinessProfile(
-                            widget.userBusinesses[index].businessID)),
+                        value: DatabaseService()
+                            .userBusinessProfile(selectedBusinessID)),
                     StreamProvider<CategoryList>.value(
                         initialData: null,
-                        value: DatabaseService().categoriesList(
-                            widget.userBusinesses[index].businessID)),
+                        value: DatabaseService()
+                            .categoriesList(selectedBusinessID)),
                   ],
-                  child: UserBusinessSettingsForm(
-                      widget.userBusinesses[index].roleInBusiness),
+                  child: UserBusinessSettingsForm(widget
+                      .userBusinesses[selectedBusinessIndex].roleInBusiness),
                 );
               },
             ),
@@ -105,6 +108,8 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                               selectedBusiness =
                                   widget.userBusinesses[i].businessName;
                               selectedBusinessIndex = i;
+                              selectedBusinessID =
+                                  widget.userBusinesses[i].businessID;
                             });
                           },
                           child: Padding(
@@ -201,6 +206,8 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                             selectedBusiness =
                                 widget.userBusinesses[i].businessName;
                             selectedBusinessIndex = i;
+                            selectedBusinessID =
+                                widget.userBusinesses[i].businessID;
                           });
                         },
                         child: Padding(
@@ -274,15 +281,15 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                   providers: [
                     StreamProvider<BusinessProfile>.value(
                         initialData: null,
-                        value: DatabaseService().userBusinessProfile(
-                            widget.userBusinesses[index].businessID)),
+                        value: DatabaseService()
+                            .userBusinessProfile(selectedBusinessID)),
                     StreamProvider<CategoryList>.value(
                         initialData: null,
-                        value: DatabaseService().categoriesList(
-                            widget.userBusinesses[index].businessID)),
+                        value: DatabaseService()
+                            .categoriesList(selectedBusinessID)),
                   ],
-                  child: UserBusinessSettingsForm(
-                      widget.userBusinesses[index].roleInBusiness),
+                  child: UserBusinessSettingsForm(widget
+                      .userBusinesses[selectedBusinessIndex].roleInBusiness),
                 );
               },
             ),
