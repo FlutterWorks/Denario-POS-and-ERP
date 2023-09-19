@@ -871,6 +871,7 @@ class DatabaseService {
 
   // Save order function
   void saveNewOrder(
+    String documentID,
     String activeBusiness,
     bool splitPayment,
     List splitPaymentDetails,
@@ -895,7 +896,7 @@ class DatabaseService {
     // //////////Create Sale
     createOrder(
         activeBusiness,
-        DateTime.now().toString(),
+        documentID,
         year,
         month,
         DateTime.now(),

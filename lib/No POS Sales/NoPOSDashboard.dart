@@ -682,20 +682,25 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                       },
                                     ),
                                   ),
-                                  onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => StreamProvider<
-                                                  MonthlyStats>.value(
-                                                value: DatabaseService()
-                                                    .monthlyStatsfromSnapshot(
-                                                        widget.currentBusiness),
-                                                initialData: null,
-                                                child: NewSaleScreen(
-                                                  widget.currentBusiness,
-                                                  fromPOS: false,
-                                                ),
-                                              ))),
+                                  onPressed: () {
+                                    _toggleDropdown();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                StreamProvider<
+                                                    MonthlyStats>.value(
+                                                  value: DatabaseService()
+                                                      .monthlyStatsfromSnapshot(
+                                                          widget
+                                                              .currentBusiness),
+                                                  initialData: null,
+                                                  child: NewSaleScreen(
+                                                    widget.currentBusiness,
+                                                    fromPOS: false,
+                                                  ),
+                                                )));
+                                  },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 5),

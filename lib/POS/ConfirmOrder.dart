@@ -697,6 +697,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                       'email': '',
                                     });
                                     DatabaseService().saveNewOrder(
+                                        documentID,
                                         widget.businessID,
                                         false,
                                         [],
@@ -737,7 +738,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     ),
                                   ),
                                   onPressed: () {
+                                    var documentID = DateTime.now().toString();
                                     DatabaseService().saveNewOrder(
+                                        documentID,
                                         widget.businessID,
                                         false,
                                         [],
@@ -1010,7 +1013,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                   ),
                                   onPressed: () {
                                     bloc.changePaymentType('Split Payment');
+                                    var documentID = DateTime.now().toString();
                                     DatabaseService().saveNewOrder(
+                                        documentID,
                                         widget.businessID,
                                         true,
                                         splitPaymentDetails,

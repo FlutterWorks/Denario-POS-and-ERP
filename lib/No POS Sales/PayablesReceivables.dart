@@ -1,8 +1,10 @@
 import 'package:denario/Backend/DatabaseService.dart';
+import 'package:denario/Dashboard/SingleSaleDialog.dart';
 import 'package:denario/Expenses/SinglePayableDialog.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Payables.dart';
 import 'package:denario/Models/Receivables.dart';
+import 'package:denario/No%20POS%20Sales/SingleReceivableDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +29,91 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
     final registerStatus = Provider.of<CashRegister>(context);
 
     if (registerStatus == null || payables == null || receivables == null) {
-      return Center();
+      return Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: <BoxShadow>[
+            new BoxShadow(
+              color: Colors.grey[350],
+              offset: new Offset(0, 0),
+              blurRadius: 10.0,
+            )
+          ],
+        ),
+        child: Column(
+          children: [
+            //Titles
+            Row(
+              children: [
+                Container(
+                  height: 15,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
+                SizedBox(width: 20),
+                Container(
+                  height: 15,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 5),
+            Divider(
+              thickness: 0.5,
+              indent: 5,
+              endIndent: 5,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 10),
+            //List
+            Expanded(
+              child: Container(
+                child: ListView.builder(
+                    itemCount: 7,
+                    shrinkWrap: true,
+                    reverse: false,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, i) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Container(
+                          height: 50,
+                          child: Row(children: [
+                            Container(
+                              width: 30,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            Container(
+                              width: 100,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            )
+                          ]),
+                        ),
+                      );
+                    }),
+              ),
+            )
+          ],
+        ),
+      );
     }
     return Container(
       padding: EdgeInsets.all(20),
@@ -317,7 +403,26 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                           -1;
 
                       return TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StreamProvider<DailyTransactions>.value(
+                                    initialData: null,
+                                    catchError: (_, err) => null,
+                                    value: DatabaseService().dailyTransactions(
+                                        widget.businessID,
+                                        registerStatus.registerName),
+                                    builder: (context, snapshot) {
+                                      return SingleReceivableDialog(
+                                          receivables[i],
+                                          widget.businessID,
+                                          receivables[i].id,
+                                          registerStatus.paymentTypes,
+                                          registerStatus);
+                                    });
+                              });
+                        },
                         child: Container(
                           height: 60,
                           width: double.infinity,

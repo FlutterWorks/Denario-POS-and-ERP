@@ -1,6 +1,8 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Dashboard/SalesDetailsFilters.dart';
 import 'package:denario/Models/DailyCash.dart';
+import 'package:denario/Models/Stats.dart';
+import 'package:denario/No%20POS%20Sales/NewSaleScreen.dart';
 import 'package:denario/Stats/DaillyStats.dart';
 import 'package:denario/Stats/MonthlyStats.dart';
 import 'package:flutter/material.dart';
@@ -339,7 +341,20 @@ class _StatsDeskState extends State<StatsDesk>
                                   },
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          StreamProvider<MonthlyStats>.value(
+                                            value: DatabaseService()
+                                                .monthlyStatsfromSnapshot(
+                                                    widget.businessID),
+                                            initialData: null,
+                                            child: NewSaleScreen(
+                                              widget.businessID,
+                                              fromPOS: false,
+                                            ),
+                                          ))),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 5),

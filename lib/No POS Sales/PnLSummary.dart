@@ -190,11 +190,9 @@ class _PnLSummaryState extends State<PnLSummary> {
                                                               totalCostos) -
                                                           0.2) >
                                                   0)
-                                              ? (maxWidth *
-                                                      ((totalVentas /
-                                                              totalCostos) -
-                                                          0.2) >
-                                                  0)
+                                              ? maxWidth *
+                                                  ((totalVentas / totalCostos) -
+                                                      0.2)
                                               : 5,
                                       height: 5,
                                       decoration: BoxDecoration(
@@ -255,11 +253,9 @@ class _PnLSummaryState extends State<PnLSummary> {
                                                               totalVentas) -
                                                           0.2) >
                                                   0)
-                                              ? (maxWidth *
-                                                      ((totalCostos /
-                                                              totalVentas) -
-                                                          0.2) >
-                                                  0)
+                                              ? maxWidth *
+                                                  ((totalCostos / totalVentas) -
+                                                      0.2)
                                               : 5,
                                       height: 5,
                                       decoration: BoxDecoration(
