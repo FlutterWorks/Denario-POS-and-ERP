@@ -105,7 +105,7 @@ class PayablesList extends StatelessWidget {
                   children: [
                     //Fecha
                     Container(
-                      width: 50,
+                      width: 75,
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +117,7 @@ class PayablesList extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   color: (ageing > 30)
-                                      ? Colors.red
+                                      ? Colors.redAccent
                                       : Colors.black),
                             ),
                             SizedBox(height: 5),

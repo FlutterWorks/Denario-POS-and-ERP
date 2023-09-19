@@ -1581,8 +1581,25 @@ class DatabaseService {
           tax: doc.data().toString().contains('IVA') ? doc['IVA'] : 0,
           discount:
               doc.data().toString().contains('Discount') ? doc['Discount'] : 0,
-          orderDetail:
-              doc.data().toString().contains('Items') ? doc['Items'] : [],
+          orderDetail: doc.data().toString().contains('Items')
+              ? doc['Items'].map<SoldItems>((item) {
+                  return SoldItems(
+                    product:
+                        item.toString().contains('Name') ? item['Name'] : '',
+                    category: item.toString().contains('Category')
+                        ? item['Category']
+                        : '',
+                    price:
+                        item.toString().contains('Price') ? item['Price'] : 0,
+                    qty: item.toString().contains('Quantity')
+                        ? item['Quantity']
+                        : 0,
+                    total: item.toString().contains('Total Price')
+                        ? item['Total Price']
+                        : 0,
+                  );
+                }).toList()
+              : [],
           id: doc.id,
           orderType: doc.data().toString().contains('Order Type')
               ? doc['Order Type']
@@ -1615,6 +1632,17 @@ class DatabaseService {
         .where('Saved Date',
             isGreaterThanOrEqualTo:
                 DateTime(DateTime.now().year, DateTime.now().month, 1))
+        .where('Pending', isEqualTo: true)
+        .orderBy('Saved Date')
+        .snapshots()
+        .map(_receivablesListFromSnapshot);
+  }
+
+  Stream<List<Receivables>> shortReceivablesList(businessID) async* {
+    yield* FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .collection('Receivables')
         .where('Pending', isEqualTo: true)
         .orderBy('Saved Date')
         .snapshots()

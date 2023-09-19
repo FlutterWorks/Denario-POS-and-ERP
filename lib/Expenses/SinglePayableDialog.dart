@@ -39,9 +39,11 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.35,
+          width: (MediaQuery.of(context).size.width > 800)
+              ? MediaQuery.of(context).size.width * 0.4
+              : MediaQuery.of(context).size.width * 0.7,
           height: MediaQuery.of(context).size.height * 0.7,
-          constraints: BoxConstraints(minHeight: 350, minWidth: 300),
+          constraints: BoxConstraints(minHeight: 350, minWidth: 350),
           padding: EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -430,8 +430,10 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                             value: DatabaseService()
                                                 .payablesList(
                                                     userProfile.activeBusiness),
-                                            child: PayablesList(
-                                                userProfile.activeBusiness),
+                                            child: Expanded(
+                                              child: PayablesList(
+                                                  userProfile.activeBusiness),
+                                            ),
                                           )
                                         : StreamProvider<List<Expenses>>.value(
                                             initialData: null,
