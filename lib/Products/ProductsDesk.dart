@@ -2,6 +2,7 @@ import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/Products.dart';
 import 'package:denario/Products/CategoriesDesk.dart';
+import 'package:denario/Products/Discounts.dart';
 import 'package:denario/Products/NewProduct.dart';
 import 'package:denario/Products/ProductList.dart';
 import 'package:flutter/material.dart';
@@ -271,6 +272,53 @@ class _ProductDeskState extends State<ProductDesk> {
                               ),
                             ),
                             Spacer(),
+                            //Promos
+                            Container(
+                              height: 40,
+                              width: 40,
+                              child: Tooltip(
+                                message: 'Descuentos',
+                                child: OutlinedButton(
+                                  style: ButtonStyle(
+                                    padding: MaterialStateProperty.all<
+                                        EdgeInsetsGeometry>(EdgeInsets.all(5)),
+                                    alignment: Alignment.center,
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white70),
+                                    overlayColor: MaterialStateProperty
+                                        .resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.hovered))
+                                          return Colors.grey.shade300;
+                                        if (states.contains(
+                                                MaterialState.focused) ||
+                                            states.contains(
+                                                MaterialState.pressed))
+                                          return Colors.white;
+                                        return null; // Defer to the widget's default.
+                                      },
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Discounts()));
+                                  },
+                                  child: Center(
+                                      child: Text(
+                                    '%',
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.grey.shade900),
+                                  )),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 15),
                             //Boton de categorias
                             Container(
                               height: 45,
@@ -542,6 +590,55 @@ class _ProductDeskState extends State<ProductDesk> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                //Promos
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  child: Tooltip(
+                                    message: 'Descuentos',
+                                    child: OutlinedButton(
+                                      style: ButtonStyle(
+                                        padding: MaterialStateProperty.all<
+                                                EdgeInsetsGeometry>(
+                                            EdgeInsets.all(5)),
+                                        alignment: Alignment.center,
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.white70),
+                                        overlayColor: MaterialStateProperty
+                                            .resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                            if (states.contains(
+                                                MaterialState.hovered))
+                                              return Colors.grey.shade300;
+                                            if (states.contains(
+                                                    MaterialState.focused) ||
+                                                states.contains(
+                                                    MaterialState.pressed))
+                                              return Colors.white;
+                                            return null; // Defer to the widget's default.
+                                          },
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Discounts()));
+                                      },
+                                      child: Center(
+                                          child: Text(
+                                        '%',
+                                        style: TextStyle(
+                                            fontSize: 21,
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.grey.shade900),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 15),
                                 //Boton de categorias
                                 Container(
                                   height: 45,

@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:denario/Backend/DatabaseService.dart';
-import 'package:denario/Dashboard/ConfirmDeleteOrder.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Receivables.dart';
-import 'package:denario/Models/Sales.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class SingleReceivableDialog extends StatefulWidget {
   final Receivables sale;

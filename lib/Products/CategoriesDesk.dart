@@ -92,7 +92,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                 ),
               ],
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 20),
             //lIST OF Categories (Titles)
             Container(
               height: 40,
@@ -201,7 +201,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                               .length;
 
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
+                            padding: const EdgeInsets.only(top: 5, bottom: 8.0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.start,
