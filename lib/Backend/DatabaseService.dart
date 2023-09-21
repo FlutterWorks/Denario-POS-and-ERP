@@ -19,6 +19,8 @@ import 'package:denario/Models/User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../Models/Discounts.dart';
+
 class DatabaseService {
   //User Profile
   Future createUserProfile(String uid, String name, int tlf, String rol,
@@ -3771,6 +3773,191 @@ class DatabaseService {
       'Payment Type': 'Efectivo',
       'Total': 100,
       'Order Type': 'Takeaway'
+    });
+  }
+
+  //////////////////////////////////// DISCOUNTS ////////////////////////////////////
+
+  //Discount Lists
+  List<Discounts> discountList(QuerySnapshot snapshot) {
+    try {
+      return snapshot.docs.map((doc) {
+        return Discounts(
+            code: doc.data().toString().contains('Code') ? doc['Code'] : '',
+            description: doc.data().toString().contains('Description')
+                ? doc['Description']
+                : [],
+            discount: doc.data().toString().contains('Discount')
+                ? doc['Discount']
+                : 0,
+            active: doc.data().toString().contains('Active')
+                ? doc['Active']
+                : false,
+            numberOfUses: doc.data().toString().contains('Number of Uses')
+                ? doc['Number of Uses']
+                : 0,
+            createdDate: doc.data().toString().contains('Created Date')
+                ? doc['Created Date'].toDate()
+                : null,
+            validUntil: (doc.data().toString().contains('Valid Until') &&
+                    doc['Valid Until'] != null)
+                ? doc['Valid Until'].toDate()
+                : null);
+      }).toList();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Stream<List<Discounts>> allDiscountsList(String businessID) async* {
+    yield* FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .collection('Discounts')
+        .orderBy('Created Date', descending: true)
+        .snapshots()
+        .map(discountList);
+  }
+
+  Future createDiscount(
+      activeBusiness, String code, String description, double discount) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(activeBusiness)
+        .collection('Discounts')
+        .doc(code)
+        .set({
+      'Code': code,
+      'Description': description,
+      'Discount': discount,
+      'Active': true,
+      'Number of Uses': 0,
+      'Created Date': DateTime.now(),
+      'Valid Until': null,
+    });
+  }
+
+  //Discount Uses
+  List<Sales> discountUsesList(QuerySnapshot snapshot) {
+    try {
+      return snapshot.docs.map((doc) {
+        return Sales(
+          account:
+              doc.data().toString().contains('Account') ? doc['Account'] : '',
+          date: doc.data().toString().contains('Date')
+              ? doc['Date'].toDate()
+              : DateTime.now(),
+          discount:
+              doc.data().toString().contains('Discount') ? doc['Discount'] : 0,
+          tax: doc.data().toString().contains('IVA') ? doc['IVA'] : 0,
+          soldItems: doc.data().toString().contains('Items')
+              ? doc['Items'].map<SoldItems>((item) {
+                  return SoldItems(
+                    product: item['Name'] ?? '',
+                    category: item['Category'] ?? '',
+                    price: item['Price'] ?? 0,
+                    qty: item['Quantity'] ?? 0,
+                    total: item['Total Price'] ?? 0,
+                  );
+                }).toList()
+              : [],
+          orderName: doc.data().toString().contains('Order Name')
+              ? doc['Order Name']
+              : '',
+          subTotal:
+              doc.data().toString().contains('Subtotal') ? doc['Subtotal'] : 0,
+          total: doc.data().toString().contains('Total') ? doc['Total'] : 0,
+          paymentType: doc.data().toString().contains('Payment Type')
+              ? doc['Payment Type']
+              : '',
+          clientName:
+              doc.data().toString().contains('Client') ? doc['Client'] : '',
+          clientDetails: doc.data().toString().contains('Client Details')
+              ? doc['Client Details']
+              : {},
+          transactionID: doc.data().toString().contains('Transaction ID')
+              ? doc['Transaction ID']
+              : '',
+          docID: doc.id,
+          cashRegister: doc.data().toString().contains('Cash Register')
+              ? doc['Cash Register']
+              : '',
+          reversed: doc.data().toString().contains('Reversed')
+              ? doc['Reversed']
+              : false,
+          orderType: doc.data().toString().contains('Order Type')
+              ? doc['Order Type']
+              : '',
+          splitPaymentDetails:
+              doc.data().toString().contains('Split Payment Details')
+                  ? doc['Split Payment Details'].toList()
+                  : [],
+        );
+      }).toList();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Stream<List<Sales>> allDiscountUsesList(
+      String businessID, String code) async* {
+    yield* FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .collection('Discounts')
+        .doc(code)
+        .collection('Uses')
+        .snapshots()
+        .map(discountUsesList);
+  }
+
+  Future registerDiscountUse(
+      String discountCode,
+      String businessID,
+      String documentID,
+      String year,
+      String month,
+      DateTime transactionDate,
+      subTotal,
+      discount,
+      tax,
+      total,
+      orderDetail,
+      orderName,
+      paymentType,
+      String clientName,
+      Map clientDetails,
+      transactionID,
+      String currentCashRegister,
+      bool reversed,
+      List splitPaymentDetails,
+      orderType) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .collection('Discounts')
+        .doc(discountCode)
+        .collection('Uses')
+        .doc(documentID)
+        .set({
+      'Account': 'Ventas',
+      'Date': transactionDate,
+      'Discount': discount,
+      'IVA': tax,
+      'Items': orderDetail,
+      'Order Name': orderName,
+      'Payment Type': paymentType,
+      'Subtotal': subTotal,
+      'Total': total,
+      'Client': clientName,
+      'Client Details': clientDetails,
+      'Transaction ID': transactionID,
+      'Cash Register': currentCashRegister,
+      'Reversed': reversed,
+      'Split Payment Details': splitPaymentDetails,
+      'Order Type': orderType
     });
   }
 

@@ -1,8 +1,9 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Models/Categories.dart';
+import 'package:denario/Models/Discounts.dart';
 import 'package:denario/Models/Products.dart';
 import 'package:denario/Products/CategoriesDesk.dart';
-import 'package:denario/Products/Discounts.dart';
+import 'package:denario/Products/DiscountsList.dart';
 import 'package:denario/Products/NewProduct.dart';
 import 'package:denario/Products/ProductList.dart';
 import 'package:flutter/material.dart';
@@ -305,7 +306,16 @@ class _ProductDeskState extends State<ProductDesk> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Discounts()));
+                                            builder: (context) =>
+                                                StreamProvider<
+                                                    List<Discounts>>.value(
+                                                  initialData: null,
+                                                  value: DatabaseService()
+                                                      .allDiscountsList(widget
+                                                          .currentBusiness),
+                                                  child: DiscountsList(
+                                                      widget.currentBusiness),
+                                                )));
                                   },
                                   child: Center(
                                       child: Text(
@@ -625,7 +635,16 @@ class _ProductDeskState extends State<ProductDesk> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Discounts()));
+                                                    StreamProvider<
+                                                        List<Discounts>>.value(
+                                                      initialData: null,
+                                                      value: DatabaseService()
+                                                          .allDiscountsList(widget
+                                                              .currentBusiness),
+                                                      child: DiscountsList(
+                                                          widget
+                                                              .currentBusiness),
+                                                    )));
                                       },
                                       child: Center(
                                           child: Text(
