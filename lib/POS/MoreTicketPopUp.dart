@@ -69,7 +69,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return DiscountDialog();
+                    return DiscountDialog(widget.activeBusiness);
                   });
               break;
             case 1:

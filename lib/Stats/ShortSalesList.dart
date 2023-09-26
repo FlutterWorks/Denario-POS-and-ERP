@@ -23,7 +23,7 @@ class ShortSalesList extends StatelessWidget {
       return Container();
     }
 
-    List<Sales> salesList = salesListfromSnap.reversed.toList();
+    List<Sales> salesList = salesListfromSnap;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

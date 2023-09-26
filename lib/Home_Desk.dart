@@ -7,6 +7,7 @@ import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/PendingOrders.dart';
+import 'package:denario/Models/Products.dart';
 import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/NoPOSDashboard.dart';

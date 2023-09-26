@@ -16,6 +16,7 @@ class TicketBloc {
     'Items': [],
     'Subtotal': 0,
     'Discount': 0,
+    'Discount Code': '',
     'IVA': 0,
     'Total': 0,
     'Color': Colors.white,
@@ -117,6 +118,7 @@ class TicketBloc {
     ticketItems['Items'] = [];
     ticketItems['Subtotal'] = 0;
     ticketItems['Discount'] = 0;
+    ticketItems['Discount Code'] = '';
     ticketItems['Total'] = 0;
     ticketItems['Color'] = Colors.white;
     ticketItems['Open Table'] = false;
@@ -212,6 +214,13 @@ class TicketBloc {
   //Edit Discount Amount
   void setDiscountAmount(double amount) {
     ticketItems['Discount'] = amount;
+
+    ticketStreamController.sink.add(ticketItems);
+  }
+
+  //Edit Discount Code
+  void setDiscountCode(String code) {
+    ticketItems['Discount Code'] = code;
 
     ticketStreamController.sink.add(ticketItems);
   }

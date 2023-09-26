@@ -792,6 +792,15 @@ class DatabaseService {
         .map(_productListFromSnapshot);
   }
 
+  Stream<List<Products>> fullProductList(String businessID) async* {
+    yield* FirebaseFirestore.instance
+        .collection('Products')
+        .doc(businessID)
+        .collection('Menu')
+        .snapshots()
+        .map(_productListFromSnapshot);
+  }
+
   Stream<List<Products>> productListbyCategory(
       String category, String businessID, int limit) async* {
     yield* FirebaseFirestore.instance
@@ -891,9 +900,11 @@ class DatabaseService {
 
     //Gather TicketBloc values before they get cleared using doc.get()
     final cartList = bloc.ticketItems['Items'];
+    final subtotal = bloc.subtotalTicketAmount;
     final total = bloc.totalTicketAmount;
     final paymentType = bloc.ticketItems['Payment Type'];
     final orderType = bloc.ticketItems['Order Type'];
+    final discountCode = bloc.ticketItems['Discount Code'];
 
     // //////////Create Sale
     createOrder(
@@ -902,7 +913,7 @@ class DatabaseService {
         year,
         month,
         DateTime.now(),
-        bloc.ticketItems['Subtotal'],
+        subtotal,
         bloc.ticketItems['Discount'],
         bloc.ticketItems['IVA'],
         bloc.totalTicketAmount,
@@ -921,6 +932,36 @@ class DatabaseService {
         false,
         splitPaymentDetails,
         orderType);
+
+    if (discountCode != '') {
+      useDiscount(activeBusiness, discountCode);
+      registerDiscountUse(
+          discountCode,
+          activeBusiness,
+          documentID,
+          year,
+          month,
+          DateTime.now(),
+          subtotal,
+          bloc.ticketItems['Discount'],
+          bloc.ticketItems['IVA'],
+          bloc.totalTicketAmount,
+          bloc.ticketItems['Items'],
+          bloc.ticketItems['Order Name'],
+          splitPayment ? 'Split' : bloc.ticketItems['Payment Type'],
+          bloc.ticketItems['Order Name'],
+          {
+            'Name': bloc.ticketItems['Order Name'],
+            'Address': '',
+            'Phone': 0,
+            'email': '',
+          },
+          invoiceNO,
+          (cashRegister == null) ? 'Independiente' : cashRegister,
+          false,
+          splitPaymentDetails,
+          orderType);
+    }
 
     // ////////////////////////Update Accounts (sales and categories)
 
@@ -3835,6 +3876,17 @@ class DatabaseService {
       'Number of Uses': 0,
       'Created Date': DateTime.now(),
       'Valid Until': null,
+    });
+  }
+
+  Future useDiscount(activeBusiness, String code) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(activeBusiness)
+        .collection('Discounts')
+        .doc(code)
+        .update({
+      'Number of Uses': FieldValue.increment(1),
     });
   }
 

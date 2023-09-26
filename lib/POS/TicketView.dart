@@ -422,7 +422,16 @@ class _TicketViewState extends State<TicketView> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                   //Column Name + Qty
-                                  Container(
+                                  (snapshot.data["Discount Code"] != '')
+                                  ? Container(
+                                    constraints: BoxConstraints(maxWidth: 150),
+                                    child: Text(
+                                      snapshot.data["Discount Code"],
+                                      style: TextStyle(
+                                          color: Colors.grey.shade700),
+                                    ),
+                                  )
+                                  : Container(
                                     constraints: BoxConstraints(maxWidth: 150),
                                     child: Text(
                                       'Descuento',
@@ -479,7 +488,7 @@ class _TicketViewState extends State<TicketView> {
                                 } else {
                                   bloc.changePaymentType('Efectivo');
                                   bloc.changeOrderName(orderName);
-                                  bloc.changeOrderType(ticketConcept);
+                                  bloc.changeOrderType('Mesa');
                                   showDialog(
                                       context: context,
                                       builder: (context) {
@@ -961,7 +970,16 @@ class _TicketViewState extends State<TicketView> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                   //Column Name + Qty
-                                  Container(
+                                  (snapshot.data["Discount Code"] != '')
+                                  ? Container(
+                                    constraints: BoxConstraints(maxWidth: 150),
+                                    child: Text(
+                                      snapshot.data["Discount Code"],
+                                      style: TextStyle(
+                                          color: Colors.grey.shade700),
+                                    ),
+                                  )
+                                  : Container(
                                     constraints: BoxConstraints(maxWidth: 150),
                                     child: Text(
                                       'Descuento',
@@ -969,7 +987,7 @@ class _TicketViewState extends State<TicketView> {
                                           color: Colors.grey.shade700),
                                     ),
                                   ),
-                                  //Amount
+                                   //Amount
                                   Spacer(),
                                   Text(
                                       formatCurrency
@@ -1653,15 +1671,24 @@ class _TicketViewState extends State<TicketView> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                                 //Column Name + Qty
-                                Container(
-                                  constraints: BoxConstraints(maxWidth: 150),
-                                  child: Text(
-                                    'Descuento',
-                                    style:
-                                        TextStyle(color: Colors.grey.shade700),
+                                (snapshot.data["Discount Code"] != '')
+                                  ? Container(
+                                    constraints: BoxConstraints(maxWidth: 150),
+                                    child: Text(
+                                      snapshot.data["Discount Code"],
+                                      style: TextStyle(
+                                          color: Colors.grey.shade700),
+                                    ),
+                                  )
+                                  : Container(
+                                    constraints: BoxConstraints(maxWidth: 150),
+                                    child: Text(
+                                      'Descuento',
+                                      style: TextStyle(
+                                          color: Colors.grey.shade700),
+                                    ),
                                   ),
-                                ),
-                                //Amount
+                                  //Amount
                                 Spacer(),
                                 Text(
                                     formatCurrency

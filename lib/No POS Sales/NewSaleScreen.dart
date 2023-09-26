@@ -719,7 +719,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return DiscountDialog();
+                                        return DiscountDialog(
+                                            widget.currentBusiness);
                                       });
                                 },
                                 icon: Icon(Icons.edit),

@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:denario/Backend/Ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class DiscountDialog extends StatefulWidget {
-  const DiscountDialog({Key key}) : super(key: key);
+  final String businessID;
+  const DiscountDialog(this.businessID, {Key key}) : super(key: key);
 
   @override
   State<DiscountDialog> createState() => _DiscountDialogState();
@@ -12,7 +14,25 @@ class DiscountDialog extends StatefulWidget {
 
 class _DiscountDialogState extends State<DiscountDialog> {
   bool fixedDiscount;
+  bool coupon;
+  String couponCode = '';
   double discount;
+  String errorMsg = '';
+
+  Future<DocumentSnapshot> fetchDocument(String businessID, documentId) async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('ERP')
+          .doc(businessID)
+          .collection('Discounts')
+          .doc(documentId)
+          .get();
+      return snapshot;
+    } catch (e) {
+      print('Error fetching document: $e');
+      return null;
+    }
+  }
 
   double totalAmount(snapshot) {
     double total = 0;
@@ -26,6 +46,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
   @override
   void initState() {
     discount = 0;
+    coupon = true;
     fixedDiscount = true;
     super.initState();
   }
@@ -40,8 +61,8 @@ class _DiscountDialogState extends State<DiscountDialog> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0)),
             child: Container(
-              width: 350,
               height: 350,
+              width: 350,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10),
                 child: Column(
@@ -79,15 +100,15 @@ class _DiscountDialogState extends State<DiscountDialog> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //Fixed
+                        //Code
                         Container(
                           width: 75,
                           height: 45,
                           child: Tooltip(
-                            message: 'Monto fijo',
+                            message: 'Código',
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: (fixedDiscount)
+                                backgroundColor: (fixedDiscount && coupon)
                                     ? Colors.greenAccent
                                     : Colors.white,
                                 padding: EdgeInsets.symmetric(horizontal: 8),
@@ -99,6 +120,34 @@ class _DiscountDialogState extends State<DiscountDialog> {
                               ),
                               onPressed: () {
                                 setState(() {
+                                  fixedDiscount = true;
+                                  coupon = true;
+                                });
+                                bloc.setDiscountAmount(0);
+                              },
+                              child: Center(
+                                  child: Text('Código',
+                                      style: TextStyle(color: Colors.black))),
+                            ),
+                          ),
+                        ),
+                        //Fixed
+                        Container(
+                          width: 75,
+                          height: 45,
+                          child: Tooltip(
+                            message: 'Monto fijo',
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: (fixedDiscount && !coupon)
+                                    ? Colors.greenAccent
+                                    : Colors.white,
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                shape: const RoundedRectangleBorder(),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  coupon = false;
                                   fixedDiscount = true;
                                 });
                                 bloc.setDiscountAmount(0);
@@ -129,6 +178,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                               ),
                               onPressed: () {
                                 setState(() {
+                                  coupon = false;
                                   fixedDiscount = false;
                                   discount = 0;
                                 });
@@ -145,76 +195,130 @@ class _DiscountDialogState extends State<DiscountDialog> {
                     SizedBox(height: 30),
                     //Amount
                     (fixedDiscount)
-                        ? Container(
-                            width: 150,
-                            child: Center(
-                              child: TextFormField(
-                                key: ValueKey(1),
-                                autofocus: true,
-                                inputFormatters: [
-                                  CurrencyTextInputFormatter(
-                                    name: '\$',
-                                    locale: 'en',
-                                    decimalDigits: 2,
-                                  ),
-                                ],
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w300),
-                                textAlign: TextAlign.center,
-                                keyboardType: TextInputType.number,
-                                onFieldSubmitted: ((value) {
-                                  Navigator.pop(context);
-                                }),
-                                decoration: InputDecoration(
-                                  label: Text(''),
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent[700],
-                                      fontSize: 12),
-                                  border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.grey,
+                        ? (coupon)
+                            ? Container(
+                                width: double.infinity,
+                                child: Center(
+                                  child: TextFormField(
+                                    key: ValueKey(1),
+                                    autofocus: true,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w300),
+                                    textAlign: TextAlign.center,
+                                    onFieldSubmitted: ((value) {
+                                      Navigator.pop(context);
+                                    }),
+                                    decoration: InputDecoration(
+                                      hintText: 'Cupón',
+                                      label: Text(''),
+                                      labelStyle: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                      errorStyle: TextStyle(
+                                          color: Colors.redAccent[700],
+                                          fontSize: 12),
+                                      border: new OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.green,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.green,
-                                    ),
+                                    cursorColor: Colors.grey,
+                                    initialValue: '',
+                                    onChanged: (val) {
+                                      if (val == null || val == '') {
+                                        setState(() {
+                                          discount = 0;
+                                          couponCode = '';
+                                        });
+                                      } else {
+                                        setState(() {
+                                          couponCode = val;
+                                        });
+                                      }
+                                    },
                                   ),
                                 ),
-                                cursorColor: Colors.grey,
-                                initialValue: (discount > 0)
-                                    ? discount.toString()
-                                    : '\$0.00',
-                                onChanged: (val) {
-                                  if (val == null || val == '') {
-                                    setState(() {
-                                      discount = 0;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      discount = double.tryParse(
-                                          (val.substring(1))
-                                              .replaceAll(',', ''));
-                                      bloc.setDiscountAmount(discount);
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          )
+                              )
+                            : Container(
+                                width: 150,
+                                child: Center(
+                                  child: TextFormField(
+                                    key: ValueKey(2),
+                                    autofocus: true,
+                                    inputFormatters: [
+                                      CurrencyTextInputFormatter(
+                                        name: '\$',
+                                        locale: 'en',
+                                        decimalDigits: 2,
+                                      ),
+                                    ],
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w300),
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    onFieldSubmitted: ((value) {
+                                      Navigator.pop(context);
+                                    }),
+                                    decoration: InputDecoration(
+                                      hintText: '\$0.00',
+                                      label: Text(''),
+                                      labelStyle: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                      errorStyle: TextStyle(
+                                          color: Colors.redAccent[700],
+                                          fontSize: 12),
+                                      border: new OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                    cursorColor: Colors.grey,
+                                    initialValue: (discount > 0)
+                                        ? discount.toString()
+                                        : '\$0.00',
+                                    onChanged: (val) {
+                                      if (val == null || val == '') {
+                                        setState(() {
+                                          discount = 0;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          discount = double.tryParse(
+                                              (val.substring(1))
+                                                  .replaceAll(',', ''));
+                                          bloc.setDiscountAmount(discount);
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                              )
                         : Container(
                             width: 150,
                             child: Center(
                               child: TextFormField(
-                                key: ValueKey(2),
-                                initialValue:
-                                    snapshot.data['Discount'].toString(),
+                                key: ValueKey(3),
                                 autofocus: false,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly
@@ -224,6 +328,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                 textAlign: TextAlign.center,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
+                                  hintText: '0',
                                   suffixText: '%',
                                   suffixStyle: TextStyle(
                                       fontSize: 18,
@@ -281,6 +386,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                     //Button
                     Container(
                       width: double.infinity,
+                      height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
@@ -289,7 +395,35 @@ class _DiscountDialogState extends State<DiscountDialog> {
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          if (coupon) {
+                            DocumentSnapshot document = await fetchDocument(
+                                widget.businessID, couponCode);
+                            if (document != null) {
+                              // You can access document data using document.data()
+                              Map<String, dynamic> data =
+                                  document.data() as Map<String, dynamic>;
+
+                              if (data['Active']) {
+                                setState(() {
+                                  discount = totalAmount(snapshot) *
+                                      (data['Discount'] / 100);
+                                  bloc.setDiscountAmount(discount);
+                                  bloc.setDiscountCode(data['Code']);
+                                });
+                              } else {
+                                setState(() {
+                                  errorMsg = 'Cupón inactivo';
+                                });
+                              }
+                            } else {
+                              // Handle the case where the document retrieval failed
+                              setState(() {
+                                errorMsg =
+                                    'Ups, ocurrió un error, intenta de nuevo';
+                              });
+                            }
+                          }
                           Navigator.pop(context);
                         },
                         child: Center(
@@ -297,6 +431,15 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                 style: TextStyle(color: Colors.white))),
                       ),
                     ),
+                    //Error
+                    (errorMsg.length > 0) ? SizedBox(height: 10) : SizedBox(),
+                    (errorMsg.length > 0)
+                        ? Text(
+                            errorMsg,
+                            style: TextStyle(
+                                color: Colors.redAccent, fontSize: 11),
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),

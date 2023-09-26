@@ -13,7 +13,6 @@ class LastSales extends StatelessWidget {
     if (salesList == null) {
       return Container();
     }
-    print(salesList.length);
 
     return Container(
       child: ListView.builder(
