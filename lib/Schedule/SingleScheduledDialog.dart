@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:denario/Backend/DatabaseService.dart';
+import 'package:denario/Backend/Ticket.dart';
+import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/ScheduledSales.dart';
 import 'package:denario/Models/Stats.dart';
+import 'package:denario/Models/User.dart';
+import 'package:denario/POS/ConfirmOrder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +58,12 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
 
   Future currentValuesBuilt;
 
+  void clearControllers() {
+    setState(() {
+      bloc.removeAllFromCart();
+    });
+  }
+
   void initState() {
     currentValuesBuilt = currentValue();
 
@@ -63,6 +73,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
   @override
   Widget build(BuildContext context) {
     final monthlyStats = Provider.of<MonthlyStats>(context);
+    final registerStatus = Provider.of<CashRegister>(context);
 
     if (monthlyStats == null) {
       currentSalesCount = 0;
@@ -302,343 +313,182 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                       )),
                                 Spacer(),
                                 //Total
-                                Container(
-                                    child: Text(
-                                  'Saldo por cobrar: ${formatCurrency.format(widget.order.remainingBalance)}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                )),
+                                (widget.order.pending)
+                                    ? Container(
+                                        child: Text(
+                                        'Saldo por cobrar: ${formatCurrency.format(widget.order.remainingBalance)}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ))
+                                    : Container(
+                                        child: Text(
+                                        'Cobrado',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      )),
                               ],
                             ),
                           ),
                           SizedBox(height: 20),
                           //Buttons
-                          Container(
-                            height: 50,
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                //Delete
-                                Expanded(
-                                  flex: 2,
-                                  child: Tooltip(
-                                    message: 'Borrar pedido',
-                                    child: Container(
-                                      height: 50,
-                                      child: OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          foregroundColor: Colors.black,
-                                        ),
-                                        onPressed: () {
-                                          DatabaseService().deleteScheduleSale(
-                                              widget.businessID,
-                                              widget.order.id);
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                //Partial Pay
-                                Expanded(
-                                  flex: 5,
-                                  child: Container(
-                                    height: 50,
-                                    child: OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                        foregroundColor: Colors.black,
-                                      ),
-                                      onPressed: () {
-                                        controller.nextPage(
-                                            duration:
-                                                Duration(milliseconds: 500),
-                                            curve: Curves.ease);
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text('Cobro parcial'),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                //Pay
-                                Expanded(
-                                  flex: 5,
-                                  child: Container(
-                                    height: 50,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.black,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 15),
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          double newSalesAmount = 0;
-                                          //Date variables
-                                          var year =
-                                              DateTime.now().year.toString();
-                                          var month =
-                                              DateTime.now().month.toString();
-
-                                          ////////////////////////Update Accounts (sales and categories)
-                                          try {
-                                            newSalesAmount = snap
-                                                    .data['Ventas'] +
-                                                widget.order.total.toDouble();
-                                          } catch (e) {
-                                            newSalesAmount =
-                                                widget.order.total.toDouble();
-                                          }
-
-                                          //Set Categories Variables
-                                          orderCategories = {};
-                                          final cartList =
-                                              widget.order.orderDetail;
-
-                                          //Logic to retrieve and add up categories totals
-                                          for (var i = 0;
-                                              i < cartList.length;
-                                              i++) {
-                                            //Check if the map contains the key
-                                            if (orderCategories.containsKey(
-                                                'Ventas de ${cartList[i]["Category"]}')) {
-                                              //Add to existing category amount
-                                              orderCategories.update(
-                                                  'Ventas de ${cartList[i]["Category"]}',
-                                                  (value) =>
-                                                      value +
-                                                      (cartList[i]["Price"] *
-                                                          cartList[i]
-                                                              ["Quantity"]));
-                                            } else {
-                                              //Add new category with amount
-                                              orderCategories[
-                                                      'Ventas de ${cartList[i]["Category"]}'] =
-                                                  cartList[i]["Price"] *
-                                                      cartList[i]["Quantity"];
-                                            }
-                                          }
-                                          //Logic to add Sales by Categories to Firebase based on current Values from snap
-                                          orderCategories.forEach((k, v) {
-                                            try {
-                                              orderCategories.update(
-                                                  k,
-                                                  (value) =>
-                                                      v = v + snap.data['$k']);
-                                            } catch (e) {
-                                              //Do nothing
-                                            }
-                                          });
-                                          //Add Total sales edited to map
-                                          orderCategories['Ventas'] =
-                                              newSalesAmount;
-
-                                          // //Create Sale
-                                          DatabaseService().createOrder(
-                                              widget.businessID,
-                                              DateTime.now().toString(),
-                                              year,
-                                              month,
-                                              DateTime.now(),
-                                              widget.order.subTotal,
-                                              widget.order.discount,
-                                              widget.order.tax,
-                                              widget.order.total,
-                                              widget.order.orderDetail,
-                                              widget.order.orderName,
-                                              'Efectivo',
-                                              widget.order.orderName,
-                                              {
-                                                'Name':
-                                                    widget.order.client['Name'],
-                                                'Address': widget
-                                                    .order.client['Address'],
-                                                'Phone': widget
-                                                    .order.client['Phone'],
-                                                'email': widget
-                                                    .order.client['email'],
+                          (widget.order.pending)
+                              ? Container(
+                                  height: 50,
+                                  width: double.infinity,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      //Delete
+                                      Expanded(
+                                        flex: 2,
+                                        child: Tooltip(
+                                          message: 'Borrar pedido',
+                                          child: Container(
+                                            height: 50,
+                                            child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                foregroundColor: Colors.black,
+                                              ),
+                                              onPressed: () {
+                                                DatabaseService()
+                                                    .deleteScheduleSale(
+                                                        widget.businessID,
+                                                        widget.order.id);
+                                                clearControllers();
+                                                Navigator.of(context).pop();
                                               },
-                                              widget.order.id,
-                                              '',
-                                              false,
-                                              [],
-                                              'Encargo');
-
-                                          /////Save Sales and Order Categories to database
-                                          DatabaseService().saveOrderType(
-                                              widget.businessID,
-                                              orderCategories);
-
-                                          // /////////////////////////// MONTH STATS ///////////////////////////
-
-                                          //Sales Count
-                                          if (currentSalesCount == null ||
-                                              currentSalesCount < 1) {
-                                            newSalesCount = 1;
-                                          } else {
-                                            newSalesCount =
-                                                currentSalesCount + 1;
-                                          }
-
-                                          //Set Categories Variables
-                                          orderStats = {};
-
-                                          //Items Sold
-                                          if (currentTicketItemsCount == null ||
-                                              currentTicketItemsCount < 1) {
-                                            newTicketItemsCount =
-                                                cartList.length;
-                                          } else {
-                                            newTicketItemsCount =
-                                                currentTicketItemsCount +
-                                                    cartList.length;
-                                          }
-
-                                          // ////////////////////////////Add amounts by category/account
-
-                                          //Logic to add up categories totals in current ticket
-                                          for (var i = 0;
-                                              i < cartList.length;
-                                              i++) {
-                                            //Check if the map contains the key
-                                            if (salesCountbyCategory.containsKey(
-                                                '${cartList[i]["Category"]}')) {
-                                              //Add to existing category amount
-                                              salesCountbyCategory.update(
-                                                  '${cartList[i]["Category"]}',
-                                                  (value) =>
-                                                      value +
-                                                      (cartList[i]["Price"] *
-                                                          cartList[i]
-                                                              ["Quantity"]));
-                                            } else {
-                                              //Add new category with amount
-                                              salesCountbyCategory[
-                                                      '${cartList[i]["Category"]}'] =
-                                                  cartList[i]["Price"] *
-                                                      cartList[i]["Quantity"];
-                                            }
-                                          }
-
-                                          ////////////////////////////Add by item count
-
-                                          //Logic to add up item count  in current ticket
-                                          for (var i = 0;
-                                              i < cartList.length;
-                                              i++) {
-                                            //Check if the map contains the key
-                                            if (currentItemsCount.containsKey(
-                                                '${cartList[i]["Name"]}')) {
-                                              //Add to existing category amount
-                                              currentItemsCount.update(
-                                                  '${cartList[i]["Name"]}',
-                                                  (value) =>
-                                                      value +
-                                                      cartList[i]["Quantity"]);
-                                            } else {
-                                              //Add new category with amount
-                                              currentItemsCount[
-                                                      '${cartList[i]["Name"]}'] =
-                                                  cartList[i]["Quantity"];
-                                            }
-                                          }
-
-                                          //Logic to add up item Amount  in current ticket
-                                          for (var i = 0;
-                                              i < cartList.length;
-                                              i++) {
-                                            //Check if the map contains the key
-                                            if (currentItemsAmount.containsKey(
-                                                '${cartList[i]["Name"]}')) {
-                                              //Add to existing category amount
-                                              currentItemsAmount.update(
-                                                  '${cartList[i]["Name"]}',
-                                                  (value) =>
-                                                      value +
-                                                      (cartList[i]["Price"] *
-                                                          cartList[i]
-                                                              ["Quantity"]));
-                                            } else {
-                                              //Add new category with amount
-                                              currentItemsAmount[
-                                                      '${cartList[i]["Name"]}'] =
-                                                  (cartList[i]["Price"] *
-                                                      cartList[i]["Quantity"]);
-                                            }
-                                          }
-
-                                          //Logic to add up item sales by order type
-                                          //Check if the map contains the key
-                                          if (currentSalesbyOrderType
-                                              .containsKey('Independiente')) {
-                                            //Add to existing category amount
-                                            currentSalesbyOrderType.update(
-                                                'Independiente',
-                                                (value) =>
-                                                    value + widget.order.total);
-                                          } else {
-                                            //Add new category with amount
-                                            currentSalesbyOrderType[
-                                                    'Independiente'] =
-                                                (widget.order.total);
-                                          }
-
-                                          orderStats['Total Sales'] =
-                                              newSalesAmount;
-                                          orderStats['Total Sales Count'] =
-                                              newSalesCount;
-                                          orderStats['Total Items Sold'] =
-                                              newTicketItemsCount;
-                                          orderStats['Sales Count by Product'] =
-                                              currentItemsCount;
-                                          orderStats[
-                                                  'Sales Amount by Product'] =
-                                              currentItemsAmount;
-                                          orderStats[
-                                                  'Sales Count by Category'] =
-                                              salesCountbyCategory;
-                                          orderStats['Sales by Order Type'] =
-                                              currentSalesbyOrderType;
-
-                                          //Save Details to Firestore Historic
-                                          DatabaseService().saveOrderStats(
-                                              widget.businessID, orderStats);
-
-                                          DatabaseService().paidScheduledSale(
-                                              widget.businessID,
-                                              widget.order.id);
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 5),
-                                          child: Center(
-                                            child: Text('Registar venta'),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        )),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      //Partial Pay
+                                      Expanded(
+                                        flex: 5,
+                                        child: Container(
+                                          height: 50,
+                                          child: OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                              foregroundColor: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              controller.nextPage(
+                                                  duration: Duration(
+                                                      milliseconds: 500),
+                                                  curve: Curves.ease);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text('Cobro parcial'),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      //Pay
+                                      Expanded(
+                                        flex: 5,
+                                        child: Container(
+                                          height: 50,
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.black,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 15),
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(8)),
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                bloc.changePaymentType(
+                                                    'Efectivo');
+                                                bloc.changeOrderName(
+                                                    widget.order.orderName);
+                                                bloc.changeOrderType(
+                                                    'Venta Agendada');
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return MultiProvider(
+                                                        providers: [
+                                                          StreamProvider<
+                                                                  MonthlyStats>.value(
+                                                              initialData: null,
+                                                              value: DatabaseService()
+                                                                  .monthlyStatsfromSnapshot(
+                                                                      widget
+                                                                          .businessID)),
+                                                        ],
+                                                        child: ConfirmOrder(
+                                                          total: widget
+                                                              .order.total,
+                                                          items: widget.order
+                                                              .orderDetail,
+                                                          discount: widget
+                                                              .order.discount,
+                                                          discountCode: '',
+                                                          orderDetail: widget
+                                                              .order
+                                                              .orderDetail,
+                                                          orderName: widget
+                                                              .order.orderName,
+                                                          subTotal: widget
+                                                              .order.subTotal,
+                                                          tax: widget.order.tax,
+                                                          controller: null,
+                                                          clearVariables:
+                                                              clearControllers,
+                                                          paymentTypes:
+                                                              registerStatus
+                                                                  .paymentTypes,
+                                                          isTable: false,
+                                                          tableCode: null,
+                                                          businessID:
+                                                              widget.businessID,
+                                                          tablePageController:
+                                                              null,
+                                                          isSavedOrder: false,
+                                                          savedOrderID:
+                                                              widget.order.id,
+                                                          orderType:
+                                                              'Venta Agendada',
+                                                          onTableView: false,
+                                                          register: null,
+                                                        ),
+                                                      );
+                                                    });
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 5),
+                                                child: Center(
+                                                  child: Text('Registar venta'),
+                                                ),
+                                              )),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
+                                )
+                              : SizedBox()
                         ],
                       ),
                       //Partial payment

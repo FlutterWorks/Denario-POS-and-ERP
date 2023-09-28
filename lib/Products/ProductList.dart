@@ -190,33 +190,70 @@ class ProductList extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )),
-                    //Precio
-                    Container(
-                        width: 150,
-                        child: Text(
-                          '${formatCurrency.format(totalCost)}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.redAccent[700]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )),
+                    //Costo
+                    (MediaQuery.of(context).size.width > 850)
+                        ? Container(
+                            width: 150,
+                            child: Text(
+                              '${formatCurrency.format(totalCost)}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.redAccent[700]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ))
+                        : Container(
+                            width: 150,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                //Cost
+                                Text(
+                                  '${formatCurrency.format(totalCost)}',
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      TextStyle(color: Colors.redAccent[700]),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 5),
+                                //Margin
+                                Text(
+                                  '${(((products[i].price - totalCost) / products[i].price) * 100).toStringAsFixed(0)}%',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          ((((products[i].price - totalCost) /
+                                                          products[i].price) *
+                                                      100) >
+                                                  products[i].lowMarginAlert)
+                                              ? Colors.black54
+                                              : Colors.redAccent[700]),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            )),
                     //Margin
-                    Container(
-                        width: 100,
-                        child: Text(
-                          '${(((products[i].price - totalCost) / products[i].price) * 100).toStringAsFixed(0)}%',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: ((((products[i].price - totalCost) /
-                                              products[i].price) *
-                                          100) >
-                                      products[i].lowMarginAlert)
-                                  ? Colors.black54
-                                  : Colors.redAccent[700]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )),
+                    (MediaQuery.of(context).size.width > 850)
+                        ? Container(
+                            width: 100,
+                            child: Text(
+                              '${(((products[i].price - totalCost) / products[i].price) * 100).toStringAsFixed(0)}%',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: ((((products[i].price - totalCost) /
+                                                  products[i].price) *
+                                              100) >
+                                          products[i].lowMarginAlert)
+                                      ? Colors.black54
+                                      : Colors.redAccent[700]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ))
+                        : SizedBox()
                   ],
                 ),
               ),

@@ -206,8 +206,40 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                         fontSize: 20,
                                         fontWeight: FontWeight.w300),
                                     textAlign: TextAlign.center,
-                                    onFieldSubmitted: ((value) {
-                                      Navigator.pop(context);
+                                    onFieldSubmitted: ((value) async {
+                                      if (coupon) {
+                                        DocumentSnapshot document =
+                                            await fetchDocument(
+                                                widget.businessID, couponCode);
+                                        if (document != null) {
+                                          // You can access document data using document.data()
+                                          Map<String, dynamic> data = document
+                                              .data() as Map<String, dynamic>;
+
+                                          if (data['Active']) {
+                                            setState(() {
+                                              discount = totalAmount(snapshot) *
+                                                  (data['Discount'] / 100);
+                                              bloc.setDiscountAmount(discount);
+                                              bloc.setDiscountCode(
+                                                  data['Code']);
+                                            });
+                                            Navigator.pop(context);
+                                          } else {
+                                            setState(() {
+                                              errorMsg = 'Cupón inactivo';
+                                            });
+                                          }
+                                        } else {
+                                          // Handle the case where the document retrieval failed
+                                          setState(() {
+                                            errorMsg =
+                                                'Ups, ocurrió un error, intenta de nuevo';
+                                          });
+                                        }
+                                      } else {
+                                        Navigator.pop(context);
+                                      }
                                     }),
                                     decoration: InputDecoration(
                                       hintText: 'Cupón',
@@ -411,6 +443,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                   bloc.setDiscountAmount(discount);
                                   bloc.setDiscountCode(data['Code']);
                                 });
+                                Navigator.pop(context);
                               } else {
                                 setState(() {
                                   errorMsg = 'Cupón inactivo';
@@ -423,8 +456,9 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                     'Ups, ocurrió un error, intenta de nuevo';
                               });
                             }
+                          } else {
+                            Navigator.pop(context);
                           }
-                          Navigator.pop(context);
                         },
                         child: Center(
                             child: Text('Guardar',
@@ -437,7 +471,9 @@ class _DiscountDialogState extends State<DiscountDialog> {
                         ? Text(
                             errorMsg,
                             style: TextStyle(
-                                color: Colors.redAccent, fontSize: 11),
+                                color: Colors.redAccent,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
                           )
                         : SizedBox(),
                   ],

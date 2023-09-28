@@ -36,7 +36,6 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
   String orderName;
   double tax;
   double discount;
-  Color color = Colors.white;
 
   List<TextEditingController> _controllers = [];
   TextEditingController invoiceController;
@@ -93,7 +92,13 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
     tax = 0;
     discount = 0;
     invoiceController = new TextEditingController(text: invoiceNo);
-    clientController = new TextEditingController(text: '');
+
+    if (bloc.ticketItems["Order Name"] != '') {
+      clientController =
+          new TextEditingController(text: bloc.ticketItems["Order Name"]);
+    } else {
+      clientController = new TextEditingController(text: '');
+    }
 
     super.initState();
   }
@@ -116,11 +121,6 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
         stream: bloc.getStream,
         initialData: bloc.ticketItems,
         builder: (context, snapshot) {
-          orderName = snapshot.data["Order Name"];
-          color = snapshot.data["Color"];
-
-          clientController.text = orderName;
-
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -729,7 +729,10 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                               SizedBox(width: 15),
                               //Text
                               Text(
-                                'Descuento',
+                                (snapshot.data['Discount Code'] == '')
+                                    ? 'Descuento'
+                                    : 'Descuento ' +
+                                        snapshot.data['Discount Code'],
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16,
@@ -738,11 +741,14 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                               SizedBox(width: 25),
                               //Amount
                               Text(
-                                formatCurrency.format(discount),
+                                formatCurrency
+                                    .format(snapshot.data['Discount']),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 18,
-                                    color: Colors.black),
+                                    color: (snapshot.data['Discount'] > 0)
+                                        ? Colors.redAccent
+                                        : Colors.black),
                               ),
                             ],
                           ),
@@ -860,7 +866,10 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                               child: ConfirmOrder(
                                                 total: bloc.totalTicketAmount,
                                                 items: snapshot.data["Items"],
-                                                discount: discount,
+                                                discount:
+                                                    snapshot.data['Discount'],
+                                                discountCode: snapshot
+                                                    .data['Discount Code'],
                                                 orderDetail:
                                                     snapshot.data["Items"],
                                                 orderName: orderName,

@@ -1,5 +1,6 @@
 import 'package:denario/Models/Discounts.dart';
 import 'package:denario/Products/DiscountCreate.dart';
+import 'package:denario/Products/DiscountDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -187,7 +188,13 @@ class DiscountsList extends StatelessWidget {
                           return TextButton(
                             style: TextButton.styleFrom(
                                 backgroundColor: Colors.white),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DiscountDetails(
+                                          discountList[i], activeBusiness)));
+                            },
                             child: Container(
                               height: 50,
                               child: Row(

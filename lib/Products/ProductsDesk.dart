@@ -841,16 +841,18 @@ class _ProductDeskState extends State<ProductDesk> {
                   )),
 
               //Margen de ganancia
-              Container(
-                  width: 100,
-                  child: Text(
-                    'Margen %',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black54),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  )),
+              (MediaQuery.of(context).size.width > 850)
+                  ? Container(
+                      width: 100,
+                      child: Text(
+                        'Margen %',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black54),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ))
+                  : SizedBox(),
             ],
           ),
         ),

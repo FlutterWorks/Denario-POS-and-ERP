@@ -341,20 +341,23 @@ class _StatsDeskState extends State<StatsDesk>
                                   },
                                 ),
                               ),
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          StreamProvider<MonthlyStats>.value(
-                                            value: DatabaseService()
-                                                .monthlyStatsfromSnapshot(
-                                                    widget.businessID),
-                                            initialData: null,
-                                            child: NewSaleScreen(
-                                              widget.businessID,
-                                              fromPOS: false,
-                                            ),
-                                          ))),
+                              onPressed: () {
+                                _toggleDropdown();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            StreamProvider<MonthlyStats>.value(
+                                              value: DatabaseService()
+                                                  .monthlyStatsfromSnapshot(
+                                                      widget.businessID),
+                                              initialData: null,
+                                              child: NewSaleScreen(
+                                                widget.businessID,
+                                                fromPOS: false,
+                                              ),
+                                            )));
+                              },
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 5),
@@ -391,7 +394,9 @@ class _StatsDeskState extends State<StatsDesk>
                                 },
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              _toggleDropdown();
+                            },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 5),

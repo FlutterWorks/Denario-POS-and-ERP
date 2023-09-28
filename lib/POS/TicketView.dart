@@ -423,22 +423,24 @@ class _TicketViewState extends State<TicketView> {
                               children: [
                                   //Column Name + Qty
                                   (snapshot.data["Discount Code"] != '')
-                                  ? Container(
-                                    constraints: BoxConstraints(maxWidth: 150),
-                                    child: Text(
-                                      snapshot.data["Discount Code"],
-                                      style: TextStyle(
-                                          color: Colors.grey.shade700),
-                                    ),
-                                  )
-                                  : Container(
-                                    constraints: BoxConstraints(maxWidth: 150),
-                                    child: Text(
-                                      'Descuento',
-                                      style: TextStyle(
-                                          color: Colors.grey.shade700),
-                                    ),
-                                  ),
+                                      ? Container(
+                                          constraints:
+                                              BoxConstraints(maxWidth: 150),
+                                          child: Text(
+                                            snapshot.data["Discount Code"],
+                                            style: TextStyle(
+                                                color: Colors.grey.shade700),
+                                          ),
+                                        )
+                                      : Container(
+                                          constraints:
+                                              BoxConstraints(maxWidth: 150),
+                                          child: Text(
+                                            'Descuento',
+                                            style: TextStyle(
+                                                color: Colors.grey.shade700),
+                                          ),
+                                        ),
                                   //Amount
                                   Spacer(),
                                   Text(
@@ -519,6 +521,8 @@ class _TicketViewState extends State<TicketView> {
                                             total: bloc.totalTicketAmount,
                                             items: snapshot.data["Items"],
                                             discount: discount,
+                                            discountCode:
+                                                snapshot.data['Discount Code'],
                                             orderDetail: orderDetail,
                                             orderName: orderName,
                                             subTotal: subTotal,
@@ -971,23 +975,25 @@ class _TicketViewState extends State<TicketView> {
                               children: [
                                   //Column Name + Qty
                                   (snapshot.data["Discount Code"] != '')
-                                  ? Container(
-                                    constraints: BoxConstraints(maxWidth: 150),
-                                    child: Text(
-                                      snapshot.data["Discount Code"],
-                                      style: TextStyle(
-                                          color: Colors.grey.shade700),
-                                    ),
-                                  )
-                                  : Container(
-                                    constraints: BoxConstraints(maxWidth: 150),
-                                    child: Text(
-                                      'Descuento',
-                                      style: TextStyle(
-                                          color: Colors.grey.shade700),
-                                    ),
-                                  ),
-                                   //Amount
+                                      ? Container(
+                                          constraints:
+                                              BoxConstraints(maxWidth: 150),
+                                          child: Text(
+                                            snapshot.data["Discount Code"],
+                                            style: TextStyle(
+                                                color: Colors.grey.shade700),
+                                          ),
+                                        )
+                                      : Container(
+                                          constraints:
+                                              BoxConstraints(maxWidth: 150),
+                                          child: Text(
+                                            'Descuento',
+                                            style: TextStyle(
+                                                color: Colors.grey.shade700),
+                                          ),
+                                        ),
+                                  //Amount
                                   Spacer(),
                                   Text(
                                       formatCurrency
@@ -1080,8 +1086,12 @@ class _TicketViewState extends State<TicketView> {
                           ),
                           SizedBox(width: 10),
                           //PopUp Menu
-                          MoreTicketPopUp(widget.userProfile.activeBusiness,
-                              categoriesProvider: categoriesProvider, insideTable: false, tables: null,),
+                          MoreTicketPopUp(
+                            widget.userProfile.activeBusiness,
+                            categoriesProvider: categoriesProvider,
+                            insideTable: false,
+                            tables: null,
+                          ),
                           SizedBox(width: 10),
                           //Pagar
                           Expanded(
@@ -1140,6 +1150,8 @@ class _TicketViewState extends State<TicketView> {
                                               total: bloc.totalTicketAmount,
                                               items: snapshot.data["Items"],
                                               discount: discount,
+                                              discountCode: snapshot
+                                                  .data['Discount Code'],
                                               orderDetail: orderDetail,
                                               orderName: orderName,
                                               subTotal: subTotal,
@@ -1296,7 +1308,8 @@ class _TicketViewState extends State<TicketView> {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return SelectTableDialog(tables, false, widget.userProfile.activeBusiness,
+                                        return SelectTableDialog(tables, false,
+                                            widget.userProfile.activeBusiness,
                                             orderNameController:
                                                 _orderNamecontroller);
                                       });
@@ -1672,23 +1685,25 @@ class _TicketViewState extends State<TicketView> {
                             children: [
                                 //Column Name + Qty
                                 (snapshot.data["Discount Code"] != '')
-                                  ? Container(
-                                    constraints: BoxConstraints(maxWidth: 150),
-                                    child: Text(
-                                      snapshot.data["Discount Code"],
-                                      style: TextStyle(
-                                          color: Colors.grey.shade700),
-                                    ),
-                                  )
-                                  : Container(
-                                    constraints: BoxConstraints(maxWidth: 150),
-                                    child: Text(
-                                      'Descuento',
-                                      style: TextStyle(
-                                          color: Colors.grey.shade700),
-                                    ),
-                                  ),
-                                  //Amount
+                                    ? Container(
+                                        constraints:
+                                            BoxConstraints(maxWidth: 150),
+                                        child: Text(
+                                          snapshot.data["Discount Code"],
+                                          style: TextStyle(
+                                              color: Colors.grey.shade700),
+                                        ),
+                                      )
+                                    : Container(
+                                        constraints:
+                                            BoxConstraints(maxWidth: 150),
+                                        child: Text(
+                                          'Descuento',
+                                          style: TextStyle(
+                                              color: Colors.grey.shade700),
+                                        ),
+                                      ),
+                                //Amount
                                 Spacer(),
                                 Text(
                                     formatCurrency
@@ -1937,7 +1952,12 @@ class _TicketViewState extends State<TicketView> {
                         ),
                         SizedBox(width: 10),
                         //PopUp Menu
-                        MoreTicketPopUp(widget.userProfile.activeBusiness,categoriesProvider: categoriesProvider, insideTable: false, tables: null,),
+                        MoreTicketPopUp(
+                          widget.userProfile.activeBusiness,
+                          categoriesProvider: categoriesProvider,
+                          insideTable: false,
+                          tables: null,
+                        ),
                         SizedBox(width: 10),
                         //Pagar
                         Expanded(
@@ -1996,6 +2016,8 @@ class _TicketViewState extends State<TicketView> {
                                             total: bloc.totalTicketAmount,
                                             items: snapshot.data["Items"],
                                             discount: discount,
+                                            discountCode:
+                                                snapshot.data['Discount Code'],
                                             orderDetail: orderDetail,
                                             orderName: orderName,
                                             subTotal: subTotal,

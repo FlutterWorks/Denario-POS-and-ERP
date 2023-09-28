@@ -16,6 +16,7 @@ class ConfirmOrder extends StatefulWidget {
 
   final double subTotal;
   final double discount;
+  final String discountCode;
   final double tax;
   final orderDetail;
   final String orderName;
@@ -40,6 +41,7 @@ class ConfirmOrder extends StatefulWidget {
       {this.total,
       this.items,
       this.discount,
+      this.discountCode,
       this.orderDetail,
       this.orderName,
       this.subTotal,
@@ -347,7 +349,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                               Spacer(),
                               //Amount
                               Text(
-                                "${formatCurrency.format(bloc.totalTicketAmount)}",
+                                "${formatCurrency.format(widget.total)}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.black,
@@ -709,7 +711,16 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         widget.tableCode,
                                         widget.isSavedOrder,
                                         widget.savedOrderID,
-                                        false);
+                                        false,
+                                        widget.orderName,
+                                        widget.orderDetail,
+                                        widget.subTotal,
+                                        widget.total,
+                                        paymentType,
+                                        widget.orderType,
+                                        widget.tax,
+                                        widget.discount,
+                                        widget.discountCode);
                                     /////////////////Clear Variables
                                     widget.clearVariables();
                                     if (widget.onTableView) {
@@ -752,11 +763,26 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         widget.tableCode,
                                         widget.isSavedOrder,
                                         widget.savedOrderID,
-                                        false);
+                                        false,
+                                        widget.orderName,
+                                        widget.orderDetail,
+                                        widget.subTotal,
+                                        widget.total,
+                                        paymentType,
+                                        widget.orderType,
+                                        widget.tax,
+                                        widget.discount,
+                                        widget.discountCode);
                                     /////////////////Clear Variables
                                     widget.clearVariables();
                                     if (widget.onTableView) {
                                       widget.tablePageController.jumpTo(0);
+                                    }
+                                    if (widget.orderType == 'Venta Agendada') {
+                                      DatabaseService().paidScheduledSale(
+                                          widget.businessID,
+                                          widget.savedOrderID);
+                                      Navigator.of(context).pop();
                                     }
                                     Navigator.of(context).pop();
                                     // saveOrder(userProfile, paymentType,
@@ -1025,7 +1051,16 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         widget.tableCode,
                                         widget.isSavedOrder,
                                         widget.savedOrderID,
-                                        false);
+                                        false,
+                                        widget.orderName,
+                                        widget.orderDetail,
+                                        widget.subTotal,
+                                        widget.total,
+                                        paymentType,
+                                        widget.orderType,
+                                        widget.tax,
+                                        widget.discount,
+                                        widget.discountCode);
 
                                     /////////////////Clear Variables
                                     widget.clearVariables();

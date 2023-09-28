@@ -882,29 +882,37 @@ class DatabaseService {
 
   // Save order function
   void saveNewOrder(
-    String documentID,
-    String activeBusiness,
-    bool splitPayment,
-    List splitPaymentDetails,
-    invoiceNO,
-    cashRegister,
-    bool isTable,
-    tableCode,
-    bool isSavedOrder,
-    savedOrderID,
-    bool reveresed,
-  ) async {
+      String documentID,
+      String activeBusiness,
+      bool splitPayment,
+      List splitPaymentDetails,
+      invoiceNO,
+      cashRegister,
+      bool isTable,
+      tableCode,
+      bool isSavedOrder,
+      savedOrderID,
+      bool reveresed,
+      orderName,
+      cartList,
+      subtotal,
+      total,
+      paymentType,
+      orderType,
+      tax,
+      discount,
+      discountCode) async {
     //Date variables
     var year = DateTime.now().year.toString();
     var month = DateTime.now().month.toString();
 
     //Gather TicketBloc values before they get cleared using doc.get()
-    final cartList = bloc.ticketItems['Items'];
-    final subtotal = bloc.subtotalTicketAmount;
-    final total = bloc.totalTicketAmount;
-    final paymentType = bloc.ticketItems['Payment Type'];
-    final orderType = bloc.ticketItems['Order Type'];
-    final discountCode = bloc.ticketItems['Discount Code'];
+    // final cartList = bloc.ticketItems['Items'];
+    // final subtotal = bloc.subtotalTicketAmount;
+    // final total = bloc.totalTicketAmount;
+    // final paymentType = bloc.ticketItems['Payment Type'];
+    // final orderType = bloc.ticketItems['Order Type'];
+    // final discountCode = bloc.ticketItems['Discount Code'];
 
     // //////////Create Sale
     createOrder(
@@ -914,15 +922,15 @@ class DatabaseService {
         month,
         DateTime.now(),
         subtotal,
-        bloc.ticketItems['Discount'],
-        bloc.ticketItems['IVA'],
-        bloc.totalTicketAmount,
-        bloc.ticketItems['Items'],
-        bloc.ticketItems['Order Name'],
-        splitPayment ? 'Split' : bloc.ticketItems['Payment Type'],
-        bloc.ticketItems['Order Name'],
+        discount,
+        tax,
+        total,
+        cartList,
+        orderName,
+        splitPayment ? 'Split' : paymentType,
+        orderName,
         {
-          'Name': bloc.ticketItems['Order Name'],
+          'Name': orderName,
           'Address': '',
           'Phone': 0,
           'email': '',
@@ -943,15 +951,15 @@ class DatabaseService {
           month,
           DateTime.now(),
           subtotal,
-          bloc.ticketItems['Discount'],
-          bloc.ticketItems['IVA'],
-          bloc.totalTicketAmount,
-          bloc.ticketItems['Items'],
-          bloc.ticketItems['Order Name'],
-          splitPayment ? 'Split' : bloc.ticketItems['Payment Type'],
-          bloc.ticketItems['Order Name'],
+          discount,
+          tax,
+          total,
+          cartList,
+          orderName,
+          splitPayment ? 'Split' : paymentType,
+          orderName,
           {
-            'Name': bloc.ticketItems['Order Name'],
+            'Name': orderName,
             'Address': '',
             'Phone': 0,
             'email': '',
@@ -3086,7 +3094,7 @@ class DatabaseService {
         .doc(month)
         .collection('Sales')
         .orderBy("Date", descending: true)
-        .limit(15)
+        .limit(10)
         .snapshots()
         .map(_salesFromSnapshot);
   }
@@ -3114,6 +3122,7 @@ class DatabaseService {
           .collection('Sales')
           .where('Date', isGreaterThanOrEqualTo: dateFrom)
           .where('Date', isLessThanOrEqualTo: dateTo)
+          .orderBy("Date", descending: true)
           // .where('Order Name', isEqualTo: '1')
           .snapshots()
           .map(_salesFromSnapshot);
@@ -3888,6 +3897,28 @@ class DatabaseService {
         .update({
       'Number of Uses': FieldValue.increment(1),
     });
+  }
+
+  Future editDiscount(
+      activeBusiness, String code, String description, bool active) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(activeBusiness)
+        .collection('Discounts')
+        .doc(code)
+        .update({
+      'Description': description,
+      'Active': active,
+    });
+  }
+
+  Future deleteDiscount(activeBusiness, String code) async {
+    return await FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(activeBusiness)
+        .collection('Discounts')
+        .doc(code)
+        .delete();
   }
 
   //Discount Uses

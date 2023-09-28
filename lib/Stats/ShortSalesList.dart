@@ -122,7 +122,7 @@ class ShortSalesList extends StatelessWidget {
                               )),
 
                           //Nombre
-                          (MediaQuery.of(context).size.width < 1100)
+                          (MediaQuery.of(context).size.width < 1150)
                               ? Container(
                                   width: 120,
                                   child: Column(
@@ -173,7 +173,7 @@ class ShortSalesList extends StatelessWidget {
                                   )),
 
                           //Payment Type
-                          (MediaQuery.of(context).size.width < 1100)
+                          (MediaQuery.of(context).size.width < 1150)
                               ? Container()
                               : Container(
                                   width: 120,

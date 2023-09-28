@@ -1,4 +1,5 @@
 import 'package:denario/Backend/DatabaseService.dart';
+import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/ScheduledSales.dart';
 import 'package:denario/Models/Stats.dart';
 import 'package:denario/Schedule/SingleScheduledDialog.dart';
@@ -75,10 +76,18 @@ class TaskList extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (context) {
-                              return StreamProvider<MonthlyStats>.value(
-                                initialData: null,
-                                value: DatabaseService()
-                                    .monthlyStatsfromSnapshot(activeBusiness),
+                              return MultiProvider(
+                                providers: [
+                                  StreamProvider<MonthlyStats>.value(
+                                      initialData: null,
+                                      value: DatabaseService()
+                                          .monthlyStatsfromSnapshot(
+                                              activeBusiness)),
+                                  StreamProvider<CashRegister>.value(
+                                      initialData: null,
+                                      value: DatabaseService()
+                                          .cashRegisterStatus(activeBusiness)),
+                                ],
                                 child: SingleScheduledDialog(
                                   order: scheduledSales[index],
                                   businessID: activeBusiness,

@@ -166,191 +166,418 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                     child: SingleChildScrollView(
                       child: Form(
                         key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //Nombre (inicializar con el nombre de la pantalla anterior)
-                            Container(
-                              child: TextFormField(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //Nombre (inicializar con el nombre de la pantalla anterior)
+                              Container(
+                                child: TextFormField(
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
+                                  cursorColor: Colors.grey,
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return "Agregá un nombre";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  focusNode: _clientNode,
+                                  controller: clientController,
+                                  textInputAction: TextInputAction.next,
+                                  decoration: InputDecoration(
+                                    label: Text(
+                                      'Cliente',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: Colors.black45),
+                                    ),
+                                    errorStyle: TextStyle(
+                                        color: Colors.redAccent[700],
+                                        fontSize: 12),
+                                    border: new OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      borderSide: new BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      borderSide: new BorderSide(
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ),
+                                  onFieldSubmitted: (term) {
+                                    _clientNode.unfocus();
+                                    openSchedule();
+                                  },
+                                  onChanged: (val) {
+                                    setState(() {
+                                      orderName = val;
+                                      clientController.text = val;
+                                      clientController.selection =
+                                          TextSelection.fromPosition(
+                                              TextPosition(
+                                                  offset: clientController
+                                                      .text.length));
+                                    });
+                                  },
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              //Fecha
+                              Text(
+                                'Agendar para:',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                                cursorColor: Colors.grey,
-                                validator: (val) {
-                                  if (val == null || val.isEmpty) {
-                                    return "Agregá un nombre";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                focusNode: _clientNode,
-                                controller: clientController,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  label: Text(
-                                    'Cliente',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: Colors.black45),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                child: Row(
+                                  children: [
+                                    //Fecha
+                                    Expanded(
+                                      child: Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                        ),
+                                        padding: EdgeInsets.all(12),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              DateFormat('dd/MM/yyyy')
+                                                  .format(selectedDate),
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 16),
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                              height: 20,
+                                              width: 20,
+                                              child: IconButton(
+                                                splashRadius: 1,
+                                                onPressed: openSchedule,
+                                                padding: EdgeInsets.all(0),
+                                                tooltip: 'Seleccionar fecha',
+                                                iconSize: 18,
+                                                icon:
+                                                    Icon(Icons.calendar_month),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    //Time
+                                    Expanded(
+                                      child: Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                        ),
+                                        padding: EdgeInsets.all(12),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              DateFormat('HH:mm')
+                                                  .format(selectedDate),
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 16),
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                              height: 20,
+                                              width: 20,
+                                              child: IconButton(
+                                                splashRadius: 1,
+                                                onPressed: openTime,
+                                                padding: EdgeInsets.all(0),
+                                                tooltip: 'Horario',
+                                                iconSize: 18,
+                                                icon: Icon(Icons.av_timer),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              // Tlf y mail
+                              Text(
+                                'Contacto',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: Colors.black45),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                child: Row(
+                                  children: [
+                                    //Telefono
+                                    Expanded(
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        focusNode: phoneNode,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                        autofocus: true,
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(8),
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
+                                        cursorColor: Colors.grey,
+                                        decoration: InputDecoration(
+                                          prefixIcon: Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  20, 10, 2, 10),
+                                              child: Text(('(11) '))),
+                                          hintText: 'Whatsapp',
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey, fontSize: 12),
+                                          border: new OutlineInputBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(12.0),
+                                            borderSide: new BorderSide(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          errorBorder: new OutlineInputBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(12.0),
+                                            borderSide: new BorderSide(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(12.0),
+                                            borderSide: new BorderSide(
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                        ),
+                                        onFieldSubmitted: (val) {
+                                          phoneNode.unfocus();
+                                          _emailNode.requestFocus();
+                                        },
+                                        onChanged: (val) {
+                                          setState(() =>
+                                              phone = int.parse('11' + val));
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    //Mail
+                                    Expanded(
+                                      child: TextFormField(
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                        cursorColor: Colors.grey,
+                                        focusNode: _emailNode,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: InputDecoration(
+                                          hintText: 'email',
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey, fontSize: 12),
+                                          prefixIcon: Icon(
+                                            Icons.mail_outline,
+                                            color: Colors.grey,
+                                          ),
+                                          errorStyle: TextStyle(
+                                              color: Colors.redAccent[700],
+                                              fontSize: 12),
+                                          border: new OutlineInputBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(12.0),
+                                            borderSide: new BorderSide(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(12.0),
+                                            borderSide: new BorderSide(
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                        ),
+                                        onFieldSubmitted: (term) {
+                                          _emailNode.unfocus();
+                                          _initialPaymentNode.requestFocus();
+                                        },
+                                        onChanged: (val) {
+                                          setState(() => email = val);
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              //Initail Payment
+                              Row(
+                                children: [
+                                  Text(
+                                    'Delivery',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
                                         color: Colors.black45),
                                   ),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent[700],
-                                      fontSize: 12),
-                                  border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                                onFieldSubmitted: (term) {
-                                  _clientNode.unfocus();
-                                  openSchedule();
-                                },
-                                onChanged: (val) {
-                                  setState(() {
-                                    orderName = val;
-                                    clientController.text = val;
-                                    clientController.selection =
-                                        TextSelection.fromPosition(TextPosition(
-                                            offset:
-                                                clientController.text.length));
-                                  });
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 15),
-                            //Fecha
-                            Text(
-                              'Agendar para:',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Colors.black45),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              child: Row(
-                                children: [
-                                  //Fecha
-                                  Expanded(
-                                    child: Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      padding: EdgeInsets.all(12),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            DateFormat('dd/MM/yyyy')
-                                                .format(selectedDate),
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 16),
-                                          ),
-                                          Spacer(),
-                                          Container(
-                                            height: 20,
-                                            width: 20,
-                                            child: IconButton(
-                                              splashRadius: 1,
-                                              onPressed: openSchedule,
-                                              padding: EdgeInsets.all(0),
-                                              tooltip: 'Seleccionar fecha',
-                                              iconSize: 18,
-                                              icon: Icon(Icons.calendar_month),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  //Time
-                                  Expanded(
-                                    child: Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      padding: EdgeInsets.all(12),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            DateFormat('HH:mm')
-                                                .format(selectedDate),
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 16),
-                                          ),
-                                          Spacer(),
-                                          Container(
-                                            height: 20,
-                                            width: 20,
-                                            child: IconButton(
-                                              splashRadius: 1,
-                                              onPressed: openTime,
-                                              padding: EdgeInsets.all(0),
-                                              tooltip: 'Horario',
-                                              iconSize: 18,
-                                              icon: Icon(Icons.av_timer),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                  (delivery)
+                                      ? IconButton(
+                                          iconSize: 14,
+                                          splashRadius: 5,
+                                          padding: EdgeInsets.all(0),
+                                          onPressed: () {
+                                            setState(() {
+                                              delivery = false;
+                                            });
+                                          },
+                                          icon: Icon(Icons.check_box_outlined))
+                                      : SizedBox(),
+                                  Spacer(),
+                                  Text(
+                                    'Pago inicial/seña:',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
                                   ),
                                 ],
                               ),
-                            ),
-                            SizedBox(height: 15),
-                            // Tlf y mail
-                            Text(
-                              'Contacto',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Colors.black45),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              child: Row(
+                              SizedBox(height: (delivery) ? 0 : 10),
+                              Row(
                                 children: [
-                                  //Telefono
+                                  //Delivery
+                                  Expanded(
+                                      child: (delivery)
+                                          ? TextFormField(
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                              validator: (val) =>
+                                                  (delivery && val.isEmpty)
+                                                      ? "Agrega una dirección"
+                                                      : null,
+                                              cursorColor: Colors.grey,
+                                              focusNode: _addressNode,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              decoration: InputDecoration(
+                                                hintText: 'Dirección',
+                                                hintStyle: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12),
+                                                prefixIcon: Icon(
+                                                  Icons.location_pin,
+                                                  color: Colors.grey,
+                                                ),
+                                                errorStyle: TextStyle(
+                                                    color:
+                                                        Colors.redAccent[700],
+                                                    fontSize: 12),
+                                                border: new OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              ),
+                                              onFieldSubmitted: (term) {
+                                                _addressNode.unfocus();
+                                                _initialPaymentNode
+                                                    .requestFocus();
+                                              },
+                                              onChanged: (val) {
+                                                setState(() => address = val);
+                                              },
+                                            )
+                                          : Container(
+                                              alignment: Alignment.topLeft,
+                                              width: 75,
+                                              child: IconButton(
+                                                  splashRadius: 10,
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      delivery = true;
+                                                    });
+                                                  },
+                                                  icon: Icon(Icons
+                                                      .check_box_outline_blank)),
+                                            )),
+                                  SizedBox(width: 10),
+                                  //Initial Pay
                                   Expanded(
                                     child: TextFormField(
                                       keyboardType: TextInputType.number,
-                                      focusNode: phoneNode,
+                                      focusNode: _initialPaymentNode,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           color: Colors.black, fontSize: 14),
                                       autofocus: true,
+                                      initialValue: '\$0.00',
+                                      validator: (val) {
+                                        if (val == null || val.isEmpty) {
+                                          return "El monto no debe estar vacío";
+                                        } else {
+                                          return null;
+                                        }
+                                      },
                                       inputFormatters: [
-                                        LengthLimitingTextInputFormatter(8),
-                                        FilteringTextInputFormatter.digitsOnly
+                                        CurrencyTextInputFormatter(
+                                          name: '\$',
+                                          locale: 'en',
+                                          decimalDigits: 2,
+                                        ),
                                       ],
                                       cursorColor: Colors.grey,
                                       decoration: InputDecoration(
-                                        prefixIcon: Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                20, 10, 2, 10),
-                                            child: Text(('(11) '))),
-                                        hintText: 'Whatsapp',
+                                        prefixIcon: Icon(
+                                          Icons.attach_money,
+                                          color: Colors.grey,
+                                        ),
+                                        hintText: 'Pago inicial',
                                         hintStyle: TextStyle(
                                             color: Colors.grey, fontSize: 12),
                                         border: new OutlineInputBorder(
@@ -376,282 +603,65 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                                         ),
                                       ),
                                       onFieldSubmitted: (val) {
-                                        phoneNode.unfocus();
-                                        _emailNode.requestFocus();
+                                        _initialPaymentNode.unfocus();
                                       },
                                       onChanged: (val) {
-                                        setState(() =>
-                                            phone = int.parse('11' + val));
+                                        setState(() => initialPayment =
+                                            double.tryParse((val.substring(1))
+                                                .replaceAll(',', '')));
                                       },
                                     ),
                                   ),
-                                  SizedBox(width: 10),
-                                  //Mail
-                                  Expanded(
-                                    child: TextFormField(
-                                      keyboardType: TextInputType.emailAddress,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                      cursorColor: Colors.grey,
-                                      focusNode: _emailNode,
-                                      textInputAction: TextInputAction.next,
-                                      decoration: InputDecoration(
-                                        hintText: 'email',
-                                        hintStyle: TextStyle(
-                                            color: Colors.grey, fontSize: 12),
-                                        prefixIcon: Icon(
-                                          Icons.mail_outline,
-                                          color: Colors.grey,
-                                        ),
-                                        errorStyle: TextStyle(
-                                            color: Colors.redAccent[700],
-                                            fontSize: 12),
-                                        border: new OutlineInputBorder(
-                                          borderRadius:
-                                              new BorderRadius.circular(12.0),
-                                          borderSide: new BorderSide(
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              new BorderRadius.circular(12.0),
-                                          borderSide: new BorderSide(
-                                            color: Colors.green,
-                                          ),
-                                        ),
-                                      ),
-                                      onFieldSubmitted: (term) {
-                                        _emailNode.unfocus();
-                                        _initialPaymentNode.requestFocus();
-                                      },
-                                      onChanged: (val) {
-                                        setState(() => email = val);
-                                      },
-                                    ),
-                                  )
                                 ],
                               ),
-                            ),
-                            SizedBox(height: 15),
-                            //Initail Payment
-                            Row(
-                              children: [
-                                Text(
-                                  'Delivery',
+                              SizedBox(height: 15),
+                              //Nota
+                              Text(
+                                'Nota',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: Colors.black45),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                child: TextFormField(
+                                  maxLines: 4,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.black45),
-                                ),
-                                (delivery)
-                                    ? IconButton(
-                                        iconSize: 14,
-                                        splashRadius: 5,
-                                        padding: EdgeInsets.all(0),
-                                        onPressed: () {
-                                          setState(() {
-                                            delivery = false;
-                                          });
-                                        },
-                                        icon: Icon(Icons.check_box_outlined))
-                                    : SizedBox(),
-                                Spacer(),
-                                Text(
-                                  'Pago inicial/seña:',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.black45),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: (delivery) ? 0 : 10),
-                            Row(
-                              children: [
-                                //Delivery
-                                Expanded(
-                                    child: (delivery)
-                                        ? TextFormField(
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                            validator: (val) =>
-                                                (delivery && val.isEmpty)
-                                                    ? "Agrega una dirección"
-                                                    : null,
-                                            cursorColor: Colors.grey,
-                                            focusNode: _addressNode,
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            decoration: InputDecoration(
-                                              hintText: 'Dirección',
-                                              hintStyle: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 12),
-                                              prefixIcon: Icon(
-                                                Icons.location_pin,
-                                                color: Colors.grey,
-                                              ),
-                                              errorStyle: TextStyle(
-                                                  color: Colors.redAccent[700],
-                                                  fontSize: 12),
-                                              border: new OutlineInputBorder(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                borderSide: new BorderSide(
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                borderSide: new BorderSide(
-                                                  color: Colors.green,
-                                                ),
-                                              ),
-                                            ),
-                                            onFieldSubmitted: (term) {
-                                              _addressNode.unfocus();
-                                              _initialPaymentNode
-                                                  .requestFocus();
-                                            },
-                                            onChanged: (val) {
-                                              setState(() => address = val);
-                                            },
-                                          )
-                                        : Container(
-                                            alignment: Alignment.topLeft,
-                                            width: 75,
-                                            child: IconButton(
-                                                splashRadius: 10,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    delivery = true;
-                                                  });
-                                                },
-                                                icon: Icon(Icons
-                                                    .check_box_outline_blank)),
-                                          )),
-                                SizedBox(width: 10),
-                                //Initial Pay
-                                Expanded(
-                                  child: TextFormField(
-                                    keyboardType: TextInputType.number,
-                                    focusNode: _initialPaymentNode,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14),
-                                    autofocus: true,
-                                    initialValue: '\$0.00',
-                                    validator: (val) {
-                                      if (val == null || val.isEmpty) {
-                                        return "El monto no debe estar vacío";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    inputFormatters: [
-                                      CurrencyTextInputFormatter(
-                                        name: '\$',
-                                        locale: 'en',
-                                        decimalDigits: 2,
-                                      ),
-                                    ],
-                                    cursorColor: Colors.grey,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.attach_money,
+                                      color: Colors.black, fontSize: 16),
+                                  cursorColor: Colors.grey,
+                                  focusNode: _noteNode,
+                                  textInputAction: TextInputAction.next,
+                                  decoration: InputDecoration(
+                                    hintText: 'Agrega una nota',
+                                    hintStyle: TextStyle(fontSize: 14),
+                                    border: new OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      borderSide: new BorderSide(
                                         color: Colors.grey,
                                       ),
-                                      hintText: 'Pago inicial',
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey, fontSize: 12),
-                                      border: new OutlineInputBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(12.0),
-                                        borderSide: new BorderSide(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      errorBorder: new OutlineInputBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(12.0),
-                                        borderSide: new BorderSide(
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(12.0),
-                                        borderSide: new BorderSide(
-                                          color: Colors.green,
-                                        ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      borderSide: new BorderSide(
+                                        color: Colors.green,
                                       ),
                                     ),
-                                    onFieldSubmitted: (val) {
-                                      _initialPaymentNode.unfocus();
-                                    },
-                                    onChanged: (val) {
-                                      setState(() => initialPayment =
-                                          double.tryParse((val.substring(1))
-                                              .replaceAll(',', '')));
-                                    },
                                   ),
+                                  onFieldSubmitted: (term) {
+                                    _noteNode.unfocus();
+                                  },
+                                  onChanged: (val) {
+                                    setState(() {
+                                      note = val;
+                                    });
+                                  },
                                 ),
-                              ],
-                            ),
-                            SizedBox(height: 15),
-                            //Nota
-                            Text(
-                              'Nota',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Colors.black45),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              child: TextFormField(
-                                maxLines: 4,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                                cursorColor: Colors.grey,
-                                focusNode: _noteNode,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  hintText: 'Agrega una nota',
-                                  hintStyle: TextStyle(fontSize: 14),
-                                  border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                                onFieldSubmitted: (term) {
-                                  _noteNode.unfocus();
-                                },
-                                onChanged: (val) {
-                                  setState(() {
-                                    note = val;
-                                  });
-                                },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

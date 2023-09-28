@@ -5,6 +5,7 @@ import 'package:denario/Models/Sales.dart';
 import 'package:denario/Models/Stats.dart';
 import 'package:denario/Stats/ShortSalesList.dart';
 import 'package:denario/Stats/StatsByCategory.dart';
+import 'package:denario/Stats/StatsByChannel.dart';
 import 'package:denario/Stats/StatsByPaymentMethods.dart';
 import 'package:denario/Stats/StatsByProducts.dart';
 import 'package:denario/Stats/TotalsSummary.dart';
@@ -26,6 +27,19 @@ class _MonthStatsState extends State<MonthStats> {
   int _currentPageIndex = 0;
 
   List productsList = [];
+  List categoriesSelection = [
+    'Categoría',
+    'Productos',
+    'Medios de Pago',
+    'Canales'
+  ];
+  String selectedCategory;
+
+  @override
+  void initState() {
+    selectedCategory = 'Categoría';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,161 +157,300 @@ class _MonthStatsState extends State<MonthStats> {
                           child: Column(
                             children: [
                               //Select Option
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  //Category
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                width: (_currentPageIndex == 0)
-                                                    ? 3
-                                                    : 0,
-                                                color: (_currentPageIndex == 0)
-                                                    ? Colors.greenAccent[700]
-                                                    : Colors.transparent))),
-                                    child: TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _currentPageIndex = 0;
-                                          });
-                                          pageController.animateToPage(0,
-                                              duration:
-                                                  Duration(milliseconds: 250),
-                                              curve: Curves.easeIn);
-                                        },
-                                        style: ButtonStyle(
-                                          overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
-                                            (Set<MaterialState> states) {
-                                              if (states.contains(
-                                                  MaterialState.hovered)) {
-                                                return Colors.grey.withOpacity(
-                                                    0.2); // Customize the hover color here
-                                              }
-                                              return null; // Use default overlay color for other states
-                                            },
-                                          ),
+                              (MediaQuery.of(context).size.width > 1100)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        //Category
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width:
+                                                          (_currentPageIndex ==
+                                                                  0)
+                                                              ? 3
+                                                              : 0,
+                                                      color: (_currentPageIndex ==
+                                                              0)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors
+                                                              .transparent))),
+                                          child: TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _currentPageIndex = 0;
+                                                });
+                                                pageController.animateToPage(0,
+                                                    duration: Duration(
+                                                        milliseconds: 250),
+                                                    curve: Curves.easeIn);
+                                              },
+                                              style: ButtonStyle(
+                                                overlayColor:
+                                                    MaterialStateProperty
+                                                        .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                                    if (states.contains(
+                                                        MaterialState
+                                                            .hovered)) {
+                                                      return Colors.grey
+                                                          .withOpacity(
+                                                              0.2); // Customize the hover color here
+                                                    }
+                                                    return null; // Use default overlay color for other states
+                                                  },
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Text(
+                                                  'Categorías',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          (_currentPageIndex ==
+                                                                  0)
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal,
+                                                      color: (_currentPageIndex ==
+                                                              0)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors.black),
+                                                ),
+                                              )),
                                         ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text(
-                                            'Categorías',
-                                            style: TextStyle(
-                                                fontWeight:
-                                                    (_currentPageIndex == 0)
-                                                        ? FontWeight.bold
-                                                        : FontWeight.normal,
-                                                color: (_currentPageIndex == 0)
-                                                    ? Colors.greenAccent[700]
-                                                    : Colors.black),
-                                          ),
-                                        )),
-                                  ),
-                                  SizedBox(width: 10),
-                                  //Products
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                width: (_currentPageIndex == 1)
-                                                    ? 3
-                                                    : 0,
-                                                color: (_currentPageIndex == 1)
-                                                    ? Colors.greenAccent[700]
-                                                    : Colors.transparent))),
-                                    child: TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _currentPageIndex = 1;
-                                          });
-                                          pageController.animateToPage(1,
-                                              duration:
-                                                  Duration(milliseconds: 250),
-                                              curve: Curves.easeIn);
-                                        },
-                                        style: ButtonStyle(
-                                          overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
-                                            (Set<MaterialState> states) {
-                                              if (states.contains(
-                                                  MaterialState.hovered)) {
-                                                return Colors.grey.withOpacity(
-                                                    0.2); // Customize the hover color here
-                                              }
-                                              return null; // Use default overlay color for other states
-                                            },
-                                          ),
+                                        SizedBox(width: 10),
+                                        //Products
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width:
+                                                          (_currentPageIndex ==
+                                                                  1)
+                                                              ? 3
+                                                              : 0,
+                                                      color: (_currentPageIndex ==
+                                                              1)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors
+                                                              .transparent))),
+                                          child: TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _currentPageIndex = 1;
+                                                });
+                                                pageController.animateToPage(1,
+                                                    duration: Duration(
+                                                        milliseconds: 250),
+                                                    curve: Curves.easeIn);
+                                              },
+                                              style: ButtonStyle(
+                                                overlayColor:
+                                                    MaterialStateProperty
+                                                        .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                                    if (states.contains(
+                                                        MaterialState
+                                                            .hovered)) {
+                                                      return Colors.grey
+                                                          .withOpacity(
+                                                              0.2); // Customize the hover color here
+                                                    }
+                                                    return null; // Use default overlay color for other states
+                                                  },
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Text(
+                                                  'Productos',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          (_currentPageIndex ==
+                                                                  1)
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal,
+                                                      color: (_currentPageIndex ==
+                                                              1)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors.black),
+                                                ),
+                                              )),
                                         ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text(
-                                            'Productos',
-                                            style: TextStyle(
-                                                fontWeight:
-                                                    (_currentPageIndex == 1)
-                                                        ? FontWeight.bold
-                                                        : FontWeight.normal,
-                                                color: (_currentPageIndex == 1)
-                                                    ? Colors.greenAccent[700]
-                                                    : Colors.black),
-                                          ),
-                                        )),
-                                  ),
-                                  SizedBox(width: 10),
-                                  //Payment Methods
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                width: (_currentPageIndex == 2)
-                                                    ? 3
-                                                    : 0,
-                                                color: (_currentPageIndex == 2)
-                                                    ? Colors.greenAccent[700]
-                                                    : Colors.transparent))),
-                                    child: TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _currentPageIndex = 2;
-                                          });
-                                          pageController.animateToPage(3,
-                                              duration:
-                                                  Duration(milliseconds: 250),
-                                              curve: Curves.easeIn);
-                                        },
-                                        style: ButtonStyle(
-                                          overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
-                                            (Set<MaterialState> states) {
-                                              if (states.contains(
-                                                  MaterialState.hovered)) {
-                                                return Colors.grey.withOpacity(
-                                                    0.2); // Customize the hover color here
-                                              }
-                                              return null; // Use default overlay color for other states
-                                            },
-                                          ),
+                                        SizedBox(width: 10),
+                                        //Payment Methods
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width:
+                                                          (_currentPageIndex ==
+                                                                  2)
+                                                              ? 3
+                                                              : 0,
+                                                      color: (_currentPageIndex ==
+                                                              2)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors
+                                                              .transparent))),
+                                          child: TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _currentPageIndex = 2;
+                                                });
+                                                pageController.animateToPage(2,
+                                                    duration: Duration(
+                                                        milliseconds: 250),
+                                                    curve: Curves.easeIn);
+                                              },
+                                              style: ButtonStyle(
+                                                overlayColor:
+                                                    MaterialStateProperty
+                                                        .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                                    if (states.contains(
+                                                        MaterialState
+                                                            .hovered)) {
+                                                      return Colors.grey
+                                                          .withOpacity(
+                                                              0.2); // Customize the hover color here
+                                                    }
+                                                    return null; // Use default overlay color for other states
+                                                  },
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Text(
+                                                  'Medios de Pago',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          (_currentPageIndex ==
+                                                                  2)
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal,
+                                                      color: (_currentPageIndex ==
+                                                              2)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors.black),
+                                                ),
+                                              )),
                                         ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text(
-                                            'Medios de Pago',
-                                            style: TextStyle(
-                                                fontWeight:
-                                                    (_currentPageIndex == 2)
-                                                        ? FontWeight.bold
-                                                        : FontWeight.normal,
-                                                color: (_currentPageIndex == 2)
-                                                    ? Colors.greenAccent[700]
-                                                    : Colors.black),
-                                          ),
-                                        )),
-                                  ),
-                                ],
-                              ),
+                                        //Channels
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width:
+                                                          (_currentPageIndex ==
+                                                                  3)
+                                                              ? 3
+                                                              : 0,
+                                                      color: (_currentPageIndex ==
+                                                              3)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors
+                                                              .transparent))),
+                                          child: TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _currentPageIndex = 3;
+                                                });
+                                                pageController.animateToPage(3,
+                                                    duration: Duration(
+                                                        milliseconds: 250),
+                                                    curve: Curves.easeIn);
+                                              },
+                                              style: ButtonStyle(
+                                                overlayColor:
+                                                    MaterialStateProperty
+                                                        .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                                    if (states.contains(
+                                                        MaterialState
+                                                            .hovered)) {
+                                                      return Colors.grey
+                                                          .withOpacity(
+                                                              0.2); // Customize the hover color here
+                                                    }
+                                                    return null; // Use default overlay color for other states
+                                                  },
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Text(
+                                                  'Canales',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          (_currentPageIndex ==
+                                                                  3)
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal,
+                                                      color: (_currentPageIndex ==
+                                                              3)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors.black),
+                                                ),
+                                              )),
+                                        ),
+                                      ],
+                                    )
+                                  : DropdownButton(
+                                      isExpanded: true,
+                                      underline: SizedBox(),
+                                      hint: Text(
+                                        selectedCategory,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                            color: Colors.grey[700]),
+                                      ),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14,
+                                          color: Colors.grey[700]),
+                                      value: selectedCategory,
+                                      items: categoriesSelection.map((x) {
+                                        return new DropdownMenuItem(
+                                          value: x,
+                                          child: new Text(x),
+                                          onTap: () {
+                                            setState(() {
+                                              _currentPageIndex =
+                                                  categoriesSelection
+                                                      .indexOf(x);
+                                            });
+                                            pageController.animateToPage(
+                                                categoriesSelection.indexOf(x),
+                                                duration:
+                                                    Duration(milliseconds: 250),
+                                                curve: Curves.easeIn);
+                                          },
+                                        );
+                                      }).toList(),
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          selectedCategory = newValue;
+                                        });
+                                      },
+                                    ),
                               SizedBox(height: 5),
                               //Pageview
                               Expanded(
@@ -338,6 +491,21 @@ class _MonthStatsState extends State<MonthStats> {
                                             //List
                                             StatsByPaymentMethods(dayStats,
                                                 registerStatus.paymentTypes)
+                                          ]),
+                                      //Channels
+                                      Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Divider(
+                                                thickness: 0.5,
+                                                indent: 0,
+                                                endIndent: 0),
+                                            //List
+                                            StatsByCannels(
+                                                monthlyStats.salesbyOrderType)
                                           ])
                                     ]),
                               )
@@ -513,7 +681,7 @@ class _MonthStatsState extends State<MonthStats> {
                                   setState(() {
                                     _currentPageIndex = 2;
                                   });
-                                  pageController.animateToPage(3,
+                                  pageController.animateToPage(2,
                                       duration: Duration(milliseconds: 250),
                                       curve: Curves.easeIn);
                                 },
@@ -539,6 +707,52 @@ class _MonthStatsState extends State<MonthStats> {
                                             ? FontWeight.bold
                                             : FontWeight.normal,
                                         color: (_currentPageIndex == 2)
+                                            ? Colors.greenAccent[700]
+                                            : Colors.black),
+                                  ),
+                                )),
+                          ),
+                          SizedBox(width: 10),
+                          //Cost types
+                          Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        width: (_currentPageIndex == 3) ? 3 : 0,
+                                        color: (_currentPageIndex == 3)
+                                            ? Colors.greenAccent[700]
+                                            : Colors.transparent))),
+                            child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _currentPageIndex = 3;
+                                  });
+                                  pageController.animateToPage(3,
+                                      duration: Duration(milliseconds: 250),
+                                      curve: Curves.easeIn);
+                                },
+                                style: ButtonStyle(
+                                  overlayColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                                      if (states
+                                          .contains(MaterialState.hovered)) {
+                                        return Colors.grey.withOpacity(
+                                            0.2); // Customize the hover color here
+                                      }
+                                      return null; // Use default overlay color for other states
+                                    },
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Text(
+                                    'Canales',
+                                    style: TextStyle(
+                                        fontWeight: (_currentPageIndex == 3)
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        color: (_currentPageIndex == 3)
                                             ? Colors.greenAccent[700]
                                             : Colors.black),
                                   ),
@@ -583,6 +797,19 @@ class _MonthStatsState extends State<MonthStats> {
                                     StatsByPaymentMethods(
                                         dayStats, registerStatus.paymentTypes)
                                   ]),
+                              //Channels
+                              Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Divider(
+                                        thickness: 0.5,
+                                        indent: 0,
+                                        endIndent: 0),
+                                    //List
+                                    StatsByCannels(
+                                        monthlyStats.salesbyOrderType)
+                                  ])
                             ]),
                       )
                     ],
