@@ -17,7 +17,8 @@ import 'package:provider/provider.dart';
 
 class POSDesk extends StatefulWidget {
   final String firstCategory;
-  POSDesk({this.firstCategory});
+  final List<Products> productList;
+  POSDesk({this.firstCategory, this.productList});
 
   @override
   _POSDeskState createState() => _POSDeskState();
@@ -28,7 +29,7 @@ class _POSDeskState extends State<POSDesk> {
   List categories;
 
   int businessIndex;
-  bool showTableView; //config at user profile
+  bool showTableView;
 
   //Mostrar mesas o mostrar pendientes de delivery/takeaway
   List tableViewTags = ['Mesas', 'Mostrador'];
@@ -172,10 +173,6 @@ class _POSDeskState extends State<POSDesk> {
             initialData: [],
             value: DatabaseService().tableList(userProfile.activeBusiness),
           ),
-          StreamProvider<List<Products>>.value(
-              initialData: [],
-              value: DatabaseService()
-                  .productList(category, userProfile.activeBusiness)),
           StreamProvider<List<SavedOrders>>.value(
               initialData: null,
               value: DatabaseService()
@@ -606,6 +603,13 @@ class _POSDeskState extends State<POSDesk> {
                                                       setState(() {
                                                         category =
                                                             categories[i];
+                                                        // productList = widget
+                                                        //     .productList
+                                                        //     .where((menuItem) =>
+                                                        //         menuItem
+                                                        //             .category ==
+                                                        //         category)
+                                                        //     .toList();
                                                       });
                                                     },
                                                     child: Padding(
@@ -645,7 +649,8 @@ class _POSDeskState extends State<POSDesk> {
                                   Expanded(
                                       child: PlateSelectionDesktop(
                                           userProfile.activeBusiness,
-                                          category)),
+                                          category,
+                                          widget.productList)),
                                 ],
                               ),
                             ),
@@ -728,6 +733,11 @@ class _POSDeskState extends State<POSDesk> {
                                           onPressed: () {
                                             setState(() {
                                               category = categories[i];
+                                              // productList = widget.productList
+                                              //     .where((menuItem) =>
+                                              //         menuItem.category ==
+                                              //         category)
+                                              //     .toList();
                                             });
                                           },
                                           child: Padding(
@@ -816,13 +826,10 @@ class _POSDeskState extends State<POSDesk> {
                         //Plates GridView
                         Expanded(
                             child: Container(
-                                child: StreamProvider<List<Products>>.value(
-                                    initialData: [],
-                                    value: DatabaseService().productList(
-                                        category, userProfile.activeBusiness),
-                                    child: PlateSelectionDesktop(
-                                        userProfile.activeBusiness,
-                                        category)))),
+                                child: PlateSelectionDesktop(
+                                    userProfile.activeBusiness,
+                                    category,
+                                    widget.productList))),
                       ],
                     ),
                   ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/auth.dart';
 import 'package:denario/Dashboard/DailyDesk.dart';
@@ -12,6 +14,7 @@ import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/NoPOSDashboard.dart';
 import 'package:denario/POS/OrderAlert.dart';
+import 'package:denario/POS/POS_Products.dart';
 import 'package:denario/PnL/PnlDesk.dart';
 import 'package:denario/Products/ProductsDesk.dart';
 import 'package:denario/Schedule/ScheduleDesk.dart';
@@ -268,7 +271,7 @@ class _HomeDeskState extends State<HomeDesk> {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista') {
-              return POSDesk(firstCategory: categoriesProvider.categoryList[0]);
+              return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
@@ -350,7 +353,7 @@ class _HomeDeskState extends State<HomeDesk> {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista') {
-              return POSDesk(firstCategory: categoriesProvider.categoryList[0]);
+              return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
@@ -422,7 +425,7 @@ class _HomeDeskState extends State<HomeDesk> {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista') {
-              return POSDesk(firstCategory: categoriesProvider.categoryList[0]);
+              return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
@@ -488,7 +491,7 @@ class _HomeDeskState extends State<HomeDesk> {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista') {
-              return POSDesk(firstCategory: categoriesProvider.categoryList[0]);
+              return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
@@ -501,6 +504,10 @@ class _HomeDeskState extends State<HomeDesk> {
     }
     return MultiProvider(
       providers: [
+        StreamProvider<List<Products>>.value(
+            initialData: null,
+            value:
+                DatabaseService().fullProductList(userProfile.activeBusiness)),
         StreamProvider<CategoryList>.value(
             initialData: null,
             value:

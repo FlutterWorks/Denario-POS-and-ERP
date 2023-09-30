@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 class PlateSelectionDesktop extends StatefulWidget {
   final String businessID;
   final String category;
-  PlateSelectionDesktop(this.businessID, this.category);
+  final List<Products> productList;
+  PlateSelectionDesktop(this.businessID, this.category, this.productList);
 
   @override
   _PlateSelectionDesktopState createState() => _PlateSelectionDesktopState();
@@ -16,18 +17,18 @@ class PlateSelectionDesktop extends StatefulWidget {
 class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
   bool productExists = false;
   int itemIndex;
+  List<Products> product;
+
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<List<Products>>(context);
-
-    if (product == null) {
-      return Center();
-    }
-
     return StreamBuilder(
         stream: bloc.getStream,
         initialData: bloc.ticketItems,
         builder: (context, snapshot) {
+          product = widget.productList
+              .where((menuItem) => menuItem.category == widget.category)
+              .toList();
+
           return GridView.builder(
             shrinkWrap: true,
             physics: BouncingScrollPhysics(),
