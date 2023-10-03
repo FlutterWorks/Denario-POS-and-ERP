@@ -64,11 +64,11 @@ class DailyDesk extends StatelessWidget {
               Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: new BorderRadius.circular(12.0),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[200],
-                        offset: new Offset(15.0, 15.0),
+                        color: Colors.grey[350],
+                        offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
                     ],

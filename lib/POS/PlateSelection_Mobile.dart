@@ -30,7 +30,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
             .toList();
         return SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+              crossAxisCount: (MediaQuery.of(context).size.width > 500) ? 3 : 2,
               crossAxisSpacing: 2.0,
               mainAxisSpacing: 2.0,
               childAspectRatio: 1,

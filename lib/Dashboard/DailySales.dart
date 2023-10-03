@@ -35,7 +35,8 @@ class DailySales extends StatelessWidget {
       );
     }
 
-    return (MediaQuery.of(context).size.width > 1100)
+    return (MediaQuery.of(context).size.width > 1100 ||
+            MediaQuery.of(context).size.width < 500)
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

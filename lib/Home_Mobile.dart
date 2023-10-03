@@ -1,4 +1,5 @@
 import 'package:denario/Backend/DatabaseService.dart';
+import 'package:denario/Backend/auth.dart';
 import 'package:denario/Dashboard/DailyDesk.dart';
 import 'package:denario/Expenses/ExpensesDesk.dart';
 import 'package:denario/Models/Categories.dart';
@@ -31,6 +32,7 @@ class HomeMobile extends StatefulWidget {
 class _HomeMobileState extends State<HomeMobile> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final _auth = AuthService();
   int pageIndex = 0;
   bool showUserSettings = false;
   List<Widget> navigationBarItems;
@@ -158,21 +160,20 @@ class _HomeMobileState extends State<HomeMobile> {
   Widget screenNavigator(String screenName, IconData screenIcon, int index) {
     return TextButton(
       style: TextButton.styleFrom(
-          foregroundColor: Colors.white,
-          padding: EdgeInsets.all(0),
-          fixedSize: Size(double.infinity, 50)),
+          foregroundColor: Colors.white, fixedSize: Size(double.infinity, 50)),
       onPressed: () {
         setState(() {
           pageIndex = index;
         });
+        _scaffoldKey.currentState.closeDrawer();
       },
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //Icon
           Icon(screenIcon, color: Colors.white, size: 25),
-          SizedBox(width: 5),
+          SizedBox(width: 10),
           //Text
           Text(
             screenName,
@@ -234,27 +235,16 @@ class _HomeMobileState extends State<HomeMobile> {
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        SizedBox(height: 20),
         (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista')
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
-            ? SizedBox(height: 20)
-            : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        SizedBox(height: 20),
         screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
-        SizedBox(height: 20),
         screenNavigator('Gastos', Icons.multiline_chart, 4),
-        SizedBox(height: 20),
         screenNavigator('Productos', Icons.assignment, 5),
-        SizedBox(height: 20),
         screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
-        SizedBox(height: 20),
         screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
-        SizedBox(height: 20),
         screenNavigator('PnL', Icons.data_usage, 8)
       ];
       pageNavigators = [
@@ -321,25 +311,15 @@ class _HomeMobileState extends State<HomeMobile> {
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        SizedBox(height: 20),
         (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista')
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
-            ? SizedBox(height: 20)
-            : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        SizedBox(height: 20),
         screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
-        SizedBox(height: 20),
         screenNavigator('Gastos', Icons.multiline_chart, 4),
-        SizedBox(height: 20),
         screenNavigator('Productos', Icons.assignment, 5),
-        SizedBox(height: 20),
         screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
-        SizedBox(height: 20),
         screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
       ];
       pageNavigators = [
@@ -402,17 +382,11 @@ class _HomeMobileState extends State<HomeMobile> {
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        SizedBox(height: 20),
         (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista')
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
-            ? SizedBox(height: 20)
-            : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        SizedBox(height: 20),
         screenNavigator('Gastos', Icons.multiline_chart, 3),
       ];
       pageNavigators = [
@@ -445,9 +419,7 @@ class _HomeMobileState extends State<HomeMobile> {
         'Contador(a)') {
       navigationBarItems = [
         screenNavigator('Ventas', Icons.insert_chart_outlined, 1),
-        SizedBox(height: 20),
         screenNavigator('Gastos', Icons.multiline_chart, 4),
-        SizedBox(height: 20),
         screenNavigator('PnL', Icons.data_usage, 2),
       ];
       pageNavigators = [
@@ -479,7 +451,6 @@ class _HomeMobileState extends State<HomeMobile> {
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        SizedBox(height: 20),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 1),
       ];
       pageNavigators = [
@@ -551,11 +522,157 @@ class _HomeMobileState extends State<HomeMobile> {
               height: double.infinity,
               width: 75,
               child: SingleChildScrollView(
-                child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: navigationBarItems)),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      //Name
+                      Container(
+                        height: 120,
+                        width: double.infinity,
+                        color: Colors.white,
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            //User
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                //Image
+                                Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
+                                        color: Colors.grey,
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                userProfile.profileImage),
+                                            fit: BoxFit.cover))),
+                                SizedBox(width: 10),
+                                //Name
+                                Column(
+                                  children: [
+                                    //Current business
+                                    Text(
+                                      userProfile
+                                          .businesses[businessIndexOnProfile]
+                                          .businessName,
+                                      style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                    SizedBox(height: 2),
+                                    //Config
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          'Perfil',
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.black),
+                                        ))
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            //Change business
+                            Container(
+                              height: 35,
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                ),
+                                onPressed: () {
+                                  changeBusinessDialog(userProfile.businesses,
+                                      userProfile.activeBusiness);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.swap_horiz_outlined,
+                                          color: Colors.black,
+                                          size: 16,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text("Cambiar de negocio")
+                                      ]),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      //Navigation
+                      Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: navigationBarItems.length,
+                              itemExtent: null,
+                              itemBuilder: (context, i) {
+                                return navigationBarItems[i];
+                              })),
+                      //Sign out
+                      Container(
+                        height: 150,
+                        width: double.infinity,
+                        padding: EdgeInsets.all(20),
+                        child: Column(children: [
+                          Divider(
+                            indent: 5,
+                            endIndent: 5,
+                            thickness: 2,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 10),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                fixedSize: Size(double.infinity, 50)),
+                            onPressed: () {
+                              _auth.signOut();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Wrapper()));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                //Icon
+                                Icon(Icons.exit_to_app,
+                                    color: Colors.white, size: 25),
+                                SizedBox(width: 10),
+                                //Text
+                                Text(
+                                  'Salir',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 11),
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
+                          ),
+                        ]),
+                      )
+                    ]),
               )),
         ),
         endDrawer: Drawer(
