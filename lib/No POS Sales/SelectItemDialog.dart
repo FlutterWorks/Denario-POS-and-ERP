@@ -79,7 +79,10 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                               crossAxisCount: 2,
                               crossAxisSpacing: 15.0,
                               mainAxisSpacing: 15.0,
-                              childAspectRatio: 3,
+                              childAspectRatio:
+                                  (MediaQuery.of(context).size.width > 900)
+                                      ? 3
+                                      : 2,
                             ),
                             scrollDirection: Axis.vertical,
                             itemCount: categories.length,
@@ -192,7 +195,8 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                         ),
                         SizedBox(width: 10),
                         Expanded(
-                          flex: 1,
+                          flex:
+                              (MediaQuery.of(context).size.width > 900) ? 1 : 2,
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.black,

@@ -29,7 +29,7 @@ class _StatsDeskState extends State<StatsDesk>
   @override
   void initState() {
     showMonthlyStats = false;
-    dateFilter = 'Today';
+    dateFilter = 'Hoy';
     selectedDate = DateTime.now();
     _controller = AnimationController(
       vsync: this,
@@ -64,14 +64,13 @@ class _StatsDeskState extends State<StatsDesk>
     return SingleChildScrollView(
       child: Container(
         width: double.infinity,
-        // height: MediaQuery.of(context).size.height * 1.2,
-        padding: EdgeInsets.all(30),
+        padding: EdgeInsets.all(20),
         child: Stack(
           children: [
             //Stats Page
             Column(
               children: [
-                SizedBox(height: 60),
+                SizedBox(height: 80),
                 (showMonthlyStats)
                     ? MonthStats(widget.businessID, dateFilter, selectedDate)
                     : StreamProvider<List<DailyTransactions>>.value(
@@ -86,217 +85,145 @@ class _StatsDeskState extends State<StatsDesk>
               ],
             ),
             //Select Monthly or Daily Stats
-            Container(
-              width: double.infinity,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //Today
-                    Container(
-                      height: 35,
-                      width: 100,
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: (!showMonthlyStats &&
-                                    dateFilter == 'Today')
-                                ? MaterialStateProperty.all<Color>(Colors.black)
-                                : MaterialStateProperty.all<Color>(
-                                    Colors.white),
-                            overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.hovered))
-                                  return Colors.grey;
-                                if (states.contains(MaterialState.focused) ||
-                                    states.contains(MaterialState.pressed))
-                                  return Colors.grey.shade300;
-                                return null; // Defer to the widget's default.
-                              },
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              showMonthlyStats = false;
-                              dateFilter = 'Today';
-                              selectedDate = DateTime.now();
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Center(
-                              child: Text(
-                                'Hoy',
-                                style:
-                                    (!showMonthlyStats && dateFilter == 'Today')
-                                        ? TextStyle(
-                                            color: Colors.white, fontSize: 12)
-                                        : TextStyle(
-                                            color: Colors.black, fontSize: 12),
-                              ),
-                            ),
-                          )),
+            PopupMenuButton<int>(
+                child: Container(
+                  height: 50,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: <BoxShadow>[
+                      new BoxShadow(
+                        color: Colors.grey[350],
+                        offset: Offset(0.0, 0.0),
+                        blurRadius: 10.0,
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.filter_alt,
+                          color: Colors.black,
+                          size: 16,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          dateFilter,
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 20),
-                    //Month
-                    Container(
-                      height: 35,
-                      width: 100,
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: (showMonthlyStats)
-                                ? MaterialStateProperty.all<Color>(Colors.black)
-                                : MaterialStateProperty.all<Color>(
-                                    Colors.white),
-                            overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.hovered))
-                                  return Colors.grey;
-                                if (states.contains(MaterialState.focused) ||
-                                    states.contains(MaterialState.pressed))
-                                  return Colors.grey.shade300;
-                                return null; // Defer to the widget's default.
-                              },
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              showMonthlyStats = true;
-                              dateFilter = 'Month';
-                              selectedDate = DateTime(
-                                  DateTime.now().year, DateTime.now().month);
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Center(
-                              child: Text(
-                                'Mes',
-                                style: (showMonthlyStats)
-                                    ? TextStyle(
-                                        color: Colors.white, fontSize: 12)
-                                    : TextStyle(
-                                        color: Colors.black, fontSize: 12),
-                              ),
-                            ),
-                          )),
+                  ),
+                ),
+                onSelected: (value) async {
+                  switch (value) {
+                    case 0:
+                      setState(() {
+                        showMonthlyStats = false;
+                        dateFilter = 'Hoy';
+                        selectedDate = DateTime.now();
+                      });
+                      break;
+                    case 1:
+                      setState(() {
+                        showMonthlyStats = true;
+                        dateFilter = 'Mes';
+                        selectedDate =
+                            DateTime(DateTime.now().year, DateTime.now().month);
+                      });
+                      break;
+                    case 2:
+                      //Open dialog box to select date
+                      DateTime pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate:
+                              DateTime.now().subtract(Duration(days: 365)),
+                          lastDate: DateTime.now(),
+                          builder: ((context, child) {
+                            return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.light(
+                                    primary:
+                                        Colors.black, // header background color
+                                    onPrimary:
+                                        Colors.white, // header text color
+                                    onSurface: Colors.black, // body text color
+                                  ),
+                                  textButtonTheme: TextButtonThemeData(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor:
+                                          Colors.black, // button text color
+                                    ),
+                                  ),
+                                ),
+                                child: child);
+                          }));
+                      setState(() {
+                        if (pickedDate != null) {
+                          selectedDate = pickedDate;
+                        }
+                        showMonthlyStats = false;
+                        dateFilter = 'Fecha';
+                      });
+                      break;
+                    case 3:
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SalesDetailsFilters(
+                                  widget.businessID, widget.registerStatus)));
+                  }
+                },
+                itemBuilder: (context) {
+                  List<PopupMenuItem<int>> items = [
+                    //Discount
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: Center(
+                        child: Text(
+                          'Hoy',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 20),
-                    //Ir a fecha
-                    Container(
-                      height: 35,
-                      width: 100,
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: (!showMonthlyStats &&
-                                    dateFilter == 'Other')
-                                ? MaterialStateProperty.all<Color>(Colors.black)
-                                : MaterialStateProperty.all<Color>(
-                                    Colors.white),
-                            overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.hovered))
-                                  return Colors.grey;
-                                if (states.contains(MaterialState.focused) ||
-                                    states.contains(MaterialState.pressed))
-                                  return Colors.grey.shade300;
-                                return null; // Defer to the widget's default.
-                              },
-                            ),
-                          ),
-                          onPressed: () async {
-                            //Open dialog box to select date
-                            DateTime pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: selectedDate,
-                                firstDate: DateTime.now()
-                                    .subtract(Duration(days: 365)),
-                                lastDate: DateTime.now(),
-                                builder: ((context, child) {
-                                  return Theme(
-                                      data: Theme.of(context).copyWith(
-                                        colorScheme: ColorScheme.light(
-                                          primary: Colors
-                                              .black, // header background color
-                                          onPrimary:
-                                              Colors.white, // header text color
-                                          onSurface:
-                                              Colors.black, // body text color
-                                        ),
-                                        textButtonTheme: TextButtonThemeData(
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: Colors
-                                                .black, // button text color
-                                          ),
-                                        ),
-                                      ),
-                                      child: child);
-                                }));
-                            setState(() {
-                              if (pickedDate != null) {
-                                selectedDate = pickedDate;
-                              }
-                              showMonthlyStats = false;
-                              dateFilter = 'Other';
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Center(
-                              child: Text(
-                                'Ir a fecha',
-                                style:
-                                    (!showMonthlyStats && dateFilter == 'Other')
-                                        ? TextStyle(
-                                            color: Colors.white, fontSize: 12)
-                                        : TextStyle(
-                                            color: Colors.black, fontSize: 12),
-                              ),
-                            ),
-                          )),
+                    //Tax
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: Center(
+                        child: Text(
+                          'Mes',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 20),
+                    //Custom item
+                    PopupMenuItem<int>(
+                      value: 2,
+                      child: Center(
+                        child: Text(
+                          'Ir a fecha',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                      ),
+                    ),
                     //All
-                    Container(
-                      height: 35,
-                      width: 100,
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.hovered))
-                                  return Colors.grey;
-                                if (states.contains(MaterialState.focused) ||
-                                    states.contains(MaterialState.pressed))
-                                  return Colors.grey.shade300;
-                                return null; // Defer to the widget's default.
-                              },
-                            ),
-                          ),
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SalesDetailsFilters(
-                                      widget.businessID,
-                                      widget.registerStatus))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Center(
-                              child: Text(
-                                'Todas',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
-                              ),
-                            ),
-                          )),
+                    PopupMenuItem<int>(
+                      value: 3,
+                      child: Center(
+                        child: Text(
+                          'Todas',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                      ),
                     ),
-                  ]),
-            ),
+                  ];
+                  return items;
+                }),
             //Create
             Align(
               alignment: Alignment.topRight,

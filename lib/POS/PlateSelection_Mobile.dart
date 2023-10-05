@@ -2,7 +2,6 @@ import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Products.dart';
 import 'package:denario/POS/POSItemDialog.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class PlateSelectionMobile extends StatefulWidget {
   final String businessID;
@@ -28,6 +27,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
         product = widget.productList
             .where((menuItem) => menuItem.category == widget.category)
             .toList();
+
         return SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: (MediaQuery.of(context).size.width > 500) ? 3 : 2,
@@ -37,10 +37,20 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
             ),
             delegate: SliverChildBuilderDelegate(
               (context, i) {
+                var ticketIndex;
+                for (var x = 0; x < bloc.ticketItems['Items'].length; x++) {
+                  if (product[i].product ==
+                      bloc.ticketItems['Items'][x]["Name"]) {
+                    ticketIndex = x;
+                  }
+                }
+
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          EdgeInsets.zero),
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.white),
                       overlayColor: MaterialStateProperty.resolveWith<Color>(
@@ -102,38 +112,77 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                           });
                     },
                     child: Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          //product
-                          Text(
-                            product[i].product, //product[index].product,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          SizedBox(height: 20),
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            left: 10,
+                            right: 10,
+                            top: 20,
+                            bottom: 20,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  //product
+                                  Text(
+                                    product[i]
+                                        .product, //product[index].product,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  SizedBox(height: 20),
 
-                          ///Price
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              "\$${product[i].price}", //'\$120' + //product[index].price.toString(),
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
+                                  ///Price
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      "\$${product[i].price}", //'\$120' + //product[index].price.toString(),
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
+                          (ticketIndex != null &&
+                                  snapshot.data['Items'][ticketIndex]
+                                          ['Quantity'] >
+                                      0)
+                              ? Positioned(
+                                  right: 5,
+                                  top: 5,
+                                  child: Container(
+                                    height: 25,
+                                    width: 25,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.greenAccent),
+                                    child: Center(
+                                      child: Text(
+                                        snapshot.data['Items'][ticketIndex]
+                                                ['Quantity']
+                                            .toString(),
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 11),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),

@@ -192,7 +192,7 @@ class TotalsSummary extends StatelessWidget {
               Spacer(),
             ]),
       );
-    } else {
+    } else if (MediaQuery.of(context).size.width > 650) {
       return Container(
         width: MediaQuery.of(context).size.width,
         height: 200,
@@ -211,8 +211,8 @@ class TotalsSummary extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[200],
-                          offset: new Offset(15.0, 15.0),
+                          color: Colors.grey[350],
+                          offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
                       ],
@@ -250,8 +250,8 @@ class TotalsSummary extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[200],
-                          offset: new Offset(15.0, 15.0),
+                          color: Colors.grey[350],
+                          offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
                       ],
@@ -292,8 +292,8 @@ class TotalsSummary extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[200],
-                          offset: new Offset(15.0, 15.0),
+                          color: Colors.grey[350],
+                          offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
                       ],
@@ -329,8 +329,8 @@ class TotalsSummary extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[200],
-                          offset: new Offset(15.0, 15.0),
+                          color: Colors.grey[350],
+                          offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
                       ],
@@ -363,6 +363,195 @@ class TotalsSummary extends StatelessWidget {
                                 color: Colors.grey),
                           )
                         ]),
+                  ),
+                ]),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: Column(
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //Total Sales
+                  Expanded(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: <BoxShadow>[
+                          new BoxShadow(
+                            color: Colors.grey[350],
+                            offset: Offset(0.0, 0.0),
+                            blurRadius: 10.0,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            //Amount
+                            Text(
+                              (dayStats != null)
+                                  ? abbreviateCurrency(stats.sales)
+                                  : abbreviateCurrency(stats.totalSales),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 21),
+                            ),
+                            SizedBox(height: 10),
+                            //Text
+                            Text(
+                              'Ingresos por Ventas',
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.grey),
+                            )
+                          ]),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  //Sales count
+                  Expanded(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: <BoxShadow>[
+                          new BoxShadow(
+                            color: Colors.grey[350],
+                            offset: Offset(0.0, 0.0),
+                            blurRadius: 10.0,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            //Amount
+                            Text(
+                              '${stats.totalSalesCount}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 21),
+                            ),
+                            SizedBox(height: 10),
+                            //Text
+                            Text(
+                              'No. de Ventas',
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.grey),
+                            )
+                          ]),
+                    ),
+                  ),
+                ]),
+            SizedBox(height: 15),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //Products sold
+                  Expanded(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: <BoxShadow>[
+                          new BoxShadow(
+                            color: Colors.grey[350],
+                            offset: Offset(0.0, 0.0),
+                            blurRadius: 10.0,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            //Amount
+                            Text(
+                              '${stats.totalItemsSold}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 21),
+                            ),
+                            SizedBox(height: 10),
+                            //Text
+                            Text(
+                              'Productos Vendidos',
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.grey),
+                            )
+                          ]),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  //Average Sale
+                  Expanded(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: <BoxShadow>[
+                          new BoxShadow(
+                            color: Colors.grey[350],
+                            offset: Offset(0.0, 0.0),
+                            blurRadius: 10.0,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            //Amount
+                            Text(
+                                (dayStats != null)
+                                    ? abbreviateCurrency((stats
+                                                .totalSalesCount !=
+                                            0)
+                                        ? (stats.sales / stats.totalSalesCount)
+                                        : 0)
+                                    : abbreviateCurrency(
+                                        (stats.totalSalesCount != 0)
+                                            ? (stats.totalSales /
+                                                stats.totalSalesCount)
+                                            : 0),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w900, fontSize: 21)),
+                            SizedBox(height: 10),
+                            //Text
+                            Text(
+                              'Promedio por Venta',
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.grey),
+                            )
+                          ]),
+                    ),
                   ),
                 ]),
           ],

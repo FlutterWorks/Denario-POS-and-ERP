@@ -562,19 +562,30 @@ class _HomeMobileState extends State<HomeMobile> {
                                           .businesses[businessIndexOnProfile]
                                           .businessName,
                                       style: TextStyle(
-                                          color: Colors.black54,
+                                          color: Colors.black,
                                           fontSize: 14,
-                                          fontWeight: FontWeight.normal),
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 2),
                                     //Config
                                     TextButton(
                                         onPressed: () {},
-                                        child: Text(
-                                          'Perfil',
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              color: Colors.black),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.settings,
+                                              color: Colors.grey,
+                                              size: 12,
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              'Perfil',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
                                         ))
                                   ],
                                 ),
@@ -607,7 +618,12 @@ class _HomeMobileState extends State<HomeMobile> {
                                           size: 16,
                                         ),
                                         SizedBox(width: 10),
-                                        Text("Cambiar de negocio")
+                                        Text(
+                                          "Cambiar de negocio",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        )
                                       ]),
                                 ),
                               ),
