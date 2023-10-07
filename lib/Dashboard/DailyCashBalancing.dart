@@ -175,7 +175,7 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                                 color: Colors.black,
                                 size: 24,
                               )),
-                          SizedBox(width: 10),
+                          SizedBox(width: 5),
                           //Historic Cash Balancing
                           IconButton(
                               tooltip: 'Historial de arqueos',
@@ -199,7 +199,7 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                       color: Colors.grey,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 10),
                   //Open / Current
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -256,62 +256,109 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                         ),
                       ),
                       SizedBox(height: 10),
-                      //Date and name
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      //Date
+                      Container(
+                          child: Row(
                         children: [
-                          //Fecha
-                          Container(
-                              child: Text(
-                            'Apertura: ' +
-                                (DateFormat.MMMd()
-                                        .format(dailyTransactions.openDate)
-                                        .toString() +
-                                    ', ' +
-                                    DateFormat('HH:mm:ss')
-                                        .format(dailyTransactions.openDate)
-                                        .toString()),
+                          Text(
+                            'Apertura:',
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                             ),
-                          )),
-                          SizedBox(width: 10),
-                          //User
-                          Container(
-                              child: Center(
-                            child: Text(
-                              '|  Usuario: ${dailyTransactions.user}',
-                              style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Spacer(),
+                          Text(
+                            (DateFormat.MMMd()
+                                    .format(dailyTransactions.openDate)
+                                    .toString() +
+                                ', ' +
+                                DateFormat('HH:mm:ss')
+                                    .format(dailyTransactions.openDate)
+                                    .toString()),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
                             ),
-                          )),
+                          ),
                         ],
-                      ),
+                      )),
+                      SizedBox(height: 20),
+                      //uSER
+                      Container(
+                          child: Row(
+                        children: [
+                          Text(
+                            'Usuario: ${dailyTransactions.user}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Spacer(),
+                          Text(
+                            '${dailyTransactions.user}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      )),
                       SizedBox(height: 20),
                       //Monto apertura
-                      Text(
-                        'Monto de Apertura: ${formatCurrency.format(dailyTransactions.initialAmount)}',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                      Row(
+                        children: [
+                          Text(
+                            'Monto de Apertura:',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Spacer(),
+                          Text(
+                            '${formatCurrency.format(dailyTransactions.initialAmount)}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 15),
                       //Sales
-                      Text(
-                        (dailyTransactions.salesByMedium['Efectivo'] != null)
-                            ? 'Ventas en efectivo: ${formatCurrency.format(dailyTransactions.salesByMedium['Efectivo'])}'
-                            : 'Ventas en efectivo: ${formatCurrency.format(0)}',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                      Row(
+                        children: [
+                          Text(
+                            'Ventas en efectivo',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Spacer(),
+                          Text(
+                            (dailyTransactions.salesByMedium['Efectivo'] !=
+                                    null)
+                                ? '${formatCurrency.format(dailyTransactions.salesByMedium['Efectivo'])}'
+                                : '${formatCurrency.format(0)}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 15),
                       //inflows
-                      Text(
-                        'Ingresos a Caja: ${formatCurrency.format(dailyTransactions.inflows)}',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                      Row(
+                        children: [
+                          Text(
+                            'Ingresos a Caja',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Spacer(),
+                          Text(
+                            '${formatCurrency.format(dailyTransactions.inflows)}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 15),
                       //outflows
-                      Text(
-                        'Egresos de Caja: ${formatCurrency.format(dailyTransactions.outflows)}',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                      Row(
+                        children: [
+                          Text(
+                            'Egresos de Caja',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Spacer(),
+                          Text(
+                            '${formatCurrency.format(dailyTransactions.inflows)}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 15),
                       //Divider
@@ -325,9 +372,18 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                       ),
                       SizedBox(height: 15),
                       //Expected in Register
-                      Text(
-                        'Esperado en Caja: ${formatCurrency.format(expectedInRegister)}',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                      Row(
+                        children: [
+                          Text(
+                            'Esperado en Caja',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Spacer(),
+                          Text(
+                            '${formatCurrency.format(dailyTransactions.inflows)}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 15),
                       //Buttons to add transactions
