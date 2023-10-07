@@ -739,9 +739,11 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
             )),
       );
     } else {
-      return SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20),
+      return Container(
+        height: double.infinity,
+        width: double.infinity,
+        padding: EdgeInsets.all(20),
+        child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
@@ -758,7 +760,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                         iconSize: 20.0),
                   ],
                 ),
-                //Titulo
+                // //Titulo
                 Text(
                   'Agendar venta',
                   textAlign: TextAlign.center,
@@ -823,15 +825,19 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                 ),
                 SizedBox(height: 15),
                 //Fecha
-                Text(
-                  'Agendar para:',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Colors.black45),
+                Row(
+                  children: [
+                    Text(
+                      'Agendar para:',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colors.black45),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 10),
-                //Date
+                // //Date
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -863,7 +869,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                     ],
                   ),
                 ),
-                SizedBox(width: 10),
+                SizedBox(height: 10),
                 //Time
                 Container(
                   width: double.infinity,
@@ -898,12 +904,16 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                 ),
                 SizedBox(height: 15),
                 // Tlf y mail
-                Text(
-                  'Contacto',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Colors.black45),
+                Row(
+                  children: [
+                    Text(
+                      'Contacto',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colors.black45),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 10),
                 //Tlf
@@ -954,7 +964,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                     },
                   ),
                 ),
-                SizedBox(width: 10),
+                SizedBox(height: 10),
                 //Mail
                 Container(
                   width: double.infinity,
@@ -997,16 +1007,21 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                 ),
                 SizedBox(height: 15),
                 //Initail Payment
-                Text(
-                  'Pago inicial/seña:',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Colors.black45),
+                Row(
+                  children: [
+                    Text(
+                      'Pago inicial/seña:',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colors.black45),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 10),
                 //Initial Pay
-                Expanded(
+                Container(
+                  width: double.infinity,
                   child: TextFormField(
                     keyboardType: TextInputType.number,
                     focusNode: _initialPaymentNode,
@@ -1088,7 +1103,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                         : SizedBox(),
                   ],
                 ),
-                SizedBox(height: (delivery) ? 0 : 10),
+                SizedBox(height: 10),
                 Container(
                     width: double.infinity,
                     child: (delivery)
@@ -1146,12 +1161,16 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                           )),
                 SizedBox(height: 15),
                 //Nota
-                Text(
-                  'Nota',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Colors.black45),
+                Row(
+                  children: [
+                    Text(
+                      'Nota',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colors.black45),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 10),
                 Container(

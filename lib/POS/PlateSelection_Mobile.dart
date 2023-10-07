@@ -37,11 +37,12 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
             ),
             delegate: SliverChildBuilderDelegate(
               (context, i) {
-                var ticketIndex;
+                var itemCount = 0;
                 for (var x = 0; x < bloc.ticketItems['Items'].length; x++) {
                   if (product[i].product ==
                       bloc.ticketItems['Items'][x]["Name"]) {
-                    ticketIndex = x;
+                    itemCount =
+                        itemCount + bloc.ticketItems['Items'][x]["Quantity"];
                   }
                 }
 
@@ -158,10 +159,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                               ),
                             ),
                           ),
-                          (ticketIndex != null &&
-                                  snapshot.data['Items'][ticketIndex]
-                                          ['Quantity'] >
-                                      0)
+                          (itemCount > 0)
                               ? Positioned(
                                   right: 5,
                                   top: 5,
@@ -173,9 +171,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                                         color: Colors.greenAccent),
                                     child: Center(
                                       child: Text(
-                                        snapshot.data['Items'][ticketIndex]
-                                                ['Quantity']
-                                            .toString(),
+                                        itemCount.toString(),
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 11),
                                       ),

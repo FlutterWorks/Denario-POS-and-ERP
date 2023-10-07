@@ -33,7 +33,9 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
               child: Container(
                 padding: EdgeInsets.all(20),
                 height: 500,
-                width: 600,
+                width: (MediaQuery.of(context).size.width > 650)
+                    ? 600
+                    : MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +96,9 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
                   child: Container(
                     // padding: EdgeInsets.all(20),
                     height: 500,
-                    width: 600,
+                    width: (MediaQuery.of(context).size.width > 650)
+                        ? 600
+                        : MediaQuery.of(context).size.width * 0.9,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -142,7 +146,11 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
                                     physics: BouncingScrollPhysics(),
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 4,
+                                      crossAxisCount:
+                                          (MediaQuery.of(context).size.width >
+                                                  650)
+                                              ? 4
+                                              : 3,
                                       crossAxisSpacing: 15.0,
                                       mainAxisSpacing: 15.0,
                                       childAspectRatio: 1,

@@ -11,6 +11,7 @@ import 'package:denario/No%20POS%20Sales/SelectItemDialog.dart';
 import 'package:denario/POS/ConfirmOrder.dart';
 import 'package:denario/POS/DiscountDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +58,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
   int newSalesCount;
   int currentTicketItemsCount;
   int newTicketItemsCount;
+
+  void nothing(BuildContext context) {}
 
   void clearControllers() {
     setState(() {
@@ -1155,34 +1158,143 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                         ListView.builder(
                             key: redrawObject,
                             shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
                             itemCount: snapshot.data["Items"].length,
                             itemBuilder: (context, i) {
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 120,
-                                  child: Row(
+                                child: Slidable(
+                                  key: const ValueKey(0),
+                                  endActionPane: ActionPane(
+                                    dismissible:
+                                        DismissiblePane(onDismissed: () {
+                                      bloc.removeFromCart(
+                                          snapshot.data["Items"][i]);
+
+                                      final random = Random();
+                                      const availableChars =
+                                          'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                                      final randomString = List.generate(
+                                              10,
+                                              (index) => availableChars[
+                                                  random.nextInt(
+                                                      availableChars.length)])
+                                          .join();
+                                      setState(() {
+                                        redrawObject = ValueKey(randomString);
+                                      });
+                                    }),
+                                    motion: ScrollMotion(),
                                     children: [
-                                      Expanded(
-                                        child: Column(
+                                      SlidableAction(
+                                        onPressed: nothing,
+                                        backgroundColor: Colors.redAccent,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        label: 'Eliminar',
+                                      ),
+                                    ],
+                                  ),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 140,
+                                    padding: EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          new BorderRadius.circular(12.0),
+                                      boxShadow: <BoxShadow>[
+                                        new BoxShadow(
+                                          color: Colors.grey[350],
+                                          offset: Offset(0.0, 0.0),
+                                          blurRadius: 10.0,
+                                        )
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        //Product
+                                        Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: TextFormField(
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                            cursorColor: Colors.grey,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            initialValue: snapshot.data["Items"]
+                                                [i]['Name'],
+                                            readOnly: true,
+                                            decoration: InputDecoration(
+                                              label: Text('Descripción'),
+                                              labelStyle: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12),
+                                              errorStyle: TextStyle(
+                                                  color: Colors.redAccent[700],
+                                                  fontSize: 12),
+                                              border: new OutlineInputBorder(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        12.0),
+                                                borderSide: new BorderSide(
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        12.0),
+                                                borderSide: new BorderSide(
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 10),
+                                        //Other
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            //Product
-                                            Container(
-                                              width: double.infinity,
-                                              height: 50,
+                                            //Price
+                                            Expanded(
+                                              flex: 4,
                                               child: TextFormField(
+                                                textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 14),
+                                                autofocus: true,
                                                 cursorColor: Colors.grey,
                                                 textInputAction:
                                                     TextInputAction.next,
-                                                initialValue: snapshot
-                                                    .data["Items"][i]['Name'],
-                                                readOnly: true,
+                                                inputFormatters: [
+                                                  CurrencyTextInputFormatter(
+                                                    name: '\$',
+                                                    locale: 'en',
+                                                    decimalDigits: 2,
+                                                  ),
+                                                ],
+                                                initialValue: (snapshot
+                                                                .data["Items"]
+                                                            [i]['Price'] >
+                                                        0)
+                                                    ? '\$${snapshot.data["Items"][i]['Price']}'
+                                                    : null,
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 decoration: InputDecoration(
-                                                  label: Text('Descripción'),
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior
+                                                          .always,
+                                                  hintText: '\$0.00',
+                                                  label: Text('Precio'),
                                                   labelStyle: TextStyle(
                                                       color: Colors.grey,
                                                       fontSize: 12),
@@ -1209,207 +1321,108 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            //Other
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                //Price
-                                                Expanded(
-                                                  flex: 4,
-                                                  child: TextFormField(
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 14),
-                                                    autofocus: true,
-                                                    cursorColor: Colors.grey,
-                                                    textInputAction:
-                                                        TextInputAction.next,
-                                                    inputFormatters: [
-                                                      CurrencyTextInputFormatter(
-                                                        name: '\$',
-                                                        locale: 'en',
-                                                        decimalDigits: 2,
-                                                      ),
-                                                    ],
-                                                    initialValue: (snapshot
-                                                                        .data[
-                                                                    "Items"][i]
-                                                                ['Price'] >
-                                                            0)
-                                                        ? '\$${snapshot.data["Items"][i]['Price']}'
-                                                        : null,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration: InputDecoration(
-                                                      floatingLabelBehavior:
-                                                          FloatingLabelBehavior
-                                                              .always,
-                                                      hintText: '\$0.00',
-                                                      label: Text('Precio'),
-                                                      labelStyle: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 12),
-                                                      errorStyle: TextStyle(
-                                                          color: Colors
-                                                              .redAccent[700],
-                                                          fontSize: 12),
-                                                      border:
-                                                          new OutlineInputBorder(
-                                                        borderRadius:
-                                                            new BorderRadius
-                                                                .circular(12.0),
-                                                        borderSide:
-                                                            new BorderSide(
-                                                          color: Colors.grey,
-                                                        ),
-                                                      ),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            new BorderRadius
-                                                                .circular(12.0),
-                                                        borderSide:
-                                                            new BorderSide(
-                                                          color: Colors.green,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    onFieldSubmitted: (term) {
-                                                      // _nameNode.unfocus();
-                                                      // FocusScope.of(context).requestFocus(_tlfNode);
-                                                    },
-                                                    onChanged: (val) {
-                                                      bloc.editPrice(
-                                                          i,
-                                                          double.tryParse((val
-                                                                  .substring(1))
+                                                onFieldSubmitted: (term) {
+                                                  // _nameNode.unfocus();
+                                                  // FocusScope.of(context).requestFocus(_tlfNode);
+                                                },
+                                                onChanged: (val) {
+                                                  bloc.editPrice(
+                                                      i,
+                                                      double.tryParse(
+                                                          (val.substring(1))
                                                               .replaceAll(
                                                                   ',', '')));
-                                                    },
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                //Qty
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: TextFormField(
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 14),
-                                                    textAlign: TextAlign.center,
-                                                    autofocus: true,
-                                                    cursorColor: Colors.grey,
-                                                    textInputAction:
-                                                        TextInputAction.next,
-                                                    initialValue: snapshot
-                                                        .data["Items"][i]
-                                                            ['Quantity']
-                                                        .toString(),
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration: InputDecoration(
-                                                      label: Text('Cantidad'),
-                                                      labelStyle: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 12),
-                                                      errorStyle: TextStyle(
-                                                          color: Colors
-                                                              .redAccent[700],
-                                                          fontSize: 12),
-                                                      border:
-                                                          new OutlineInputBorder(
-                                                        borderRadius:
-                                                            new BorderRadius
-                                                                .circular(12.0),
-                                                        borderSide:
-                                                            new BorderSide(
-                                                          color: Colors.grey,
-                                                        ),
-                                                      ),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            new BorderRadius
-                                                                .circular(12.0),
-                                                        borderSide:
-                                                            new BorderSide(
-                                                          color: Colors.green,
-                                                        ),
-                                                      ),
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            //Qty
+                                            Expanded(
+                                              flex: 2,
+                                              child: TextFormField(
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14),
+                                                textAlign: TextAlign.center,
+                                                autofocus: true,
+                                                cursorColor: Colors.grey,
+                                                textInputAction:
+                                                    TextInputAction.next,
+                                                initialValue: snapshot
+                                                    .data["Items"][i]
+                                                        ['Quantity']
+                                                    .toString(),
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration: InputDecoration(
+                                                  label: Text('Cantidad'),
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 12),
+                                                  errorStyle: TextStyle(
+                                                      color:
+                                                          Colors.redAccent[700],
+                                                      fontSize: 12),
+                                                  border:
+                                                      new OutlineInputBorder(
+                                                    borderRadius:
+                                                        new BorderRadius
+                                                            .circular(12.0),
+                                                    borderSide: new BorderSide(
+                                                      color: Colors.grey,
                                                     ),
-                                                    onFieldSubmitted: (term) {
-                                                      // _nameNode.unfocus();
-                                                      // FocusScope.of(context).requestFocus(_tlfNode);
-                                                    },
-                                                    onChanged: (val) {
-                                                      bloc.editQuantity(
-                                                          i, int.parse(val));
-                                                    },
                                                   ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                //Total
-                                                Expanded(
-                                                  flex: 4,
-                                                  child: Container(
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color: Colors.grey),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12.0),
-                                                    ),
-                                                    padding: EdgeInsets.all(12),
-                                                    child: Text(
-                                                      formatCurrency.format(
-                                                          snapshot.data["Items"]
-                                                                  [i]
-                                                              ['Total Price']),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        new BorderRadius
+                                                            .circular(12.0),
+                                                    borderSide: new BorderSide(
+                                                      color: Colors.green,
                                                     ),
                                                   ),
                                                 ),
-                                              ],
+                                                onFieldSubmitted: (term) {
+                                                  // _nameNode.unfocus();
+                                                  // FocusScope.of(context).requestFocus(_tlfNode);
+                                                },
+                                                onChanged: (val) {
+                                                  bloc.editQuantity(
+                                                      i, int.parse(val));
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            //Total
+                                            Expanded(
+                                              flex: 4,
+                                              child: Container(
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.grey),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                ),
+                                                padding: EdgeInsets.all(12),
+                                                child: Text(
+                                                  formatCurrency.format(
+                                                      snapshot.data["Items"][i]
+                                                          ['Total Price']),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      //Detele
-                                      IconButton(
-                                          onPressed: () {
-                                            bloc.removeFromCart(
-                                                snapshot.data["Items"][i]);
-
-                                            final random = Random();
-                                            const availableChars =
-                                                'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-                                            final randomString = List.generate(
-                                                10,
-                                                (index) => availableChars[random
-                                                    .nextInt(availableChars
-                                                        .length)]).join();
-                                            setState(() {
-                                              redrawObject =
-                                                  ValueKey(randomString);
-                                            });
-                                          },
-                                          icon: Icon(Icons.delete))
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );

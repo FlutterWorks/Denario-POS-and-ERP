@@ -242,7 +242,9 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
           child: Container(
             padding: EdgeInsets.all(20),
             height: (paymentType == 'Efectivo') ? 500 : 400,
-            width: MediaQuery.of(context).size.width * 0.35,
+            width: (MediaQuery.of(context).size.width > 650)
+                ? MediaQuery.of(context).size.width * 0.35
+                : MediaQuery.of(context).size.width * 0.9,
             constraints: (paymentType == 'Efectivo')
                 ? BoxConstraints(minHeight: 500, minWidth: 400)
                 : BoxConstraints(minHeight: 400, minWidth: 400),
@@ -308,16 +310,20 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                               ),
                               Spacer(),
                               //Confirm Text
-                              Text(
-                                "Confirmar pedido",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Spacer(),
+                              (MediaQuery.of(context).size.width > 650)
+                                  ? Text(
+                                      "Confirmar pedido",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              (MediaQuery.of(context).size.width > 650)
+                                  ? Spacer()
+                                  : SizedBox(),
                               //Cancel
                               IconButton(
                                   onPressed: () => Navigator.pop(context),
@@ -329,42 +335,77 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                       Divider(thickness: 0.5, indent: 0, endIndent: 0),
                       SizedBox(height: 15),
                       //Amount
-                      Container(
-                        width: double.infinity,
-                        height: 50,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              //Text
-                              Text(
-                                "Total:",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                      (MediaQuery.of(context).size.width > 650)
+                          ? Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //Text
+                                    Text(
+                                      "Total:",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    //Amount
+                                    Text(
+                                      "${formatCurrency.format(widget.total)}",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ]),
+                            )
+                          : Container(
+                              height: 75,
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Total",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  //Text
+                                  Text(
+                                    "${formatCurrency.format(widget.total)}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 28.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Spacer(),
-                              //Amount
-                              Text(
-                                "${formatCurrency.format(widget.total)}",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ]),
-                      ),
-                      Divider(thickness: 0.5, indent: 0, endIndent: 0),
+                            ),
+                      (MediaQuery.of(context).size.width > 650)
+                          ? Divider(thickness: 0.5, indent: 0, endIndent: 0)
+                          : SizedBox(),
                       SizedBox(
-                        height: 15,
+                        height:
+                            (MediaQuery.of(context).size.width > 650) ? 15 : 0,
                       ),
                       //Change AMOUNT
-                      (paymentType == 'Efectivo')
+                      (paymentType == 'Efectivo' &&
+                              (MediaQuery.of(context).size.width > 650))
                           ? Container(
                               width: double.infinity,
                               height: 50,
@@ -553,10 +594,14 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                             )
                           : Container(),
                       SizedBox(
-                        height: (paymentType == 'Efectivo') ? 15 : 0,
+                        height: (paymentType == 'Efectivo' &&
+                                (MediaQuery.of(context).size.width > 650))
+                            ? 15
+                            : 0,
                       ),
                       //Change FORMULA
-                      (paymentType == 'Efectivo')
+                      (paymentType == 'Efectivo' &&
+                              (MediaQuery.of(context).size.width > 650))
                           ? Container(
                               width: double.infinity,
                               child: Row(
@@ -580,223 +625,431 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                       SizedBox(
                         height: (paymentType == 'Efectivo') ? 15 : 0,
                       ),
-                      (paymentType == 'Efectivo')
+                      (paymentType == 'Efectivo' &&
+                              (MediaQuery.of(context).size.width > 650))
                           ? Divider(thickness: 0.5, indent: 0, endIndent: 0)
                           : Container(),
                       SizedBox(
                         height: 15,
                       ),
                       //Payment type
-                      Container(
-                        width: double.infinity,
-                        height: 60,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              //Text
-                              Text(
-                                "Método:",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(width: 15),
-                              //List of payment methods
-                              Expanded(
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: widget.paymentTypes.length,
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, i) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 3.0),
-                                        child: Container(
-                                          height: 60,
-                                          width: 60,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
-                                            border: Border.all(
-                                                color: (paymentType ==
-                                                        widget.paymentTypes[i]
-                                                            ['Type'])
-                                                    ? Colors.greenAccent
-                                                    : Colors.white10,
-                                                width: 1.5),
-                                          ),
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                paymentType = widget
-                                                    .paymentTypes[i]['Type'];
-                                              });
-                                              bloc.changePaymentType(widget
-                                                  .paymentTypes[i]['Type']);
-                                            },
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5.0),
-                                                child: Image(
-                                                  image: NetworkImage(
-                                                      widget.paymentTypes[i]
-                                                          ['Image']),
-                                                  fit: BoxFit.scaleDown,
-                                                )
-                                                // Container(
-                                                //     decoration: BoxDecoration(
-                                                //         image: DecorationImage(
-                                                //   image: NetworkImage(widget
-                                                //       .paymentTypes[i]['Image']),
-                                                //   fit: BoxFit.cover,
-                                                // ))),
+                      (MediaQuery.of(context).size.width > 650)
+                          ? Container(
+                              width: double.infinity,
+                              height: 60,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //Text
+                                    Text(
+                                      "Método:",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(width: 15),
+                                    //List of payment methods
+                                    Expanded(
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: widget.paymentTypes.length,
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, i) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 3.0),
+                                              child: Container(
+                                                height: 60,
+                                                width: 60,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(8)),
+                                                  border: Border.all(
+                                                      color: (paymentType ==
+                                                              widget.paymentTypes[
+                                                                  i]['Type'])
+                                                          ? Colors.greenAccent
+                                                          : Colors.white10,
+                                                      width: 1.5),
                                                 ),
-                                          ),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      paymentType =
+                                                          widget.paymentTypes[i]
+                                                              ['Type'];
+                                                    });
+                                                    bloc.changePaymentType(
+                                                        widget.paymentTypes[i]
+                                                            ['Type']);
+                                                  },
+                                                  child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      child: Image(
+                                                        image: NetworkImage(
+                                                            widget.paymentTypes[
+                                                                i]['Image']),
+                                                        fit: BoxFit.scaleDown,
+                                                      )
+                                                      // Container(
+                                                      //     decoration: BoxDecoration(
+                                                      //         image: DecorationImage(
+                                                      //   image: NetworkImage(widget
+                                                      //       .paymentTypes[i]['Image']),
+                                                      //   fit: BoxFit.cover,
+                                                      // ))),
+                                                      ),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    ),
+                                  ]),
+                            )
+                          : Container(
+                              height: 60,
+                              width: double.infinity,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: widget.paymentTypes.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, i) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 3.0),
+                                      child: Container(
+                                        height: 60,
+                                        width: 60,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8)),
+                                          border: Border.all(
+                                              color: (paymentType ==
+                                                      widget.paymentTypes[i]
+                                                          ['Type'])
+                                                  ? Colors.greenAccent
+                                                  : Colors.white10,
+                                              width: 1.5),
                                         ),
-                                      );
-                                    }),
-                              ),
-                            ]),
-                      ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              paymentType = widget
+                                                  .paymentTypes[i]['Type'];
+                                            });
+                                            bloc.changePaymentType(
+                                                widget.paymentTypes[i]['Type']);
+                                          },
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Image(
+                                                image: NetworkImage(widget
+                                                    .paymentTypes[i]['Image']),
+                                                fit: BoxFit.scaleDown,
+                                              )),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ),
                       SizedBox(height: 25),
                       //Buttons
-                      Container(
-                        height: 50,
-                        width: double.infinity,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              //To Receivables
-                              Container(
-                                height: 50,
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    var documentID = DateTime.now().toString();
+                      (MediaQuery.of(context).size.width > 650)
+                          ? Container(
+                              height: 50,
+                              width: double.infinity,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    //To Receivables
+                                    Container(
+                                      height: 50,
+                                      child: OutlinedButton(
+                                        style: OutlinedButton.styleFrom(
+                                          foregroundColor: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          var documentID =
+                                              DateTime.now().toString();
 
-                                    bloc.changePaymentType('Por Cobrar');
+                                          bloc.changePaymentType('Por Cobrar');
 
-                                    DatabaseService().createReceivable(
-                                        widget.businessID,
-                                        documentID,
-                                        widget.subTotal,
-                                        widget.discount,
-                                        widget.tax,
-                                        widget.total,
-                                        widget.orderDetail,
-                                        widget.orderName,
-                                        widget.orderType,
-                                        widget.orderName, {
-                                      'Name': widget.orderName,
-                                      'Address': '',
-                                      'Phone': 0,
-                                      'email': '',
-                                    });
-                                    DatabaseService().saveNewOrder(
-                                        documentID,
-                                        widget.businessID,
-                                        false,
-                                        [],
-                                        invoiceNo,
-                                        (widget.register == null)
-                                            ? 'Indpendiente'
-                                            : widget.register.registerName,
-                                        widget.isTable,
-                                        widget.tableCode,
-                                        widget.isSavedOrder,
-                                        widget.savedOrderID,
-                                        false,
-                                        widget.orderName,
-                                        widget.orderDetail,
-                                        widget.subTotal,
-                                        widget.total,
-                                        paymentType,
-                                        widget.orderType,
-                                        widget.tax,
-                                        widget.discount,
-                                        widget.discountCode);
-                                    /////////////////Clear Variables
-                                    widget.clearVariables();
-                                    if (widget.onTableView) {
-                                      widget.tablePageController.jumpTo(0);
-                                    }
-                                    Navigator.of(context).pop();
-                                    // saveOrder(userProfile, 'Por Cobrar',
-                                    //     documentID, false);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('A ventas por cobrar'),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 15),
-                              //Confirmar
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.black,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8)),
+                                          DatabaseService().createReceivable(
+                                              widget.businessID,
+                                              documentID,
+                                              widget.subTotal,
+                                              widget.discount,
+                                              widget.tax,
+                                              widget.total,
+                                              widget.orderDetail,
+                                              widget.orderName,
+                                              widget.orderType,
+                                              widget.orderName, {
+                                            'Name': widget.orderName,
+                                            'Address': '',
+                                            'Phone': 0,
+                                            'email': '',
+                                          });
+                                          DatabaseService().saveNewOrder(
+                                              documentID,
+                                              widget.businessID,
+                                              false,
+                                              [],
+                                              invoiceNo,
+                                              (widget.register == null)
+                                                  ? 'Indpendiente'
+                                                  : widget
+                                                      .register.registerName,
+                                              widget.isTable,
+                                              widget.tableCode,
+                                              widget.isSavedOrder,
+                                              widget.savedOrderID,
+                                              false,
+                                              widget.orderName,
+                                              widget.orderDetail,
+                                              widget.subTotal,
+                                              widget.total,
+                                              paymentType,
+                                              widget.orderType,
+                                              widget.tax,
+                                              widget.discount,
+                                              widget.discountCode);
+                                          /////////////////Clear Variables
+                                          widget.clearVariables();
+                                          if (widget.onTableView) {
+                                            widget.tablePageController
+                                                .jumpTo(0);
+                                          }
+                                          Navigator.of(context).pop();
+                                          // saveOrder(userProfile, 'Por Cobrar',
+                                          //     documentID, false);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text('A ventas por cobrar'),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  onPressed: () {
-                                    var documentID = DateTime.now().toString();
-                                    DatabaseService().saveNewOrder(
-                                        documentID,
-                                        widget.businessID,
-                                        false,
-                                        [],
-                                        invoiceNo,
-                                        (widget.register == null)
-                                            ? null
-                                            : widget.register.registerName,
-                                        widget.isTable,
-                                        widget.tableCode,
-                                        widget.isSavedOrder,
-                                        widget.savedOrderID,
-                                        false,
-                                        widget.orderName,
-                                        widget.orderDetail,
-                                        widget.subTotal,
-                                        widget.total,
-                                        paymentType,
-                                        widget.orderType,
-                                        widget.tax,
-                                        widget.discount,
-                                        widget.discountCode);
-                                    /////////////////Clear Variables
-                                    widget.clearVariables();
-                                    if (widget.onTableView) {
-                                      widget.tablePageController.jumpTo(0);
-                                    }
-                                    if (widget.orderType == 'Venta Agendada') {
-                                      DatabaseService().paidScheduledSale(
-                                          widget.businessID,
-                                          widget.savedOrderID);
-                                      Navigator.of(context).pop();
-                                    }
-                                    Navigator.of(context).pop();
-                                    // saveOrder(userProfile, paymentType,
-                                    //     DateTime.now().toString(), false);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 5),
-                                    child: Center(
-                                      child: Text('Confirmar'),
+                                    SizedBox(width: 15),
+                                    //Confirmar
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.black,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          var documentID =
+                                              DateTime.now().toString();
+                                          DatabaseService().saveNewOrder(
+                                              documentID,
+                                              widget.businessID,
+                                              false,
+                                              [],
+                                              invoiceNo,
+                                              (widget.register == null)
+                                                  ? null
+                                                  : widget
+                                                      .register.registerName,
+                                              widget.isTable,
+                                              widget.tableCode,
+                                              widget.isSavedOrder,
+                                              widget.savedOrderID,
+                                              false,
+                                              widget.orderName,
+                                              widget.orderDetail,
+                                              widget.subTotal,
+                                              widget.total,
+                                              paymentType,
+                                              widget.orderType,
+                                              widget.tax,
+                                              widget.discount,
+                                              widget.discountCode);
+                                          /////////////////Clear Variables
+                                          widget.clearVariables();
+                                          if (widget.onTableView) {
+                                            widget.tablePageController
+                                                .jumpTo(0);
+                                          }
+                                          if (widget.orderType ==
+                                              'Venta Agendada') {
+                                            DatabaseService().paidScheduledSale(
+                                                widget.businessID,
+                                                widget.savedOrderID);
+                                            Navigator.of(context).pop();
+                                          }
+                                          Navigator.of(context).pop();
+                                          // saveOrder(userProfile, paymentType,
+                                          //     DateTime.now().toString(), false);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15, vertical: 5),
+                                          child: Center(
+                                            child: Text('Confirmar'),
+                                          ),
+                                        )),
+                                  ]),
+                            )
+                          : Container(
+                              height: 120,
+                              width: double.infinity,
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    //To Receivables
+                                    Container(
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: OutlinedButton(
+                                        style: OutlinedButton.styleFrom(
+                                          foregroundColor: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          var documentID =
+                                              DateTime.now().toString();
+
+                                          bloc.changePaymentType('Por Cobrar');
+
+                                          DatabaseService().createReceivable(
+                                              widget.businessID,
+                                              documentID,
+                                              widget.subTotal,
+                                              widget.discount,
+                                              widget.tax,
+                                              widget.total,
+                                              widget.orderDetail,
+                                              widget.orderName,
+                                              widget.orderType,
+                                              widget.orderName, {
+                                            'Name': widget.orderName,
+                                            'Address': '',
+                                            'Phone': 0,
+                                            'email': '',
+                                          });
+                                          DatabaseService().saveNewOrder(
+                                              documentID,
+                                              widget.businessID,
+                                              false,
+                                              [],
+                                              invoiceNo,
+                                              (widget.register == null)
+                                                  ? 'Indpendiente'
+                                                  : widget
+                                                      .register.registerName,
+                                              widget.isTable,
+                                              widget.tableCode,
+                                              widget.isSavedOrder,
+                                              widget.savedOrderID,
+                                              false,
+                                              widget.orderName,
+                                              widget.orderDetail,
+                                              widget.subTotal,
+                                              widget.total,
+                                              paymentType,
+                                              widget.orderType,
+                                              widget.tax,
+                                              widget.discount,
+                                              widget.discountCode);
+                                          /////////////////Clear Variables
+                                          widget.clearVariables();
+                                          if (widget.onTableView) {
+                                            widget.tablePageController
+                                                .jumpTo(0);
+                                          }
+                                          Navigator.of(context).pop();
+                                          // saveOrder(userProfile, 'Por Cobrar',
+                                          //     documentID, false);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text('A ventas por cobrar'),
+                                        ),
+                                      ),
                                     ),
-                                  )),
-                            ]),
-                      ),
+                                    SizedBox(height: 15),
+                                    //Confirmar
+                                    Container(
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.black,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8)),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            var documentID =
+                                                DateTime.now().toString();
+                                            DatabaseService().saveNewOrder(
+                                                documentID,
+                                                widget.businessID,
+                                                false,
+                                                [],
+                                                invoiceNo,
+                                                (widget.register == null)
+                                                    ? null
+                                                    : widget
+                                                        .register.registerName,
+                                                widget.isTable,
+                                                widget.tableCode,
+                                                widget.isSavedOrder,
+                                                widget.savedOrderID,
+                                                false,
+                                                widget.orderName,
+                                                widget.orderDetail,
+                                                widget.subTotal,
+                                                widget.total,
+                                                paymentType,
+                                                widget.orderType,
+                                                widget.tax,
+                                                widget.discount,
+                                                widget.discountCode);
+                                            /////////////////Clear Variables
+                                            widget.clearVariables();
+                                            if (widget.onTableView) {
+                                              widget.tablePageController
+                                                  .jumpTo(0);
+                                            }
+                                            if (widget.orderType ==
+                                                'Venta Agendada') {
+                                              DatabaseService()
+                                                  .paidScheduledSale(
+                                                      widget.businessID,
+                                                      widget.savedOrderID);
+                                              Navigator.of(context).pop();
+                                            }
+                                            Navigator.of(context).pop();
+                                            // saveOrder(userProfile, paymentType,
+                                            //     DateTime.now().toString(), false);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 5),
+                                            child: Center(
+                                              child: Text('Confirmar'),
+                                            ),
+                                          )),
+                                    ),
+                                  ]),
+                            ),
                     ],
                   ),
                   //Split
