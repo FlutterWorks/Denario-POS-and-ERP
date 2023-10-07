@@ -70,14 +70,15 @@ class _POSItemDialogState extends State<POSItemDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Dialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-        child: Container(
-            width: 400,
-            constraints: BoxConstraints(minHeight: 350),
-            padding: EdgeInsets.all(20),
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      child: Container(
+          width: (MediaQuery.of(context).size.width > 500)
+              ? 400
+              : MediaQuery.of(context).size.width * 0.9,
+          constraints: BoxConstraints(minHeight: 350),
+          padding: EdgeInsets.all(20),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -156,6 +157,7 @@ class _POSItemDialogState extends State<POSItemDialog> {
                     ? Container()
                     : ListView.builder(
                         shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: widget.productOptions.length,
                         itemBuilder: (context, i) {
                           return Padding(
@@ -395,8 +397,8 @@ class _POSItemDialogState extends State<POSItemDialog> {
                       ))),
                 ),
               ],
-            )),
-      ),
+            ),
+          )),
     );
   }
 }
