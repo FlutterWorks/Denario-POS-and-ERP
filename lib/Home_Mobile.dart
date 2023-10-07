@@ -527,10 +527,9 @@ class _HomeMobileState extends State<HomeMobile> {
                     children: [
                       //Name
                       Container(
-                        height: 120,
                         width: double.infinity,
                         color: Colors.white,
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -555,6 +554,8 @@ class _HomeMobileState extends State<HomeMobile> {
                                 SizedBox(width: 10),
                                 //Name
                                 Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     //Current business
                                     Text(
@@ -571,6 +572,8 @@ class _HomeMobileState extends State<HomeMobile> {
                                     TextButton(
                                         onPressed: () {},
                                         child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
                                           children: [
                                             Icon(
                                               Icons.settings,
