@@ -359,6 +359,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                                     cursorColor: Colors.grey,
                                     focusNode: newItemPriceNode,
                                     controller: _newItemPriceTextController,
+                                    keyboardType: TextInputType.number,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.allow(
                                           RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),

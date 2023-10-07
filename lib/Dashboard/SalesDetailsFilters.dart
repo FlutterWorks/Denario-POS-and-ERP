@@ -65,79 +65,104 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
               child: Column(
                 children: [
                   //Go Back /// Title
-                  Container(
-                    width: double.infinity,
-                    height: 75,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          //Back
-                          IconButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              icon: Icon(Icons.arrow_back)),
-                          SizedBox(width: 25),
-                          Text(
-                            'Historial de ventas',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 50,
-                            child: Tooltip(
-                              message: 'Registrar o agendar nueva venta',
-                              child: OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Colors.black,
+                  (MediaQuery.of(context).size.width > 800)
+                      ? Container(
+                          width: double.infinity,
+                          height: 75,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                //Back
+                                IconButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    icon: Icon(Icons.arrow_back)),
+                                SizedBox(width: 25),
+                                Text(
+                                  'Historial de ventas',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                onPressed: () {
-                                  final User user =
-                                      FirebaseAuth.instance.currentUser;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MultiProvider(
-                                                providers: [
-                                                  StreamProvider<
-                                                          UserData>.value(
-                                                      initialData: null,
-                                                      value: DatabaseService()
-                                                          .userProfile(user.uid
-                                                              .toString())),
-                                                  StreamProvider<
-                                                      MonthlyStats>.value(
-                                                    value: DatabaseService()
-                                                        .monthlyStatsfromSnapshot(
-                                                            widget
-                                                                .currentBusiness),
-                                                    initialData: null,
-                                                  )
-                                                ],
-                                                child: Scaffold(
-                                                    body: NewSaleScreen(
-                                                  widget.currentBusiness,
-                                                  fromPOS: false,
-                                                )),
-                                              )));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.add, size: 16),
-                                        SizedBox(width: 10),
-                                        Text('Nueva venta')
-                                      ]),
+                                Spacer(),
+                                Container(
+                                  height: 50,
+                                  child: Tooltip(
+                                    message: 'Registrar o agendar nueva venta',
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.black,
+                                      ),
+                                      onPressed: () {
+                                        final User user =
+                                            FirebaseAuth.instance.currentUser;
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MultiProvider(
+                                                      providers: [
+                                                        StreamProvider<
+                                                                UserData>.value(
+                                                            initialData: null,
+                                                            value: DatabaseService()
+                                                                .userProfile(user
+                                                                    .uid
+                                                                    .toString())),
+                                                        StreamProvider<
+                                                            MonthlyStats>.value(
+                                                          value: DatabaseService()
+                                                              .monthlyStatsfromSnapshot(
+                                                                  widget
+                                                                      .currentBusiness),
+                                                          initialData: null,
+                                                        )
+                                                      ],
+                                                      child: Scaffold(
+                                                          body: NewSaleScreen(
+                                                        widget.currentBusiness,
+                                                        fromPOS: false,
+                                                      )),
+                                                    )));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.add, size: 16),
+                                              SizedBox(width: 10),
+                                              Text('Nueva venta')
+                                            ]),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ]),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          height: 75,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                //Back
+                                IconButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    icon: Icon(Icons.arrow_back)),
+                                SizedBox(width: 15),
+                                Text(
+                                  'Historial de ventas',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                            ),
-                          )
-                        ]),
-                  ),
+                              ]),
+                        ),
                   //Filters
                   (MediaQuery.of(context).size.width > 800)
                       ? Container(

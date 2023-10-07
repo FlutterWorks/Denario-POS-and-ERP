@@ -32,7 +32,9 @@ class _CloseCashRegisterDialogState extends State<CloseCashRegisterDialog> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.4,
-          width: MediaQuery.of(context).size.width * 0.35,
+          width: (MediaQuery.of(context).size.width > 650)
+              ? MediaQuery.of(context).size.width * 0.35
+              : MediaQuery.of(context).size.width * 0.9,
           constraints: BoxConstraints(minHeight: 350, minWidth: 200),
           child: Container(
             width: MediaQuery.of(context).size.width * 0.35,

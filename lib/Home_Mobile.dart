@@ -48,9 +48,9 @@ class _HomeMobileState extends State<HomeMobile> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0)),
               child: Container(
-                width: 450,
-                height: MediaQuery.of(context).size.height * 0.6,
-                padding: EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 20),
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.8,
+                padding: EdgeInsets.all(20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,

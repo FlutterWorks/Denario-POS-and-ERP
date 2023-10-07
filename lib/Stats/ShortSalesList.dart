@@ -188,19 +188,31 @@ class ShortSalesList extends StatelessWidget {
                                     ),
                                   )),
                           //Total
-                          Container(
-                              width: 100,
-                              child: Center(
-                                child: Text(
-                                  '${formatCurrency.format(salesList[i].total)}',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )),
+                          (MediaQuery.of(context).size.width < 1150)
+                              ? Expanded(
+                                  child: Container(
+                                  child: Text(
+                                    '${formatCurrency.format(salesList[i].total)}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.black),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ))
+                              : Container(
+                                  child: Center(
+                                  child: Text(
+                                    '${formatCurrency.format(salesList[i].total)}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.black),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )),
                         ],
                       ),
                     ),

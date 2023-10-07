@@ -39,8 +39,12 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                   borderRadius: BorderRadius.circular(15.0)),
               child: Container(
                 padding: EdgeInsets.all(20),
-                height: 500,
-                width: 500,
+                height: (MediaQuery.of(context).size.width > 650)
+                    ? 500
+                    : MediaQuery.of(context).size.height * 0.8,
+                width: (MediaQuery.of(context).size.width > 650)
+                    ? 500
+                    : MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -69,59 +73,110 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                     ),
                     SizedBox(height: 30),
                     //lIST OF Categories
-                    Expanded(
-                      child: Container(
-                        child: GridView.builder(
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 15.0,
-                              mainAxisSpacing: 15.0,
-                              childAspectRatio:
-                                  (MediaQuery.of(context).size.width > 900)
-                                      ? 3
-                                      : 2,
-                            ),
-                            scrollDirection: Axis.vertical,
-                            itemCount: categories.length,
-                            itemBuilder: (context, i) {
-                              return ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedCategory = categories[i];
-                                      categoryisSelected = true;
-                                    });
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.white),
-                                    overlayColor: MaterialStateProperty
-                                        .resolveWith<Color>(
-                                      (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.hovered))
-                                          return Colors.black12;
-                                        if (states.contains(
-                                                MaterialState.focused) ||
-                                            states.contains(
-                                                MaterialState.pressed))
-                                          return Colors.black26;
-                                        return null; // Defer to the widget's default.
-                                      },
-                                    ),
+                    (MediaQuery.of(context).size.width > 650)
+                        ? Expanded(
+                            child: Container(
+                              child: GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 15.0,
+                                    mainAxisSpacing: 15.0,
+                                    childAspectRatio:
+                                        (MediaQuery.of(context).size.width >
+                                                900)
+                                            ? 3
+                                            : 2,
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      categories[i],
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ));
-                            }),
-                      ),
-                    )
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: categories.length,
+                                  itemBuilder: (context, i) {
+                                    return ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            selectedCategory = categories[i];
+                                            categoryisSelected = true;
+                                          });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                          overlayColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                            (Set<MaterialState> states) {
+                                              if (states.contains(
+                                                  MaterialState.hovered))
+                                                return Colors.black12;
+                                              if (states.contains(
+                                                      MaterialState.focused) ||
+                                                  states.contains(
+                                                      MaterialState.pressed))
+                                                return Colors.black26;
+                                              return null; // Defer to the widget's default.
+                                            },
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            categories[i],
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ));
+                                  }),
+                            ),
+                          )
+                        : Expanded(
+                            child: Container(
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: categories.length,
+                                  itemBuilder: (context, i) {
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 75,
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              selectedCategory = categories[i];
+                                              categoryisSelected = true;
+                                            });
+                                          },
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(Colors.white),
+                                            overlayColor: MaterialStateProperty
+                                                .resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                                if (states.contains(
+                                                    MaterialState.hovered))
+                                                  return Colors.black12;
+                                                if (states.contains(
+                                                        MaterialState
+                                                            .focused) ||
+                                                    states.contains(
+                                                        MaterialState.pressed))
+                                                  return Colors.black26;
+                                                return null; // Defer to the widget's default.
+                                              },
+                                            ),
+                                          ),
+                                          child: Text(
+                                            categories[i],
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          )),
+                                    );
+                                  }),
+                            ),
+                          )
                   ],
                 ),
               )));
@@ -132,8 +187,12 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                   borderRadius: BorderRadius.circular(15.0)),
               child: Container(
                 padding: EdgeInsets.all(20),
-                height: 500,
-                width: 600,
+                height: (MediaQuery.of(context).size.width > 650)
+                    ? 500
+                    : MediaQuery.of(context).size.height * 0.8,
+                width: (MediaQuery.of(context).size.width > 650)
+                    ? 600
+                    : MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,

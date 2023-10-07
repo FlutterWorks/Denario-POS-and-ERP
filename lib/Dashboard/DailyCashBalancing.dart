@@ -64,6 +64,7 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
       //Si no hay caja abierta
       return Container(
           padding: EdgeInsets.fromLTRB(30, 30, 30, 15),
+          height: 200,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +114,7 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                   child: Center(
                       child: Text('Abrir caja',
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontWeight: FontWeight.w400))),
                 ),
               )
@@ -484,6 +485,7 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
       children: [
         //Open/Close Register
         Container(
+            height: 200,
             padding: EdgeInsets.fromLTRB(30, 30, 30, 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
