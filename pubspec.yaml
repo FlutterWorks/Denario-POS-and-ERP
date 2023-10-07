@@ -49,6 +49,7 @@ dependencies:
   qr_flutter: ^4.0.0
   path_provider: ^2.0.2
   universal_html: ^2.0.9
+  flutter_slidable: ^3.0.0
 
 dev_dependencies:
   flutter_test:
