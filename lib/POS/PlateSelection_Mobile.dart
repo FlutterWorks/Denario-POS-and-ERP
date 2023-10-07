@@ -43,6 +43,8 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                       bloc.ticketItems['Items'][x]["Name"]) {
                     itemCount =
                         itemCount + bloc.ticketItems['Items'][x]["Quantity"];
+                    itemCount =
+                        itemCount + bloc.ticketItems['Items'][x]["Quantity"];
                   }
                 }
 

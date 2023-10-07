@@ -2,7 +2,6 @@ import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Products.dart';
 import 'package:denario/POS/POSItemDialog.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class PlateSelectionDesktop extends StatefulWidget {
   final String businessID;

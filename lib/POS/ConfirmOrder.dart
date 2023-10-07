@@ -324,6 +324,20 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                               (MediaQuery.of(context).size.width > 650)
                                   ? Spacer()
                                   : SizedBox(),
+                              (MediaQuery.of(context).size.width > 650)
+                                  ? Text(
+                                      "Confirmar pedido",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              (MediaQuery.of(context).size.width > 650)
+                                  ? Spacer()
+                                  : SizedBox(),
                               //Cancel
                               IconButton(
                                   onPressed: () => Navigator.pop(context),
@@ -335,6 +349,70 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                       Divider(thickness: 0.5, indent: 0, endIndent: 0),
                       SizedBox(height: 15),
                       //Amount
+                      (MediaQuery.of(context).size.width > 650)
+                          ? Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //Text
+                                    Text(
+                                      "Total:",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    //Amount
+                                    Text(
+                                      "${formatCurrency.format(widget.total)}",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ]),
+                            )
+                          : Container(
+                              height: 75,
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Total",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  //Text
+                                  Text(
+                                    "${formatCurrency.format(widget.total)}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 28.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                      (MediaQuery.of(context).size.width > 650)
+                          ? Divider(thickness: 0.5, indent: 0, endIndent: 0)
+                          : SizedBox(),
                       (MediaQuery.of(context).size.width > 650)
                           ? Container(
                               width: double.infinity,
@@ -761,6 +839,134 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     );
                                   }),
                             ),
+                      (MediaQuery.of(context).size.width > 650)
+                          ? Container(
+                              width: double.infinity,
+                              height: 60,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //Text
+                                    Text(
+                                      "Método:",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(width: 15),
+                                    //List of payment methods
+                                    Expanded(
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: widget.paymentTypes.length,
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, i) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 3.0),
+                                              child: Container(
+                                                height: 60,
+                                                width: 60,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(8)),
+                                                  border: Border.all(
+                                                      color: (paymentType ==
+                                                              widget.paymentTypes[
+                                                                  i]['Type'])
+                                                          ? Colors.greenAccent
+                                                          : Colors.white10,
+                                                      width: 1.5),
+                                                ),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      paymentType =
+                                                          widget.paymentTypes[i]
+                                                              ['Type'];
+                                                    });
+                                                    bloc.changePaymentType(
+                                                        widget.paymentTypes[i]
+                                                            ['Type']);
+                                                  },
+                                                  child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      child: Image(
+                                                        image: NetworkImage(
+                                                            widget.paymentTypes[
+                                                                i]['Image']),
+                                                        fit: BoxFit.scaleDown,
+                                                      )
+                                                      // Container(
+                                                      //     decoration: BoxDecoration(
+                                                      //         image: DecorationImage(
+                                                      //   image: NetworkImage(widget
+                                                      //       .paymentTypes[i]['Image']),
+                                                      //   fit: BoxFit.cover,
+                                                      // ))),
+                                                      ),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    ),
+                                  ]),
+                            )
+                          : Container(
+                              height: 60,
+                              width: double.infinity,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: widget.paymentTypes.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, i) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 3.0),
+                                      child: Container(
+                                        height: 60,
+                                        width: 60,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8)),
+                                          border: Border.all(
+                                              color: (paymentType ==
+                                                      widget.paymentTypes[i]
+                                                          ['Type'])
+                                                  ? Colors.greenAccent
+                                                  : Colors.white10,
+                                              width: 1.5),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              paymentType = widget
+                                                  .paymentTypes[i]['Type'];
+                                            });
+                                            bloc.changePaymentType(
+                                                widget.paymentTypes[i]['Type']);
+                                          },
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Image(
+                                                image: NetworkImage(widget
+                                                    .paymentTypes[i]['Image']),
+                                                fit: BoxFit.scaleDown,
+                                              )),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ),
                       SizedBox(height: 25),
                       //Buttons
                       (MediaQuery.of(context).size.width > 650)
@@ -781,6 +987,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                           var documentID =
                                               DateTime.now().toString();
 
+                                          bloc.changePaymentType('Por Cobrar');
                                           bloc.changePaymentType('Por Cobrar');
 
                                           DatabaseService().createReceivable(

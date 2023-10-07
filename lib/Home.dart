@@ -5,7 +5,6 @@ import 'package:denario/Loading.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/PendingOrders.dart';
-import 'package:denario/Models/Products.dart';
 import 'package:denario/Models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/auth.dart';
 import 'package:denario/Dashboard/DailyDesk.dart';
@@ -25,8 +23,6 @@ import 'package:denario/User%20Settings/UserSettings.dart';
 import 'package:denario/Wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'POS/POS_Desk.dart';
 
 class HomeDesk extends StatefulWidget {
   @override

@@ -4,7 +4,6 @@ import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/ScheduledSales.dart';
 import 'package:denario/Models/Stats.dart';
-import 'package:denario/Models/User.dart';
 import 'package:denario/POS/ConfirmOrder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

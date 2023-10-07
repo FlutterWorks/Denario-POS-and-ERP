@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Expenses.dart';

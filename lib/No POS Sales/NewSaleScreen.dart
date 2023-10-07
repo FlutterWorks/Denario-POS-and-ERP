@@ -1329,9 +1329,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                                   bloc.editPrice(
                                                       i,
                                                       double.tryParse(
-                                                          (val.substring(1))
-                                                              .replaceAll(
-                                                                  ',', '')));
+                                                          (val.substring(1))));
                                                 },
                                               ),
                                             ),
