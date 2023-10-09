@@ -129,10 +129,9 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
             dailyTransactions.inflows -
             dailyTransactions.outflows;
       } else {
-        expectedInRegister = //dailyTransactions.salesByMedium['Efectivo'] +
-            dailyTransactions.initialAmount +
-                dailyTransactions.inflows -
-                dailyTransactions.outflows;
+        expectedInRegister = dailyTransactions.initialAmount +
+            dailyTransactions.inflows -
+            dailyTransactions.outflows;
       }
 
       return Column(
@@ -288,7 +287,7 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                           child: Row(
                         children: [
                           Text(
-                            'Usuario: ${dailyTransactions.user}',
+                            'Usuario',
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                           Spacer(),
@@ -356,7 +355,7 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                           ),
                           Spacer(),
                           Text(
-                            '${formatCurrency.format(dailyTransactions.inflows)}',
+                            '${formatCurrency.format(dailyTransactions.outflows)}',
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ],
@@ -381,7 +380,7 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                           ),
                           Spacer(),
                           Text(
-                            '${formatCurrency.format(dailyTransactions.inflows)}',
+                            formatCurrency.format(expectedInRegister),
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ],

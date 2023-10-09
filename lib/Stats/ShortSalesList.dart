@@ -95,66 +95,99 @@ class ShortSalesList extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           //Fecha
-                          Container(
-                              width: 45,
-                              child: Text(
-                                DateFormat.MMMd()
-                                    .format(salesList[i].date)
-                                    .toString(),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )),
+                          (MediaQuery.of(context).size.width < 1150)
+                              ? Container(
+                                  width: 70,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        DateFormat.MMMd()
+                                            .format(salesList[i].date)
+                                            .toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        DateFormat('HH:mm:ss')
+                                            .format(salesList[i].date)
+                                            .toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(
+                                  width: 45,
+                                  child: Text(
+                                    DateFormat.MMMd()
+                                        .format(salesList[i].date)
+                                        .toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
                           //Hora
-                          Container(
-                              width: 70,
-                              child: Text(
-                                DateFormat('HH:mm:ss')
-                                    .format(salesList[i].date)
-                                    .toString(),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              )),
+                          (MediaQuery.of(context).size.width < 1150)
+                              ? SizedBox()
+                              : Container(
+                                  width: 70,
+                                  child: Text(
+                                    DateFormat('HH:mm:ss')
+                                        .format(salesList[i].date)
+                                        .toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  )),
 
                           //Nombre
                           (MediaQuery.of(context).size.width < 1150)
-                              ? Container(
-                                  width: 120,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      //Name
-                                      Text(
-                                          (salesList[i].orderName == '')
-                                              ? 'Sin nombre'
-                                              : '${salesList[i].orderName}',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                              ? Expanded(
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        //Name
+                                        Text(
+                                            (salesList[i].orderName == '')
+                                                ? 'Sin nombre'
+                                                : '${salesList[i].orderName}',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                            )),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        //Payment
+                                        Text(
+                                          '${salesList[i].paymentType}',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal,
-                                          )),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      //Payment
-                                      Text(
-                                        '${salesList[i].paymentType}',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 11),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                                              color: Colors.grey, fontSize: 11),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 )
                               : Container(
@@ -189,18 +222,20 @@ class ShortSalesList extends StatelessWidget {
                                   )),
                           //Total
                           (MediaQuery.of(context).size.width < 1150)
-                              ? Expanded(
-                                  child: Container(
-                                  child: Text(
-                                    '${formatCurrency.format(salesList[i].total)}',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                              ? Container(
+                                  width: 120,
+                                  child: Center(
+                                    child: Text(
+                                      '${formatCurrency.format(salesList[i].total)}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.black),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                ))
+                                )
                               : Container(
                                   child: Center(
                                   child: Text(

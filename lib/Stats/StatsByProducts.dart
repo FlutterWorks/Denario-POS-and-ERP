@@ -98,7 +98,7 @@ class _StatsByProductsState extends State<StatsByProducts> {
               children: [
                 //Producto
                 Expanded(
-                  flex: 4,
+                  flex: 3,
                   child: Container(
                       // width: 150,
                       child: TextButton(
@@ -246,7 +246,7 @@ class _StatsByProductsState extends State<StatsByProducts> {
                         children: [
                           //Producto
                           Expanded(
-                            flex: 4,
+                            flex: 3,
                             child: Container(
                                 // width: 150,
                                 child: Text(

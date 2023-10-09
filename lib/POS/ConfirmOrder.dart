@@ -241,13 +241,17 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
           child: Container(
             padding: EdgeInsets.all(20),
-            height: (paymentType == 'Efectivo') ? 500 : 400,
+            height: (paymentType != 'Efectivo' &&
+                    MediaQuery.of(context).size.width > 650)
+                ? 400
+                : 500,
             width: (MediaQuery.of(context).size.width > 650)
                 ? MediaQuery.of(context).size.width * 0.35
                 : MediaQuery.of(context).size.width * 0.9,
-            constraints: (paymentType == 'Efectivo')
-                ? BoxConstraints(minHeight: 500, minWidth: 400)
-                : BoxConstraints(minHeight: 400, minWidth: 400),
+            constraints: (paymentType != 'Efectivo' &&
+                    MediaQuery.of(context).size.width > 650)
+                ? BoxConstraints(minHeight: 400, minWidth: 400)
+                : BoxConstraints(minHeight: 500, minWidth: 400),
             child: PageView(
                 controller: controller,
                 physics: NeverScrollableScrollPhysics(),
@@ -1118,16 +1122,21 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         //Text
-                                        Text(
-                                          splitPaymentDetails[i]['Type'],
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.w500,
+                                        Expanded(
+                                          flex: 5,
+                                          child: Text(
+                                            splitPaymentDetails[i]['Type'],
+                                            textAlign: TextAlign.center,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                         ),
-                                        Spacer(),
+                                        SizedBox(width: 15),
                                         //Dollar sign
                                         Container(
                                           width: 15,
@@ -1142,65 +1151,62 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                           ),
                                         ),
                                         //Amount
-                                        Container(
-                                          height: 50,
-                                          width: 70,
-                                          child: Center(
-                                            child: TextFormField(
-                                              autofocus: true,
-                                              focusNode: otherChangeNode,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 24,
-                                                  color: Colors.black),
-                                              validator: (val) =>
-                                                  val.contains(',')
-                                                      ? "Usa punto"
-                                                      : null,
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .allow(RegExp(
-                                                        r"[0-9]+[.]?[0-9]*"))
-                                              ],
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              cursorColor: Colors.black,
-                                              decoration:
-                                                  InputDecoration.collapsed(
-                                                hintText: "0",
-                                                hintStyle: TextStyle(
-                                                    color:
-                                                        Colors.grey.shade700),
-                                              ),
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  splitPaymentDetails[
-                                                              currentIndex]
-                                                          ['Amount'] =
-                                                      int.parse(val);
-                                                });
+                                        Expanded(
+                                          flex: 4,
+                                          child: Container(
+                                            height: 50,
+                                            child: Center(
+                                              child: TextFormField(
+                                                autofocus: true,
+                                                focusNode: otherChangeNode,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 24,
+                                                    color: Colors.black),
+                                                validator: (val) =>
+                                                    val.contains(',')
+                                                        ? "Usa punto"
+                                                        : null,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .allow(RegExp(
+                                                          r"[0-9]+[.]?[0-9]*"))
+                                                ],
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                cursorColor: Colors.black,
+                                                decoration:
+                                                    InputDecoration.collapsed(
+                                                  hintText: "0",
+                                                  hintStyle: TextStyle(
+                                                      color:
+                                                          Colors.grey.shade700),
+                                                ),
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    splitPaymentDetails[
+                                                                currentIndex]
+                                                            ['Amount'] =
+                                                        int.parse(val);
+                                                  });
 
-                                                currentSplitAmount = 0;
-                                                for (var i = 0;
-                                                    i <
-                                                        splitPaymentDetails
-                                                            .length;
-                                                    i++) {
-                                                  currentSplitAmount =
-                                                      currentSplitAmount +
-                                                          splitPaymentDetails[i]
-                                                              ['Amount'];
-                                                }
-                                              },
+                                                  currentSplitAmount = 0;
+                                                  for (var i = 0;
+                                                      i <
+                                                          splitPaymentDetails
+                                                              .length;
+                                                      i++) {
+                                                    currentSplitAmount =
+                                                        currentSplitAmount +
+                                                            splitPaymentDetails[
+                                                                i]['Amount'];
+                                                  }
+                                                },
+                                              ),
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 10),
-                                        Divider(
-                                            thickness: 0.5,
-                                            indent: 0,
-                                            endIndent: 0),
                                       ]),
                                 ),
                               );

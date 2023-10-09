@@ -542,7 +542,7 @@ class _TicketViewState extends State<TicketView> {
                                             orderType:
                                                 snapshot.data["Order Type"],
                                             onTableView: widget.onTableView,
-                                            register: registerStatus,
+                                            register: (!registerStatus.registerisOpen) ? null : registerStatus,
                                           ),
                                         );
                                       });
@@ -1184,7 +1184,7 @@ class _TicketViewState extends State<TicketView> {
                                               orderType:
                                                   snapshot.data["Order Type"],
                                               onTableView: widget.onTableView,
-                                              register: registerStatus,
+                                              register: (!registerStatus.registerisOpen) ? null : registerStatus,
                                             ),
                                           );
                                         });
@@ -2047,7 +2047,7 @@ class _TicketViewState extends State<TicketView> {
                                             orderType:
                                                 snapshot.data["Order Type"],
                                             onTableView: widget.onTableView,
-                                            register: registerStatus,
+                                            register: (!registerStatus.registerisOpen) ? null : registerStatus,
                                           ),
                                         );
                                       });
