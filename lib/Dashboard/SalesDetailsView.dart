@@ -131,6 +131,9 @@ class SalesDetailsView extends StatelessWidget {
         );
       } else {
         return TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.white,
+          ),
           onPressed: () {
             showDialog(
                 context: context,
@@ -152,7 +155,6 @@ class SalesDetailsView extends StatelessWidget {
           },
           child: Container(
             height: 50,
-            color: i.isOdd ? Colors.grey[100] : Colors.white,
             width: double.infinity,
             padding: EdgeInsets.all(5),
             child: Padding(

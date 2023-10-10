@@ -26,6 +26,9 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
   bool filtered;
   List paymentTypes = [];
 
+  bool dateFiltered;
+  bool paymentFiltered;
+
   @override
   void initState() {
     initDate = DateTime(DateTime.now().year, DateTime.now().month,
@@ -34,6 +37,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
     endDate = DateTime(DateTime.now().year, DateTime.now().month,
         DateTime.now().day, 23, 59, 59);
     filtered = false;
+    dateFiltered = false;
+    paymentFiltered = false;
 
     for (var i = 0; i < widget.registerStatus.paymentTypes.length; i++) {
       paymentTypes.add(widget.registerStatus.paymentTypes[i]['Type']);
@@ -975,6 +980,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                     endDate = DateTime(pickedDate.year,
                                         pickedDate.month + 1, 0);
                                     filtered = true;
+                                    dateFiltered = true;
                                   }
                                 });
                               },
@@ -987,7 +993,10 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                   ),
                                   SizedBox(width: 10),
                                   Text(
-                                    'Desde',
+                                    dateFiltered
+                                        ? DateFormat('dd/MM/yyyy')
+                                            .format(initDate)
+                                        : 'Desde',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14,
@@ -1052,6 +1061,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                     endDate = pickedDate
                                         .add(Duration(hours: 23, minutes: 59));
                                     filtered = true;
+                                    dateFiltered = true;
                                   }
                                 });
                               },
@@ -1064,7 +1074,10 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                   ),
                                   SizedBox(width: 10),
                                   Text(
-                                    'Hasta',
+                                    dateFiltered
+                                        ? DateFormat('dd/MM/yyyy')
+                                            .format(endDate)
+                                        : 'Hasta',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14,
@@ -1095,7 +1108,134 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.grey.shade300.withOpacity(0.2)),
                               ),
-                              onPressed: () async {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0)),
+                                        child: Container(
+                                            width: 400,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.8,
+                                            padding: EdgeInsets.all(20),
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  //Cancel Icon
+                                                  Container(
+                                                    alignment:
+                                                        Alignment(1.0, 0.0),
+                                                    child: IconButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                        icon: Icon(Icons.close),
+                                                        iconSize: 20.0),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  //Title
+                                                  Container(
+                                                    width: double.infinity,
+                                                    child: Text(
+                                                      'Métodos de pago',
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      softWrap: true,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 20),
+                                                  //Payment Methods
+                                                  ListView.builder(
+                                                      itemCount:
+                                                          paymentTypes.length,
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      itemBuilder:
+                                                          (context, i) {
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 10.0),
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .black12,
+                                                                    width: 1),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            12))),
+                                                            child: InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  paymentType =
+                                                                      paymentTypes[
+                                                                          i];
+                                                                  filtered =
+                                                                      true;
+                                                                  paymentFiltered =
+                                                                      true;
+                                                                });
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        12.0),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    //Name
+                                                                    Text(
+                                                                      paymentTypes[
+                                                                          i],
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight:
+                                                                              FontWeight.normal),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }),
+                                                ],
+                                              ),
+                                            )),
+                                      );
+                                    });
+                              },
                               child: Row(
                                 children: [
                                   Icon(
@@ -1105,7 +1245,9 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                   ),
                                   SizedBox(width: 10),
                                   Text(
-                                    'Medio de pago',
+                                    paymentFiltered
+                                        ? paymentType
+                                        : 'Medio de Pago',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14,
@@ -1155,6 +1297,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                       59,
                                       59);
                                   filtered = false;
+                                  dateFiltered = false;
+                                  paymentFiltered = false;
                                 });
                               },
                               child: Icon(
@@ -1166,274 +1310,6 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                           ),
                         ],
                       )),
-                  //   Column(
-                  //     children: [
-                  //       Row(
-                  //         mainAxisAlignment: MainAxisAlignment.start,
-                  //         children: [
-                  //           //Fecha
-                  //           Container(
-                  //             width: 150,
-                  //             height: 45,
-                  //             decoration: BoxDecoration(
-                  //               border: Border.all(color: Colors.grey[350]),
-                  //               borderRadius: BorderRadius.circular(12.0),
-                  //             ),
-                  //             padding: EdgeInsets.all(12),
-                  //             child: Row(
-                  //               children: [
-                  //                 Text(
-                  //                   DateFormat('dd/MM/yyyy').format(initDate),
-                  //                   style: TextStyle(
-                  //                       fontWeight: FontWeight.w400,
-                  //                       fontSize: 16),
-                  //                 ),
-                  //                 Spacer(),
-                  //                 Container(
-                  //                   height: 20,
-                  //                   width: 20,
-                  //                   child: IconButton(
-                  //                     splashRadius: 1,
-                  //                     onPressed: () async {
-                  //                       DateTime pickedDate =
-                  //                           await showDatePicker(
-                  //                               context: context,
-                  //                               initialDate: initDate,
-                  //                               firstDate: DateTime.now()
-                  //                                   .subtract(
-                  //                                       Duration(days: 730)),
-                  //                               lastDate: DateTime.now(),
-                  //                               builder: ((context, child) {
-                  //                                 return Theme(
-                  //                                     data: Theme.of(context)
-                  //                                         .copyWith(
-                  //                                       colorScheme:
-                  //                                           ColorScheme.light(
-                  //                                         primary: Colors
-                  //                                             .black, // header background color
-                  //                                         onPrimary: Colors
-                  //                                             .white, // header text color
-                  //                                         onSurface: Colors
-                  //                                             .black, // body text color
-                  //                                       ),
-                  //                                       textButtonTheme:
-                  //                                           TextButtonThemeData(
-                  //                                         style: TextButton
-                  //                                             .styleFrom(
-                  //                                           foregroundColor: Colors
-                  //                                               .black, // button text color
-                  //                                         ),
-                  //                                       ),
-                  //                                     ),
-                  //                                     child: child);
-                  //                               }));
-                  //                       setState(() {
-                  //                         if (pickedDate != null) {
-                  //                           initDate = pickedDate;
-                  //                           endDate = DateTime(pickedDate.year,
-                  //                               pickedDate.month + 1, 0);
-                  //                           filtered = true;
-                  //                         }
-                  //                       });
-                  //                     },
-                  //                     padding: EdgeInsets.all(0),
-                  //                     tooltip: 'Selecciona un fecha inicial',
-                  //                     iconSize: 18,
-                  //                     icon: Icon(Icons.calendar_month),
-                  //                   ),
-                  //                 )
-                  //               ],
-                  //             ),
-                  //           ),
-                  //           SizedBox(width: 10),
-                  //           Container(
-                  //               width: 150,
-                  //               height: 45,
-                  //               decoration: BoxDecoration(
-                  //                 border: Border.all(color: Colors.grey[350]),
-                  //                 borderRadius: BorderRadius.circular(12.0),
-                  //               ),
-                  //               padding: EdgeInsets.all(12),
-                  //               child: //(DateTime.now().difference(initDate).inDays > 1)
-                  //                   // ?
-                  //                   Row(
-                  //                 children: [
-                  //                   Text(
-                  //                     (endDate == null)
-                  //                         ? 'Hasta fecha'
-                  //                         : DateFormat('dd/MM/yyyy')
-                  //                             .format(endDate),
-                  //                     style: TextStyle(
-                  //                         fontWeight: FontWeight.w400,
-                  //                         fontSize: 16),
-                  //                   ),
-                  //                   Spacer(),
-                  //                   Container(
-                  //                     height: 20,
-                  //                     width: 20,
-                  //                     child: IconButton(
-                  //                       splashRadius: 1,
-                  //                       onPressed: () async {
-                  //                         DateTime pickedDate =
-                  //                             await showDatePicker(
-                  //                                 context: context,
-                  //                                 initialDate: initDate
-                  //                                     .add(Duration(days: 1)),
-                  //                                 firstDate: initDate,
-                  //                                 lastDate: DateTime(
-                  //                                     initDate.year,
-                  //                                     initDate.month + 1,
-                  //                                     0),
-                  //                                 builder: ((context, child) {
-                  //                                   return Theme(
-                  //                                       data: Theme.of(context)
-                  //                                           .copyWith(
-                  //                                         colorScheme:
-                  //                                             ColorScheme.light(
-                  //                                           primary: Colors
-                  //                                               .black, // header background color
-                  //                                           onPrimary: Colors
-                  //                                               .white, // header text color
-                  //                                           onSurface: Colors
-                  //                                               .black, // body text color
-                  //                                         ),
-                  //                                         textButtonTheme:
-                  //                                             TextButtonThemeData(
-                  //                                           style: TextButton
-                  //                                               .styleFrom(
-                  //                                             foregroundColor:
-                  //                                                 Colors
-                  //                                                     .black, // button text color
-                  //                                           ),
-                  //                                         ),
-                  //                                       ),
-                  //                                       child: child);
-                  //                                 }));
-                  //                         setState(() {
-                  //                           if (pickedDate != null) {
-                  //                             endDate = pickedDate.add(Duration(
-                  //                                 hours: 23, minutes: 59));
-                  //                             filtered = true;
-                  //                           }
-                  //                         });
-                  //                       },
-                  //                       padding: EdgeInsets.all(0),
-                  //                       tooltip: 'Selecciona un fecha final',
-                  //                       iconSize: 18,
-                  //                       icon: Icon(Icons.calendar_month),
-                  //                     ),
-                  //                   )
-                  //                 ],
-                  //               )),
-                  //         ],
-                  //       ),
-                  //       SizedBox(height: 10),
-                  //       Row(
-                  //         mainAxisAlignment: MainAxisAlignment.start,
-                  //         children: [
-                  //           //Medio de pago
-                  //           Container(
-                  //             width: 250,
-                  //             height: 45,
-                  //             decoration: BoxDecoration(
-                  //               border: Border.all(color: Colors.grey[350]),
-                  //               borderRadius: BorderRadius.circular(12.0),
-                  //             ),
-                  //             padding: EdgeInsets.symmetric(horizontal: 12),
-                  //             child: DropdownButton(
-                  //               isExpanded: true,
-                  //               underline: SizedBox(),
-                  //               hint: Text(
-                  //                 'Método de pago',
-                  //                 style: TextStyle(
-                  //                     fontWeight: FontWeight.w400,
-                  //                     fontSize: 16,
-                  //                     color: Colors.black),
-                  //               ),
-                  //               style: TextStyle(
-                  //                   fontWeight: FontWeight.w400,
-                  //                   fontSize: 16,
-                  //                   color: Colors.black),
-                  //               value: paymentType,
-                  //               items: paymentTypes.map((i) {
-                  //                 return new DropdownMenuItem(
-                  //                   value: i,
-                  //                   child: new Text(i),
-                  //                 );
-                  //               }).toList(),
-                  //               onChanged: (x) {
-                  //                 setState(() {
-                  //                   paymentType = x;
-                  //                   filtered = true;
-                  //                 });
-                  //               },
-                  //             ),
-                  //           ),
-                  //           SizedBox(width: 20),
-                  //           //Boton de filtrar
-                  //           Container(
-                  //             height: 40,
-                  //             width: 40,
-                  //             child: Tooltip(
-                  //               message: 'Quitar filtros',
-                  //               child: OutlinedButton(
-                  //                 style: ButtonStyle(
-                  //                   padding: MaterialStateProperty.all<
-                  //                       EdgeInsetsGeometry>(EdgeInsets.all(5)),
-                  //                   alignment: Alignment.center,
-                  //                   backgroundColor:
-                  //                       MaterialStateProperty.all<Color>(
-                  //                           Colors.white70),
-                  //                   overlayColor: MaterialStateProperty
-                  //                       .resolveWith<Color>(
-                  //                     (Set<MaterialState> states) {
-                  //                       if (states
-                  //                           .contains(MaterialState.hovered))
-                  //                         return Colors.grey.shade300;
-                  //                       if (states.contains(
-                  //                               MaterialState.focused) ||
-                  //                           states.contains(
-                  //                               MaterialState.pressed))
-                  //                         return Colors.white;
-                  //                       return null; // Defer to the widget's default.
-                  //                     },
-                  //                   ),
-                  //                 ),
-                  //                 onPressed: () {
-                  //                   setState(() {
-                  //                     paymentType = 'Todos';
-                  //                     initDate = DateTime(
-                  //                             DateTime.now().year,
-                  //                             DateTime.now().month,
-                  //                             DateTime.now().day,
-                  //                             0,
-                  //                             0,
-                  //                             0)
-                  //                         .subtract(Duration(days: 1));
-                  //                     endDate = DateTime(
-                  //                         DateTime.now().year,
-                  //                         DateTime.now().month,
-                  //                         DateTime.now().day,
-                  //                         23,
-                  //                         59,
-                  //                         59);
-                  //                     filtered = false;
-                  //                   });
-                  //                 },
-                  //                 child: Center(
-                  //                     child: Icon(
-                  //                   Icons.filter_alt_off_outlined,
-                  //                   color: Colors.black,
-                  //                   size: 18,
-                  //                 )),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // )
                 ],
               ),
             ),
