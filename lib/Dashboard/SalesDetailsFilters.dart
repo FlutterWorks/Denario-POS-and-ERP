@@ -1313,7 +1313,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                 ],
               ),
             ),
-          ), //Historical Details
+          ),
+          //Historical Details
           (filtered)
               ? StreamProvider<List<Sales>>.value(
                   initialData: null,
