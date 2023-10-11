@@ -39,7 +39,7 @@ class SupplierSearchBar extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-      width: 400,
+      width: (MediaQuery.of(context).size.width > 650) ? 400 : double.infinity,
       // height: 200,
       constraints: BoxConstraints(maxHeight: 250),
       decoration: BoxDecoration(

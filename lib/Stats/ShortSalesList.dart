@@ -96,32 +96,34 @@ class ShortSalesList extends StatelessWidget {
                         children: [
                           //Fecha
                           (MediaQuery.of(context).size.width < 1150)
-                              ? Container(
-                                  width: 70,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        DateFormat.MMMd()
-                                            .format(salesList[i].date)
-                                            .toString(),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                              ? Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          DateFormat.MMMd()
+                                              .format(salesList[i].date)
+                                              .toString(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        DateFormat('HH:mm:ss')
-                                            .format(salesList[i].date)
-                                            .toString(),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
+                                        SizedBox(height: 5),
+                                        Text(
+                                          DateFormat('HH:mm:ss')
+                                              .format(salesList[i].date)
+                                              .toString(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 )
                               : Container(
@@ -155,6 +157,7 @@ class ShortSalesList extends StatelessWidget {
                           //Nombre
                           (MediaQuery.of(context).size.width < 1150)
                               ? Expanded(
+                                  flex: 3,
                                   child: Container(
                                     child: Column(
                                       mainAxisAlignment:
@@ -222,17 +225,19 @@ class ShortSalesList extends StatelessWidget {
                                   )),
                           //Total
                           (MediaQuery.of(context).size.width < 1150)
-                              ? Container(
-                                  width: 120,
-                                  child: Center(
-                                    child: Text(
-                                      '${formatCurrency.format(salesList[i].total)}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.black),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                              ? Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    child: Center(
+                                      child: Text(
+                                        '${formatCurrency.format(salesList[i].total)}',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ),
                                 )

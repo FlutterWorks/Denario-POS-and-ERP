@@ -76,30 +76,77 @@ class _CreateExpenseUseCashierMoneyState
             ]));
   }
 
+  Widget mobilePaymentButton(String type, String imagePath) {
+    return GestureDetector(
+        onTap: () {
+          setState(() {
+            paymentType = type;
+          });
+          widget.selectPayment(type);
+        },
+        child: Container(
+          height: 70,
+          width: 70,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              color: Colors.white,
+              border: Border.all(
+                  color: (paymentType == type) ? Colors.green : Colors.white10,
+                  width: 2),
+              image: DecorationImage(
+                image: AssetImage(imagePath),
+                fit: BoxFit.cover,
+              )),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         // Payment Buttons
-        Container(
-          width: double.infinity,
-          alignment: Alignment.center,
-          child: //Payment type
-              Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Efectivo
-              paymentButton('Efectivo', 'images/Cash.png'),
-              // MercadoPago
-              paymentButton('MercadoPago', 'images/MP.png'),
-              // Card
-              paymentButton('Tarjeta', 'images/CreditCard.png'),
-              //Payable
-              paymentButton('Por pagar', 'images/Payable.jpg'),
-            ],
-          ),
-        ),
+        (MediaQuery.of(context).size.width > 650)
+            ? Container(
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: //Payment type
+                    Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Efectivo
+                    paymentButton('Efectivo', 'images/Cash.png'),
+                    // MercadoPago
+                    paymentButton('MercadoPago', 'images/MP.png'),
+                    // Card
+                    paymentButton('Tarjeta', 'images/CreditCard.png'),
+                    //Payable
+                    paymentButton('Por pagar', 'images/Payable.jpg'),
+                  ],
+                ),
+              )
+            : Container(
+                width: double.infinity,
+                height: 75,
+                child: //Payment type
+                    ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    // Efectivo
+                    mobilePaymentButton('Efectivo', 'images/Cash.png'),
+                    SizedBox(width: 10),
+                    // MercadoPago
+                    mobilePaymentButton('MercadoPago', 'images/MP.png'),
+                    SizedBox(width: 10),
+                    // Card
+                    mobilePaymentButton('Tarjeta', 'images/CreditCard.png'),
+                    SizedBox(width: 10),
+                    //Payable
+                    mobilePaymentButton('Por pagar', 'images/Payable.jpg'),
+                    SizedBox(width: 10),
+                  ],
+                ),
+              ),
         SizedBox(
           height: 5,
         ),

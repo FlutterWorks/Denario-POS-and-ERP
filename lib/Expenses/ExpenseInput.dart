@@ -65,22 +65,40 @@ class _ExpenseInputState extends State<ExpenseInput> {
         bloc.changeCostType(costType);
         // bloc.changeVendor(dropdownVendors.first);
 
-        showDialog(
-            context: context,
-            builder: (context) {
-              return StreamProvider<UserData>.value(
-                initialData: null,
-                value: DatabaseService().userProfile(
-                    FirebaseAuth.instance.currentUser.uid.toString()),
-                child: CreateExpenseDialog(
-                    costType,
-                    registerStatus,
-                    dailyTransactions,
-                    clearVariables,
-                    widget.activeBusiness,
-                    dropdownCategories),
-              );
-            });
+        if (MediaQuery.of(context).size.width > 650) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return StreamProvider<UserData>.value(
+                  initialData: null,
+                  value: DatabaseService().userProfile(
+                      FirebaseAuth.instance.currentUser.uid.toString()),
+                  child: CreateExpenseDialog(
+                      costType,
+                      registerStatus,
+                      dailyTransactions,
+                      clearVariables,
+                      widget.activeBusiness,
+                      dropdownCategories),
+                );
+              });
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => StreamProvider<UserData>.value(
+                        initialData: null,
+                        value: DatabaseService().userProfile(
+                            FirebaseAuth.instance.currentUser.uid.toString()),
+                        child: CreateExpenseDialog(
+                            costType,
+                            registerStatus,
+                            dailyTransactions,
+                            clearVariables,
+                            widget.activeBusiness,
+                            dropdownCategories),
+                      )));
+        }
       },
       child: Column(children: [
         //Circle

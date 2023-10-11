@@ -5,7 +5,6 @@ import 'package:denario/Models/Expenses.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:universal_html/html.dart';
 
 class FilteredExpenseList extends StatelessWidget {
   final String businessID;

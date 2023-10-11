@@ -208,6 +208,7 @@ class ExpenseList extends StatelessWidget {
                           DateFormat.MMMd()
                               .format(expenseList[i].date)
                               .toString(),
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, color: Colors.black),
                         )),
@@ -249,11 +250,13 @@ class ExpenseList extends StatelessWidget {
                       ),
                       //Total
                       Expanded(
-                        flex: 3,
+                        flex: 2,
                         child: Container(
                             child: Center(
                           child: Text(
                               '${formatCurrency.format(expenseList[i].total)}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black)),
