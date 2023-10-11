@@ -40,8 +40,8 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
         child: Container(
           width: (MediaQuery.of(context).size.width > 800)
-              ? MediaQuery.of(context).size.width * 0.4
-              : MediaQuery.of(context).size.width * 0.7,
+              ? MediaQuery.of(context).size.width * 0.35
+              : MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.7,
           constraints: BoxConstraints(minHeight: 350, minWidth: 350),
           padding: EdgeInsets.all(20),
@@ -92,6 +92,23 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                         fontWeight: FontWeight.normal,
                       ),
                     )),
+                  ],
+                ),
+              ),
+              SizedBox(height: 5),
+              //Type
+              Container(
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      widget.expense.costType,
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey),
+                    )
                   ],
                 ),
               ),
@@ -214,8 +231,10 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                                 style: TextStyle(fontWeight: FontWeight.normal),
                               )),
 
-                    SizedBox(width: 5),
-                    (editMethod)
+                    SizedBox(
+                        width:
+                            (MediaQuery.of(context).size.width > 650) ? 5 : 0),
+                    (editMethod && MediaQuery.of(context).size.width > 650)
                         ? TextButton(
                             onPressed: (() {
                               setState(() {
@@ -241,7 +260,27 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                   ],
                 ),
               ),
+              (editMethod && MediaQuery.of(context).size.width <= 650)
+                  ? SizedBox(height: 15)
+                  : SizedBox(),
+              (editMethod && MediaQuery.of(context).size.width <= 650)
+                  ? TextButton(
+                      onPressed: (() {
+                        setState(() {
+                          editMethod = false;
+                          paymentMethodEdited = false;
+                        });
+                      }),
+                      child: Text(
+                        'Dejar de Editar',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ))
+                  : Container(),
+              (editMethod && MediaQuery.of(context).size.width <= 650)
+                  ? SizedBox(height: 15)
+                  : SizedBox(),
               //Save new payment method
+
               (paymentMethodEdited) ? SizedBox(height: 15) : SizedBox(),
               (paymentMethodEdited)
                   ? Container(

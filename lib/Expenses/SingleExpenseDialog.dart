@@ -43,7 +43,9 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.35,
+          width: (MediaQuery.of(context).size.width > 650)
+              ? MediaQuery.of(context).size.width * 0.35
+              : MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.7,
           constraints: BoxConstraints(minHeight: 350, minWidth: 300),
           padding: EdgeInsets.all(20),
@@ -114,6 +116,23 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                         fontWeight: FontWeight.normal,
                       ),
                     )),
+                  ],
+                ),
+              ),
+              SizedBox(height: 5),
+              //Type
+              Container(
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      widget.expense.costType,
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey),
+                    )
                   ],
                 ),
               ),

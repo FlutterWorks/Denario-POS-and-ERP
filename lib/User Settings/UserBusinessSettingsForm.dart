@@ -627,7 +627,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      QrImage(
+                                      QrImageView(
                                         data:
                                             'http://mi-denario.web.app/?id=${userBusiness.businessID}',
                                         version: QrVersions.auto,

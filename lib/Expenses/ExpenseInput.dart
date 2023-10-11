@@ -89,12 +89,13 @@ class _ExpenseInputState extends State<ExpenseInput> {
             width: 75,
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: Colors.white,
               shape: BoxShape.circle,
+              // border: Border.all(color: Colors.grey),
               boxShadow: <BoxShadow>[
                 new BoxShadow(
-                  color: Colors.grey[200],
-                  offset: new Offset(5.0, 5.0),
+                  color: Colors.grey[350],
+                  offset: Offset(0.0, 0.0),
                   blurRadius: 10.0,
                 )
               ],
@@ -205,7 +206,8 @@ class _ExpenseInputState extends State<ExpenseInput> {
                 }
 
                 return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 5),
                     child: costSelection(
                         highLevelMapping.expenseGroups[i],
                         iconSelected,
