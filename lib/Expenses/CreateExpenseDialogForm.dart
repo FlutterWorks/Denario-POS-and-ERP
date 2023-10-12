@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:denario/Backend/Expense.dart';
+import 'package:denario/Expenses/AddExpenseItem.dart';
 import 'package:denario/Models/Supplier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +42,16 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
   var random = new Random();
   Map updateSuppliesFromList = {};
   void nothing(BuildContext context) {}
+
+  void addExpenseItem(String name, String category, double qty, double price) {
+    bloc.addToExpenseList({
+      'Name': name,
+      'Price': price,
+      'Quantity': qty,
+      'Total Price': qty * price,
+      'Category': category,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -830,449 +841,12 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                           foregroundColor: Colors.black,
                         ),
                         onPressed: () {
-                          for (var x = 0; x < 3; x++) {
-                            _controllers.add(new TextEditingController());
-                          }
-
-                          int itemIndex = snapshot.data['Items'].length;
-                          var category = widget.dropdownCategories.first;
-
-                          // double itemTotal;
-
-                          // if (snapshot.data["Items"][itemIndex]['Price'] !=
-                          //         null &&
-                          //     bloc.expenseItems["Items"][itemIndex]
-                          //             ['Quantity'] !=
-                          //         null) {
-                          //   itemTotal = snapshot.data["Items"][itemIndex]
-                          //           ['Price'] *
-                          //       snapshot.data["Items"][itemIndex]['Quantity'];
-                          // } else {
-                          //   itemTotal = 0;
-                          // }
-
-                          if (widget.costType == 'Costo de Ventas' &&
-                              selectedSupplier != null &&
-                              selectedSupplier.predefinedCategory != null &&
-                              selectedSupplier.predefinedCategory != '') {
-                            bloc.addToExpenseList({
-                              'Name': '',
-                              'Price': 0,
-                              'Quantity': 1,
-                              'Total Price': 0,
-                              'Category': (selectedSupplier.predefinedCategory),
-                            });
-                          } else if (widget.costType != 'Costo de Ventas' &&
-                              selectedSupplier != null &&
-                              selectedSupplier.predefinedAccount != null &&
-                              selectedSupplier.predefinedAccount != '') {
-                            bloc.addToExpenseList({
-                              'Name':
-                                  selectedSupplier.initialExpenseDescription,
-                              'Price': 0,
-                              'Quantity': 1,
-                              'Total Price': 0,
-                              'Category': (widget.dropdownCategories.contains(
-                                      selectedSupplier.predefinedAccount))
-                                  ? selectedSupplier.predefinedAccount
-                                  : widget.dropdownCategories[0],
-                            });
-                          } else {
-                            bloc.addToExpenseList({
-                              'Name': '',
-                              'Price': 0,
-                              'Quantity': 1,
-                              'Total Price': 0,
-                              'Category': widget.dropdownCategories[0]
-                              // widget.snapshot.data["Items"][0]
-                              //     ['Category' ],
-                            });
-                          }
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0)),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      child: Column(
-                                        children: [
-                                          //Back
-                                          Container(
-                                            width: double.infinity,
-                                            padding: EdgeInsets.all(20),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                //Text
-                                                Text(
-                                                  'Agregar Item',
-                                                ),
-                                                Spacer(),
-                                                //IconButton
-                                                IconButton(
-                                                    onPressed: () =>
-                                                        Navigator.of(context)
-                                                            .pop(),
-                                                    icon: Icon(
-                                                      Icons.close,
-                                                      color: Colors.black,
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          //Producto
-                                          Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: Colors.grey[350]),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Row(
-                                                children: [
-                                                  //Title
-                                                  Expanded(
-                                                      flex: 3,
-                                                      child:
-                                                          Text('Descripción')),
-                                                  //Tezxt
-                                                  Expanded(
-                                                    flex: 5,
-                                                    child: TextFormField(
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 14,
-                                                          color:
-                                                              Colors.grey[700]),
-                                                      validator: (val) => val
-                                                              .isEmpty
-                                                          ? "No olvides agregar una descripción"
-                                                          : null,
-                                                      inputFormatters: [
-                                                        LengthLimitingTextInputFormatter(
-                                                            25)
-                                                      ],
-                                                      cursorColor: Colors.black,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        floatingLabelBehavior:
-                                                            FloatingLabelBehavior
-                                                                .always,
-                                                        hintText: snapshot
-                                                                .data["Items"]
-                                                            [itemIndex]['Name'],
-                                                        label: Text(''),
-                                                        labelStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 12),
-                                                        errorStyle: TextStyle(
-                                                            color: Colors
-                                                                .redAccent[700],
-                                                            fontSize: 14),
-                                                      ),
-                                                      onChanged: (val) {
-                                                        bloc.editProduct(
-                                                            itemIndex, val);
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          //Categoria
-                                          Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: Colors.grey[350]),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Row(
-                                                children: [
-                                                  //Title
-                                                  Expanded(
-                                                      flex: 3,
-                                                      child: Text('Categoría')),
-                                                  //Dropdown
-                                                  Expanded(
-                                                    flex: 5,
-                                                    child: DropdownButton(
-                                                      isExpanded: true,
-                                                      underline: SizedBox(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 14,
-                                                          color:
-                                                              Colors.grey[700]),
-                                                      value: category,
-                                                      items: widget
-                                                          .dropdownCategories
-                                                          .map((x) {
-                                                        return new DropdownMenuItem(
-                                                          value: x,
-                                                          child: new Text(x),
-                                                          onTap: () {
-                                                            setState(() {
-                                                              category = x;
-                                                              // categoryInt = widget
-                                                              //     .dropdownCategories
-                                                              //     .indexOf(x);
-                                                              // if (widget
-                                                              //         .costType ==
-                                                              //     'Costo de Ventas') {
-                                                              //   selectedAccount =
-                                                              //       'Costo de Ventas';
-                                                              // }
-
-                                                              // if (widget
-                                                              //         .costType ==
-                                                              //     'Costo de Ventas') {
-                                                              //   bloc.changeAccount(
-                                                              //       'Costo de Ventas');
-                                                              //   bloc.editCategory(
-                                                              //       snapshot
-                                                              //           .data[
-                                                              //               "Items"]
-                                                              //           .length,
-                                                              //       x);
-                                                              // } else {
-                                                              //   bloc.changeAccount(
-                                                              //       x);
-                                                              //   bloc.editCategory(
-                                                              //       snapshot
-                                                              //           .data[
-                                                              //               "Items"]
-                                                              //           .length,
-                                                              //       x);
-                                                              // }
-
-                                                              // bloc.editProduct(
-                                                              //     i,
-                                                              //     widget
-                                                              //         .accountsProvider
-                                                              //         .accountsMapping[widget.costType][categoryInt]['Description']);
-                                                            });
-                                                          },
-                                                        );
-                                                      }).toList(),
-                                                      onChanged: (newValue) {
-                                                        setState(() {
-                                                          snapshot.data["Items"]
-                                                                  [snapshot
-                                                                      .data["Items"]
-                                                                      .length][
-                                                              'Category'] = newValue;
-                                                          category = newValue;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          //Cantidad
-                                          Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: Colors.grey[350]),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Row(
-                                                children: [
-                                                  //Title
-                                                  Expanded(
-                                                      flex: 3,
-                                                      child: Text('Cantidad')),
-                                                  //Form
-                                                  Expanded(
-                                                    flex: 5,
-                                                    child: TextFormField(
-                                                      initialValue: snapshot
-                                                          .data["Items"]
-                                                              [itemIndex]
-                                                              ['Quantity']
-                                                          .toString(),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 14,
-                                                          color:
-                                                              Colors.grey[700]),
-                                                      validator: (val) =>
-                                                          val.contains(',')
-                                                              ? "Usa punto"
-                                                              : null,
-                                                      inputFormatters: [
-                                                        FilteringTextInputFormatter
-                                                            .allow(RegExp(
-                                                                r'[0-9]+[,.]{0,1}[0-9]*')),
-                                                        TextInputFormatter
-                                                            .withFunction(
-                                                          (oldValue,
-                                                                  newValue) =>
-                                                              newValue.copyWith(
-                                                            text: newValue.text
-                                                                .replaceAll(
-                                                                    ',', '.'),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                      keyboardType:
-                                                          TextInputType.number,
-                                                      cursorColor: Colors.black,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        label: Text(''),
-                                                        labelStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 12),
-                                                        errorStyle: TextStyle(
-                                                            color: Colors
-                                                                .redAccent[700],
-                                                            fontSize: 12),
-                                                      ),
-                                                      onChanged: (val) {
-                                                        bloc.editQuantity(
-                                                            itemIndex,
-                                                            double.parse(val));
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          //Precio
-                                          Container(
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: Colors.grey[350]),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                              child: Row(
-                                                children: [
-                                                  //Title
-                                                  Expanded(
-                                                      flex: 3,
-                                                      child: Text('Precio')),
-                                                  //Form
-                                                  Expanded(
-                                                    flex: 5,
-                                                    child: TextFormField(
-                                                      initialValue: '0',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 16,
-                                                          color:
-                                                              Colors.grey[700]),
-                                                      validator: (val) {
-                                                        if (val.isEmpty) {
-                                                          return 'Agrega un precio';
-                                                        } else {
-                                                          return null;
-                                                        }
-                                                      },
-                                                      inputFormatters: [
-                                                        // CurrencyTextInputFormatter(
-                                                        //   name: '\$',
-                                                        //   locale: 'en',
-                                                        //   decimalDigits: 2,
-                                                        // ),
-                                                        FilteringTextInputFormatter
-                                                            .allow(RegExp(
-                                                                r'[0-9]+[,.]{0,1}[0-9]*')),
-                                                        TextInputFormatter
-                                                            .withFunction(
-                                                          (oldValue,
-                                                                  newValue) =>
-                                                              newValue.copyWith(
-                                                            text: newValue.text
-                                                                .replaceAll(
-                                                                    ',', '.'),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                      keyboardType:
-                                                          TextInputType.number,
-                                                      cursorColor: Colors.black,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        floatingLabelBehavior:
-                                                            FloatingLabelBehavior
-                                                                .always,
-                                                        hintText: '\$0.00',
-                                                        label: Text(''),
-                                                        labelStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 12),
-                                                        errorStyle: TextStyle(
-                                                            color: Colors
-                                                                .redAccent[700],
-                                                            fontSize: 12),
-                                                      ),
-                                                      onChanged: (val) {
-                                                        if (val != null &&
-                                                            val != '') {
-                                                          bloc.editPrice(
-                                                              itemIndex,
-                                                              double.tryParse(
-                                                                  (val)));
-                                                          // bloc.editPrice(
-                                                          //     i,
-                                                          //     double.tryParse(
-                                                          //         (val.substring(
-                                                          //                 1))
-                                                          //             .replaceAll(
-                                                          //                 ',',
-                                                          //                 '')));
-                                                        } else if (val == '') {
-                                                          bloc.editPrice(
-                                                              itemIndex, 0);
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          //Total
-                                          Container(
-                                            width: double.infinity,
-                                            child: Text(
-                                              '${NumberFormat.simpleCurrency().format(0)}',
-                                              textAlign: TextAlign.right,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 16,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          //Agregar Boton
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              });
                           // for (var x = 0; x < 3; x++) {
                           //   _controllers.add(new TextEditingController());
                           // }
+                          // var category = widget.dropdownCategories.first;
+
+                          // double itemTotal;
 
                           // if (widget.costType == 'Costo de Ventas' &&
                           //     selectedSupplier != null &&
@@ -1311,6 +885,526 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                           //     //     ['Category' ],
                           //   });
                           // }
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AddExpenseItem(
+                                    addExpenseItem,
+                                    snapshot,
+                                    snapshot.data['Items'].length,
+                                    widget.dropdownCategories);
+                                // if (snapshot.data["Items"][itemIndex]
+                                //             ['Price'] !=
+                                //         null &&
+                                //     bloc.expenseItems["Items"][itemIndex]
+                                //             ['Quantity'] !=
+                                //         null) {
+                                //   itemTotal = snapshot.data["Items"][itemIndex]
+                                //           ['Price'] *
+                                //       snapshot.data["Items"][itemIndex]
+                                //           ['Quantity'];
+                                // } else {
+                                //   itemTotal = 0;
+                                // }
+                                // return Padding(
+                                //   padding: const EdgeInsets.all(20.0),
+                                //   child: Dialog(
+                                //     shape: RoundedRectangleBorder(
+                                //         borderRadius:
+                                //             BorderRadius.circular(15.0)),
+                                //     child: Container(
+                                //       width: double.infinity,
+                                //       height: double.infinity,
+                                //       padding: EdgeInsets.all(20),
+                                //       child: Column(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.start,
+                                //         crossAxisAlignment:
+                                //             CrossAxisAlignment.start,
+                                //         children: [
+                                //           //Back
+                                //           Container(
+                                //             width: double.infinity,
+                                //             child: Row(
+                                //               mainAxisAlignment:
+                                //                   MainAxisAlignment.start,
+                                //               children: [
+                                //                 //Text
+                                //                 Text(
+                                //                   'Agregar Item',
+                                //                 ),
+                                //                 Spacer(),
+                                //                 //IconButton
+                                //                 IconButton(
+                                //                     onPressed: () =>
+                                //                         Navigator.of(context)
+                                //                             .pop(),
+                                //                     icon: Icon(
+                                //                       Icons.close,
+                                //                       color: Colors.black,
+                                //                     )),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //           SizedBox(height: 20),
+                                //           //Producto
+                                //           Text(
+                                //             'Descripción',
+                                //             textAlign: TextAlign.start,
+                                //             style: TextStyle(
+                                //                 fontWeight: FontWeight.w400,
+                                //                 fontSize: 12,
+                                //                 color: Colors.black45),
+                                //           ),
+                                //           SizedBox(height: 5),
+                                //           Container(
+                                //             height: 50,
+                                //             width: double.infinity,
+                                //             child: Center(
+                                //               child: TextFormField(
+                                //                 textAlign: TextAlign.left,
+                                //                 style: TextStyle(
+                                //                     fontWeight: FontWeight.w400,
+                                //                     fontSize: 14,
+                                //                     color: Colors.grey[700]),
+                                //                 inputFormatters: [
+                                //                   LengthLimitingTextInputFormatter(
+                                //                       25)
+                                //                 ],
+                                //                 cursorColor: Colors.black,
+                                //                 decoration: InputDecoration(
+                                //                   floatingLabelBehavior:
+                                //                       FloatingLabelBehavior
+                                //                           .always,
+                                //                   hintText:
+                                //                       snapshot.data["Items"]
+                                //                           [itemIndex]['Name'],
+                                //                   label: Text(''),
+                                //                   labelStyle: TextStyle(
+                                //                       color: Colors.grey,
+                                //                       fontSize: 12),
+                                //                   errorStyle: TextStyle(
+                                //                       color:
+                                //                           Colors.redAccent[700],
+                                //                       fontSize: 14),
+                                //                   border:
+                                //                       new OutlineInputBorder(
+                                //                     borderRadius:
+                                //                         new BorderRadius
+                                //                             .circular(5.0),
+                                //                     borderSide: new BorderSide(
+                                //                       color: Colors.grey,
+                                //                     ),
+                                //                   ),
+                                //                   focusedBorder:
+                                //                       OutlineInputBorder(
+                                //                     borderRadius:
+                                //                         new BorderRadius
+                                //                             .circular(5.0),
+                                //                     borderSide: new BorderSide(
+                                //                       color: Colors.green,
+                                //                     ),
+                                //                   ),
+                                //                 ),
+                                //                 onChanged: (val) {
+                                //                   bloc.editProduct(
+                                //                       itemIndex, val);
+                                //                 },
+                                //               ),
+                                //             ),
+                                //           ),
+                                //           SizedBox(height: 15),
+                                //           //Categoria
+                                //           Text(
+                                //             'Categoría',
+                                //             textAlign: TextAlign.start,
+                                //             style: TextStyle(
+                                //                 fontWeight: FontWeight.w400,
+                                //                 fontSize: 12,
+                                //                 color: Colors.black45),
+                                //           ),
+                                //           SizedBox(height: 5),
+                                //           Container(
+                                //               decoration: BoxDecoration(
+                                //                 border: Border.all(
+                                //                     color: Colors.grey),
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(5.0),
+                                //               ),
+                                //               padding: EdgeInsets.symmetric(
+                                //                   horizontal: 12),
+                                //               child: DropdownButton(
+                                //                 isExpanded: true,
+                                //                 underline: SizedBox(),
+                                //                 hint: Text(
+                                //                   snapshot.data["Items"]
+                                //                       [itemIndex]['Category'],
+                                //                   style: TextStyle(
+                                //                       fontWeight:
+                                //                           FontWeight.w400,
+                                //                       fontSize: 14,
+                                //                       color: Colors.grey[700]),
+                                //                 ),
+                                //                 style: TextStyle(
+                                //                     fontWeight: FontWeight.w400,
+                                //                     fontSize: 14,
+                                //                     color: Colors.grey[700]),
+                                //                 value: snapshot.data["Items"]
+                                //                     [itemIndex]['Category'],
+                                //                 items: widget.dropdownCategories
+                                //                     .map((x) {
+                                //                   return new DropdownMenuItem(
+                                //                     value: x,
+                                //                     child: new Text(x),
+                                //                     onTap: () {
+                                //                       setState(() {
+                                //                         categoryInt = widget
+                                //                             .dropdownCategories
+                                //                             .indexOf(x);
+                                //                         if (widget.costType ==
+                                //                             'Costo de Ventas') {
+                                //                           selectedAccount =
+                                //                               'Costo de Ventas';
+                                //                         }
+
+                                //                         if (widget.costType ==
+                                //                             'Costo de Ventas') {
+                                //                           bloc.changeAccount(
+                                //                               'Costo de Ventas');
+                                //                           bloc.editCategory(
+                                //                               itemIndex, x);
+                                //                         } else {
+                                //                           bloc.changeAccount(x);
+                                //                           bloc.editCategory(
+                                //                               itemIndex, x);
+                                //                         }
+
+                                //                         // bloc.editProduct(
+                                //                         //     i,
+                                //                         //     widget
+                                //                         //         .accountsProvider
+                                //                         //         .accountsMapping[widget.costType][categoryInt]['Description']);
+                                //                       });
+                                //                     },
+                                //                   );
+                                //                 }).toList(),
+                                //                 onChanged: (newValue) {
+                                //                   setState(() {
+                                //                     snapshot.data["Items"]
+                                //                             [itemIndex]
+                                //                         ['Category'] = newValue;
+                                //                   });
+                                //                 },
+                                //               )),
+                                //           SizedBox(height: 15),
+                                //           //Cantidad/Precio
+                                //           Container(
+                                //             height: 75,
+                                //             width: double.infinity,
+                                //             child: Row(
+                                //               mainAxisAlignment:
+                                //                   MainAxisAlignment.start,
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.center,
+                                //               children: [
+                                //                 //Cantidad
+                                //                 Expanded(
+                                //                     flex: 3,
+                                //                     child: Column(
+                                //                       mainAxisAlignment:
+                                //                           MainAxisAlignment
+                                //                               .start,
+                                //                       crossAxisAlignment:
+                                //                           CrossAxisAlignment
+                                //                               .start,
+                                //                       children: [
+                                //                         Text(
+                                //                           'Cantidad ',
+                                //                           textAlign:
+                                //                               TextAlign.start,
+                                //                           style: TextStyle(
+                                //                               fontWeight:
+                                //                                   FontWeight
+                                //                                       .w400,
+                                //                               fontSize: 12,
+                                //                               color: Colors
+                                //                                   .black45),
+                                //                         ),
+                                //                         SizedBox(height: 5),
+                                //                         Expanded(
+                                //                           child: TextFormField(
+                                //                             initialValue: snapshot
+                                //                                 .data["Items"]
+                                //                                     [itemIndex]
+                                //                                     ['Quantity']
+                                //                                 .toString(),
+                                //                             textAlign: TextAlign
+                                //                                 .center,
+                                //                             style: TextStyle(
+                                //                                 fontWeight:
+                                //                                     FontWeight
+                                //                                         .w400,
+                                //                                 fontSize: 14,
+                                //                                 color: Colors
+                                //                                     .grey[700]),
+                                //                             validator: (val) =>
+                                //                                 val.contains(
+                                //                                         ',')
+                                //                                     ? "Usa punto"
+                                //                                     : null,
+                                //                             inputFormatters: [
+                                //                               FilteringTextInputFormatter
+                                //                                   .allow(RegExp(
+                                //                                       r'[0-9]+[,.]{0,1}[0-9]*')),
+                                //                               TextInputFormatter
+                                //                                   .withFunction(
+                                //                                 (oldValue,
+                                //                                         newValue) =>
+                                //                                     newValue
+                                //                                         .copyWith(
+                                //                                   text: newValue
+                                //                                       .text
+                                //                                       .replaceAll(
+                                //                                           ',',
+                                //                                           '.'),
+                                //                                 ),
+                                //                               ),
+                                //                             ],
+                                //                             keyboardType:
+                                //                                 TextInputType
+                                //                                     .number,
+                                //                             cursorColor:
+                                //                                 Colors.black,
+                                //                             decoration:
+                                //                                 InputDecoration(
+                                //                               floatingLabelBehavior:
+                                //                                   FloatingLabelBehavior
+                                //                                       .always,
+                                //                               label: Text(''),
+                                //                               labelStyle:
+                                //                                   TextStyle(
+                                //                                       color: Colors
+                                //                                           .grey,
+                                //                                       fontSize:
+                                //                                           12),
+                                //                               errorStyle: TextStyle(
+                                //                                   color: Colors
+                                //                                           .redAccent[
+                                //                                       700],
+                                //                                   fontSize: 14),
+                                //                               border:
+                                //                                   new OutlineInputBorder(
+                                //                                 borderRadius:
+                                //                                     new BorderRadius
+                                //                                             .circular(
+                                //                                         5.0),
+                                //                                 borderSide:
+                                //                                     new BorderSide(
+                                //                                   color: Colors
+                                //                                       .grey,
+                                //                                 ),
+                                //                               ),
+                                //                               focusedBorder:
+                                //                                   OutlineInputBorder(
+                                //                                 borderRadius:
+                                //                                     new BorderRadius
+                                //                                             .circular(
+                                //                                         5.0),
+                                //                                 borderSide:
+                                //                                     new BorderSide(
+                                //                                   color: Colors
+                                //                                       .green,
+                                //                                 ),
+                                //                               ),
+                                //                             ),
+                                //                             onChanged: (val) {
+                                //                               bloc.editQuantity(
+                                //                                   itemIndex,
+                                //                                   double.parse(
+                                //                                       val));
+                                //                             },
+                                //                           ),
+                                //                         ),
+                                //                       ],
+                                //                     )),
+                                //                 SizedBox(width: 10),
+                                //                 //Precio
+                                //                 Expanded(
+                                //                     flex: 5,
+                                //                     child: Column(
+                                //                       mainAxisAlignment:
+                                //                           MainAxisAlignment
+                                //                               .start,
+                                //                       crossAxisAlignment:
+                                //                           CrossAxisAlignment
+                                //                               .start,
+                                //                       children: [
+                                //                         Text(
+                                //                           'Precio',
+                                //                           textAlign:
+                                //                               TextAlign.start,
+                                //                           style: TextStyle(
+                                //                               fontWeight:
+                                //                                   FontWeight
+                                //                                       .w400,
+                                //                               fontSize: 12,
+                                //                               color: Colors
+                                //                                   .black45),
+                                //                         ),
+                                //                         SizedBox(height: 5),
+                                //                         Expanded(
+                                //                           child: TextFormField(
+                                //                             textAlign: TextAlign
+                                //                                 .center,
+                                //                             style: TextStyle(
+                                //                                 fontWeight:
+                                //                                     FontWeight
+                                //                                         .w400,
+                                //                                 fontSize: 14,
+                                //                                 color: Colors
+                                //                                     .grey[700]),
+                                //                             validator: (val) =>
+                                //                                 val.contains(
+                                //                                         ',')
+                                //                                     ? "Usa punto"
+                                //                                     : null,
+                                //                             inputFormatters: [
+                                //                               FilteringTextInputFormatter
+                                //                                   .allow(RegExp(
+                                //                                       r'[0-9]+[,.]{0,1}[0-9]*')),
+                                //                               TextInputFormatter
+                                //                                   .withFunction(
+                                //                                 (oldValue,
+                                //                                         newValue) =>
+                                //                                     newValue
+                                //                                         .copyWith(
+                                //                                   text: newValue
+                                //                                       .text
+                                //                                       .replaceAll(
+                                //                                           ',',
+                                //                                           '.'),
+                                //                                 ),
+                                //                               ),
+                                //                             ],
+                                //                             keyboardType:
+                                //                                 TextInputType
+                                //                                     .number,
+                                //                             cursorColor:
+                                //                                 Colors.black,
+                                //                             decoration:
+                                //                                 InputDecoration(
+                                //                               floatingLabelBehavior:
+                                //                                   FloatingLabelBehavior
+                                //                                       .always,
+                                //                               hintText:
+                                //                                   '\$0.00',
+                                //                               label: Text(''),
+                                //                               labelStyle:
+                                //                                   TextStyle(
+                                //                                       color: Colors
+                                //                                           .grey,
+                                //                                       fontSize:
+                                //                                           12),
+                                //                               errorStyle: TextStyle(
+                                //                                   color: Colors
+                                //                                           .redAccent[
+                                //                                       700],
+                                //                                   fontSize: 14),
+                                //                               border:
+                                //                                   new OutlineInputBorder(
+                                //                                 borderRadius:
+                                //                                     new BorderRadius
+                                //                                             .circular(
+                                //                                         5.0),
+                                //                                 borderSide:
+                                //                                     new BorderSide(
+                                //                                   color: Colors
+                                //                                       .grey,
+                                //                                 ),
+                                //                               ),
+                                //                               focusedBorder:
+                                //                                   OutlineInputBorder(
+                                //                                 borderRadius:
+                                //                                     new BorderRadius
+                                //                                             .circular(
+                                //                                         5.0),
+                                //                                 borderSide:
+                                //                                     new BorderSide(
+                                //                                   color: Colors
+                                //                                       .green,
+                                //                                 ),
+                                //                               ),
+                                //                             ),
+                                //                             onChanged: (val) {
+                                //                               if (val != null &&
+                                //                                   val != '') {
+                                //                                 bloc.editPrice(
+                                //                                     itemIndex,
+                                //                                     double.tryParse(
+                                //                                         (val)));
+                                //                               } else if (val ==
+                                //                                   '') {
+                                //                                 bloc.editPrice(
+                                //                                     itemIndex,
+                                //                                     0);
+                                //                               }
+                                //                             },
+                                //                           ),
+                                //                         ),
+                                //                       ],
+                                //                     )),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //           SizedBox(height: 20),
+                                //           //Total
+                                //           Container(
+                                //             width: double.infinity,
+                                //             child: Text(
+                                //               'TOTAL: ${NumberFormat.simpleCurrency().format(0)}',
+                                //               textAlign: TextAlign.right,
+                                //               style: TextStyle(
+                                //                   fontWeight: FontWeight.w600,
+                                //                   fontSize: 16,
+                                //                   color: Colors.black),
+                                //             ),
+                                //           ),
+                                //           Spacer(),
+                                //           //Agregar Boton
+                                //           Container(
+                                //               height: 35.0,
+                                //               width: double.infinity,
+                                //               child: ElevatedButton(
+                                //                 style: ElevatedButton.styleFrom(
+                                //                   backgroundColor: Colors.black,
+                                //                   minimumSize: Size(300, 50),
+                                //                   padding: EdgeInsets.symmetric(
+                                //                       horizontal: 15),
+                                //                   shape:
+                                //                       const RoundedRectangleBorder(
+                                //                     borderRadius:
+                                //                         BorderRadius.all(
+                                //                             Radius.circular(8)),
+                                //                   ),
+                                //                 ),
+                                //                 onPressed: () =>
+                                //                     Navigator.of(context).pop(),
+                                //                 child: Text(
+                                //                   "Agregar",
+                                //                   textAlign: TextAlign.center,
+                                //                   style: TextStyle(
+                                //                       fontSize: 12,
+                                //                       fontWeight:
+                                //                           FontWeight.w500,
+                                //                       color: Colors.white),
+                                //                 ),
+                                //               ))
+                                //         ],
+                                //       ),
+                                //     ),
+                                //   ),
+                                // );
+                              });
                         },
                         child: Container(
                           height: 70,

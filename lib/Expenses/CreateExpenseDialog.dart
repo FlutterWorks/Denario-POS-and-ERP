@@ -893,7 +893,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                         minimumSize: Size(300, 50),
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                       ),
                       onPressed: () async {
@@ -915,12 +915,10 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                             selectedIvoiceDate.month.toString(),
                             widget.registerStatus.registerName,
                             false,
-                            (isChecked &&
-                                    widget.registerStatus.registerisOpen)
+                            (isChecked && widget.registerStatus.registerisOpen)
                                 ? true
                                 : false,
-                            (isChecked &&
-                                    widget.registerStatus.registerisOpen)
+                            (isChecked && widget.registerStatus.registerisOpen)
                                 ? cashRegisterAmount
                                 : 0,
                             docID,
@@ -949,8 +947,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                               setSearchParam(
                                 (bloc.expenseItems["Vendor"] != '' &&
                                         bloc.expenseItems["Vendor"] != null)
-                                    ? bloc.expenseItems["Vendor"]
-                                        .toLowerCase()
+                                    ? bloc.expenseItems["Vendor"].toLowerCase()
                                     : vendorName.toLowerCase(),
                               ),
                               invoiceReference);
@@ -983,8 +980,8 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                         try {
                           if (doc.exists) {
                             docRef.update({
-                              '${widget.costType}': FieldValue.increment(
-                                  bloc.totalExpenseAmount)
+                              '${widget.costType}':
+                                  FieldValue.increment(bloc.totalExpenseAmount)
                             });
                           } else {
                             docRef.set({
@@ -1030,10 +1027,9 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                           cartList[i]["Quantity"]));
                             } else {
                               //Add new category with amount
-                              expenseCategories[
-                                  '${cartList[i]["Category"]}'] = cartList[i]
-                                      ["Price"] *
-                                  cartList[i]["Quantity"];
+                              expenseCategories['${cartList[i]["Category"]}'] =
+                                  cartList[i]["Price"] *
+                                      cartList[i]["Quantity"];
                             }
                           }
                         }
@@ -1044,8 +1040,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                         });
 
                         ///////////If we use money in cash register ///////////////
-                        if (isChecked &&
-                            widget.registerStatus.registerisOpen) {
+                        if (isChecked && widget.registerStatus.registerisOpen) {
                           double totalTransactionAmount =
                               widget.dailyTransactions.outflows +
                                   cashRegisterAmount;
@@ -1160,11 +1155,9 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                           //Update price in this index
                                           updateSuppliesFromList
                                               .forEach((y, z) {
-                                            if (ingredients[x]
-                                                    ['Ingredient'] ==
+                                            if (ingredients[x]['Ingredient'] ==
                                                 y) {
-                                              ingredients[x]['Supply Cost'] =
-                                                  z;
+                                              ingredients[x]['Supply Cost'] = z;
                                             }
                                           });
                                         }
@@ -1199,19 +1192,16 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                           //Update price in this index
                                           updateSuppliesFromList
                                               .forEach((y, z) {
-                                            if (ingredients[x]
-                                                    ['Ingredient'] ==
+                                            if (ingredients[x]['Ingredient'] ==
                                                 y) {
-                                              ingredients[x]['Supply Cost'] =
-                                                  z;
+                                              ingredients[x]['Supply Cost'] = z;
                                             }
                                           });
                                         }
-                                        DatabaseService()
-                                            .editSupplyIngredients(
-                                                widget.activeBusiness,
-                                                doc.id,
-                                                ingredients);
+                                        DatabaseService().editSupplyIngredients(
+                                            widget.activeBusiness,
+                                            doc.id,
+                                            ingredients);
                                         updatedSupplyDocuments.add(doc.id);
                                       }
                                     }));
