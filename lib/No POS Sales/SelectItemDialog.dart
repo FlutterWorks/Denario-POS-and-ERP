@@ -170,6 +170,9 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                                           ),
                                           child: Text(
                                             categories[i],
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
                                             style:
                                                 TextStyle(color: Colors.black),
                                           )),

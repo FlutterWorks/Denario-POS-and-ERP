@@ -1,12 +1,12 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/Expense.dart';
+import 'package:denario/Expenses/VendorSearchBar.dart';
 import 'package:denario/Models/Supplier.dart';
 import 'package:denario/Suppliers/SaveVendorButton.dart';
 import 'package:denario/Suppliers/SupplierSearchBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:universal_html/html.dart';
 
 class SelectVendorExpense extends StatefulWidget {
   final selectIvoiceDate;
@@ -67,6 +67,8 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
   bool showListofVendors = false;
   TextEditingController searchController = TextEditingController(text: '');
   TextEditingController _newController = TextEditingController(text: '');
+  TextEditingController _mobileSearchController =
+      TextEditingController(text: '');
   String predefinedCategory;
   String predefinedDescription;
   Supplier selectedSupplier;
@@ -76,6 +78,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
   String invoiceReference = '';
   bool keepTaggedVendor;
   String taggedVendor;
+  bool searchByCategory;
 
   void selectVendor(Supplier vendor) {
     setState(() {
@@ -106,6 +109,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
 
   @override
   void initState() {
+    searchByCategory = true;
     showVendorTags = true;
     saveVendor = false;
     saveVendorPressed = false;
@@ -471,64 +475,69 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
             height: 10,
           ),
           //Month
+          Text(
+            'Fecha',
+            textAlign: TextAlign.start,
+            style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 12,
+                color: Colors.black45),
+          ),
+          SizedBox(height: 8),
           Container(
+            height: 45,
             width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () async {
-                    DateTime pickedDate = await showDatePicker(
-                        context: context,
-                        helpText: 'Fecha del gasto',
-                        confirmText: 'Guardar',
-                        cancelText: 'Cancelar',
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now().subtract(Duration(days: 60)),
-                        lastDate: DateTime.now(),
-                        builder: ((context, child) {
-                          return Theme(
-                              data: Theme.of(context).copyWith(
-                                colorScheme: ColorScheme.light(
-                                  primary:
-                                      Colors.black, // header background color
-                                  onPrimary: Colors.white, // header text color
-                                  onSurface: Colors.black, // body text color
-                                ),
-                                textButtonTheme: TextButtonThemeData(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor:
-                                        Colors.black, // button text color
-                                  ),
-                                ),
+            child: OutlinedButton(
+              onPressed: () async {
+                DateTime pickedDate = await showDatePicker(
+                    context: context,
+                    helpText: 'Fecha del gasto',
+                    confirmText: 'Guardar',
+                    cancelText: 'Cancelar',
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now().subtract(Duration(days: 60)),
+                    lastDate: DateTime.now(),
+                    builder: ((context, child) {
+                      return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.light(
+                              primary: Colors.black, // header background color
+                              onPrimary: Colors.white, // header text color
+                              onSurface: Colors.black, // body text color
+                            ),
+                            textButtonTheme: TextButtonThemeData(
+                              style: TextButton.styleFrom(
+                                foregroundColor:
+                                    Colors.black, // button text color
                               ),
-                              child: child);
-                        }));
-                    setState(() {
-                      if (pickedDate != null) {
-                        selectedIvoiceDate = pickedDate;
-                        widget.selectIvoiceDate(pickedDate);
-                      }
-                    });
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.calendar_month,
-                        size: 18,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        '${meses[selectedIvoiceDate.month - 1]}, ${selectedIvoiceDate.year}',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
+                            ),
+                          ),
+                          child: child);
+                    }));
+                setState(() {
+                  if (pickedDate != null) {
+                    selectedIvoiceDate = pickedDate;
+                    widget.selectIvoiceDate(pickedDate);
+                  }
+                });
+              },
+              style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                color: Colors.grey,
+              )),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.calendar_month,
+                    size: 18,
+                    color: Colors.grey,
                   ),
-                ),
-              ],
+                  SizedBox(width: 10),
+                  Text(
+                      '${selectedIvoiceDate.day} de ${meses[selectedIvoiceDate.month - 1]}, ${selectedIvoiceDate.year}',
+                      style: TextStyle(color: Colors.black45, fontSize: 14)),
+                ],
+              ),
             ),
           ),
           SizedBox(
@@ -564,13 +573,13 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                   errorStyle:
                       TextStyle(color: Colors.redAccent[700], fontSize: 14),
                   border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(12.0),
+                    borderRadius: new BorderRadius.circular(5.0),
                     borderSide: new BorderSide(
                       color: Colors.grey,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(12.0),
+                    borderRadius: new BorderRadius.circular(5.0),
                     borderSide: new BorderSide(
                       color: Colors.green,
                     ),
@@ -629,117 +638,36 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                   ),
                 )
               : Container(
-                  height: 50,
+                  height: 45,
                   width: double.infinity,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 45,
-                          child: TextFormField(
-                            style: TextStyle(color: Colors.black, fontSize: 14),
-                            cursorColor: Colors.grey,
-                            controller: _newController, //searchController,
-                            textAlign: TextAlign.left,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                              ),
-                              suffixIcon: IconButton(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(2),
-                                iconSize: 14,
-                                splashRadius: 15,
-                                onPressed: () {
-                                  setState(() {
-                                    vendorName = '';
-                                    showSearchOptions = true;
-                                    showListofVendors = false;
-                                    _newController.text = '';
-                                    widget.setShowVendorTags(true);
-                                    widget.showVendorTagsfromParent(true);
-                                    widget.showVendorOptionsfromParent(true);
-                                    bloc.changeVendor('');
-                                  });
-                                },
-                                icon: Icon(Icons.close),
-                                color: Colors.black,
-                              ),
-                              hintText: 'Buscar',
-                              focusColor: Colors.black,
-                              hintStyle: TextStyle(
-                                  color: Colors.black45, fontSize: 14),
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(12.0),
-                                borderSide: new BorderSide(
-                                  color: Colors.grey[350],
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(12.0),
-                                borderSide: new BorderSide(
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              widget.setShowVendorTags(true);
-                              widget.showVendorTagsfromParent(true);
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                if (value.isNotEmpty) {
-                                  showSearchOptions = true;
-                                  showListofVendors = false;
-                                  widget.showVendorOptionsfromParent(true);
-                                } else {
-                                  showSearchOptions = false;
-                                  showListofVendors = true;
-                                }
-                                vendorName = value;
-                              });
-                            },
-                            onFieldSubmitted: (value) {
-                              setState(() {
-                                bloc.changeVendor(_newController.text);
-                                showSearchOptions = false;
-                                showListofVendors = true;
-                                widget.showVendorOptionsfromParent(false);
-                                widget.setShowVendorTags(false);
-                              });
-                            },
-                          ),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return VendorSearchBar(widget.activeBusiness,
+                                widget.costType, selectVendor);
+                          });
+                    },
+                    style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                      color: Colors.grey,
+                    )),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                          size: 18,
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      (widget.saveVendor &&
-                              vendorName != null &&
-                              vendorName != '' &&
-                              _newController.text.isNotEmpty)
-                          ? StreamProvider<List<Supplier>>.value(
-                              value: DatabaseService().suppliersList(
-                                  widget.activeBusiness,
-                                  vendorName.toLowerCase()),
-                              initialData: null,
-                              child: SaveVendorButton(
-                                  vendorName, widget.saveNewVendor),
-                            )
-                          : SizedBox(),
-                    ],
+                        SizedBox(width: 10),
+                        Text('Buscar',
+                            style:
+                                TextStyle(color: Colors.black45, fontSize: 14)),
+                      ],
+                    ),
                   ),
                 ),
-          SizedBox(height: 5),
-          //Lookup
-          (widget.showSearchOptions && showSearchOptions)
-              ? StreamProvider<List<Supplier>>.value(
-                  value: DatabaseService().suppliersList(
-                      widget.activeBusiness, vendorName.toLowerCase()),
-                  initialData: null,
-                  child: SupplierSearchBar(
-                      selectVendor, widget.showVendorTagsfromParent),
-                )
-              : SizedBox(),
 
           SizedBox(height: 25),
         ],
