@@ -372,7 +372,8 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                               widget.costType,
                               dropdownCategories,
                               removeSupplyFromList,
-                              addSupplyToList)
+                              addSupplyToList,
+                              widget.activeBusiness)
                           : Container(),
                       //Tags de productos
                       (widget.costType == 'Costo de Ventas')
@@ -832,7 +833,8 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                           widget.costType,
                           dropdownCategories,
                           removeSupplyFromList,
-                          addSupplyToList)
+                          addSupplyToList,
+                          widget.activeBusiness)
                       : Container(),
                   //Tags de productos
                   // (widget.costType == 'Costo de Ventas')

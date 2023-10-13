@@ -23,93 +23,89 @@ class _VendorSearchBarState extends State<VendorSearchBar> {
   String vendorName = '';
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Dialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              //Back
-              Container(
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    //IconButton
-                    IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Icon(
-                          Icons.close,
-                          color: Colors.black,
-                        )),
-                  ],
-                ),
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            //Back
+            Container(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  //IconButton
+                  IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      )),
+                ],
               ),
-              SizedBox(height: 10),
-              //Search
-              Container(
-                height: 50,
-                width: double.infinity,
-                child: TextFormField(
-                  key: Key('Mobile Search'),
-                  style: TextStyle(color: Colors.black, fontSize: 14),
-                  cursorColor: Colors.grey,
-                  controller: _mobileSearchController,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ),
-                    hintText: 'Buscar',
-                    focusColor: Colors.black,
-                    hintStyle: TextStyle(color: Colors.black45, fontSize: 14),
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(12.0),
-                      borderSide: new BorderSide(
-                        color: Colors.grey[350],
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(12.0),
-                      borderSide: new BorderSide(
-                        color: Colors.green,
-                      ),
+            ),
+            SizedBox(height: 10),
+            //Search
+            Container(
+              height: 50,
+              width: double.infinity,
+              child: TextFormField(
+                key: Key('Mobile Search'),
+                style: TextStyle(color: Colors.black, fontSize: 14),
+                cursorColor: Colors.grey,
+                controller: _mobileSearchController,
+                textAlign: TextAlign.left,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  hintText: 'Buscar',
+                  focusColor: Colors.black,
+                  hintStyle: TextStyle(color: Colors.black45, fontSize: 14),
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(12.0),
+                    borderSide: new BorderSide(
+                      color: Colors.grey[350],
                     ),
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      vendorName = value;
-                    });
-                  },
-                  onFieldSubmitted: (value) {
-                    setState(() {
-                      bloc.changeVendor(_mobileSearchController.text);
-                    });
-                    Navigator.of(context).pop();
-                  },
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(12.0),
+                    borderSide: new BorderSide(
+                      color: Colors.green,
+                    ),
+                  ),
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    vendorName = value;
+                  });
+                },
+                onFieldSubmitted: (value) {
+                  setState(() {
+                    bloc.changeVendor(_mobileSearchController.text);
+                  });
+                  Navigator.of(context).pop();
+                },
               ),
-              SizedBox(height: 20),
-              //Suggested or Search findings
-              (vendorName == '')
-                  ? StreamProvider<List<Supplier>>.value(
-                      value: DatabaseService().suppliersListbyCategory(
-                          widget.activeBusiness, widget.costType),
-                      initialData: null,
-                      child: VendorsSelection(widget.selectVendor))
-                  : StreamProvider<List<Supplier>>.value(
-                      value: DatabaseService().suppliersList(
-                          widget.activeBusiness, vendorName.toLowerCase()),
-                      initialData: null,
-                      child: VendorsSelection(widget.selectVendor))
-            ],
-          ),
+            ),
+            SizedBox(height: 20),
+            //Suggested or Search findings
+            (vendorName == '')
+                ? StreamProvider<List<Supplier>>.value(
+                    value: DatabaseService().suppliersListbyCategory(
+                        widget.activeBusiness, widget.costType),
+                    initialData: null,
+                    child: VendorsSelection(widget.selectVendor))
+                : StreamProvider<List<Supplier>>.value(
+                    value: DatabaseService().suppliersList(
+                        widget.activeBusiness, vendorName.toLowerCase()),
+                    initialData: null,
+                    child: VendorsSelection(widget.selectVendor))
+          ],
         ),
       ),
     );

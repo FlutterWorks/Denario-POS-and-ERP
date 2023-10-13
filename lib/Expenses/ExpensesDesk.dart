@@ -601,182 +601,172 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                               ],
                             ),
                             child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  //Title
-                                  Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: Row(children: [
-                                        //All
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      width: searchByPayables
-                                                          ? 0
-                                                          : 3,
-                                                      color: searchByPayables
-                                                          ? Colors.white
-                                                          : Colors.greenAccent[
-                                                              400]))),
-                                          child: TextButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  searchByPayables = false;
-                                                });
-                                              },
-                                              style: ButtonStyle(
-                                                overlayColor:
-                                                    MaterialStateProperty
-                                                        .resolveWith<Color>(
-                                                  (Set<MaterialState> states) {
-                                                    if (states.contains(
-                                                        MaterialState
-                                                            .hovered)) {
-                                                      return Colors.grey
-                                                          .withOpacity(
-                                                              0.2); // Customize the hover color here
-                                                    }
-                                                    return null; // Use default overlay color for other states
-                                                  },
-                                                ),
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //Title
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    child: Row(children: [
+                                      //All
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    width: searchByPayables
+                                                        ? 0
+                                                        : 3,
+                                                    color: searchByPayables
+                                                        ? Colors.white
+                                                        : Colors.greenAccent[
+                                                            400]))),
+                                        child: TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                searchByPayables = false;
+                                              });
+                                            },
+                                            style: ButtonStyle(
+                                              overlayColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                                  if (states.contains(
+                                                      MaterialState.hovered)) {
+                                                    return Colors.grey.withOpacity(
+                                                        0.2); // Customize the hover color here
+                                                  }
+                                                  return null; // Use default overlay color for other states
+                                                },
                                               ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: Text(
-                                                  'Gastos',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          (!searchByPayables)
-                                                              ? FontWeight.bold
-                                                              : FontWeight
-                                                                  .normal,
-                                                      color: (!searchByPayables)
-                                                          ? Colors
-                                                              .greenAccent[700]
-                                                          : Colors.black),
-                                                ),
-                                              )),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      width: searchByPayables
-                                                          ? 3
-                                                          : 0,
-                                                      color: searchByPayables
-                                                          ? Colors
-                                                              .greenAccent[400]
-                                                          : Colors.white))),
-                                          child: TextButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  searchByPayables = true;
-                                                });
-                                              },
-                                              style: ButtonStyle(
-                                                overlayColor:
-                                                    MaterialStateProperty
-                                                        .resolveWith<Color>(
-                                                  (Set<MaterialState> states) {
-                                                    if (states.contains(
-                                                        MaterialState
-                                                            .hovered)) {
-                                                      return Colors.grey
-                                                          .withOpacity(
-                                                              0.2); // Customize the hover color here
-                                                    }
-                                                    return null; // Use default overlay color for other states
-                                                  },
-                                                ),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: Text(
+                                                'Gastos',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        (!searchByPayables)
+                                                            ? FontWeight.bold
+                                                            : FontWeight.normal,
+                                                    color: (!searchByPayables)
+                                                        ? Colors
+                                                            .greenAccent[700]
+                                                        : Colors.black),
                                               ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: Text(
-                                                  'Por pagar',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          (searchByPayables)
-                                                              ? FontWeight.bold
-                                                              : FontWeight
-                                                                  .normal,
-                                                      color: (searchByPayables)
-                                                          ? Colors
-                                                              .greenAccent[700]
-                                                          : Colors.black),
-                                                ),
-                                              )),
-                                        ),
-                                        Spacer(),
-                                        IconButton(
-                                            tooltip: 'Ver todos los gastos',
-                                            iconSize: 16,
-                                            splashRadius: 0.2,
-                                            onPressed: () => Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        StreamProvider<
-                                                            List<
-                                                                Expenses>>.value(
-                                                          initialData: null,
-                                                          value: DatabaseService()
-                                                              .expenseList(
-                                                                  userProfile
-                                                                      .activeBusiness,
-                                                                  DateTime.now()
-                                                                      .month
-                                                                      .toString(),
-                                                                  DateTime.now()
-                                                                      .year
-                                                                      .toString()),
-                                                          child: ExpensesHistory(
-                                                              userProfile
-                                                                  .activeBusiness),
-                                                        ))),
-                                            // ExpensesHistory(userProfile
-                                            //     .activeBusiness))),
-                                            icon: Icon(
-                                              Icons.list,
-                                              color: Colors.black,
-                                              size: 24,
-                                            ))
-                                      ]),
-                                    ),
+                                            )),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    width: searchByPayables
+                                                        ? 3
+                                                        : 0,
+                                                    color: searchByPayables
+                                                        ? Colors
+                                                            .greenAccent[400]
+                                                        : Colors.white))),
+                                        child: TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                searchByPayables = true;
+                                              });
+                                            },
+                                            style: ButtonStyle(
+                                              overlayColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                                  if (states.contains(
+                                                      MaterialState.hovered)) {
+                                                    return Colors.grey.withOpacity(
+                                                        0.2); // Customize the hover color here
+                                                  }
+                                                  return null; // Use default overlay color for other states
+                                                },
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: Text(
+                                                'Por pagar',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        (searchByPayables)
+                                                            ? FontWeight.bold
+                                                            : FontWeight.normal,
+                                                    color: (searchByPayables)
+                                                        ? Colors
+                                                            .greenAccent[700]
+                                                        : Colors.black),
+                                              ),
+                                            )),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                          tooltip: 'Ver todos los gastos',
+                                          iconSize: 16,
+                                          splashRadius: 0.2,
+                                          onPressed: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      StreamProvider<
+                                                          List<Expenses>>.value(
+                                                        initialData: null,
+                                                        value: DatabaseService()
+                                                            .expenseList(
+                                                                userProfile
+                                                                    .activeBusiness,
+                                                                DateTime.now()
+                                                                    .month
+                                                                    .toString(),
+                                                                DateTime.now()
+                                                                    .year
+                                                                    .toString()),
+                                                        child: ExpensesHistory(
+                                                            userProfile
+                                                                .activeBusiness),
+                                                      ))),
+                                          // ExpensesHistory(userProfile
+                                          //     .activeBusiness))),
+                                          icon: Icon(
+                                            Icons.list,
+                                            color: Colors.black,
+                                            size: 24,
+                                          ))
+                                    ]),
                                   ),
-                                  //Expenses List
-                                  searchByPayables
-                                      ? StreamProvider<List<Payables>>.value(
-                                          initialData: null,
-                                          value: DatabaseService().payablesList(
+                                ),
+                                //Expenses List
+                                searchByPayables
+                                    ? StreamProvider<List<Payables>>.value(
+                                        initialData: null,
+                                        value: DatabaseService().payablesList(
+                                            userProfile.activeBusiness),
+                                        child: Expanded(
+                                          child: PayablesList(
                                               userProfile.activeBusiness),
-                                          child: Expanded(
-                                            child: PayablesList(
-                                                userProfile.activeBusiness),
-                                          ),
-                                        )
-                                      : StreamProvider<List<Expenses>>.value(
-                                          initialData: null,
-                                          value: DatabaseService()
-                                              .shortExpenseList(
-                                                  userProfile.activeBusiness,
-                                                  DateTime.now()
-                                                      .month
-                                                      .toString(),
-                                                  DateTime.now()
-                                                      .year
-                                                      .toString()),
-                                          child: Expanded(
-                                            child: ExpenseList(
-                                                userProfile.activeBusiness),
-                                          ),
                                         ),
-                                ]),
+                                      )
+                                    : StreamProvider<List<Expenses>>.value(
+                                        initialData: null,
+                                        value: DatabaseService()
+                                            .shortExpenseList(
+                                                userProfile.activeBusiness,
+                                                DateTime.now().month.toString(),
+                                                DateTime.now().year.toString()),
+                                        child: Expanded(
+                                          child: ExpenseList(
+                                              userProfile.activeBusiness),
+                                        ),
+                                      ),
+                              ],
+                            ),
                           ),
                         ],
                       )),

@@ -67,8 +67,6 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
   bool showListofVendors = false;
   TextEditingController searchController = TextEditingController(text: '');
   TextEditingController _newController = TextEditingController(text: '');
-  TextEditingController _mobileSearchController =
-      TextEditingController(text: '');
   String predefinedCategory;
   String predefinedDescription;
   Supplier selectedSupplier;

@@ -1,21 +1,25 @@
 import 'dart:math';
 
+import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/Expense.dart';
 import 'package:denario/Expenses/AddExpenseItem.dart';
 import 'package:denario/Models/Supplier.dart';
+import 'package:denario/Models/Supply.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CreateExpenseDialogForm extends StatefulWidget {
   final List dropdownCategories;
   final String costType;
   final removeSupplyFromList;
   final addSupplyToList;
+  final String activeBusiness;
 
   const CreateExpenseDialogForm(this.costType, this.dropdownCategories,
-      this.removeSupplyFromList, this.addSupplyToList,
+      this.removeSupplyFromList, this.addSupplyToList, this.activeBusiness,
       {Key key})
       : super(key: key);
 
@@ -643,22 +647,45 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                               ),
                             ],
                           ),
-                          child: GestureDetector(
-                            onTap: () {},
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.grey,
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return StreamProvider<List<Supply>>.value(
+                                      value: DatabaseService()
+                                          .suppliesListbyVendor(
+                                              widget.activeBusiness,
+                                              bloc.expenseItems['Vendor']
+                                                  .toLowerCase()),
+                                      initialData: [],
+                                      child: AddExpenseItem(
+                                        addExpenseItem,
+                                        snapshot,
+                                        i,
+                                        widget.dropdownCategories,
+                                        true,
+                                        false,
+                                        selectedSupplier,
+                                        product: snapshot.data["Items"][i]
+                                            ['Name'],
+                                        price: snapshot.data["Items"][i]
+                                            ['Price'],
+                                        category: snapshot.data["Items"][i]
+                                            ['Category'],
+                                        qty: snapshot.data["Items"][i]
+                                            ['Quantity'],
+                                      ),
+                                    );
+                                  });
+                            },
                             child: Container(
                               width: double.infinity,
                               padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: new BorderRadius.circular(12.0),
-                                boxShadow: <BoxShadow>[
-                                  new BoxShadow(
-                                    color: Colors.grey[350],
-                                    offset: Offset(0.0, 0.0),
-                                    blurRadius: 10.0,
-                                  )
-                                ],
-                              ),
                               child: Column(
                                 children: [
                                   //Input
@@ -841,569 +868,24 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                           foregroundColor: Colors.black,
                         ),
                         onPressed: () {
-                          // for (var x = 0; x < 3; x++) {
-                          //   _controllers.add(new TextEditingController());
-                          // }
-                          // var category = widget.dropdownCategories.first;
-
-                          // double itemTotal;
-
-                          // if (widget.costType == 'Costo de Ventas' &&
-                          //     selectedSupplier != null &&
-                          //     selectedSupplier.predefinedCategory != null &&
-                          //     selectedSupplier.predefinedCategory != '') {
-                          //   bloc.addToExpenseList({
-                          //     'Name': '',
-                          //     'Price': 0,
-                          //     'Quantity': 1,
-                          //     'Total Price': 0,
-                          //     'Category': (selectedSupplier.predefinedCategory),
-                          //   });
-                          // } else if (widget.costType != 'Costo de Ventas' &&
-                          //     selectedSupplier != null &&
-                          //     selectedSupplier.predefinedAccount != null &&
-                          //     selectedSupplier.predefinedAccount != '') {
-                          //   bloc.addToExpenseList({
-                          //     'Name':
-                          //         selectedSupplier.initialExpenseDescription,
-                          //     'Price': 0,
-                          //     'Quantity': 1,
-                          //     'Total Price': 0,
-                          //     'Category': (widget.dropdownCategories.contains(
-                          //             selectedSupplier.predefinedAccount))
-                          //         ? selectedSupplier.predefinedAccount
-                          //         : widget.dropdownCategories[0],
-                          //   });
-                          // } else {
-                          //   bloc.addToExpenseList({
-                          //     'Name': '',
-                          //     'Price': 0,
-                          //     'Quantity': 1,
-                          //     'Total Price': 0,
-                          //     'Category': widget.dropdownCategories[0]
-                          //     // widget.snapshot.data["Items"][0]
-                          //     //     ['Category' ],
-                          //   });
-                          // }
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return AddExpenseItem(
-                                    addExpenseItem,
-                                    snapshot,
-                                    snapshot.data['Items'].length,
-                                    widget.dropdownCategories);
-                                // if (snapshot.data["Items"][itemIndex]
-                                //             ['Price'] !=
-                                //         null &&
-                                //     bloc.expenseItems["Items"][itemIndex]
-                                //             ['Quantity'] !=
-                                //         null) {
-                                //   itemTotal = snapshot.data["Items"][itemIndex]
-                                //           ['Price'] *
-                                //       snapshot.data["Items"][itemIndex]
-                                //           ['Quantity'];
-                                // } else {
-                                //   itemTotal = 0;
-                                // }
-                                // return Padding(
-                                //   padding: const EdgeInsets.all(20.0),
-                                //   child: Dialog(
-                                //     shape: RoundedRectangleBorder(
-                                //         borderRadius:
-                                //             BorderRadius.circular(15.0)),
-                                //     child: Container(
-                                //       width: double.infinity,
-                                //       height: double.infinity,
-                                //       padding: EdgeInsets.all(20),
-                                //       child: Column(
-                                //         mainAxisAlignment:
-                                //             MainAxisAlignment.start,
-                                //         crossAxisAlignment:
-                                //             CrossAxisAlignment.start,
-                                //         children: [
-                                //           //Back
-                                //           Container(
-                                //             width: double.infinity,
-                                //             child: Row(
-                                //               mainAxisAlignment:
-                                //                   MainAxisAlignment.start,
-                                //               children: [
-                                //                 //Text
-                                //                 Text(
-                                //                   'Agregar Item',
-                                //                 ),
-                                //                 Spacer(),
-                                //                 //IconButton
-                                //                 IconButton(
-                                //                     onPressed: () =>
-                                //                         Navigator.of(context)
-                                //                             .pop(),
-                                //                     icon: Icon(
-                                //                       Icons.close,
-                                //                       color: Colors.black,
-                                //                     )),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //           SizedBox(height: 20),
-                                //           //Producto
-                                //           Text(
-                                //             'Descripción',
-                                //             textAlign: TextAlign.start,
-                                //             style: TextStyle(
-                                //                 fontWeight: FontWeight.w400,
-                                //                 fontSize: 12,
-                                //                 color: Colors.black45),
-                                //           ),
-                                //           SizedBox(height: 5),
-                                //           Container(
-                                //             height: 50,
-                                //             width: double.infinity,
-                                //             child: Center(
-                                //               child: TextFormField(
-                                //                 textAlign: TextAlign.left,
-                                //                 style: TextStyle(
-                                //                     fontWeight: FontWeight.w400,
-                                //                     fontSize: 14,
-                                //                     color: Colors.grey[700]),
-                                //                 inputFormatters: [
-                                //                   LengthLimitingTextInputFormatter(
-                                //                       25)
-                                //                 ],
-                                //                 cursorColor: Colors.black,
-                                //                 decoration: InputDecoration(
-                                //                   floatingLabelBehavior:
-                                //                       FloatingLabelBehavior
-                                //                           .always,
-                                //                   hintText:
-                                //                       snapshot.data["Items"]
-                                //                           [itemIndex]['Name'],
-                                //                   label: Text(''),
-                                //                   labelStyle: TextStyle(
-                                //                       color: Colors.grey,
-                                //                       fontSize: 12),
-                                //                   errorStyle: TextStyle(
-                                //                       color:
-                                //                           Colors.redAccent[700],
-                                //                       fontSize: 14),
-                                //                   border:
-                                //                       new OutlineInputBorder(
-                                //                     borderRadius:
-                                //                         new BorderRadius
-                                //                             .circular(5.0),
-                                //                     borderSide: new BorderSide(
-                                //                       color: Colors.grey,
-                                //                     ),
-                                //                   ),
-                                //                   focusedBorder:
-                                //                       OutlineInputBorder(
-                                //                     borderRadius:
-                                //                         new BorderRadius
-                                //                             .circular(5.0),
-                                //                     borderSide: new BorderSide(
-                                //                       color: Colors.green,
-                                //                     ),
-                                //                   ),
-                                //                 ),
-                                //                 onChanged: (val) {
-                                //                   bloc.editProduct(
-                                //                       itemIndex, val);
-                                //                 },
-                                //               ),
-                                //             ),
-                                //           ),
-                                //           SizedBox(height: 15),
-                                //           //Categoria
-                                //           Text(
-                                //             'Categoría',
-                                //             textAlign: TextAlign.start,
-                                //             style: TextStyle(
-                                //                 fontWeight: FontWeight.w400,
-                                //                 fontSize: 12,
-                                //                 color: Colors.black45),
-                                //           ),
-                                //           SizedBox(height: 5),
-                                //           Container(
-                                //               decoration: BoxDecoration(
-                                //                 border: Border.all(
-                                //                     color: Colors.grey),
-                                //                 borderRadius:
-                                //                     BorderRadius.circular(5.0),
-                                //               ),
-                                //               padding: EdgeInsets.symmetric(
-                                //                   horizontal: 12),
-                                //               child: DropdownButton(
-                                //                 isExpanded: true,
-                                //                 underline: SizedBox(),
-                                //                 hint: Text(
-                                //                   snapshot.data["Items"]
-                                //                       [itemIndex]['Category'],
-                                //                   style: TextStyle(
-                                //                       fontWeight:
-                                //                           FontWeight.w400,
-                                //                       fontSize: 14,
-                                //                       color: Colors.grey[700]),
-                                //                 ),
-                                //                 style: TextStyle(
-                                //                     fontWeight: FontWeight.w400,
-                                //                     fontSize: 14,
-                                //                     color: Colors.grey[700]),
-                                //                 value: snapshot.data["Items"]
-                                //                     [itemIndex]['Category'],
-                                //                 items: widget.dropdownCategories
-                                //                     .map((x) {
-                                //                   return new DropdownMenuItem(
-                                //                     value: x,
-                                //                     child: new Text(x),
-                                //                     onTap: () {
-                                //                       setState(() {
-                                //                         categoryInt = widget
-                                //                             .dropdownCategories
-                                //                             .indexOf(x);
-                                //                         if (widget.costType ==
-                                //                             'Costo de Ventas') {
-                                //                           selectedAccount =
-                                //                               'Costo de Ventas';
-                                //                         }
-
-                                //                         if (widget.costType ==
-                                //                             'Costo de Ventas') {
-                                //                           bloc.changeAccount(
-                                //                               'Costo de Ventas');
-                                //                           bloc.editCategory(
-                                //                               itemIndex, x);
-                                //                         } else {
-                                //                           bloc.changeAccount(x);
-                                //                           bloc.editCategory(
-                                //                               itemIndex, x);
-                                //                         }
-
-                                //                         // bloc.editProduct(
-                                //                         //     i,
-                                //                         //     widget
-                                //                         //         .accountsProvider
-                                //                         //         .accountsMapping[widget.costType][categoryInt]['Description']);
-                                //                       });
-                                //                     },
-                                //                   );
-                                //                 }).toList(),
-                                //                 onChanged: (newValue) {
-                                //                   setState(() {
-                                //                     snapshot.data["Items"]
-                                //                             [itemIndex]
-                                //                         ['Category'] = newValue;
-                                //                   });
-                                //                 },
-                                //               )),
-                                //           SizedBox(height: 15),
-                                //           //Cantidad/Precio
-                                //           Container(
-                                //             height: 75,
-                                //             width: double.infinity,
-                                //             child: Row(
-                                //               mainAxisAlignment:
-                                //                   MainAxisAlignment.start,
-                                //               crossAxisAlignment:
-                                //                   CrossAxisAlignment.center,
-                                //               children: [
-                                //                 //Cantidad
-                                //                 Expanded(
-                                //                     flex: 3,
-                                //                     child: Column(
-                                //                       mainAxisAlignment:
-                                //                           MainAxisAlignment
-                                //                               .start,
-                                //                       crossAxisAlignment:
-                                //                           CrossAxisAlignment
-                                //                               .start,
-                                //                       children: [
-                                //                         Text(
-                                //                           'Cantidad ',
-                                //                           textAlign:
-                                //                               TextAlign.start,
-                                //                           style: TextStyle(
-                                //                               fontWeight:
-                                //                                   FontWeight
-                                //                                       .w400,
-                                //                               fontSize: 12,
-                                //                               color: Colors
-                                //                                   .black45),
-                                //                         ),
-                                //                         SizedBox(height: 5),
-                                //                         Expanded(
-                                //                           child: TextFormField(
-                                //                             initialValue: snapshot
-                                //                                 .data["Items"]
-                                //                                     [itemIndex]
-                                //                                     ['Quantity']
-                                //                                 .toString(),
-                                //                             textAlign: TextAlign
-                                //                                 .center,
-                                //                             style: TextStyle(
-                                //                                 fontWeight:
-                                //                                     FontWeight
-                                //                                         .w400,
-                                //                                 fontSize: 14,
-                                //                                 color: Colors
-                                //                                     .grey[700]),
-                                //                             validator: (val) =>
-                                //                                 val.contains(
-                                //                                         ',')
-                                //                                     ? "Usa punto"
-                                //                                     : null,
-                                //                             inputFormatters: [
-                                //                               FilteringTextInputFormatter
-                                //                                   .allow(RegExp(
-                                //                                       r'[0-9]+[,.]{0,1}[0-9]*')),
-                                //                               TextInputFormatter
-                                //                                   .withFunction(
-                                //                                 (oldValue,
-                                //                                         newValue) =>
-                                //                                     newValue
-                                //                                         .copyWith(
-                                //                                   text: newValue
-                                //                                       .text
-                                //                                       .replaceAll(
-                                //                                           ',',
-                                //                                           '.'),
-                                //                                 ),
-                                //                               ),
-                                //                             ],
-                                //                             keyboardType:
-                                //                                 TextInputType
-                                //                                     .number,
-                                //                             cursorColor:
-                                //                                 Colors.black,
-                                //                             decoration:
-                                //                                 InputDecoration(
-                                //                               floatingLabelBehavior:
-                                //                                   FloatingLabelBehavior
-                                //                                       .always,
-                                //                               label: Text(''),
-                                //                               labelStyle:
-                                //                                   TextStyle(
-                                //                                       color: Colors
-                                //                                           .grey,
-                                //                                       fontSize:
-                                //                                           12),
-                                //                               errorStyle: TextStyle(
-                                //                                   color: Colors
-                                //                                           .redAccent[
-                                //                                       700],
-                                //                                   fontSize: 14),
-                                //                               border:
-                                //                                   new OutlineInputBorder(
-                                //                                 borderRadius:
-                                //                                     new BorderRadius
-                                //                                             .circular(
-                                //                                         5.0),
-                                //                                 borderSide:
-                                //                                     new BorderSide(
-                                //                                   color: Colors
-                                //                                       .grey,
-                                //                                 ),
-                                //                               ),
-                                //                               focusedBorder:
-                                //                                   OutlineInputBorder(
-                                //                                 borderRadius:
-                                //                                     new BorderRadius
-                                //                                             .circular(
-                                //                                         5.0),
-                                //                                 borderSide:
-                                //                                     new BorderSide(
-                                //                                   color: Colors
-                                //                                       .green,
-                                //                                 ),
-                                //                               ),
-                                //                             ),
-                                //                             onChanged: (val) {
-                                //                               bloc.editQuantity(
-                                //                                   itemIndex,
-                                //                                   double.parse(
-                                //                                       val));
-                                //                             },
-                                //                           ),
-                                //                         ),
-                                //                       ],
-                                //                     )),
-                                //                 SizedBox(width: 10),
-                                //                 //Precio
-                                //                 Expanded(
-                                //                     flex: 5,
-                                //                     child: Column(
-                                //                       mainAxisAlignment:
-                                //                           MainAxisAlignment
-                                //                               .start,
-                                //                       crossAxisAlignment:
-                                //                           CrossAxisAlignment
-                                //                               .start,
-                                //                       children: [
-                                //                         Text(
-                                //                           'Precio',
-                                //                           textAlign:
-                                //                               TextAlign.start,
-                                //                           style: TextStyle(
-                                //                               fontWeight:
-                                //                                   FontWeight
-                                //                                       .w400,
-                                //                               fontSize: 12,
-                                //                               color: Colors
-                                //                                   .black45),
-                                //                         ),
-                                //                         SizedBox(height: 5),
-                                //                         Expanded(
-                                //                           child: TextFormField(
-                                //                             textAlign: TextAlign
-                                //                                 .center,
-                                //                             style: TextStyle(
-                                //                                 fontWeight:
-                                //                                     FontWeight
-                                //                                         .w400,
-                                //                                 fontSize: 14,
-                                //                                 color: Colors
-                                //                                     .grey[700]),
-                                //                             validator: (val) =>
-                                //                                 val.contains(
-                                //                                         ',')
-                                //                                     ? "Usa punto"
-                                //                                     : null,
-                                //                             inputFormatters: [
-                                //                               FilteringTextInputFormatter
-                                //                                   .allow(RegExp(
-                                //                                       r'[0-9]+[,.]{0,1}[0-9]*')),
-                                //                               TextInputFormatter
-                                //                                   .withFunction(
-                                //                                 (oldValue,
-                                //                                         newValue) =>
-                                //                                     newValue
-                                //                                         .copyWith(
-                                //                                   text: newValue
-                                //                                       .text
-                                //                                       .replaceAll(
-                                //                                           ',',
-                                //                                           '.'),
-                                //                                 ),
-                                //                               ),
-                                //                             ],
-                                //                             keyboardType:
-                                //                                 TextInputType
-                                //                                     .number,
-                                //                             cursorColor:
-                                //                                 Colors.black,
-                                //                             decoration:
-                                //                                 InputDecoration(
-                                //                               floatingLabelBehavior:
-                                //                                   FloatingLabelBehavior
-                                //                                       .always,
-                                //                               hintText:
-                                //                                   '\$0.00',
-                                //                               label: Text(''),
-                                //                               labelStyle:
-                                //                                   TextStyle(
-                                //                                       color: Colors
-                                //                                           .grey,
-                                //                                       fontSize:
-                                //                                           12),
-                                //                               errorStyle: TextStyle(
-                                //                                   color: Colors
-                                //                                           .redAccent[
-                                //                                       700],
-                                //                                   fontSize: 14),
-                                //                               border:
-                                //                                   new OutlineInputBorder(
-                                //                                 borderRadius:
-                                //                                     new BorderRadius
-                                //                                             .circular(
-                                //                                         5.0),
-                                //                                 borderSide:
-                                //                                     new BorderSide(
-                                //                                   color: Colors
-                                //                                       .grey,
-                                //                                 ),
-                                //                               ),
-                                //                               focusedBorder:
-                                //                                   OutlineInputBorder(
-                                //                                 borderRadius:
-                                //                                     new BorderRadius
-                                //                                             .circular(
-                                //                                         5.0),
-                                //                                 borderSide:
-                                //                                     new BorderSide(
-                                //                                   color: Colors
-                                //                                       .green,
-                                //                                 ),
-                                //                               ),
-                                //                             ),
-                                //                             onChanged: (val) {
-                                //                               if (val != null &&
-                                //                                   val != '') {
-                                //                                 bloc.editPrice(
-                                //                                     itemIndex,
-                                //                                     double.tryParse(
-                                //                                         (val)));
-                                //                               } else if (val ==
-                                //                                   '') {
-                                //                                 bloc.editPrice(
-                                //                                     itemIndex,
-                                //                                     0);
-                                //                               }
-                                //                             },
-                                //                           ),
-                                //                         ),
-                                //                       ],
-                                //                     )),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //           SizedBox(height: 20),
-                                //           //Total
-                                //           Container(
-                                //             width: double.infinity,
-                                //             child: Text(
-                                //               'TOTAL: ${NumberFormat.simpleCurrency().format(0)}',
-                                //               textAlign: TextAlign.right,
-                                //               style: TextStyle(
-                                //                   fontWeight: FontWeight.w600,
-                                //                   fontSize: 16,
-                                //                   color: Colors.black),
-                                //             ),
-                                //           ),
-                                //           Spacer(),
-                                //           //Agregar Boton
-                                //           Container(
-                                //               height: 35.0,
-                                //               width: double.infinity,
-                                //               child: ElevatedButton(
-                                //                 style: ElevatedButton.styleFrom(
-                                //                   backgroundColor: Colors.black,
-                                //                   minimumSize: Size(300, 50),
-                                //                   padding: EdgeInsets.symmetric(
-                                //                       horizontal: 15),
-                                //                   shape:
-                                //                       const RoundedRectangleBorder(
-                                //                     borderRadius:
-                                //                         BorderRadius.all(
-                                //                             Radius.circular(8)),
-                                //                   ),
-                                //                 ),
-                                //                 onPressed: () =>
-                                //                     Navigator.of(context).pop(),
-                                //                 child: Text(
-                                //                   "Agregar",
-                                //                   textAlign: TextAlign.center,
-                                //                   style: TextStyle(
-                                //                       fontSize: 12,
-                                //                       fontWeight:
-                                //                           FontWeight.w500,
-                                //                       color: Colors.white),
-                                //                 ),
-                                //               ))
-                                //         ],
-                                //       ),
-                                //     ),
-                                //   ),
-                                // );
+                                return StreamProvider<List<Supply>>.value(
+                                  value: DatabaseService().suppliesListbyVendor(
+                                      widget.activeBusiness,
+                                      bloc.expenseItems['Vendor']
+                                          .toLowerCase()),
+                                  initialData: null,
+                                  child: AddExpenseItem(
+                                      addExpenseItem,
+                                      snapshot,
+                                      snapshot.data['Items'].length,
+                                      widget.dropdownCategories,
+                                      false,
+                                      true,
+                                      selectedSupplier),
+                                );
                               });
                         },
                         child: Container(
