@@ -53,13 +53,15 @@ class _ExpenseInputState extends State<ExpenseInput> {
         } else {
           highlevelMapping.pnlMapping[type]
               .forEach((y) => dropdownCategories.add(y));
-          bloc.addToExpenseList({
-            'Name': '',
-            'Price': 0,
-            'Quantity': 1,
-            'Total Price': 0,
-            'Category': dropdownCategories[0],
-          });
+          if (MediaQuery.of(context).size.width > 650) {
+            bloc.addToExpenseList({
+              'Name': '',
+              'Price': 0,
+              'Quantity': 1,
+              'Total Price': 0,
+              'Category': dropdownCategories[0],
+            });
+          }
         }
 
         bloc.changeCostType(costType);

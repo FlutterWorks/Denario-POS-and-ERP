@@ -460,7 +460,13 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
             child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               //Back
               IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    setState(() {
+                      showList = false;
+                    });
+                    bloc.removeAllFromExpense();
+                    Navigator.pop(context);
+                  },
                   icon: Icon(Icons.arrow_back)),
               SizedBox(width: 15),
               Text(

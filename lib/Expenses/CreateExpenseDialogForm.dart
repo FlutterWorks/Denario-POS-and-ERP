@@ -47,13 +47,15 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
   Map updateSuppliesFromList = {};
   void nothing(BuildContext context) {}
 
-  void addExpenseItem(String name, String category, double qty, double price) {
+  void addExpenseItem(String name, String category, double qty, double price,
+      double basePrice) {
     bloc.addToExpenseList({
       'Name': name,
       'Price': price,
       'Quantity': qty,
       'Total Price': qty * price,
       'Category': category,
+      'Base Price': basePrice
     });
   }
 
@@ -665,7 +667,6 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                       initialData: [],
                                       child: AddExpenseItem(
                                         addExpenseItem,
-                                        snapshot,
                                         i,
                                         widget.dropdownCategories,
                                         true,
@@ -679,6 +680,8 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                             ['Category'],
                                         qty: snapshot.data["Items"][i]
                                             ['Quantity'],
+                                        basePrice: snapshot.data["Items"][i]
+                                            ['Base Price'],
                                       ),
                                     );
                                   });
@@ -732,123 +735,143 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                           ],
                                         ),
                                       ), //Total
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(
-                                          '${NumberFormat.simpleCurrency().format(itemTotal)}',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: Colors.grey[700]),
-                                        ),
-                                      ),
+                                      //Button
+                                      ((snapshot.data["Items"][i]
+                                                      ['Base Price'] !=
+                                                  null) &&
+                                              (snapshot.data["Items"][i]
+                                                      ['Base Price'] !=
+                                                  snapshot.data["Items"][i]
+                                                      ['Price']))
+                                          ? Expanded(
+                                              flex: 2,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    '${NumberFormat.simpleCurrency().format(itemTotal)}',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 14,
+                                                        color:
+                                                            Colors.grey[700]),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  ElevatedButton(
+                                                      style: ButtonStyle(
+                                                        side: MaterialStateProperty.all(BorderSide(
+                                                            width: 1,
+                                                            color: (updateSuppliesFromList
+                                                                    .containsKey(
+                                                                        snapshot.data["Items"][i]
+                                                                            [
+                                                                            'Name']))
+                                                                ? Colors.green
+                                                                : Colors.grey)),
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all<Color>(
+                                                                    Colors
+                                                                        .white),
+                                                        overlayColor:
+                                                            MaterialStateProperty
+                                                                .resolveWith<
+                                                                    Color>(
+                                                          (Set<MaterialState>
+                                                              states) {
+                                                            if (states.contains(
+                                                                MaterialState
+                                                                    .hovered))
+                                                              return Colors.grey
+                                                                  .shade100;
+                                                            if (states.contains(
+                                                                    MaterialState
+                                                                        .focused) ||
+                                                                states.contains(
+                                                                    MaterialState
+                                                                        .pressed))
+                                                              return Colors.grey
+                                                                  .shade200;
+                                                            return null; // Defer to the widget's default.
+                                                          },
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          if (updateSuppliesFromList
+                                                              .containsKey(snapshot
+                                                                          .data[
+                                                                      "Items"][
+                                                                  i]['Name'])) {
+                                                            updateSuppliesFromList
+                                                                .remove(snapshot
+                                                                            .data[
+                                                                        "Items"]
+                                                                    [
+                                                                    i]['Name']);
+                                                            widget.removeSupplyFromList(
+                                                                snapshot.data[
+                                                                        "Items"]
+                                                                    [
+                                                                    i]['Name']);
+                                                          } else {
+                                                            updateSuppliesFromList[
+                                                                snapshot.data[
+                                                                        "Items"][i]
+                                                                    [
+                                                                    'Name']] = snapshot
+                                                                        .data[
+                                                                    "Items"][i]
+                                                                ['Price'];
+                                                            widget.addSupplyToList(
+                                                                snapshot.data[
+                                                                        "Items"]
+                                                                    [i]['Name'],
+                                                                snapshot.data[
+                                                                        "Items"]
+                                                                    [
+                                                                    i]['Price']);
+                                                          }
+                                                        });
+                                                      },
+                                                      child: Center(
+                                                          child: Text(
+                                                        'Actualizar costo',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: (updateSuppliesFromList
+                                                                    .containsKey(
+                                                                        snapshot.data["Items"][i]
+                                                                            [
+                                                                            'Name']))
+                                                                ? Colors.green
+                                                                : Colors.black,
+                                                            fontSize: 11),
+                                                      ))),
+                                                ],
+                                              ),
+                                            )
+                                          : Expanded(
+                                              flex: 2,
+                                              child: Text(
+                                                '${NumberFormat.simpleCurrency().format(itemTotal)}',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14,
+                                                    color: Colors.grey[700]),
+                                              ),
+                                            ),
                                     ],
                                   ),
-                                  SizedBox(
-                                      height: (snapshot.data["Items"][i]
-                                                  ['Base Price'] !=
-                                              snapshot.data["Items"][i]
-                                                  ['Price'])
-                                          ? 10
-                                          : 0),
-                                  //Button
-                                  ((snapshot.data["Items"][i]['Base Price'] !=
-                                              null) &&
-                                          (snapshot.data["Items"][i]
-                                                  ['Base Price'] !=
-                                              snapshot.data["Items"][i]
-                                                  ['Price']))
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            ElevatedButton(
-                                                style: ButtonStyle(
-                                                  side: MaterialStateProperty.all(BorderSide(
-                                                      width: 1,
-                                                      color: (updateSuppliesFromList
-                                                              .containsKey(snapshot
-                                                                          .data[
-                                                                      "Items"]
-                                                                  [i]['Name']))
-                                                          ? Colors.green
-                                                          : Colors.grey)),
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(Colors.white),
-                                                  overlayColor:
-                                                      MaterialStateProperty
-                                                          .resolveWith<Color>(
-                                                    (Set<MaterialState>
-                                                        states) {
-                                                      if (states.contains(
-                                                          MaterialState
-                                                              .hovered))
-                                                        return Colors
-                                                            .grey.shade100;
-                                                      if (states.contains(
-                                                              MaterialState
-                                                                  .focused) ||
-                                                          states.contains(
-                                                              MaterialState
-                                                                  .pressed))
-                                                        return Colors
-                                                            .grey.shade200;
-                                                      return null; // Defer to the widget's default.
-                                                    },
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    if (updateSuppliesFromList
-                                                        .containsKey(snapshot
-                                                                .data["Items"]
-                                                            [i]['Name'])) {
-                                                      updateSuppliesFromList
-                                                          .remove(snapshot
-                                                                  .data["Items"]
-                                                              [i]['Name']);
-                                                      widget
-                                                          .removeSupplyFromList(
-                                                              snapshot.data[
-                                                                      "Items"]
-                                                                  [i]['Name']);
-                                                    } else {
-                                                      updateSuppliesFromList[
-                                                              snapshot.data[
-                                                                      "Items"]
-                                                                  [i]['Name']] =
-                                                          snapshot.data["Items"]
-                                                              [i]['Price'];
-                                                      widget.addSupplyToList(
-                                                          snapshot.data["Items"]
-                                                              [i]['Name'],
-                                                          snapshot.data["Items"]
-                                                              [i]['Price']);
-                                                    }
-                                                  });
-                                                },
-                                                child: Center(
-                                                    child: Text(
-                                                  'Actualizar costo',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: (updateSuppliesFromList
-                                                              .containsKey(snapshot
-                                                                          .data[
-                                                                      "Items"]
-                                                                  [i]['Name']))
-                                                          ? Colors.green
-                                                          : Colors.black,
-                                                      fontSize: 11),
-                                                ))),
-                                            SizedBox(
-                                              width: 50,
-                                            )
-                                          ],
-                                        )
-                                      : SizedBox()
                                 ],
                               ),
                             ),
@@ -879,7 +902,6 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                   initialData: null,
                                   child: AddExpenseItem(
                                       addExpenseItem,
-                                      snapshot,
                                       snapshot.data['Items'].length,
                                       widget.dropdownCategories,
                                       false,
