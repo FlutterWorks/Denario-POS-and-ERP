@@ -546,45 +546,11 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                             .cashRegisterStatus(userProfile.activeBusiness)),
                   ],
                   child: Container(
-                      height: 950,
                       width: double.infinity,
                       padding: EdgeInsets.all(20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          //Graph
-                          Container(
-                            height: 375,
-                            width: double.infinity,
-                            padding: EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: new BorderRadius.circular(12.0),
-                              boxShadow: <BoxShadow>[
-                                new BoxShadow(
-                                  color: Colors.grey[350],
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 10.0,
-                                )
-                              ],
-                            ),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  //Title
-                                  Text(
-                                    'Resumen de Gastos',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                  SizedBox(height: 15),
-                                  //Expenses List
-                                  ExpenseSummary(userProfile.activeBusiness)
-                                ]),
-                          ),
-                          SizedBox(height: 20),
                           //ExpenseList
                           Container(
                             height: 500,
@@ -767,6 +733,39 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                       ),
                               ],
                             ),
+                          ),
+                          SizedBox(height: 20),
+                          //Graph
+                          Container(
+                            height: 375,
+                            width: double.infinity,
+                            padding: EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: new BorderRadius.circular(12.0),
+                              boxShadow: <BoxShadow>[
+                                new BoxShadow(
+                                  color: Colors.grey[350],
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 10.0,
+                                )
+                              ],
+                            ),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  //Title
+                                  Text(
+                                    'Resumen de Gastos',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                  SizedBox(height: 15),
+                                  //Expenses List
+                                  ExpenseSummary(userProfile.activeBusiness)
+                                ]),
                           ),
                         ],
                       )),

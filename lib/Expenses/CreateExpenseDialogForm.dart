@@ -744,7 +744,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                                   snapshot.data["Items"][i]
                                                       ['Price']))
                                           ? Expanded(
-                                              flex: 2,
+                                              flex: 3,
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -860,7 +860,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                               ),
                                             )
                                           : Expanded(
-                                              flex: 2,
+                                              flex: 3,
                                               child: Text(
                                                 '${NumberFormat.simpleCurrency().format(itemTotal)}',
                                                 textAlign: TextAlign.center,
