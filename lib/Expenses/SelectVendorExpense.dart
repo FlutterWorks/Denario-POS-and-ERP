@@ -646,7 +646,11 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
-                      showDialog(
+                      showModalBottomSheet(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0)),
+                          isScrollControlled: true,
                           context: context,
                           builder: (context) {
                             return VendorSearchBar(widget.activeBusiness,

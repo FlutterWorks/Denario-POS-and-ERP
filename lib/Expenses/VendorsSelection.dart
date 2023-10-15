@@ -21,9 +21,8 @@ class VendorsSelection extends StatelessWidget {
             itemBuilder: (context, i) {
               return Container(
                 width: double.infinity,
-                height: 75,
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
+                height: 50,
+                child: TextButton(
                     onPressed: () {
                       selectVendor(suppliers[i]);
                       Navigator.of(context).pop();

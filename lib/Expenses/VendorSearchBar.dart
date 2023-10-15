@@ -23,33 +23,15 @@ class _VendorSearchBarState extends State<VendorSearchBar> {
   String vendorName = '';
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            //Back
-            Container(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  //IconButton
-                  IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.black,
-                      )),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
-            //Search
-            Container(
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.75,
+      child: Column(
+        children: [
+          //Search
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
               height: 50,
               width: double.infinity,
               child: TextFormField(
@@ -92,21 +74,20 @@ class _VendorSearchBarState extends State<VendorSearchBar> {
                 },
               ),
             ),
-            SizedBox(height: 20),
-            //Suggested or Search findings
-            (vendorName == '')
-                ? StreamProvider<List<Supplier>>.value(
-                    value: DatabaseService().suppliersListbyCategory(
-                        widget.activeBusiness, widget.costType),
-                    initialData: null,
-                    child: VendorsSelection(widget.selectVendor))
-                : StreamProvider<List<Supplier>>.value(
-                    value: DatabaseService().suppliersList(
-                        widget.activeBusiness, vendorName.toLowerCase()),
-                    initialData: null,
-                    child: VendorsSelection(widget.selectVendor))
-          ],
-        ),
+          ),
+          //Suggested or Search findings
+          (vendorName == '')
+              ? StreamProvider<List<Supplier>>.value(
+                  value: DatabaseService().suppliersListbyCategory(
+                      widget.activeBusiness, widget.costType),
+                  initialData: null,
+                  child: VendorsSelection(widget.selectVendor))
+              : StreamProvider<List<Supplier>>.value(
+                  value: DatabaseService().suppliersList(
+                      widget.activeBusiness, vendorName.toLowerCase()),
+                  initialData: null,
+                  child: VendorsSelection(widget.selectVendor))
+        ],
       ),
     );
   }

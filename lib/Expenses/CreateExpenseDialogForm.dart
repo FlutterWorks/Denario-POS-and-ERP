@@ -655,7 +655,12 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                               foregroundColor: Colors.grey,
                             ),
                             onPressed: () {
-                              showDialog(
+                              showModalBottomSheet(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(15.0)),
+                                  isScrollControlled: true,
                                   context: context,
                                   builder: (context) {
                                     return StreamProvider<List<Supply>>.value(
@@ -891,7 +896,11 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                           foregroundColor: Colors.black,
                         ),
                         onPressed: () {
-                          showDialog(
+                          showModalBottomSheet(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0)),
+                              isScrollControlled: true,
                               context: context,
                               builder: (context) {
                                 return StreamProvider<List<Supply>>.value(
