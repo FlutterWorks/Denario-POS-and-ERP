@@ -382,7 +382,7 @@ class _SupplierDataState extends State<SupplierData> {
             : Row(
                 children: [
                   Text(
-                    'Tipos de costos asociados',
+                    'Costos asociados',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,

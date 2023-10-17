@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth > 650) {
+          if (constraints.maxWidth > 750) {
             return HomeDesk();
           } else {
             return HomeMobile();

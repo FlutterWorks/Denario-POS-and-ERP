@@ -149,13 +149,19 @@ class _NewSupplyState extends State<NewSupply> {
                     },
                     icon: Icon(Icons.arrow_back),
                     iconSize: 20.0),
-                SizedBox(width: 25),
+                SizedBox(
+                    width: (MediaQuery.of(context).size.width > 650) ? 25 : 20),
                 Text(
                   (widget.supply == null)
                       ? 'Agregar Insumo'
                       : widget.supply.supply,
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 28),
+                  style: TextStyle(
+                      fontWeight: (MediaQuery.of(context).size.width > 650)
+                          ? FontWeight.w900
+                          : FontWeight.bold,
+                      fontSize:
+                          (MediaQuery.of(context).size.width > 650) ? 28 : 18),
                 ),
               ],
             ),
@@ -163,19 +169,24 @@ class _NewSupplyState extends State<NewSupply> {
           SizedBox(height: 35),
           //Form
           Container(
-            width: 600,
-            padding: EdgeInsets.all(40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(25),
-              boxShadow: <BoxShadow>[
-                new BoxShadow(
-                  color: Colors.grey[350],
-                  offset: new Offset(0, 0),
-                  blurRadius: 10.0,
-                )
-              ],
-            ),
+            width: (MediaQuery.of(context).size.width > 650)
+                ? 600
+                : double.infinity,
+            padding: EdgeInsets.all(
+                (MediaQuery.of(context).size.width > 650) ? 40 : 20),
+            decoration: (MediaQuery.of(context).size.width > 650)
+                ? BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: <BoxShadow>[
+                      new BoxShadow(
+                        color: Colors.grey[350],
+                        offset: new Offset(0, 0),
+                        blurRadius: 10.0,
+                      )
+                    ],
+                  )
+                : BoxDecoration(),
             child: Form(
               key: _formKey,
               child: Column(
@@ -233,13 +244,264 @@ class _NewSupplyState extends State<NewSupply> {
                   ),
                   SizedBox(height: 20),
                   //Price/Qty/Unit
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      //Price
-                      Expanded(
-                        flex: 3,
-                        child: Column(
+                  (MediaQuery.of(context).size.width > 650)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            //Price
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Precio de compra*',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  (totalIngredientsCost() <= 0)
+                                      ? Container(
+                                          width: double.infinity,
+                                          child: TextFormField(
+                                            enabled: true,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                            cursorColor: Colors.grey,
+                                            initialValue: (price > 0)
+                                                ? price.toString()
+                                                : '',
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(
+                                                      r'[0-9]+[,.]{0,1}[0-9]*')),
+                                              TextInputFormatter.withFunction(
+                                                (oldValue, newValue) =>
+                                                    newValue.copyWith(
+                                                  text: newValue.text
+                                                      .replaceAll(',', '.'),
+                                                ),
+                                              ),
+                                            ],
+                                            validator: (val) {
+                                              if (val == null || val.isEmpty) {
+                                                return "Agrega un precio";
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                            decoration: InputDecoration(
+                                              hintText: '0.00',
+                                              prefixIcon: Icon(
+                                                Icons.attach_money,
+                                                color: Colors.grey,
+                                              ),
+                                              focusColor: Colors.black,
+                                              hintStyle: TextStyle(
+                                                  color: Colors.black45,
+                                                  fontSize: 14),
+                                              errorStyle: TextStyle(
+                                                  color: Colors.redAccent[700],
+                                                  fontSize: 12),
+                                              border: new OutlineInputBorder(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        12.0),
+                                                borderSide: new BorderSide(
+                                                  color: Colors.grey[350],
+                                                ),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        12.0),
+                                                borderSide: new BorderSide(
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                            ),
+                                            onChanged: (value) {
+                                              if (value != '' &&
+                                                  value != null) {
+                                                setState(() {
+                                                  price = double.parse(value);
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  price = 0;
+                                                });
+                                              }
+                                            },
+                                          ),
+                                        )
+                                      : Container(
+                                          width: double.infinity,
+                                          child: TextFormField(
+                                            enabled: false,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                            cursorColor: Colors.grey,
+                                            controller: priceController,
+                                            decoration: InputDecoration(
+                                              hintText: '0.00',
+                                              prefixIcon: Icon(
+                                                Icons.attach_money,
+                                                color: Colors.grey,
+                                              ),
+                                              focusColor: Colors.black,
+                                              hintStyle: TextStyle(
+                                                  color: Colors.black45,
+                                                  fontSize: 14),
+                                              errorStyle: TextStyle(
+                                                  color: Colors.redAccent[700],
+                                                  fontSize: 12),
+                                              border: new OutlineInputBorder(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        12.0),
+                                                borderSide: new BorderSide(
+                                                  color: Colors.grey[350],
+                                                ),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        12.0),
+                                                borderSide: new BorderSide(
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            //Qty
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Cantidad*',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    width: double.infinity,
+                                    child: TextFormField(
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                      cursorColor: Colors.grey,
+                                      initialValue:
+                                          qty != null ? qty.toString() : '',
+                                      decoration: InputDecoration(
+                                        hintText: '0',
+                                        focusColor: Colors.black,
+                                        hintStyle: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 14),
+                                        errorStyle: TextStyle(
+                                            color: Colors.redAccent[700],
+                                            fontSize: 12),
+                                        border: new OutlineInputBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(12.0),
+                                          borderSide: new BorderSide(
+                                            color: Colors.grey[350],
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(12.0),
+                                          borderSide: new BorderSide(
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          qty = double.parse(value);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            //Unit
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Unidad de medida*',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 12),
+                                      child: DropdownButton(
+                                        isExpanded: true,
+                                        underline: SizedBox(),
+                                        hint: Text(
+                                          'Gramos',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                              color: Colors.grey[700]),
+                                        ),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                            color: Colors.grey[700]),
+                                        value: unit,
+                                        items: unitList.map((x) {
+                                          return new DropdownMenuItem(
+                                            value: x,
+                                            child: new Text(x),
+                                            onTap: () {
+                                              setState(() {
+                                                unit = x;
+                                              });
+                                            },
+                                          );
+                                        }).toList(),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            unit = newValue;
+                                          });
+                                        },
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -360,123 +622,133 @@ class _NewSupplyState extends State<NewSupply> {
                                   ),
                           ],
                         ),
-                      ),
-                      SizedBox(width: 20),
-                      //Qty
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(height: 20),
+                  (MediaQuery.of(context).size.width > 650)
+                      ? SizedBox()
+                      : Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              'Cantidad*',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Colors.black45),
+                            //Qty
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Cantidad*',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    width: double.infinity,
+                                    child: TextFormField(
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                      cursorColor: Colors.grey,
+                                      initialValue:
+                                          qty != null ? qty.toString() : '',
+                                      decoration: InputDecoration(
+                                        hintText: '0',
+                                        focusColor: Colors.black,
+                                        hintStyle: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 14),
+                                        errorStyle: TextStyle(
+                                            color: Colors.redAccent[700],
+                                            fontSize: 12),
+                                        border: new OutlineInputBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(12.0),
+                                          borderSide: new BorderSide(
+                                            color: Colors.grey[350],
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(12.0),
+                                          borderSide: new BorderSide(
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          qty = double.parse(value);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(height: 10),
-                            Container(
-                              width: double.infinity,
-                              child: TextFormField(
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                                cursorColor: Colors.grey,
-                                initialValue: qty != null ? qty.toString() : '',
-                                decoration: InputDecoration(
-                                  hintText: '0',
-                                  focusColor: Colors.black,
-                                  hintStyle: TextStyle(
-                                      color: Colors.black45, fontSize: 14),
-                                  errorStyle: TextStyle(
-                                      color: Colors.redAccent[700],
-                                      fontSize: 12),
-                                  border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.grey[350],
-                                    ),
+                            SizedBox(width: 20),
+                            //Unit
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Unidad de medida*',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
                                   ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(12.0),
-                                    borderSide: new BorderSide(
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    qty = double.parse(value);
-                                  });
-                                },
+                                  SizedBox(height: 10),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 12),
+                                      child: DropdownButton(
+                                        isExpanded: true,
+                                        underline: SizedBox(),
+                                        hint: Text(
+                                          'Gramos',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                              color: Colors.grey[700]),
+                                        ),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                            color: Colors.grey[700]),
+                                        value: unit,
+                                        items: unitList.map((x) {
+                                          return new DropdownMenuItem(
+                                            value: x,
+                                            child: new Text(x),
+                                            onTap: () {
+                                              setState(() {
+                                                unit = x;
+                                              });
+                                            },
+                                          );
+                                        }).toList(),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            unit = newValue;
+                                          });
+                                        },
+                                      )),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(width: 20),
-                      //Unit
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Unidad de medida*',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Colors.black45),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: DropdownButton(
-                                  isExpanded: true,
-                                  underline: SizedBox(),
-                                  hint: Text(
-                                    'Gramos',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        color: Colors.grey[700]),
-                                  ),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                      color: Colors.grey[700]),
-                                  value: unit,
-                                  items: unitList.map((x) {
-                                    return new DropdownMenuItem(
-                                      value: x,
-                                      child: new Text(x),
-                                      onTap: () {
-                                        setState(() {
-                                          unit = x;
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      unit = newValue;
-                                    });
-                                  },
-                                )),
-                          ],
-                        ),
-                      ),
-                    ],
+                  SizedBox(
+                    height: (MediaQuery.of(context).size.width > 650) ? 0 : 20,
                   ),
-                  SizedBox(height: 20),
                   //Vendor Search Bar
                   Text(
                     'Proveedor',
@@ -578,233 +850,224 @@ class _NewSupplyState extends State<NewSupply> {
 
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 15.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  //Ingrediente
-                                  Expanded(
-                                    flex: 6,
-                                    child: Container(
+                              child: Container(
+                                width: double.infinity,
+                                height: 120,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    //Ingrediente
+                                    Container(
                                       width: double.infinity,
-                                      child: TextFormField(
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 14),
-                                        cursorColor: Colors.grey,
-                                        validator: (val) {
-                                          if (val == null || val.isEmpty) {
-                                            return "Agrega un ingrediente válido";
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        initialValue: ingredients[i]
-                                            ['Ingredient'],
-                                        decoration: InputDecoration(
-                                          hintText: 'Insumo',
-                                          focusColor: Colors.black,
-                                          hintStyle: TextStyle(
-                                              color: Colors.black45,
-                                              fontSize: 12),
-                                          errorStyle: TextStyle(
-                                              color: Colors.redAccent[700],
-                                              fontSize: 12),
-                                          border: new OutlineInputBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            borderSide: new BorderSide(
-                                              color: Colors.grey[350],
-                                            ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            (ingredientTotal.isNaN ||
+                                                    ingredientTotal
+                                                        .isInfinite ||
+                                                    ingredientTotal.isNegative)
+                                                ? '${ingredients[i]['Ingredient']} \$0'
+                                                : '${ingredients[i]['Ingredient']} \$${ingredientTotal.toStringAsFixed(0)}',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            borderSide: new BorderSide(
-                                              color: Colors.green,
-                                            ),
-                                          ),
-                                        ),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            ingredients[i]['Ingredient'] =
-                                                value;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 15),
-                                  //Amount
-                                  Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: TextFormField(
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 14),
-                                        textAlign: TextAlign.center,
-                                        initialValue: ingredients[i]
-                                                    ['Quantity'] ==
-                                                0
-                                            ? ''
-                                            : '${ingredients[i]['Quantity']}',
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
-                                          TextInputFormatter.withFunction(
-                                            (oldValue, newValue) =>
-                                                newValue.copyWith(
-                                              text: newValue.text
-                                                  .replaceAll(',', '.'),
-                                            ),
-                                          ),
+                                          Spacer(),
+                                          //Delete
+                                          IconButton(
+                                              tooltip: 'Eliminar',
+                                              padding: EdgeInsets.all(2),
+                                              splashRadius: 5,
+                                              onPressed: () {
+                                                ingredients.removeAt(i);
+
+                                                final random = Random();
+                                                const availableChars =
+                                                    'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                                                final randomString = List.generate(
+                                                    10,
+                                                    (index) => availableChars[
+                                                        random.nextInt(
+                                                            availableChars
+                                                                .length)]).join();
+                                                setState(() {
+                                                  redrawObject =
+                                                      ValueKey(randomString);
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.close,
+                                                size: 16,
+                                              ))
                                         ],
-                                        cursorColor: Colors.grey,
-                                        decoration: InputDecoration(
-                                          focusColor: Colors.black,
-                                          floatingLabelStyle:
-                                              TextStyle(color: Colors.grey),
-                                          labelStyle: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12),
-                                          labelText:
-                                              (ingredients[i]['Unit'] != null)
-                                                  ? ingredients[i]['Unit']
-                                                  : 'Cantidad',
-                                          errorStyle: TextStyle(
-                                              color: Colors.redAccent[700],
-                                              fontSize: 12),
-                                          border: new OutlineInputBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            borderSide: new BorderSide(
-                                              color: Colors.grey[350],
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            borderSide: new BorderSide(
-                                              color: Colors.green,
-                                            ),
-                                          ),
-                                        ),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            ingredients[i]['Quantity'] =
-                                                double.parse(value);
-                                          });
-                                        },
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(width: 15),
-                                  //Yield
-                                  Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: TextFormField(
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 14),
-                                        textAlign: TextAlign.center,
-                                        initialValue:
-                                            ingredients[i]['Yield'] == 0
-                                                ? ''
-                                                : '${ingredients[i]['Yield']}',
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
-                                          TextInputFormatter.withFunction(
-                                            (oldValue, newValue) =>
-                                                newValue.copyWith(
-                                              text: newValue.text
-                                                  .replaceAll(',', '.'),
-                                            ),
-                                          ),
-                                        ],
-                                        cursorColor: Colors.grey,
-                                        decoration: InputDecoration(
-                                          focusColor: Colors.black,
-                                          labelText: 'Rinde para',
-                                          floatingLabelStyle:
-                                              TextStyle(color: Colors.grey),
-                                          labelStyle: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12),
-                                          errorStyle: TextStyle(
-                                              color: Colors.redAccent[700],
-                                              fontSize: 12),
-                                          border: new OutlineInputBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            borderSide: new BorderSide(
-                                              color: Colors.grey[350],
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            borderSide: new BorderSide(
-                                              color: Colors.green,
-                                            ),
-                                          ),
-                                        ),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            ingredients[i]['Yield'] =
-                                                double.parse(value);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 15),
-                                  //Cost
-                                  Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            border: Border.all(
-                                              color: Colors.grey[350],
-                                            ),
-                                          ),
-                                          padding: EdgeInsets.all(15),
-                                          child: Center(
-                                            child: Text(
-                                              (ingredientTotal.isNaN ||
-                                                      ingredientTotal
-                                                          .isInfinite ||
-                                                      ingredientTotal
-                                                          .isNegative)
-                                                  ? '0'
-                                                  : '\$${ingredientTotal.toStringAsFixed(0)}',
+                                    SizedBox(height: 10),
+                                    //Amount
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            width: double.infinity,
+                                            child: TextFormField(
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                              textAlign: TextAlign.center,
+                                              initialValue: ingredients[i]
+                                                          ['Quantity'] ==
+                                                      0
+                                                  ? ''
+                                                  : '${ingredients[i]['Quantity']}',
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .allow(RegExp(
+                                                        r'[0-9]+[,.]{0,1}[0-9]*')),
+                                                TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) =>
+                                                      newValue.copyWith(
+                                                    text: newValue.text
+                                                        .replaceAll(',', '.'),
+                                                  ),
+                                                ),
+                                              ],
+                                              cursorColor: Colors.grey,
+                                              decoration: InputDecoration(
+                                                floatingLabelStyle: TextStyle(
+                                                    color: Colors.grey),
+                                                labelStyle: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12),
+                                                labelText: (ingredients[i]
+                                                            ['Unit'] !=
+                                                        null)
+                                                    ? ingredients[i]['Unit']
+                                                    : 'Cantidad',
+                                                focusColor: Colors.black,
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black45,
+                                                    fontSize: 12),
+                                                errorStyle: TextStyle(
+                                                    color:
+                                                        Colors.redAccent[700],
+                                                    fontSize: 12),
+                                                border: UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors.greenAccent,
+                                                  ),
+                                                ),
+                                              ),
+                                              onChanged: (value) {
+                                                String newValue =
+                                                    value.toString();
+                                                try {
+                                                  double newPrice =
+                                                      double.parse(newValue);
+                                                  setState(() {
+                                                    ingredients[i]['Quantity'] =
+                                                        newPrice;
+                                                  });
+                                                } catch (e) {
+                                                  print(e);
+                                                  // priceOptions[i]['Price'] =
+                                                  //     double.parse(newValue);
+                                                }
+                                              },
                                             ),
-                                          ))),
-
-                                  //Delete
-                                  IconButton(
-                                      onPressed: () {
-                                        ingredients.removeAt(i);
-
-                                        final random = Random();
-                                        const availableChars =
-                                            'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-                                        final randomString = List.generate(
-                                                10,
-                                                (index) => availableChars[
-                                                    random.nextInt(
-                                                        availableChars.length)])
-                                            .join();
-                                        setState(() {
-                                          redrawObject = ValueKey(randomString);
-                                        });
-                                      },
-                                      icon: Icon(Icons.delete))
-                                ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        //Yield
+                                        Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            width: double.infinity,
+                                            child: TextFormField(
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                              textAlign: TextAlign.center,
+                                              initialValue: ingredients[i]
+                                                          ['Yield'] ==
+                                                      0
+                                                  ? ''
+                                                  : '${ingredients[i]['Yield']}',
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .allow(RegExp(
+                                                        r'[0-9]+[,.]{0,1}[0-9]*')),
+                                                TextInputFormatter.withFunction(
+                                                  (oldValue, newValue) =>
+                                                      newValue.copyWith(
+                                                    text: newValue.text
+                                                        .replaceAll(',', '.'),
+                                                  ),
+                                                ),
+                                              ],
+                                              cursorColor: Colors.grey,
+                                              decoration: InputDecoration(
+                                                labelText: 'Rinde para',
+                                                floatingLabelStyle: TextStyle(
+                                                    color: Colors.grey),
+                                                labelStyle: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12),
+                                                focusColor: Colors.black,
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black45,
+                                                    fontSize: 12),
+                                                errorStyle: TextStyle(
+                                                    color:
+                                                        Colors.redAccent[700],
+                                                    fontSize: 12),
+                                                border: UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors.greenAccent,
+                                                  ),
+                                                ),
+                                              ),
+                                              onChanged: (value) {
+                                                String newValue =
+                                                    value.toString();
+                                                try {
+                                                  double newPrice =
+                                                      double.parse(newValue);
+                                                  setState(() {
+                                                    ingredients[i]['Yield'] =
+                                                        newPrice;
+                                                  });
+                                                } catch (e) {
+                                                  print(e);
+                                                  // priceOptions[i]['Price'] =
+                                                  //     double.parse(newValue);
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           })),

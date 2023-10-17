@@ -42,101 +42,192 @@ class SuppliesList extends StatelessWidget {
             } else {
               description = supplies[i].suppliers.first;
             }
-            return TextButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            NewSupply(currentBusiness, supplies[i])));
-              },
-              child: Container(
-                color: i.isOdd ? Colors.grey[100] : Colors.white,
-                width: double.infinity,
-                height: 50,
-                padding: EdgeInsets.symmetric(vertical: 5),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    //Suppliers
-                    (MediaQuery.of(context).size.width > 950)
-                        ? Container(
-                            width: 150,
-                            child: Text(
-                              description,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
-                            ))
-                        : SizedBox(),
-                    //Nombre
-                    (MediaQuery.of(context).size.width > 950)
-                        ? Container(
-                            width: 150,
-                            child: Text(
-                              supplies[i].supply,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
-                            ))
-                        : Column(
+
+            if (MediaQuery.of(context).size.width > 650) {
+              return TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              NewSupply(currentBusiness, supplies[i])));
+                },
+                child: Container(
+                  color: i.isOdd ? Colors.grey[100] : Colors.white,
+                  width: double.infinity,
+                  height: 50,
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //Suppliers
+                      (MediaQuery.of(context).size.width > 950)
+                          ? Container(
+                              width: 150,
+                              child: Text(
+                                description,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.black),
+                              ))
+                          : SizedBox(),
+                      //Nombre
+                      (MediaQuery.of(context).size.width > 950)
+                          ? Container(
+                              width: 150,
+                              child: Text(
+                                supplies[i].supply,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.black),
+                              ))
+                          : Column(
+                              children: [
+                                Container(
+                                    width: 150,
+                                    child: Text(
+                                      supplies[i].supply,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                SizedBox(height: 5),
+                                Container(
+                                    width: 150,
+                                    child: Text(
+                                      description,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 11),
+                                    ))
+                              ],
+                            ),
+                      //QTY
+                      Container(
+                          width: 150,
+                          child: Text(
+                            supplies[i].qty.toString(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.black),
+                          )),
+                      //Unit
+                      Container(
+                          width: 100,
+                          child: Text(
+                            supplies[i].unit,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.black),
+                          )),
+                      //Precio
+                      Container(
+                          width: 150,
+                          child: Text(
+                            '${formatCurrency.format(supplies[i].price)}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.black),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              NewSupply(currentBusiness, supplies[i])));
+                },
+                child: Container(
+                  color: i.isOdd ? Colors.grey[100] : Colors.white,
+                  width: double.infinity,
+                  height: 50,
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //Nombre
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          child: Column(
                             children: [
                               Container(
-                                  width: 150,
                                   child: Text(
-                                    supplies[i].supply,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  )),
+                                supplies[i].supply,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              )),
                               SizedBox(height: 5),
                               Container(
-                                  width: 150,
                                   child: Text(
-                                    description,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 11),
-                                  ))
+                                description,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 11),
+                              ))
                             ],
                           ),
-                    //QTY
-                    Container(
-                        width: 150,
-                        child: Text(
-                          supplies[i].qty.toString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      //QTY
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                            child: Column(
+                          children: [
+                            Text(
+                              supplies[i].qty.toString(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              supplies[i].unit,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 11),
+                            )
+                          ],
                         )),
-                    //Unit
-                    Container(
-                        width: 100,
-                        child: Text(
-                          supplies[i].unit,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
-                        )),
-                    //Precio
-                    Container(
-                        width: 150,
-                        child: Text(
+                      ),
+                      //Precio
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                            child: Text(
                           '${formatCurrency.format(supplies[i].price)}',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           } else if (supplies.length < limitSearch) {
             return SizedBox();
           } else {

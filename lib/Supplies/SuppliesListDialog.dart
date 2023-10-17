@@ -36,9 +36,13 @@ class _SuppliesListDialogState extends State<SuppliesListDialog> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
           child: Container(
-            width: 600,
-            height: MediaQuery.of(context).size.height * 0.65,
-            padding: EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 20),
+            width: (MediaQuery.of(context).size.width > 650)
+                ? 600
+                : MediaQuery.of(context).size.width,
+            height: (MediaQuery.of(context).size.width > 650)
+                ? MediaQuery.of(context).size.height * 0.65
+                : MediaQuery.of(context).size.height * 0.9,
+            padding: EdgeInsets.all(20),
             child: Column(children: [
               //Go back
               Row(
@@ -154,64 +158,140 @@ class ListofSupplies extends StatelessWidget {
                     itemCount: supplies.length + 1,
                     itemBuilder: (context, i) {
                       if (i < supplies.length) {
-                        return TextButton(
-                          onPressed: () {
-                            selectSupply(supplies[i].supply, supplies[i].unit,
-                                supplies[i].price, supplies[i].qty);
-                            Navigator.of(context).pop();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15.0),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  //Name
-                                  Container(
-                                    width: 150,
-                                    child: Text(supplies[i].supply,
+                        if (MediaQuery.of(context).size.width > 800) {
+                          return TextButton(
+                            onPressed: () {
+                              selectSupply(supplies[i].supply, supplies[i].unit,
+                                  supplies[i].price, supplies[i].qty);
+                              Navigator.of(context).pop();
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //Name
+                                    Container(
+                                      width: 150,
+                                      child: Text(supplies[i].supply,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              overflow: TextOverflow.ellipsis)),
+                                    ),
+                                    //QTY
+                                    Container(
+                                      width: 100,
+                                      child: Text(
+                                        supplies[i].qty.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    ),
+                                    //Unit
+                                    Container(
+                                      width: 100,
+                                      child: Text(
+                                        supplies[i].unit,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    ),
+                                    //Price
+                                    Container(
+                                      width: 150,
+                                      child: Text(
+                                        '${formatCurrency.format(supplies[i].price)}',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.black,
-                                            overflow: TextOverflow.ellipsis)),
-                                  ),
-                                  //QTY
-                                  Container(
-                                    width: 100,
-                                    child: Text(
-                                      supplies[i].qty.toString(),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          overflow: TextOverflow.ellipsis),
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
                                     ),
-                                  ),
-                                  //Unit
-                                  Container(
-                                    width: 100,
-                                    child: Text(
-                                      supplies[i].unit,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          overflow: TextOverflow.ellipsis),
+                                  ]),
+                            ),
+                          );
+                        } else {
+                          return TextButton(
+                            onPressed: () {
+                              selectSupply(supplies[i].supply, supplies[i].unit,
+                                  supplies[i].price, supplies[i].qty);
+                              Navigator.of(context).pop();
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //Nombre
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        child: Text(
+                                          supplies[i].supply,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  //Price
-                                  Container(
-                                    width: 150,
-                                    child: Text(
-                                      '${formatCurrency.format(supplies[i].price)}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          overflow: TextOverflow.ellipsis),
+                                    //QTY
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                          child: Column(
+                                        children: [
+                                          Text(
+                                            supplies[i].qty.toString(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            supplies[i].unit,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 11),
+                                          )
+                                        ],
+                                      )),
                                     ),
-                                  ),
-                                ]),
-                          ),
-                        );
+                                    //Precio
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                          child: Text(
+                                        '${formatCurrency.format(supplies[i].price)}',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      )),
+                                    ),
+                                  ]),
+                            ),
+                          );
+                        }
                       } else if (supplies.length < limitSearch) {
                         return SizedBox();
                       } else {

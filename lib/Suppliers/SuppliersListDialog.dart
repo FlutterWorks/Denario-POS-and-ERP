@@ -36,9 +36,13 @@ class _SuppliersListDialogState extends State<SuppliersListDialog> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
           child: Container(
-            width: 600,
-            height: MediaQuery.of(context).size.height * 0.65,
-            padding: EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 20),
+            width: (MediaQuery.of(context).size.width > 650)
+                ? 600
+                : MediaQuery.of(context).size.width,
+            height: (MediaQuery.of(context).size.width > 650)
+                ? MediaQuery.of(context).size.height * 0.65
+                : (MediaQuery.of(context).size.height * 0.85),
+            padding: EdgeInsets.all(20),
             child: Column(children: [
               //Go back
               Row(
@@ -155,59 +159,110 @@ class ListofSuppliers extends StatelessWidget {
                     itemCount: supplier.length + 1,
                     itemBuilder: (context, i) {
                       if (i < supplier.length) {
-                        return TextButton(
-                          onPressed: () {
-                            selectSupplier(supplier[i]);
-                            Navigator.of(context).pop();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15.0),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  //Name
-                                  Container(
-                                    width: 150,
-                                    child: Text(supplier[i].name,
+                        if (MediaQuery.of(context).size.width > 650) {
+                          return TextButton(
+                            onPressed: () {
+                              selectSupplier(supplier[i]);
+                              Navigator.of(context).pop();
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //Name
+                                    Container(
+                                      width: 150,
+                                      child: Text(supplier[i].name,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              overflow: TextOverflow.ellipsis)),
+                                    ),
+                                    Spacer(),
+                                    //Cost Type (from List)
+                                    Container(
+                                      width: 150,
+                                      child: Text(
+                                        (supplier[i].costTypeAssociated.length >
+                                                0)
+                                            ? supplier[i].costTypeAssociated[0]
+                                            : 'Sin costo asociado',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    //Phone
+                                    Container(
+                                      width: 150,
+                                      child: Text(
+                                        (supplier[i].phone != null &&
+                                                supplier[i].phone != 0)
+                                            ? supplier[i].phone.toString()
+                                            : 'Teléfono sin agregar',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.black,
-                                            overflow: TextOverflow.ellipsis)),
-                                  ),
-                                  Spacer(),
-                                  //Cost Type (from List)
-                                  Container(
-                                    width: 150,
-                                    child: Text(
-                                      (supplier[i].costTypeAssociated.length >
-                                              0)
-                                          ? supplier[i].costTypeAssociated[0]
-                                          : 'Sin costo asociado',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          overflow: TextOverflow.ellipsis),
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
                                     ),
-                                  ),
-                                  Spacer(),
-                                  //Phone
-                                  Container(
-                                    width: 150,
-                                    child: Text(
-                                      (supplier[i].phone != null &&
-                                              supplier[i].phone != 0)
-                                          ? supplier[i].phone.toString()
-                                          : 'Teléfono sin agregar',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          overflow: TextOverflow.ellipsis),
+                                  ]),
+                            ),
+                          );
+                        } else {
+                          return TextButton(
+                            onPressed: () {
+                              selectSupplier(supplier[i]);
+                              Navigator.of(context).pop();
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //Name
+                                    Expanded(
+                                      flex: 5,
+                                      child: Container(
+                                        child: Text(supplier[i].name,
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                overflow:
+                                                    TextOverflow.ellipsis)),
+                                      ),
                                     ),
-                                  ),
-                                ]),
-                          ),
-                        );
+                                    SizedBox(width: 15),
+                                    //Cost Type (from List)
+                                    Expanded(
+                                      flex: 5,
+                                      child: Container(
+                                        child: Text(
+                                          (supplier[i]
+                                                      .costTypeAssociated
+                                                      .length >
+                                                  0)
+                                              ? supplier[i]
+                                                  .costTypeAssociated[0]
+                                              : 'Sin costo asociado',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              overflow: TextOverflow.ellipsis),
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                          );
+                        }
                       } else if (supplier.length < limitSearch) {
                         return SizedBox();
                       } else {

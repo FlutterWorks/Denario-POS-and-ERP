@@ -4650,169 +4650,179 @@ class _NewProductState extends State<NewProduct> {
                         ),
                       ),
                       SizedBox(height: 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          //Available
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Disponible',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.black45),
-                                ),
-                                SizedBox(height: 10),
-                                Switch(
-                                  value: isAvailable,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isAvailable = value;
-                                    });
-                                  },
-                                  activeTrackColor: Colors.lightGreenAccent,
-                                  activeColor: Colors.green,
-                                ),
-                              ],
+                      //Available//Show
+                      Container(
+                        width: double.infinity,
+                        height: 75,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            //Available
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Disponible',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Switch(
+                                    value: isAvailable,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isAvailable = value;
+                                      });
+                                    },
+                                    activeTrackColor: Colors.lightGreenAccent,
+                                    activeColor: Colors.green,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 20),
-                          //Show on menu
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Mostrar en catálogo digital',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.black45),
-                                ),
-                                SizedBox(height: 10),
-                                Switch(
-                                  value: show,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      show = value;
-                                    });
-                                  },
-                                  activeTrackColor: Colors.lightGreenAccent,
-                                  activeColor: Colors.green,
-                                ),
-                              ],
+                            SizedBox(width: 20),
+                            //Show on menu
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Mostrar en catálogo digital',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Switch(
+                                    value: show,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        show = value;
+                                      });
+                                    },
+                                    activeTrackColor: Colors.lightGreenAccent,
+                                    activeColor: Colors.green,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       SizedBox(height: 15),
                       //Dropdown categories
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          //Categories
-                          Expanded(
-                            flex: 6,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Categoría',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.black45),
-                                ),
-                                SizedBox(height: 10),
-                                Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 12),
-                                    child: DropdownButton(
-                                      isExpanded: true,
-                                      underline: SizedBox(),
-                                      hint: Text(
-                                        widget.categories[0],
+                      Container(
+                        width: double.infinity,
+                        height: 75,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            //Categories
+                            Expanded(
+                              flex: 6,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Categoría',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 12),
+                                      child: DropdownButton(
+                                        isExpanded: true,
+                                        underline: SizedBox(),
+                                        hint: Text(
+                                          widget.categories[0],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                              color: Colors.grey[700]),
+                                        ),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 14,
                                             color: Colors.grey[700]),
-                                      ),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                          color: Colors.grey[700]),
-                                      value: category,
-                                      items: widget.categories.map((x) {
-                                        return new DropdownMenuItem(
-                                          value: x,
-                                          child: new Text(x),
-                                          onTap: () {
-                                            setState(() {
-                                              category = x;
-                                            });
-                                          },
-                                        );
-                                      }).toList(),
-                                      onChanged: (newValue) {
+                                        value: category,
+                                        items: widget.categories.map((x) {
+                                          return new DropdownMenuItem(
+                                            value: x,
+                                            child: new Text(x),
+                                            onTap: () {
+                                              setState(() {
+                                                category = x;
+                                              });
+                                            },
+                                          );
+                                        }).toList(),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            category = newValue;
+                                          });
+                                        },
+                                      )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            //Featured
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Destacado',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  IconButton(
+                                      tooltip:
+                                          'Los productos destacados se verán primero en tu catálogo digital',
+                                      onPressed: () {
                                         setState(() {
-                                          category = newValue;
+                                          featured = !featured;
                                         });
                                       },
-                                    )),
-                              ],
+                                      icon: !featured
+                                          ? Icon(
+                                              Icons.star_border_outlined,
+                                              size: 30,
+                                              color: Colors.grey,
+                                            )
+                                          : Icon(
+                                              Icons.star,
+                                              size: 30,
+                                              color: Colors.yellow,
+                                            ))
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 20),
-                          //Featured
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Destacado',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.black45),
-                                ),
-                                SizedBox(height: 10),
-                                IconButton(
-                                    tooltip:
-                                        'Los productos destacados se verán primero en tu catálogo digital',
-                                    onPressed: () {
-                                      setState(() {
-                                        featured = !featured;
-                                      });
-                                    },
-                                    icon: !featured
-                                        ? Icon(
-                                            Icons.star_border_outlined,
-                                            size: 30,
-                                            color: Colors.grey,
-                                          )
-                                        : Icon(
-                                            Icons.star,
-                                            size: 30,
-                                            color: Colors.yellow,
-                                          ))
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       SizedBox(height: 15),
                       //Description
@@ -4900,6 +4910,7 @@ class _NewProductState extends State<NewProduct> {
                           : ListView.builder(
                               key: redrawObject2,
                               shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
                               itemCount: productOptions.length,
                               itemBuilder: ((context, i) {
                                 return Padding(
@@ -4926,8 +4937,20 @@ class _NewProductState extends State<NewProduct> {
                                           //Edit
                                           IconButton(
                                               onPressed: () {
-                                                showDialog(
+                                                showModalBottomSheet(
+                                                    isScrollControlled: true,
                                                     context: context,
+                                                    backgroundColor: Colors
+                                                        .white,
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        25),
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        25))),
                                                     builder: (context) {
                                                       return ProductOptionsDialog(
                                                         setProductOptions,
@@ -4978,72 +5001,83 @@ class _NewProductState extends State<NewProduct> {
                                       ),
                                       SizedBox(height: 5),
                                       //Mandatory //Multiple options
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          //Mandatory
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(12)),
-                                              border: Border.all(
-                                                color: Colors.grey,
+                                      Container(
+                                        height: 40,
+                                        width: double.infinity,
+                                        child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: [
+                                            //Mandatory
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10, vertical: 5),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(12)),
+                                                border: Border.all(
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              child: Center(
+                                                child: Text((productOptions[i]
+                                                        ['Mandatory'])
+                                                    ? 'Obligatorio'
+                                                    : 'Opcional'),
                                               ),
                                             ),
-                                            child: Text((productOptions[i]
-                                                    ['Mandatory'])
-                                                ? 'Obligatorio'
-                                                : 'Opcional'),
-                                          ),
-                                          SizedBox(width: 10),
-                                          //Multiple Options
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(12)),
-                                              border: Border.all(
-                                                color: Colors.grey,
+                                            SizedBox(width: 10),
+                                            //Multiple Options
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10, vertical: 5),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(12)),
+                                                border: Border.all(
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              child: Center(
+                                                child: Text((productOptions[i]
+                                                        ['Multiple Options'])
+                                                    ? 'Selección múltiple'
+                                                    : 'Selección única'),
                                               ),
                                             ),
-                                            child: Text((productOptions[i]
-                                                    ['Multiple Options'])
-                                                ? 'Selección múltiple'
-                                                : 'Selección única'),
-                                          ),
-                                          SizedBox(width: 10),
-                                          //Price Structure
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(12)),
-                                              border: Border.all(
-                                                color: Colors.grey,
+                                            SizedBox(width: 10),
+                                            //Price Structure
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10, vertical: 5),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(12)),
+                                                border: Border.all(
+                                                  color: Colors.grey,
+                                                ),
                                               ),
-                                            ),
-                                            child: Text((productOptions[i]
-                                                        ['Price Structure'] ==
-                                                    'Aditional')
-                                                ? 'Precio adicional'
-                                                : (productOptions[i][
+                                              child: Center(
+                                                child: Text((productOptions[i][
                                                             'Price Structure'] ==
-                                                        'Complete')
-                                                    ? 'Reemplaza el precio'
-                                                    : 'Sin costo adicional'),
-                                          ),
-                                        ],
+                                                        'Aditional')
+                                                    ? 'Precio adicional'
+                                                    : (productOptions[i][
+                                                                'Price Structure'] ==
+                                                            'Complete')
+                                                        ? 'Reemplaza el precio'
+                                                        : 'Sin costo adicional'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
 
                                       SizedBox(height: 10),
                                       //OPTIONS
                                       ListView.builder(
                                           shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
                                           itemCount: productOptions[i]
                                                   ['Price Options']
                                               .length,
@@ -5083,8 +5117,14 @@ class _NewProductState extends State<NewProduct> {
                             foregroundColor: Colors.black,
                           ),
                           onPressed: () {
-                            showDialog(
+                            showModalBottomSheet(
+                                isScrollControlled: true,
                                 context: context,
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(25),
+                                        topLeft: Radius.circular(25))),
                                 builder: (context) {
                                   return ProductOptionsDialog(
                                       setProductOptions, false);
@@ -5127,266 +5167,242 @@ class _NewProductState extends State<NewProduct> {
 
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 15.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      //Ingrediente
-                                      Expanded(
-                                        flex: 6,
-                                        child: Container(
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 120,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        //Ingrediente
+                                        Container(
                                           width: double.infinity,
-                                          child: TextFormField(
-                                            enabled: false,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                            cursorColor: Colors.grey,
-                                            initialValue: ingredients[i]
-                                                ['Ingredient'],
-                                            decoration: InputDecoration(
-                                              focusColor: Colors.black,
-                                              hintStyle: TextStyle(
-                                                  color: Colors.black45,
-                                                  fontSize: 12),
-                                              errorStyle: TextStyle(
-                                                  color: Colors.redAccent[700],
-                                                  fontSize: 12),
-                                              border: new OutlineInputBorder(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                borderSide: new BorderSide(
-                                                  color: Colors.grey[350],
-                                                ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                (ingredientTotal.isNaN ||
+                                                        ingredientTotal
+                                                            .isInfinite ||
+                                                        ingredientTotal
+                                                            .isNegative)
+                                                    ? '${ingredients[i]['Ingredient']} \$0'
+                                                    : '${ingredients[i]['Ingredient']} \$${ingredientTotal.toStringAsFixed(0)}',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                borderSide: new BorderSide(
-                                                  color: Colors.green,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 15),
-                                      //Amount
-                                      Expanded(
-                                        flex: 3,
-                                        child: Container(
-                                          width: double.infinity,
-                                          child: TextFormField(
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                            textAlign: TextAlign.center,
-                                            initialValue: ingredients[i]
-                                                        ['Quantity'] ==
-                                                    0
-                                                ? ''
-                                                : '${ingredients[i]['Quantity']}',
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter.allow(
-                                                  RegExp(
-                                                      r'[0-9]+[,.]{0,1}[0-9]*')),
-                                              TextInputFormatter.withFunction(
-                                                (oldValue, newValue) =>
-                                                    newValue.copyWith(
-                                                  text: newValue.text
-                                                      .replaceAll(',', '.'),
-                                                ),
-                                              ),
-                                            ],
-                                            cursorColor: Colors.grey,
-                                            decoration: InputDecoration(
-                                              floatingLabelStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              labelStyle: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12),
-                                              labelText: (ingredients[i]
-                                                          ['Unit'] !=
-                                                      null)
-                                                  ? ingredients[i]['Unit']
-                                                  : 'Cantidad',
-                                              focusColor: Colors.black,
-                                              hintStyle: TextStyle(
-                                                  color: Colors.black45,
-                                                  fontSize: 12),
-                                              errorStyle: TextStyle(
-                                                  color: Colors.redAccent[700],
-                                                  fontSize: 12),
-                                              border: new OutlineInputBorder(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                borderSide: new BorderSide(
-                                                  color: Colors.grey[350],
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                borderSide: new BorderSide(
-                                                  color: Colors.green,
-                                                ),
-                                              ),
-                                            ),
-                                            onChanged: (value) {
-                                              String newValue =
-                                                  value.toString();
-                                              try {
-                                                double newPrice =
-                                                    double.parse(newValue);
-                                                setState(() {
-                                                  ingredients[i]['Quantity'] =
-                                                      newPrice;
-                                                });
-                                              } catch (e) {
-                                                print(e);
-                                                // priceOptions[i]['Price'] =
-                                                //     double.parse(newValue);
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 15),
-                                      //Yield
-                                      Expanded(
-                                        flex: 3,
-                                        child: Container(
-                                          width: double.infinity,
-                                          child: TextFormField(
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14),
-                                            textAlign: TextAlign.center,
-                                            initialValue: ingredients[i]
-                                                        ['Yield'] ==
-                                                    0
-                                                ? ''
-                                                : '${ingredients[i]['Yield']}',
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter.allow(
-                                                  RegExp(
-                                                      r'[0-9]+[,.]{0,1}[0-9]*')),
-                                              TextInputFormatter.withFunction(
-                                                (oldValue, newValue) =>
-                                                    newValue.copyWith(
-                                                  text: newValue.text
-                                                      .replaceAll(',', '.'),
-                                                ),
-                                              ),
-                                            ],
-                                            cursorColor: Colors.grey,
-                                            decoration: InputDecoration(
-                                              labelText: 'Rinde para',
-                                              floatingLabelStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              labelStyle: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12),
-                                              focusColor: Colors.black,
-                                              hintStyle: TextStyle(
-                                                  color: Colors.black45,
-                                                  fontSize: 12),
-                                              errorStyle: TextStyle(
-                                                  color: Colors.redAccent[700],
-                                                  fontSize: 12),
-                                              border: new OutlineInputBorder(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                borderSide: new BorderSide(
-                                                  color: Colors.grey[350],
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                borderSide: new BorderSide(
-                                                  color: Colors.green,
-                                                ),
-                                              ),
-                                            ),
-                                            onChanged: (value) {
-                                              String newValue =
-                                                  value.toString();
-                                              try {
-                                                double newPrice =
-                                                    double.parse(newValue);
-                                                setState(() {
-                                                  ingredients[i]['Yield'] =
-                                                      newPrice;
-                                                });
-                                              } catch (e) {
-                                                print(e);
-                                                // priceOptions[i]['Price'] =
-                                                //     double.parse(newValue);
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 15),
-                                      //Cost
-                                      Expanded(
-                                          flex: 3,
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        12.0),
-                                                border: Border.all(
-                                                  color: Colors.grey[350],
-                                                ),
-                                              ),
-                                              padding: EdgeInsets.all(15),
-                                              child: Center(
-                                                child: Text(
-                                                  (ingredientTotal.isNaN ||
-                                                          ingredientTotal
-                                                              .isInfinite ||
-                                                          ingredientTotal
-                                                              .isNegative)
-                                                      ? '0'
-                                                      : '\$${ingredientTotal.toStringAsFixed(0)}',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ))),
-                                      //Delete
-                                      IconButton(
-                                          tooltip: 'Eliminar',
-                                          padding: EdgeInsets.all(2),
-                                          splashRadius: 5,
-                                          onPressed: () {
-                                            ingredients.removeAt(i);
+                                              Spacer(),
+                                              //Delete
+                                              IconButton(
+                                                  tooltip: 'Eliminar',
+                                                  padding: EdgeInsets.all(2),
+                                                  splashRadius: 5,
+                                                  onPressed: () {
+                                                    ingredients.removeAt(i);
 
-                                            final random = Random();
-                                            const availableChars =
-                                                'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-                                            final randomString = List.generate(
-                                                10,
-                                                (index) => availableChars[random
-                                                    .nextInt(availableChars
-                                                        .length)]).join();
-                                            setState(() {
-                                              redrawObject =
-                                                  ValueKey(randomString);
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.close,
-                                            size: 16,
-                                          ))
-                                    ],
+                                                    final random = Random();
+                                                    const availableChars =
+                                                        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+                                                    final randomString = List.generate(
+                                                        10,
+                                                        (index) => availableChars[
+                                                            random.nextInt(
+                                                                availableChars
+                                                                    .length)]).join();
+                                                    setState(() {
+                                                      redrawObject = ValueKey(
+                                                          randomString);
+                                                    });
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.close,
+                                                    size: 16,
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 10),
+                                        //Amount
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                width: double.infinity,
+                                                child: TextFormField(
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14),
+                                                  textAlign: TextAlign.center,
+                                                  initialValue: ingredients[i]
+                                                              ['Quantity'] ==
+                                                          0
+                                                      ? ''
+                                                      : '${ingredients[i]['Quantity']}',
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp(
+                                                            r'[0-9]+[,.]{0,1}[0-9]*')),
+                                                    TextInputFormatter
+                                                        .withFunction(
+                                                      (oldValue, newValue) =>
+                                                          newValue.copyWith(
+                                                        text: newValue.text
+                                                            .replaceAll(
+                                                                ',', '.'),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                  cursorColor: Colors.grey,
+                                                  decoration: InputDecoration(
+                                                    floatingLabelStyle:
+                                                        TextStyle(
+                                                            color: Colors.grey),
+                                                    labelStyle: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12),
+                                                    labelText: (ingredients[i]
+                                                                ['Unit'] !=
+                                                            null)
+                                                        ? ingredients[i]['Unit']
+                                                        : 'Cantidad',
+                                                    focusColor: Colors.black,
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.black45,
+                                                        fontSize: 12),
+                                                    errorStyle: TextStyle(
+                                                        color: Colors
+                                                            .redAccent[700],
+                                                        fontSize: 12),
+                                                    border:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color:
+                                                            Colors.greenAccent,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onChanged: (value) {
+                                                    String newValue =
+                                                        value.toString();
+                                                    try {
+                                                      double newPrice =
+                                                          double.parse(
+                                                              newValue);
+                                                      setState(() {
+                                                        ingredients[i]
+                                                                ['Quantity'] =
+                                                            newPrice;
+                                                      });
+                                                    } catch (e) {
+                                                      print(e);
+                                                      // priceOptions[i]['Price'] =
+                                                      //     double.parse(newValue);
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            //Yield
+                                            Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                width: double.infinity,
+                                                child: TextFormField(
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14),
+                                                  textAlign: TextAlign.center,
+                                                  initialValue: ingredients[i]
+                                                              ['Yield'] ==
+                                                          0
+                                                      ? ''
+                                                      : '${ingredients[i]['Yield']}',
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp(
+                                                            r'[0-9]+[,.]{0,1}[0-9]*')),
+                                                    TextInputFormatter
+                                                        .withFunction(
+                                                      (oldValue, newValue) =>
+                                                          newValue.copyWith(
+                                                        text: newValue.text
+                                                            .replaceAll(
+                                                                ',', '.'),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                  cursorColor: Colors.grey,
+                                                  decoration: InputDecoration(
+                                                    labelText: 'Rinde para',
+                                                    floatingLabelStyle:
+                                                        TextStyle(
+                                                            color: Colors.grey),
+                                                    labelStyle: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12),
+                                                    focusColor: Colors.black,
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.black45,
+                                                        fontSize: 12),
+                                                    errorStyle: TextStyle(
+                                                        color: Colors
+                                                            .redAccent[700],
+                                                        fontSize: 12),
+                                                    border:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color:
+                                                            Colors.greenAccent,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onChanged: (value) {
+                                                    String newValue =
+                                                        value.toString();
+                                                    try {
+                                                      double newPrice =
+                                                          double.parse(
+                                                              newValue);
+                                                      setState(() {
+                                                        ingredients[i]
+                                                                ['Yield'] =
+                                                            newPrice;
+                                                      });
+                                                    } catch (e) {
+                                                      print(e);
+                                                      // priceOptions[i]['Price'] =
+                                                      //     double.parse(newValue);
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               })),
@@ -5397,7 +5413,7 @@ class _NewProductState extends State<NewProduct> {
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text('Costo total del producto: '),
+                                Text('Costo total: '),
                                 Text(
                                   formatCurrency.format(totalIngredientsCost()),
                                   style: TextStyle(
@@ -5439,193 +5455,145 @@ class _NewProductState extends State<NewProduct> {
                       //Expected Margin/Low margin
                       (ingredients.length == 0)
                           ? SizedBox()
+                          : Container(
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Margen de ganancia actual',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                      '${(((price - totalIngredientsCost()) / price) * 100).toStringAsFixed(1)}%',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color:
+                                              ((((price - totalIngredientsCost()) /
+                                                              price) *
+                                                          100) <
+                                                      lowMarginAlert)
+                                                  ? Colors.red
+                                                  : Colors.greenAccent[700])),
+                                  SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
+
+                      (ingredients.length == 0)
+                          ? SizedBox()
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                //Current Margin
-                                Expanded(
-                                  flex: 5,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Margen de ganancia actual',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            color: Colors.black45),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Container(
-                                        width: double.infinity,
-                                        height: 45,
-                                        child: Center(
-                                          child: Text(
-                                              '${(((price - totalIngredientsCost()) / price) * 100).toStringAsFixed(1)}%',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                  color:
-                                                      ((((price - totalIngredientsCost()) /
-                                                                      price) *
-                                                                  100) <
-                                                              lowMarginAlert)
-                                                          ? Colors.red
-                                                          : Colors.greenAccent[
-                                                              700])),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 20),
                                 //Expected Margin
                                 Expanded(
                                   flex: 5,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Margen esperado',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            color: Colors.black45),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Container(
-                                        width: double.infinity,
-                                        child: TextFormField(
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                          cursorColor: Colors.grey,
-                                          initialValue: (expectedMargin != null)
-                                              ? expectedMargin.toString()
-                                              : '',
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
-                                            LengthLimitingTextInputFormatter(2),
-                                          ],
-                                          decoration: InputDecoration(
-                                            focusColor: Colors.black,
-                                            suffixIcon: Icon(
-                                                Icons.percent_outlined,
-                                                color: Colors.grey,
-                                                size: 16),
-                                            hintStyle: TextStyle(
-                                                color: Colors.black45,
-                                                fontSize: 14),
-                                            errorStyle: TextStyle(
-                                                color: Colors.redAccent[700],
-                                                fontSize: 12),
-                                            border: new OutlineInputBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      12.0),
-                                              borderSide: new BorderSide(
-                                                color: Colors.grey[350],
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      12.0),
-                                              borderSide: new BorderSide(
-                                                color: Colors.green,
-                                              ),
-                                            ),
+                                  child: Container(
+                                    width: double.infinity,
+                                    child: TextFormField(
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                      cursorColor: Colors.grey,
+                                      initialValue: (expectedMargin != null)
+                                          ? expectedMargin.toString()
+                                          : '',
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        LengthLimitingTextInputFormatter(2),
+                                      ],
+                                      decoration: InputDecoration(
+                                        suffixIcon: Icon(Icons.percent_outlined,
+                                            color: Colors.grey, size: 16),
+                                        labelText: 'Margen esperado',
+                                        floatingLabelStyle:
+                                            TextStyle(color: Colors.grey),
+                                        labelStyle: TextStyle(
+                                            color: Colors.black, fontSize: 12),
+                                        focusColor: Colors.black,
+                                        hintStyle: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 12),
+                                        errorStyle: TextStyle(
+                                            color: Colors.redAccent[700],
+                                            fontSize: 12),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.grey,
                                           ),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              expectedMargin =
-                                                  double.parse(value);
-                                            });
-                                          },
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.greenAccent,
+                                          ),
                                         ),
                                       ),
-                                    ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          expectedMargin = double.parse(value);
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: 20),
                                 //Low Margin Alert
                                 Expanded(
                                   flex: 5,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Alerta de bajo margen',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            color: Colors.black45),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Container(
-                                        width: double.infinity,
-                                        child: TextFormField(
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                          cursorColor: Colors.grey,
-                                          initialValue: (lowMarginAlert != null)
-                                              ? lowMarginAlert.toString()
-                                              : '',
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
-                                            LengthLimitingTextInputFormatter(2),
-                                          ],
-                                          decoration: InputDecoration(
-                                            suffixIcon: Icon(
-                                                Icons.percent_outlined,
-                                                color: Colors.grey,
-                                                size: 16),
-                                            focusColor: Colors.black,
-                                            hintStyle: TextStyle(
-                                                color: Colors.black45,
-                                                fontSize: 14),
-                                            errorStyle: TextStyle(
-                                                color: Colors.redAccent[700],
-                                                fontSize: 12),
-                                            border: new OutlineInputBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      12.0),
-                                              borderSide: new BorderSide(
-                                                color: Colors.grey[350],
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      12.0),
-                                              borderSide: new BorderSide(
-                                                color: Colors.green,
-                                              ),
-                                            ),
+                                  child: Container(
+                                    width: double.infinity,
+                                    child: TextFormField(
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                      cursorColor: Colors.grey,
+                                      initialValue: (lowMarginAlert != null)
+                                          ? lowMarginAlert.toString()
+                                          : '',
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        LengthLimitingTextInputFormatter(2),
+                                      ],
+                                      decoration: InputDecoration(
+                                        suffixIcon: Icon(Icons.percent_outlined,
+                                            color: Colors.grey, size: 16),
+                                        labelText: 'Alerta de bajo margen',
+                                        floatingLabelStyle:
+                                            TextStyle(color: Colors.grey),
+                                        labelStyle: TextStyle(
+                                            color: Colors.black, fontSize: 12),
+                                        focusColor: Colors.black,
+                                        hintStyle: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 12),
+                                        errorStyle: TextStyle(
+                                            color: Colors.redAccent[700],
+                                            fontSize: 12),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.grey,
                                           ),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              lowMarginAlert =
-                                                  double.parse(value);
-                                            });
-                                          },
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.greenAccent,
+                                          ),
                                         ),
                                       ),
-                                    ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          lowMarginAlert = double.parse(value);
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],
