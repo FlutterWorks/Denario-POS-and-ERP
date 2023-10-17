@@ -81,7 +81,8 @@ class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
                       'Price': product[i].price,
                       'Quantity': 1,
                       'Total Price': product[i].price,
-                      'Options': []
+                      'Options': [],
+                      'Supplies': product[i].ingredients
                     });
                   }
 

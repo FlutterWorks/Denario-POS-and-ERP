@@ -8,6 +8,7 @@ class MonthlyStats {
   Map<String, dynamic> salesAmountbyCategory;
   Map<String, dynamic> salesbyOrderType;
   Map<String, dynamic> salesByMedium;
+  double totalSuppliesCost;
 
   MonthlyStats(
       {this.totalSales,
@@ -18,5 +19,6 @@ class MonthlyStats {
       this.salesAmountbyProduct,
       this.salesAmountbyCategory,
       this.salesbyOrderType,
-      this.salesByMedium});
+      this.salesByMedium,
+      this.totalSuppliesCost});
 }

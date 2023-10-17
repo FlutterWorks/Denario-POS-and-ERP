@@ -89,7 +89,8 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                           'Price': product[i].price,
                           'Quantity': 1,
                           'Total Price': product[i].price,
-                          'Options': []
+                          'Options': [],
+                          'Supplies': product[i].ingredients
                         });
                       }
 

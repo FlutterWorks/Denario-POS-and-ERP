@@ -80,7 +80,8 @@ class ProductSelection extends StatelessWidget {
                       'Category': product[i].category,
                       'Price': product[i].price,
                       'Quantity': 1,
-                      'Total Price': product[i].price
+                      'Total Price': product[i].price,
+                      'Supplies': product[i].ingredients
                     });
                     Navigator.of(context).pop();
                   },

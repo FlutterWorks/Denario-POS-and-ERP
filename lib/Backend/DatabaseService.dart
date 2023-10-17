@@ -913,6 +913,38 @@ class DatabaseService {
     // final orderType = bloc.ticketItems['Order Type'];
     // final discountCode = bloc.ticketItems['Discount Code'];
 
+    //Get total ingredients cost
+    double totalCostOfIngredients = 0;
+    for (var i = 0; i < cartList.length; i++) {
+      double totalCost = 0;
+      List ingredients = cartList[i]['Supplies'];
+      if (ingredients.length > 0) {
+        //Loop through supplies
+        for (int x = 0; x < ingredients.length; x++) {
+          //Check Ingredient total
+          if (ingredients[x]['Supply Cost'] != null &&
+              ingredients[x]['Supply Quantity'] != null &&
+              ingredients[x]['Quantity'] != null &&
+              ingredients[x]['Yield'] != null) {
+            double ingredientTotal = ((ingredients[x]['Supply Cost'] /
+                        ingredients[x]['Supply Quantity']) *
+                    ingredients[x]['Quantity']) /
+                ingredients[x]['Yield'];
+            //Add Ingredient Total to product cost if not null
+            if (!ingredientTotal.isNaN &&
+                !ingredientTotal.isInfinite &&
+                !ingredientTotal.isNegative &&
+                ingredientTotal != null) {
+              totalCost = totalCost + ingredientTotal;
+            }
+          }
+        }
+        if (totalCost != null && totalCost > 0) {
+          totalCostOfIngredients = totalCostOfIngredients + totalCost;
+        }
+      }
+    }
+
     // //////////Create Sale
     createOrder(
         activeBusiness,
@@ -938,7 +970,8 @@ class DatabaseService {
         (cashRegister == null) ? 'Independiente' : cashRegister,
         false,
         splitPaymentDetails,
-        orderType);
+        orderType,
+        totalCostOfIngredients);
 
     if (discountCode != '') {
       useDiscount(activeBusiness, discountCode);
@@ -1039,6 +1072,8 @@ class DatabaseService {
             'Total Items Sold': FieldValue.increment(cartList.length),
             'Sales by Order Type.$orderType': FieldValue.increment(total),
             'Sales by Payment Type.$paymentType': FieldValue.increment(total),
+            'Cost of Used Supplies':
+                FieldValue.increment(totalCostOfIngredients)
           });
         } else {
           monthStatsRef.update({
@@ -1046,6 +1081,8 @@ class DatabaseService {
             'Total Sales': FieldValue.increment(total),
             'Total Items Sold': FieldValue.increment(cartList.length),
             'Sales by Order Type.$orderType': FieldValue.increment(total),
+            'Cost of Used Supplies':
+                FieldValue.increment(totalCostOfIngredients)
           });
           for (var x in splitPaymentDetails) {
             monthStatsRef.update({
@@ -1086,6 +1123,7 @@ class DatabaseService {
         orderStats['Total Sales'] = total;
         orderStats['Total Items Sold'] = cartList.length;
         orderStats['Sales by Order Type'] = {orderType: total};
+        orderStats['Cost of Used Supplies'] = totalCostOfIngredients;
 
         //Add list of payment types to the Map
         if (splitPayment) {
@@ -1155,6 +1193,8 @@ class DatabaseService {
               'Total Items Sold': FieldValue.increment(cartList.length),
               'Sales by Order Type.$orderType': FieldValue.increment(total),
               'Ventas por Medio.$paymentType': FieldValue.increment(total),
+              'Cost of Used Supplies':
+                  FieldValue.increment(totalCostOfIngredients)
             });
           } else {
             dayStatsRef.update({
@@ -1163,6 +1203,8 @@ class DatabaseService {
               'Transacciones del Día': FieldValue.increment(total),
               'Total Items Sold': FieldValue.increment(cartList.length),
               'Sales by Order Type.$orderType': FieldValue.increment(total),
+              'Cost of Used Supplies':
+                  FieldValue.increment(totalCostOfIngredients)
             });
             for (var x in splitPaymentDetails) {
               dayStatsRef.update({
@@ -1358,7 +1400,8 @@ class DatabaseService {
       String currentCashRegister,
       bool reversed,
       List splitPaymentDetails,
-      orderType) async {
+      orderType,
+      double totalCostOfIngredients) async {
     return await FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -1382,7 +1425,8 @@ class DatabaseService {
       'Cash Register': currentCashRegister,
       'Reversed': reversed,
       'Split Payment Details': splitPaymentDetails,
-      'Order Type': orderType
+      'Order Type': orderType,
+      'Cost of Supplies': totalCostOfIngredients
     });
   }
 
@@ -1647,6 +1691,9 @@ class DatabaseService {
                         : 0,
                     total: item.toString().contains('Total Price')
                         ? item['Total Price']
+                        : 0,
+                    supplies: item.toString().contains('Supplies')
+                        ? item['Supplies']
                         : 0,
                   );
                 }).toList()
@@ -2697,6 +2744,10 @@ class DatabaseService {
             snapshot.data().toString().contains('Sales by Order Type')
                 ? snapshot['Sales by Order Type']
                 : {},
+        totalSuppliesCost:
+            snapshot.data().toString().contains('Cost of Used Supplies')
+                ? snapshot['Cost of Used Supplies']
+                : 0,
       );
     } catch (e) {
       print(e);
@@ -2769,6 +2820,10 @@ class DatabaseService {
               doc.data().toString().contains('Sales by Order Type')
                   ? doc['Sales by Order Type']
                   : {},
+          totalSuppliesCost:
+              doc.data().toString().contains('Cost of Used Supplies')
+                  ? doc['Cost of Used Supplies']
+                  : 0,
         );
       }).toList();
     } catch (e) {
@@ -2877,6 +2932,10 @@ class DatabaseService {
               doc.data().toString().contains('Sales by Order Type')
                   ? doc['Sales by Order Type']
                   : {},
+          totalSuppliesCost:
+              doc.data().toString().contains('Cost of Used Supplies')
+                  ? doc['Cost of Used Supplies']
+                  : 0,
         );
       }).toList();
     } catch (e) {
@@ -2955,6 +3014,9 @@ class DatabaseService {
                     price: item['Price'] ?? 0,
                     qty: item['Quantity'] ?? 0,
                     total: item['Total Price'] ?? 0,
+                    supplies: item.toString().contains('Supplies')
+                        ? item['Supplies']
+                        : [],
                   );
                 }).toList()
               : [],
@@ -2989,6 +3051,9 @@ class DatabaseService {
               doc.data().toString().contains('Split Payment Details')
                   ? doc['Split Payment Details'].toList()
                   : [],
+          totalSuppliesCost: doc.data().toString().contains('Cost of Supplies')
+              ? doc['Cost of Supplies']
+              : 0,
         );
       }).toList();
     } catch (e) {
@@ -3222,6 +3287,10 @@ class DatabaseService {
             snapshot.data().toString().contains('Sales by Payment Type')
                 ? snapshot['Sales by Payment Type']
                 : {},
+        totalSuppliesCost:
+            snapshot.data().toString().contains('Cost of Used Supplies')
+                ? snapshot['Cost of Used Supplies']
+                : 0,
       );
     } catch (e) {
       print(e);

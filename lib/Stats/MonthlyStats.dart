@@ -10,6 +10,7 @@ import 'package:denario/Stats/StatsByPaymentMethods.dart';
 import 'package:denario/Stats/StatsByProducts.dart';
 import 'package:denario/Stats/TotalsSummary.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class MonthStats extends StatefulWidget {
@@ -23,6 +24,7 @@ class MonthStats extends StatefulWidget {
 
 class _MonthStatsState extends State<MonthStats> {
   final PageController pageController = PageController();
+  final formatCurrency = new NumberFormat.simpleCurrency();
 
   int _currentPageIndex = 0;
 
@@ -31,7 +33,8 @@ class _MonthStatsState extends State<MonthStats> {
     'Categoría',
     'Productos',
     'Medios de Pago',
-    'Canales'
+    'Canales',
+    'Costos'
   ];
   String selectedCategory;
 
@@ -157,7 +160,7 @@ class _MonthStatsState extends State<MonthStats> {
                           child: Column(
                             children: [
                               //Select Option
-                              (MediaQuery.of(context).size.width > 1100)
+                              (MediaQuery.of(context).size.width > 1250)
                                   ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -410,6 +413,68 @@ class _MonthStatsState extends State<MonthStats> {
                                                 ),
                                               )),
                                         ),
+                                        SizedBox(width: 10),
+                                        //Costos de insumos
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      width:
+                                                          (_currentPageIndex ==
+                                                                  4)
+                                                              ? 4
+                                                              : 0,
+                                                      color: (_currentPageIndex ==
+                                                              4)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors
+                                                              .transparent))),
+                                          child: TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _currentPageIndex = 4;
+                                                });
+                                                pageController.animateToPage(4,
+                                                    duration: Duration(
+                                                        milliseconds: 250),
+                                                    curve: Curves.easeIn);
+                                              },
+                                              style: ButtonStyle(
+                                                overlayColor:
+                                                    MaterialStateProperty
+                                                        .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                                    if (states.contains(
+                                                        MaterialState
+                                                            .hovered)) {
+                                                      return Colors.grey
+                                                          .withOpacity(
+                                                              0.2); // Customize the hover color here
+                                                    }
+                                                    return null; // Use default overlay color for other states
+                                                  },
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Text(
+                                                  'Costos',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          (_currentPageIndex ==
+                                                                  4)
+                                                              ? FontWeight.bold
+                                                              : FontWeight
+                                                                  .normal,
+                                                      color: (_currentPageIndex ==
+                                                              4)
+                                                          ? Colors
+                                                              .greenAccent[700]
+                                                          : Colors.black),
+                                                ),
+                                              )),
+                                        ),
                                       ],
                                     )
                                   : DropdownButton(
@@ -506,6 +571,54 @@ class _MonthStatsState extends State<MonthStats> {
                                             //List
                                             StatsByCannels(
                                                 monthlyStats.salesbyOrderType)
+                                          ]),
+                                      //Costos de Insumos
+                                      Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Divider(
+                                                thickness: 0.5,
+                                                indent: 0,
+                                                endIndent: 0),
+                                            //List
+                                            Container(
+                                              height: 35,
+                                              width: double.infinity,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  //Payment Type
+                                                  Text(
+                                                    'Insumos',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  Spacer(),
+                                                  //Monto vendidos
+                                                  Container(
+                                                      width: 120,
+                                                      child: Center(
+                                                        child: Text(
+                                                          '${formatCurrency.format(monthlyStats.totalSuppliesCost)}',
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      )),
+                                                ],
+                                              ),
+                                            )
                                           ])
                                     ]),
                               )
@@ -571,7 +684,7 @@ class _MonthStatsState extends State<MonthStats> {
                   child: Column(
                     children: [
                       //Select Option
-                      (MediaQuery.of(context).size.width > 600)
+                      (MediaQuery.of(context).size.width > 650)
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -775,6 +888,56 @@ class _MonthStatsState extends State<MonthStats> {
                                         ),
                                       )),
                                 ),
+                                SizedBox(width: 10),
+                                //Costos de insumos
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              width: (_currentPageIndex == 4)
+                                                  ? 4
+                                                  : 0,
+                                              color: (_currentPageIndex == 4)
+                                                  ? Colors.greenAccent[700]
+                                                  : Colors.transparent))),
+                                  child: TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _currentPageIndex = 4;
+                                        });
+                                        pageController.animateToPage(4,
+                                            duration:
+                                                Duration(milliseconds: 250),
+                                            curve: Curves.easeIn);
+                                      },
+                                      style: ButtonStyle(
+                                        overlayColor: MaterialStateProperty
+                                            .resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                            if (states.contains(
+                                                MaterialState.hovered)) {
+                                              return Colors.grey.withOpacity(
+                                                  0.2); // Customize the hover color here
+                                            }
+                                            return null; // Use default overlay color for other states
+                                          },
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          'Costos',
+                                          style: TextStyle(
+                                              fontWeight:
+                                                  (_currentPageIndex == 4)
+                                                      ? FontWeight.bold
+                                                      : FontWeight.normal,
+                                              color: (_currentPageIndex == 4)
+                                                  ? Colors.greenAccent[700]
+                                                  : Colors.black),
+                                        ),
+                                      )),
+                                ),
                               ],
                             )
                           : DropdownButton(
@@ -863,6 +1026,49 @@ class _MonthStatsState extends State<MonthStats> {
                                     //List
                                     StatsByCannels(
                                         monthlyStats.salesbyOrderType)
+                                  ]),
+                              //Costos de Insumos
+                              Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Divider(
+                                        thickness: 0.5,
+                                        indent: 0,
+                                        endIndent: 0),
+                                    //List
+                                    Container(
+                                      height: 35,
+                                      width: double.infinity,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          //Payment Type
+                                          Text(
+                                            'Insumos',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Spacer(),
+                                          //Monto vendidos
+                                          Container(
+                                              width: 120,
+                                              child: Center(
+                                                child: Text(
+                                                  '${formatCurrency.format(monthlyStats.totalSuppliesCost)}',
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                    )
                                   ])
                             ]),
                       )

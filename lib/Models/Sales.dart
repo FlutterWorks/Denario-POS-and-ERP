@@ -17,6 +17,7 @@ class Sales {
   bool reversed;
   String orderType;
   List splitPaymentDetails;
+  double totalSuppliesCost;
 
   Sales(
       {this.account,
@@ -36,7 +37,8 @@ class Sales {
       this.cashRegister,
       this.reversed,
       this.orderType,
-      this.splitPaymentDetails});
+      this.splitPaymentDetails,
+      this.totalSuppliesCost});
 }
 
 class SoldItems {
@@ -45,6 +47,13 @@ class SoldItems {
   double price;
   double qty;
   double total;
+  List supplies;
 
-  SoldItems({this.product, this.category, this.price, this.qty, this.total});
+  SoldItems(
+      {this.product,
+      this.category,
+      this.price,
+      this.qty,
+      this.total,
+      this.supplies});
 }

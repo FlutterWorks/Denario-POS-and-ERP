@@ -28,12 +28,27 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
   bool paymentMethodEdited = false;
   String paymentType;
   List availablePaymentTypes = [];
+  String suppliesCost = '';
 
   @override
   void initState() {
     paymentType = widget.sale.paymentType;
     widget.paymentTypes.forEach((x) => availablePaymentTypes.add(x['Type']));
     availablePaymentTypes.add('Por Cobrar');
+
+    suppliesCost =
+        'Costo: ${formatCurrency.format(widget.sale.totalSuppliesCost)}';
+    for (var i = 0; i < widget.sale.soldItems.length; i++) {
+      if (widget.sale.soldItems[i].supplies.length > 0) {
+        for (var x = 0; x < widget.sale.soldItems[i].supplies.length; x++) {
+          double cost = (widget.sale.soldItems[i].supplies[x]['Quantity'] /
+                  widget.sale.soldItems[i].supplies[x]['Supply Quantity']) *
+              widget.sale.soldItems[i].supplies[x]['Supply Cost'];
+          suppliesCost +=
+              '\n${widget.sale.soldItems[i].supplies[x]['Ingredient']}: ${formatCurrency.format(cost)}';
+        }
+      }
+    }
     super.initState();
   }
 
@@ -48,8 +63,10 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
         child: Container(
           width: (MediaQuery.of(context).size.width > 800)
               ? MediaQuery.of(context).size.width * 0.4
-              : MediaQuery.of(context).size.width * 0.7,
-          height: MediaQuery.of(context).size.height * 0.7,
+              : MediaQuery.of(context).size.width,
+          height: (MediaQuery.of(context).size.width > 800)
+              ? MediaQuery.of(context).size.height * 0.7
+              : MediaQuery.of(context).size.height * 0.9,
           constraints: BoxConstraints(minHeight: 350, minWidth: 300),
           padding: EdgeInsets.all(20),
           child: Column(
@@ -269,10 +286,13 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                           Spacer(),
                           //Total
                           Container(
-                              child: Text(
-                            '${formatCurrency.format(widget.sale.total)}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                              child: Tooltip(
+                            message: suppliesCost,
+                            child: Text(
+                              '${formatCurrency.format(widget.sale.total)}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
                           )),
                         ],
                       ),

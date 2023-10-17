@@ -26,6 +26,7 @@ class DailyTransactions {
   Map salesbyCategory;
   Map salesbyOrderType;
   Map salesAmountbyCategory;
+  double totalSuppliesCost;
 
   DailyTransactions(
       {this.openDate,
@@ -47,5 +48,6 @@ class DailyTransactions {
       this.salesCountbyProduct,
       this.salesbyCategory,
       this.salesbyOrderType,
-      this.salesAmountbyCategory});
+      this.salesAmountbyCategory,
+      this.totalSuppliesCost});
 }

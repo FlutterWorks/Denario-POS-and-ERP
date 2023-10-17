@@ -125,7 +125,8 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                             widget.sale.cashRegister,
                             true,
                             widget.sale.splitPaymentDetails,
-                            widget.sale.orderType);
+                            widget.sale.orderType,
+                            0);
 
                         /////Save Sales and Order Categories to database
                         ////////Update each Account for the month based on order's categories
