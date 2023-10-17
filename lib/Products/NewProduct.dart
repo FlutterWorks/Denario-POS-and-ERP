@@ -5158,6 +5158,7 @@ class _NewProductState extends State<NewProduct> {
                               key: redrawObject,
                               shrinkWrap: true,
                               itemCount: ingredients.length,
+                              physics: NeverScrollableScrollPhysics(),
                               itemBuilder: ((context, i) {
                                 double ingredientTotal = ((ingredients[i]
                                                 ['Supply Cost'] /
@@ -5247,6 +5248,8 @@ class _NewProductState extends State<NewProduct> {
                                                           0
                                                       ? ''
                                                       : '${ingredients[i]['Quantity']}',
+                                                  keyboardType:
+                                                      TextInputType.number,
                                                   inputFormatters: [
                                                     FilteringTextInputFormatter
                                                         .allow(RegExp(
@@ -5347,6 +5350,8 @@ class _NewProductState extends State<NewProduct> {
                                                       ),
                                                     ),
                                                   ],
+                                                  keyboardType:
+                                                      TextInputType.number,
                                                   cursorColor: Colors.grey,
                                                   decoration: InputDecoration(
                                                     labelText: 'Rinde para',

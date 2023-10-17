@@ -840,28 +840,24 @@ class _NewSupplierState extends State<NewSupplier> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //Title
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(Icons.arrow_back),
-                        iconSize: 20.0),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Text(
-                      'Alta de proveedor',
-                      textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(Icons.arrow_back),
+                      iconSize: 20.0),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    'Alta de proveedor',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ],
               ),
               //Name
               Text(

@@ -217,7 +217,7 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                     //Search bar
                     Expanded(
                       child: Container(
-                        height: 45,
+                        height: 50,
                         child: TextFormField(
                           style: TextStyle(color: Colors.black, fontSize: 14),
                           cursorColor: Colors.grey,
@@ -285,7 +285,6 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                           Icons.list_rounded,
                           color: Colors.black,
                         )),
-                    SizedBox(width: 15),
                     //New Supplier
                     Container(
                       height: 40,

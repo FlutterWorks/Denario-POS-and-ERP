@@ -23,6 +23,9 @@ class SupplierProducts extends StatelessWidget {
       return ListView.builder(
           shrinkWrap: true,
           itemCount: products.length,
+          physics: (MediaQuery.of(context).size.width > 650)
+              ? BouncingScrollPhysics()
+              : NeverScrollableScrollPhysics(),
           itemBuilder: ((context, index) {
             return SupplierProductCard(products[index], businessID);
           }));

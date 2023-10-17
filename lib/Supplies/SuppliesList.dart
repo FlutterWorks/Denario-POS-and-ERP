@@ -149,7 +149,6 @@ class SuppliesList extends StatelessWidget {
                               NewSupply(currentBusiness, supplies[i])));
                 },
                 child: Container(
-                  color: i.isOdd ? Colors.grey[100] : Colors.white,
                   width: double.infinity,
                   height: 50,
                   padding: EdgeInsets.symmetric(vertical: 5),

@@ -23,6 +23,9 @@ class SupplierPendingInvoices extends StatelessWidget {
       return ListView.builder(
           shrinkWrap: true,
           itemCount: invoices.length,
+          physics: (MediaQuery.of(context).size.width > 650)
+              ? BouncingScrollPhysics()
+              : NeverScrollableScrollPhysics(),
           itemBuilder: ((context, index) {
             return SupplierIvoiceCard(invoices[index], businessID);
           }));

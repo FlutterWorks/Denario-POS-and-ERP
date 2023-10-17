@@ -166,7 +166,7 @@ class _NewSupplyState extends State<NewSupply> {
               ],
             ),
           ),
-          SizedBox(height: 35),
+          SizedBox(height: (MediaQuery.of(context).size.width > 650) ? 35 : 10),
           //Form
           Container(
             width: (MediaQuery.of(context).size.width > 650)
@@ -841,6 +841,7 @@ class _NewSupplyState extends State<NewSupply> {
                           key: redrawObject,
                           shrinkWrap: true,
                           itemCount: ingredients.length,
+                          physics: NeverScrollableScrollPhysics(),
                           itemBuilder: ((context, i) {
                             double ingredientTotal = ((ingredients[i]
                                             ['Supply Cost'] /
@@ -926,6 +927,8 @@ class _NewSupplyState extends State<NewSupply> {
                                                       0
                                                   ? ''
                                                   : '${ingredients[i]['Quantity']}',
+                                              keyboardType:
+                                                  TextInputType.number,
                                               inputFormatters: [
                                                 FilteringTextInputFormatter
                                                     .allow(RegExp(
@@ -1000,6 +1003,8 @@ class _NewSupplyState extends State<NewSupply> {
                                                   color: Colors.black,
                                                   fontSize: 14),
                                               textAlign: TextAlign.center,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               initialValue: ingredients[i]
                                                           ['Yield'] ==
                                                       0
