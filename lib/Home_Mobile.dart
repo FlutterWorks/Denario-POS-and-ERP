@@ -514,123 +514,123 @@ class _HomeMobileState extends State<HomeMobile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       //Name
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(25))),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             //User
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //Image
-                                Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Colors.grey.shade300),
-                                        color: Colors.grey,
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                userProfile.profileImage),
-                                            fit: BoxFit.cover))),
-                                SizedBox(width: 10),
-                                //Name
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white24),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    //Current business
-                                    Text(
-                                      userProfile
-                                          .businesses[businessIndexOnProfile]
-                                          .businessName,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(height: 2),
-                                    //Config
-                                    TextButton(
-                                        onPressed: () {},
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Icon(
-                                              Icons.settings,
-                                              color: Colors.grey,
-                                              size: 12,
-                                            ),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              'Perfil',
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            //Change business
-                            Container(
-                              height: 35,
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                ),
-                                onPressed: () {
-                                  changeBusinessDialog(userProfile.businesses,
-                                      userProfile.activeBusiness);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                    //Image
+                                    Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                color: Colors.grey.shade300),
+                                            color: Colors.grey,
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                    userProfile.profileImage),
+                                                fit: BoxFit.cover))),
+                                    SizedBox(width: 10),
+                                    //Name
+                                    Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Icon(
-                                          Icons.swap_horiz_outlined,
-                                          color: Colors.black,
-                                          size: 16,
-                                        ),
-                                        SizedBox(width: 10),
+                                        //Name
                                         Text(
-                                          "Cambiar de negocio",
+                                          userProfile.name,
                                           style: TextStyle(
-                                            color: Colors.grey,
-                                          ),
-                                        )
-                                      ]),
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        SizedBox(height: 5),
+                                        //Current business
+                                        Text(
+                                          userProfile
+                                              .businesses[
+                                                  businessIndexOnProfile]
+                                              .businessName,
+                                          style: TextStyle(
+                                              color: Colors.grey.shade300,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    //Icons
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.white,
+                                      size: 14,
+                                    )
+                                  ],
                                 ),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            //Change business
+                            TextButton(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.grey,
+                              ),
+                              onPressed: () {
+                                changeBusinessDialog(userProfile.businesses,
+                                    userProfile.activeBusiness);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.swap_horiz_outlined,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "Cambiar de negocio",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    ]),
                               ),
                             ),
                           ],
                         ),
                       ),
+                      Divider(
+                        indent: 25,
+                        endIndent: 25,
+                        thickness: 1,
+                        color: Colors.grey,
+                      ),
                       //Navigation
                       Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -648,7 +648,7 @@ class _HomeMobileState extends State<HomeMobile> {
                           Divider(
                             indent: 5,
                             endIndent: 5,
-                            thickness: 2,
+                            thickness: 1,
                             color: Colors.grey,
                           ),
                           SizedBox(height: 10),
