@@ -47,6 +47,7 @@ class BusinessProfile {
   final List socialMedia;
   final List visibleStoreCategories;
   final List paymentMethods;
+  final bool cashBalancing;
 
   BusinessProfile(
       {this.businessID,
@@ -61,7 +62,8 @@ class BusinessProfile {
       this.businessSchedule,
       this.socialMedia,
       this.visibleStoreCategories,
-      this.paymentMethods});
+      this.paymentMethods,
+      this.cashBalancing});
 }
 
 // class BusinessUsers {

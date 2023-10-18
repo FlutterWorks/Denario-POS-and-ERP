@@ -68,23 +68,43 @@ class ShortSalesList extends StatelessWidget {
                 itemBuilder: (context, i) {
                   return TextButton(
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return StreamProvider<DailyTransactions>.value(
-                                initialData: null,
-                                catchError: (_, err) => null,
-                                value: DatabaseService().dailyTransactions(
-                                    userBusiness, registerStatus.registerName),
-                                builder: (context, snapshot) {
-                                  return SingleSaleDialog(
-                                      salesList[i],
+                      if (MediaQuery.of(context).size.width > 650) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return StreamProvider<DailyTransactions>.value(
+                                  initialData: null,
+                                  catchError: (_, err) => null,
+                                  value: DatabaseService().dailyTransactions(
                                       userBusiness,
-                                      salesList[i].docID,
-                                      registerStatus.paymentTypes,
-                                      registerStatus);
-                                });
-                          });
+                                      registerStatus.registerName),
+                                  builder: (context, snapshot) {
+                                    return SingleSaleDialog(
+                                        salesList[i],
+                                        userBusiness,
+                                        salesList[i].docID,
+                                        registerStatus.paymentTypes,
+                                        registerStatus);
+                                  });
+                            });
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return StreamProvider<DailyTransactions>.value(
+                              initialData: null,
+                              catchError: (_, err) => null,
+                              value: DatabaseService().dailyTransactions(
+                                  userBusiness, registerStatus.registerName),
+                              builder: (context, snapshot) {
+                                return SingleSaleDialog(
+                                    salesList[i],
+                                    userBusiness,
+                                    salesList[i].docID,
+                                    registerStatus.paymentTypes,
+                                    registerStatus);
+                              });
+                        }));
+                      }
                     },
                     child: Container(
                       height: 50,

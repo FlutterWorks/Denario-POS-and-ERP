@@ -231,23 +231,21 @@ class _HomeDeskState extends State<HomeDesk> {
       navigationBarItems = [
         screenNavigator(
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? 'POS'
                 : 'Inicio',
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? Icons.blur_circular
                 : Icons.home,
             0),
         SizedBox(height: 20),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
-            ? SizedBox(height: 20)
-            : SizedBox(),
+        (userBusiness.cashBalancing) ? SizedBox(height: 20) : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
         SizedBox(height: 20),
         screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
@@ -266,15 +264,15 @@ class _HomeDeskState extends State<HomeDesk> {
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista') {
+                userBusiness.businessField == 'Venta Minorista' ||
+                userBusiness.businessField == 'Belleza/Spa') {
               return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
           });
         }),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? Navigator(onGenerateRoute: (routeSettings) {
                 return MaterialPageRoute(builder: (context) => DailyDesk());
               })
@@ -315,23 +313,21 @@ class _HomeDeskState extends State<HomeDesk> {
       navigationBarItems = [
         screenNavigator(
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? 'POS'
                 : 'Inicio',
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? Icons.blur_circular
                 : Icons.home,
             0),
         SizedBox(height: 20),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
-            ? SizedBox(height: 20)
-            : SizedBox(),
+        (userBusiness.cashBalancing) ? SizedBox(height: 20) : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
         SizedBox(height: 20),
         screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
@@ -355,8 +351,7 @@ class _HomeDeskState extends State<HomeDesk> {
             }
           });
         }),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? Navigator(onGenerateRoute: (routeSettings) {
                 return MaterialPageRoute(builder: (context) => DailyDesk());
               })
@@ -395,23 +390,21 @@ class _HomeDeskState extends State<HomeDesk> {
       navigationBarItems = [
         screenNavigator(
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? 'POS'
                 : 'Inicio',
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? Icons.blur_circular
                 : Icons.home,
             0),
         SizedBox(height: 20),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
-            ? SizedBox(height: 20)
-            : SizedBox(),
+        (userBusiness.cashBalancing) ? SizedBox(height: 20) : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
         SizedBox(height: 20),
         screenNavigator('Gastos', Icons.multiline_chart, 3),
@@ -469,16 +462,7 @@ class _HomeDeskState extends State<HomeDesk> {
         userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
             'Otro') {
       navigationBarItems = [
-        screenNavigator(
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
-                ? 'POS'
-                : 'Inicio',
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
-                ? Icons.blur_circular
-                : Icons.home,
-            0),
+        screenNavigator('POS', Icons.blur_circular, 0),
         SizedBox(height: 20),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 1),
       ];
@@ -486,7 +470,8 @@ class _HomeDeskState extends State<HomeDesk> {
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista') {
+                userBusiness.businessField == 'Venta Minorista' ||
+                userBusiness.businessField == 'Belleza/Spa') {
               return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);

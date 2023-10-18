@@ -4,7 +4,6 @@ import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/Products.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -25,14 +24,6 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
   ValueKey redrawObject = ValueKey('List');
   List<TextEditingController> _controllers = [];
   void nothing(BuildContext context) {}
-  List<Widget> _rows;
-
-  void _onReorder(int oldIndex, int newIndex) {
-    setState(() {
-      Widget row = categoriesList.removeAt(oldIndex);
-      categoriesList.insert(newIndex, row);
-    });
-  }
 
   @override
   void initState() {

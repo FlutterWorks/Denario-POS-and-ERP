@@ -227,16 +227,17 @@ class _HomeMobileState extends State<HomeMobile> {
       navigationBarItems = [
         screenNavigator(
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? 'POS'
                 : 'Inicio',
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
@@ -251,18 +252,15 @@ class _HomeMobileState extends State<HomeMobile> {
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(
-                categoriesProvider.categoryList[0],
-                scaffoldKeyMobile: _scaffoldKey,
-              );
+                userBusiness.businessField == 'Venta Minorista' ||
+                userBusiness.businessField == 'Belleza/Spa') {
+              return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
           });
         }),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? Navigator(onGenerateRoute: (routeSettings) {
                 return MaterialPageRoute(builder: (context) => DailyDesk());
               })
@@ -303,18 +301,20 @@ class _HomeMobileState extends State<HomeMobile> {
       navigationBarItems = [
         screenNavigator(
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? 'POS'
                 : 'Inicio',
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
+        (userBusiness.cashBalancing) ? SizedBox(height: 20) : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
         screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
         screenNavigator('Gastos', Icons.multiline_chart, 4),
@@ -327,15 +327,13 @@ class _HomeMobileState extends State<HomeMobile> {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList[0],
-                  scaffoldKeyMobile: _scaffoldKey);
+              return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
           });
         }),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? Navigator(onGenerateRoute: (routeSettings) {
                 return MaterialPageRoute(builder: (context) => DailyDesk());
               })
@@ -374,16 +372,17 @@ class _HomeMobileState extends State<HomeMobile> {
       navigationBarItems = [
         screenNavigator(
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? 'POS'
                 : 'Inicio',
             (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
+                    userBusiness.businessField == 'Venta Minorista' ||
+                    userBusiness.businessField == 'Belleza/Spa')
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
+        (userBusiness.cashBalancing)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
@@ -394,8 +393,7 @@ class _HomeMobileState extends State<HomeMobile> {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList[0],
-                  scaffoldKeyMobile: _scaffoldKey);
+              return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
@@ -441,25 +439,16 @@ class _HomeMobileState extends State<HomeMobile> {
         userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
             'Otro') {
       navigationBarItems = [
-        screenNavigator(
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
-                ? 'POS'
-                : 'Inicio',
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Tienda Minorista')
-                ? Icons.blur_circular
-                : Icons.home,
-            0),
+        screenNavigator('POS', Icons.blur_circular, 0),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 1),
       ];
       pageNavigators = [
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList[0],
-                  scaffoldKeyMobile: _scaffoldKey);
+                userBusiness.businessField == 'Venta Minorista' ||
+                userBusiness.businessField == 'Belleza/Spa') {
+              return POSProducts(categoriesProvider.categoryList[0]);
             } else {
               return NoPOSDashboard(userProfile.activeBusiness);
             }
@@ -470,7 +459,6 @@ class _HomeMobileState extends State<HomeMobile> {
         }),
       ];
     }
-
     return MultiProvider(
       providers: [
         StreamProvider<List<Products>>.value(
@@ -528,8 +516,12 @@ class _HomeMobileState extends State<HomeMobile> {
                       //Name
                       Container(
                         width: double.infinity,
-                        color: Colors.white,
                         padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(25),
+                                bottomRight: Radius.circular(25))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [

@@ -45,13 +45,15 @@ class _OnboardingState extends State<Onboarding> {
   ];
   String repeatPassword = "";
   String error = "";
+  bool cashBalancing = true;
 
   String businessName = "";
   String businessField = "Gastronómico";
   List businessFieldList = [
     'Gastronómico', //Vista de Mesas/Mostrador + Botón de venta manual
+    'Venta Minorista', //Solo venta de mostrador + boton de venta manual
+    'Belleza/Spa', //Solo venta de mostrador + boton de venta manual
     'Servicios Profesionales', //Solo boton de venta manual
-    'Tienda Minorista', //Solo venta de mostrador + boton de venta manual
     'Otro' //Solo boton de venta manual
   ];
   String businessLocation = "";
@@ -95,185 +97,6 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
-    // final userProfile = Provider.of<UserData>(context);
-
-    // if (userProfile == null) {
-    //   return Loading();
-    // }
-
-    // //New Employee Loging in for first time
-    // if (userProfile.name != null && userProfile.name != '') {
-    //   final businessIndexOnProfile = userProfile.businesses.indexWhere(
-    //       (element) => element.businessID == userProfile.activeBusiness);
-
-    //   return Scaffold(
-    //       body: Stack(children: [
-    //     //Pages
-    //     Align(
-    //       alignment: Alignment.center,
-    //       child: SingleChildScrollView(
-    //         child: Container(
-    //           constraints: BoxConstraints(
-    //               maxWidth: 600, maxHeight: 600, minHeight: 500, minWidth: 500),
-    //           padding: EdgeInsets.all(20),
-    //           child: Form(
-    //             key: _formKey,
-    //             child: Column(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: <Widget>[
-    //                 ////// Welcome
-    //                 Text(
-    //                   'Bienvenido!',
-    //                   textAlign: TextAlign.center,
-    //                   style: TextStyle(
-    //                       color: Colors.black,
-    //                       fontSize: 24,
-    //                       fontWeight: FontWeight.bold),
-    //                 ),
-    //                 SizedBox(height: 8),
-    //                 Text(
-    //                   'Sólo necesitamos confirmar tus datos para activar tu cuenta',
-    //                   textAlign: TextAlign.center,
-    //                   style: TextStyle(color: Colors.black, fontSize: 14),
-    //                 ),
-    //                 SizedBox(height: 50),
-    //                 //Nombre
-    //                 TextFormField(
-    //                   style: TextStyle(color: Colors.black, fontSize: 14),
-    //                   validator: (val) =>
-    //                       val.isEmpty ? "Agrega un nombre" : null,
-    //                   autofocus: true,
-    //                   cursorColor: Colors.grey,
-    //                   focusNode: _nameNode,
-    //                   textInputAction: TextInputAction.next,
-    //                   initialValue: userProfile.name,
-    //                   decoration: InputDecoration(
-    //                       labelText: 'Nombre',
-    //                       hintStyle: TextStyle(color: Colors.grey.shade400),
-    //                       errorStyle: TextStyle(
-    //                           color: Colors.redAccent[700], fontSize: 12),
-    //                       focusedBorder: UnderlineInputBorder(
-    //                           borderSide: BorderSide(color: Colors.grey))),
-    //                   onFieldSubmitted: (term) {
-    //                     _nameNode.unfocus();
-    //                     FocusScope.of(context).requestFocus(_tlfNode);
-    //                   },
-    //                   onChanged: (val) {
-    //                     setState(() => name = val);
-    //                   },
-    //                 ),
-    //                 //Whatsapp
-    //                 SizedBox(height: 25),
-    //                 TextFormField(
-    //                   style: TextStyle(color: Colors.black, fontSize: 14),
-    //                   keyboardType: TextInputType.number,
-    //                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-    //                   validator: (val) => val.isEmpty
-    //                       ? "Agrega un celular válido"
-    //                       : (val.length == 10)
-    //                           ? null
-    //                           : "El número de celular debe tener 10 caracteres",
-    //                   cursorColor: Colors.grey,
-    //                   focusNode: _tlfNode,
-    //                   textInputAction: TextInputAction.next,
-    //                   decoration: InputDecoration(
-    //                       labelText: 'Nro. de celular',
-    //                       hintStyle: TextStyle(color: Colors.grey.shade400),
-    //                       errorStyle: TextStyle(
-    //                           color: Colors.redAccent[700], fontSize: 12),
-    //                       focusedBorder: UnderlineInputBorder(
-    //                           borderSide: BorderSide(color: Colors.grey))),
-    //                   onFieldSubmitted: (term) {
-    //                     _tlfNode.unfocus();
-    //                     FocusScope.of(context).requestFocus(_rolNode);
-    //                   },
-    //                   onChanged: (val) {
-    //                     setState(() => phone = int.parse(val));
-    //                   },
-    //                 ),
-    //                 //Rol en el negocio
-    //                 SizedBox(height: 25),
-    //                 Text(
-    //                   'Rol en el negocio',
-    //                   textAlign: TextAlign.center,
-    //                   style: TextStyle(
-    //                       color: Colors.grey[600],
-    //                       fontSize: 12,
-    //                       fontWeight: FontWeight.w400),
-    //                 ),
-    //                 SizedBox(height: 8),
-    //                 Text(
-    //                   userProfile
-    //                       .businesses[businessIndexOnProfile].roleInBusiness,
-    //                   textAlign: TextAlign.center,
-    //                   style: TextStyle(
-    //                       color: Colors.black,
-    //                       fontSize: 14,
-    //                       fontWeight: FontWeight.w400),
-    //                 ),
-    //                 SizedBox(height: 25),
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-
-    //     ///Pages navigator Dots
-    //     Padding(
-    //       padding: const EdgeInsets.only(bottom: 25.0),
-    //       child: Align(
-    //         alignment: Alignment.bottomCenter,
-    //         child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-    //           //Button
-    //           ElevatedButton(
-    //             style: ButtonStyle(
-    //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    //                   RoundedRectangleBorder(
-    //                 borderRadius: new BorderRadius.circular(12.0),
-    //               )),
-    //               backgroundColor:
-    //                   MaterialStateProperty.all<Color>(Colors.black),
-    //               overlayColor: MaterialStateProperty.resolveWith<Color>(
-    //                 (Set<MaterialState> states) {
-    //                   if (states.contains(MaterialState.hovered))
-    //                     return Colors.grey.shade800;
-    //                   if (states.contains(MaterialState.focused) ||
-    //                       states.contains(MaterialState.pressed))
-    //                     return Colors.grey.shade500;
-    //                   return null; // Defer to the widget's default.
-    //                 },
-    //               ),
-    //             ),
-    //             onPressed: () {
-    //               if (_formKey.currentState.validate()) {
-    //                 //Save user data to Firestore
-    //                 DatabaseService().updateUserProfile(name, phone, '');
-    //                 //Save user data to user profile
-    //                 AuthService().updateUserData(name);
-    //               }
-    //             },
-    //             child: Container(
-    //               width: 300,
-    //               padding: EdgeInsets.symmetric(vertical: 10),
-    //               alignment: Alignment.center,
-    //               child: Text(
-    //                 'CONFIRMAR',
-    //                 textAlign: TextAlign.center,
-    //                 style: TextStyle(
-    //                     fontSize: 12,
-    //                     fontWeight: FontWeight.w500,
-    //                     color: Colors.white),
-    //               ),
-    //             ),
-    //           )
-    //         ]),
-    //       ),
-    //     ),
-    //   ]));
-    // }
-
     //New Owner creating user
     return Scaffold(
         body: Stack(children: [
@@ -360,13 +183,12 @@ class _OnboardingState extends State<Onboarding> {
                             keyboardType: TextInputType.number,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(10),
                             ],
                             validator: (val) => val.isEmpty
                                 ? "Agrega un celular válido"
-                                : (val.length == 10)
+                                : (val.length > 9)
                                     ? null
-                                    : "El número de celular debe tener 10 caracteres ej: 1112345678",
+                                    : "El número de celular debe tener al menos 10 caracteres",
                             cursorColor: Colors.grey,
                             focusNode: _tlfNode,
                             textInputAction: TextInputAction.next,
@@ -457,196 +279,287 @@ class _OnboardingState extends State<Onboarding> {
                     padding: EdgeInsets.all(20),
                     child: Form(
                       key: _formKey2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          ////// About text
-                          Text(
-                            'Sobre tu negocio',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 50),
-                          //Nombre del negocio
-                          TextFormField(
-                            style: TextStyle(color: Colors.black, fontSize: 14),
-                            validator: (val) =>
-                                val.isEmpty ? "Agrega un nombre" : null,
-                            cursorColor: Colors.grey,
-                            focusNode: _businessNameNode,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              label: Text('Nombre del negocio'),
-                              labelStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                              prefixIcon: Icon(
-                                Icons.store,
-                                color: Colors.grey,
-                              ),
-                              errorStyle: TextStyle(
-                                  color: Colors.redAccent[700], fontSize: 12),
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(12.0),
-                                borderSide: new BorderSide(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            ////// About text
+                            Text(
+                              'Sobre tu negocio',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 50),
+                            //Nombre del negocio
+                            TextFormField(
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
+                              validator: (val) =>
+                                  val.isEmpty ? "Agrega un nombre" : null,
+                              cursorColor: Colors.grey,
+                              focusNode: _businessNameNode,
+                              textInputAction: TextInputAction.next,
+                              decoration: InputDecoration(
+                                label: Text('Nombre del negocio'),
+                                labelStyle:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
+                                prefixIcon: Icon(
+                                  Icons.store,
                                   color: Colors.grey,
                                 ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(12.0),
-                                borderSide: new BorderSide(
-                                  color: Colors.green,
+                                errorStyle: TextStyle(
+                                    color: Colors.redAccent[700], fontSize: 12),
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(12.0),
+                                  borderSide: new BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(12.0),
+                                  borderSide: new BorderSide(
+                                    color: Colors.green,
+                                  ),
                                 ),
                               ),
+                              onFieldSubmitted: (term) {
+                                _businessNameNode.unfocus();
+                                FocusScope.of(context)
+                                    .requestFocus(_businessFieldNode);
+                              },
+                              onChanged: (val) {
+                                setState(() => businessName = val);
+                              },
                             ),
-                            onFieldSubmitted: (term) {
-                              _businessNameNode.unfocus();
-                              FocusScope.of(context)
-                                  .requestFocus(_businessFieldNode);
-                            },
-                            onChanged: (val) {
-                              setState(() => businessName = val);
-                            },
-                          ),
-                          //Rubro del negocio
-                          SizedBox(height: 25),
-                          Text(
-                            'Rubro',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          SizedBox(height: 5),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(12.0),
+                            //Rubro del negocio
+                            SizedBox(height: 25),
+                            Text(
+                              'Rubro',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
                             ),
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            child: DropdownButton(
-                              isExpanded: true,
-                              underline: SizedBox(),
-                              hint: Text(
-                                'Gastronómico',
+                            SizedBox(height: 5),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: DropdownButton(
+                                isExpanded: true,
+                                underline: SizedBox(),
+                                hint: Text(
+                                  'Gastronómico',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: Colors.black),
+                                ),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14,
                                     color: Colors.black),
+                                value: businessField,
+                                items: businessFieldList.map((i) {
+                                  return new DropdownMenuItem(
+                                    value: i,
+                                    child: new Text(i),
+                                  );
+                                }).toList(),
+                                onChanged: (x) {
+                                  setState(() {
+                                    businessField = x;
+                                  });
+                                },
                               ),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: Colors.black),
-                              value: businessField,
-                              items: businessFieldList.map((i) {
-                                return new DropdownMenuItem(
-                                  value: i,
-                                  child: new Text(i),
-                                );
-                              }).toList(),
-                              onChanged: (x) {
-                                setState(() {
-                                  businessField = x;
-                                });
+                            ),
+                            //Lugar
+                            SizedBox(height: 25),
+                            TextFormField(
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
+                              validator: (val) => val.isEmpty ? "" : null,
+                              cursorColor: Colors.grey,
+                              focusNode: _businessLocationNode,
+                              textInputAction: TextInputAction.next,
+                              decoration: InputDecoration(
+                                label: Text('Ubicación'),
+                                labelStyle:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
+                                prefixIcon: Icon(
+                                  Icons.location_pin,
+                                  color: Colors.grey,
+                                ),
+                                errorStyle: TextStyle(
+                                    color: Colors.redAccent[700], fontSize: 12),
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(12.0),
+                                  borderSide: new BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(12.0),
+                                  borderSide: new BorderSide(
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                              onFieldSubmitted: (term) {
+                                _businessLocationNode.unfocus();
+                                FocusScope.of(context)
+                                    .requestFocus(_businessSizeNode);
+                              },
+                              onChanged: (val) {
+                                setState(() => businessLocation = val);
                               },
                             ),
-                          ),
-                          //Lugar
-                          SizedBox(height: 25),
-                          TextFormField(
-                            style: TextStyle(color: Colors.black, fontSize: 14),
-                            validator: (val) => val.isEmpty ? "" : null,
-                            cursorColor: Colors.grey,
-                            focusNode: _businessLocationNode,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              label: Text('Ubicación'),
-                              labelStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                              prefixIcon: Icon(
-                                Icons.location_pin,
-                                color: Colors.grey,
-                              ),
-                              errorStyle: TextStyle(
-                                  color: Colors.redAccent[700], fontSize: 12),
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(12.0),
-                                borderSide: new BorderSide(
+                            //Tamaño
+                            SizedBox(height: 25),
+                            TextFormField(
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
+                              validator: (val) => val.isEmpty
+                                  ? "Agrega un numero válido"
+                                  : null,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              cursorColor: Colors.grey,
+                              focusNode: _businessSizeNode,
+                              textInputAction: TextInputAction.next,
+                              decoration: InputDecoration(
+                                label: Text(
+                                    'No. de personas trabajando en el negocio'),
+                                labelStyle:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
+                                prefixIcon: Icon(
+                                  Icons.person_outline,
                                   color: Colors.grey,
                                 ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(12.0),
-                                borderSide: new BorderSide(
-                                  color: Colors.green,
+                                errorStyle: TextStyle(
+                                    color: Colors.redAccent[700], fontSize: 12),
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(12.0),
+                                  borderSide: new BorderSide(
+                                    color: Colors.grey,
+                                  ),
                                 ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(12.0),
+                                  borderSide: new BorderSide(
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                              onFieldSubmitted: (term) {
+                                _businessSizeNode.unfocus();
+                                if (_formKey2.currentState.validate()) {
+                                  controller.nextPage(
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.ease);
+                                }
+                              },
+                              onChanged: (val) {
+                                setState(() => businessSize = int.parse(val));
+                              },
+                            ),
+                            SizedBox(height: 25),
+                            //Control de caja
+                            Text(
+                              '¿Es tienda física con control de caja?',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              width: double.infinity,
+                              height: 50,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  //Name
+                                  Container(
+                                    height: 45,
+                                    width: 75,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: !cashBalancing
+                                            ? Colors.white
+                                            : Colors.greenAccent[400],
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(8),
+                                              bottomLeft: Radius.circular(8)),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          cashBalancing = !cashBalancing;
+                                        });
+                                      },
+                                      child: Center(
+                                          child: Text('¡Sí!',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: !cashBalancing
+                                                    ? Colors.grey
+                                                    : Colors.black,
+                                              ))),
+                                    ),
+                                  ),
+                                  //Vendor
+                                  Container(
+                                    width: 75,
+                                    height: 45,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: !cashBalancing
+                                            ? Colors.greenAccent[400]
+                                            : Colors.white,
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(8),
+                                              bottomRight: Radius.circular(8)),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          cashBalancing = !cashBalancing;
+                                        });
+                                      },
+                                      child: Center(
+                                          child: Text('No',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: !cashBalancing
+                                                    ? Colors.black
+                                                    : Colors.grey,
+                                              ))),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            onFieldSubmitted: (term) {
-                              _businessLocationNode.unfocus();
-                              FocusScope.of(context)
-                                  .requestFocus(_businessSizeNode);
-                            },
-                            onChanged: (val) {
-                              setState(() => businessLocation = val);
-                            },
-                          ),
-                          //Tamaño
-                          SizedBox(height: 25),
-                          TextFormField(
-                            style: TextStyle(color: Colors.black, fontSize: 14),
-                            validator: (val) =>
-                                val.isEmpty ? "Agrega un numero válido" : null,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            cursorColor: Colors.grey,
-                            focusNode: _businessSizeNode,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              label: Text(
-                                  'No. de personas trabajando en el negocio'),
-                              labelStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                              prefixIcon: Icon(
-                                Icons.person_outline,
-                                color: Colors.grey,
-                              ),
-                              errorStyle: TextStyle(
-                                  color: Colors.redAccent[700], fontSize: 12),
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(12.0),
-                                borderSide: new BorderSide(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(12.0),
-                                borderSide: new BorderSide(
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                            onFieldSubmitted: (term) {
-                              _businessSizeNode.unfocus();
-                              if (_formKey2.currentState.validate()) {
-                                controller.nextPage(
-                                    duration: Duration(milliseconds: 500),
-                                    curve: Curves.ease);
-                              }
-                            },
-                            onChanged: (val) {
-                              setState(() => businessSize = int.parse(val));
-                            },
-                          ),
-                          SizedBox(height: 25),
-                        ],
+                            SizedBox(height: 75),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -762,7 +675,8 @@ class _OnboardingState extends State<Onboarding> {
                       businessField,
                       businessLocation,
                       businessSize,
-                      selectedTags);
+                      selectedTags,
+                      cashBalancing);
                   DatabaseService().createBusinessERPcategories(businessID);
                   DatabaseService().createBusinessERPmapping(businessID);
                   // DatabaseService().createBusinessERPaccountMapping(businessID);

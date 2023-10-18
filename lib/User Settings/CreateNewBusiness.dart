@@ -35,12 +35,14 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
   String businessField = "Gastronómico";
   List businessFieldList = [
     'Gastronómico', //Vista de Mesas/Mostrador + Botón de venta manual
+    'Venta Minorista', //Solo venta de mostrador + boton de venta manual
+    'Belleza/Spa', //Solo venta de mostrador + boton de venta manual
     'Servicios Profesionales', //Solo boton de venta manual
-    'Tienda Minorista', //Solo venta de mostrador + boton de venta manual
     'Otro' //Solo boton de venta manual
   ];
   String businessLocation = "";
   int businessSize = 0;
+  bool cashBalancing = true;
 
   String generateRandomString() {
     final _random = Random();
@@ -280,7 +282,89 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
                     ),
                   ),
                   SizedBox(height: 25),
-
+                  //Cash Balancing
+                  Text(
+                    '¿Es tienda física con control de caja?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //Name
+                        Container(
+                          height: 45,
+                          width: 75,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: !cashBalancing
+                                  ? Colors.white
+                                  : Colors.greenAccent[400],
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                    bottomLeft: Radius.circular(8)),
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                cashBalancing = !cashBalancing;
+                              });
+                            },
+                            child: Center(
+                                child: Text('¡Sí!',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: !cashBalancing
+                                          ? Colors.grey
+                                          : Colors.black,
+                                    ))),
+                          ),
+                        ),
+                        //Vendor
+                        Container(
+                          width: 75,
+                          height: 45,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: !cashBalancing
+                                  ? Colors.greenAccent[400]
+                                  : Colors.white,
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(8),
+                                    bottomRight: Radius.circular(8)),
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                cashBalancing = !cashBalancing;
+                              });
+                            },
+                            child: Center(
+                                child: Text('No',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: !cashBalancing
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    ))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 75),
                   //Button
                   ElevatedButton(
                     style: ButtonStyle(
@@ -322,7 +406,9 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
                             businessID,
                             businessField,
                             businessLocation,
-                            businessSize, []);
+                            businessSize,
+                            [],
+                            cashBalancing);
                         DatabaseService()
                             .createBusinessERPcategories(businessID);
                         DatabaseService().createBusinessERPmapping(businessID);

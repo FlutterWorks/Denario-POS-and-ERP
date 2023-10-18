@@ -135,23 +135,21 @@ class SalesDetailsView extends StatelessWidget {
             backgroundColor: Colors.white,
           ),
           onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return StreamProvider<DailyTransactions>.value(
-                      initialData: null,
-                      catchError: (_, err) => null,
-                      value: DatabaseService().dailyTransactions(
-                          businessID, registerStatus.registerName),
-                      builder: (context, snapshot) {
-                        return SingleSaleDialog(
-                            salesList[i],
-                            businessID,
-                            salesList[i].docID,
-                            registerStatus.paymentTypes,
-                            registerStatus);
-                      });
-                });
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return StreamProvider<DailyTransactions>.value(
+                  initialData: null,
+                  catchError: (_, err) => null,
+                  value: DatabaseService().dailyTransactions(
+                      businessID, registerStatus.registerName),
+                  builder: (context, snapshot) {
+                    return SingleSaleDialog(
+                        salesList[i],
+                        businessID,
+                        salesList[i].docID,
+                        registerStatus.paymentTypes,
+                        registerStatus);
+                  });
+            }));
           },
           child: Container(
             height: 50,

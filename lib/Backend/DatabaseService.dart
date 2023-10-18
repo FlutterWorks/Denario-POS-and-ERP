@@ -162,68 +162,70 @@ class DatabaseService {
   BusinessProfile _userBusinessProfileFromSnapshot(DocumentSnapshot snapshot) {
     try {
       return BusinessProfile(
-        businessID: snapshot.data().toString().contains('Business ID')
-            ? snapshot['Business ID']
-            : '',
-        businessName: snapshot.data().toString().contains('Business Name')
-            ? snapshot['Business Name']
-            : '',
-        businessField: snapshot.data().toString().contains('Business Field')
-            ? snapshot['Business Field']
-            : '',
-        businessImage: snapshot.data().toString().contains('Business Image')
-            ? snapshot['Business Image']
-            : '',
-        businessSize: snapshot.data().toString().contains('Business Size')
-            ? snapshot['Business Size']
-            : 0,
-        businessLocation:
-            snapshot.data().toString().contains('Business Location')
-                ? snapshot['Business Location']
-                : '',
-        businessUsers: snapshot.data().toString().contains('Business Users')
-            ? snapshot['Business Users']
-            : [],
-        businessBackgroundImage:
-            snapshot.data().toString().contains('Catalog Background Image')
-                ? snapshot['Catalog Background Image']
-                : '',
-        businessSchedule:
-            snapshot.data().toString().contains('Business Schedule')
-                ? snapshot['Business Schedule']
-                : [],
-        socialMedia: snapshot.data().toString().contains('Social Media')
-            ? snapshot['Social Media']
-            : [],
-        visibleStoreCategories:
-            snapshot.data().toString().contains('Visible Store Categories')
-                ? snapshot['Visible Store Categories']
-                : ['All'],
-        paymentMethods: snapshot.data().toString().contains('Payment Types')
-            ? snapshot['Payment Types']
-            : [
-                {
-                  'Method': 'Efectivo',
-                  'Image':
-                      'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-cash-100.png?alt=media&token=9d58b0f5-dcff-4ecb-bc8c-ffc51d05dc94'
-                },
-                {
-                  'Method': 'Tarjeta de Débito',
-                  'Image':
-                      'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-credit-card-80.png?alt=media&token=b349ec08-93ea-4120-91b8-c1b0a643c7da'
-                },
-                {
-                  'Method': 'QR',
-                  'Image':
-                      'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-qr-code-96.png?alt=media&token=a3a9d2f5-3ba6-4775-aaf9-a22159997694'
-                },
-                {
-                  'Method': 'Transferencia Bancaria',
-                  'Image':
-                      'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-bank-transfer-58.png?alt=media&token=71680c7e-a20c-4601-ba2d-3ea792c7c550'
-                },
-              ],
-      );
+          businessID: snapshot.data().toString().contains('Business ID')
+              ? snapshot['Business ID']
+              : '',
+          businessName: snapshot.data().toString().contains('Business Name')
+              ? snapshot['Business Name']
+              : '',
+          businessField: snapshot.data().toString().contains('Business Field')
+              ? snapshot['Business Field']
+              : '',
+          businessImage: snapshot.data().toString().contains('Business Image')
+              ? snapshot['Business Image']
+              : '',
+          businessSize: snapshot.data().toString().contains('Business Size')
+              ? snapshot['Business Size']
+              : 0,
+          businessLocation:
+              snapshot.data().toString().contains('Business Location')
+                  ? snapshot['Business Location']
+                  : '',
+          businessUsers: snapshot.data().toString().contains('Business Users')
+              ? snapshot['Business Users']
+              : [],
+          businessBackgroundImage:
+              snapshot.data().toString().contains('Catalog Background Image')
+                  ? snapshot['Catalog Background Image']
+                  : '',
+          businessSchedule:
+              snapshot.data().toString().contains('Business Schedule')
+                  ? snapshot['Business Schedule']
+                  : [],
+          socialMedia: snapshot.data().toString().contains('Social Media')
+              ? snapshot['Social Media']
+              : [],
+          visibleStoreCategories:
+              snapshot.data().toString().contains('Visible Store Categories')
+                  ? snapshot['Visible Store Categories']
+                  : ['All'],
+          paymentMethods: snapshot.data().toString().contains('Payment Types')
+              ? snapshot['Payment Types']
+              : [
+                  {
+                    'Method': 'Efectivo',
+                    'Image':
+                        'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-cash-100.png?alt=media&token=9d58b0f5-dcff-4ecb-bc8c-ffc51d05dc94'
+                  },
+                  {
+                    'Method': 'Tarjeta de Débito',
+                    'Image':
+                        'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-credit-card-80.png?alt=media&token=b349ec08-93ea-4120-91b8-c1b0a643c7da'
+                  },
+                  {
+                    'Method': 'QR',
+                    'Image':
+                        'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-qr-code-96.png?alt=media&token=a3a9d2f5-3ba6-4775-aaf9-a22159997694'
+                  },
+                  {
+                    'Method': 'Transferencia Bancaria',
+                    'Image':
+                        'https://firebasestorage.googleapis.com/v0/b/cafe-galia.appspot.com/o/App%20Assets%2FPayment%20Methods%2Ficons8-bank-transfer-58.png?alt=media&token=71680c7e-a20c-4601-ba2d-3ea792c7c550'
+                  },
+                ],
+          cashBalancing: snapshot.data().toString().contains('Arqueo de Caja')
+              ? snapshot['Arqueo de Caja']
+              : true);
     } catch (e) {
       print(e);
       return null;
@@ -248,11 +250,13 @@ class DatabaseService {
       String businessField,
       String businessLocation,
       int businessSize,
-      List usage) async {
+      List usage,
+      bool cashBalancing) async {
     return await FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
         .set({
+      'Arqueo de Caja': cashBalancing,
       'Caja Abierta': false,
       'Caja Actual': '',
       'Payment Types': [
