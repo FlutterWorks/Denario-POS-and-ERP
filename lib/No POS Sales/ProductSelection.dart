@@ -73,7 +73,7 @@ class ProductSelection extends StatelessWidget {
               width: double.infinity,
               height: 75,
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
+              child: TextButton(
                   onPressed: () {
                     bloc.addToCart({
                       'Name': product[i].product,
@@ -85,20 +85,6 @@ class ProductSelection extends StatelessWidget {
                     });
                     Navigator.of(context).pop();
                   },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                    overlayColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.hovered))
-                          return Colors.black12;
-                        if (states.contains(MaterialState.focused) ||
-                            states.contains(MaterialState.pressed))
-                          return Colors.black26;
-                        return null; // Defer to the widget's default.
-                      },
-                    ),
-                  ),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

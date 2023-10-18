@@ -1436,15 +1436,33 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                               _controllers.add(new TextEditingController());
                             }
 
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return StreamProvider<CategoryList>.value(
-                                      initialData: null,
-                                      value: DatabaseService().categoriesList(
-                                          userProfile.activeBusiness),
-                                      child: SelectItemDialog(userProfile));
-                                });
+                            if (MediaQuery.of(context).size.width > 650) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return StreamProvider<CategoryList>.value(
+                                        initialData: null,
+                                        value: DatabaseService().categoriesList(
+                                            userProfile.activeBusiness),
+                                        child: SelectItemDialog(userProfile));
+                                  });
+                            } else {
+                              showModalBottomSheet(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15))),
+                                  isScrollControlled: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return StreamProvider<CategoryList>.value(
+                                        initialData: null,
+                                        value: DatabaseService().categoriesList(
+                                            userProfile.activeBusiness),
+                                        child: SelectItemDialog(userProfile));
+                                  });
+                            }
                           },
                           child: Container(
                             height: 70,

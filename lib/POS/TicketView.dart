@@ -9,6 +9,7 @@ import 'package:denario/Models/SavedOrders.dart';
 import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/Tables.dart';
 import 'package:denario/Models/User.dart';
+import 'package:denario/No%20POS%20Sales/ScheduleSaleDialog.dart';
 //import 'package:denario/Models/Stats.dart';
 import 'package:denario/POS/ActiveOrders.dart';
 import 'package:denario/POS/ConfirmOrder.dart';
@@ -1316,13 +1317,46 @@ class _TicketViewState extends State<TicketView> {
                                   // });
                                   break;
                                 case 3:
+                                if(MediaQuery.of(context).size.width > 650){
+                                  showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return ScheduleSaleDialog(
+                                              widget.userProfile.activeBusiness,
+                                              bloc.totalTicketAmount,
+                                              discount,
+                                              tax,
+                                              bloc.subtotalTicketAmount,
+                                              bloc.ticketItems['Items'],
+                                              orderName,
+                                              clearVariables);
+                                        });
+                                } else {
+                                  Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Scaffold(
+                                                  body: ScheduleSaleDialog(
+                                                      widget.userProfile.activeBusiness,
+                                                      bloc.totalTicketAmount,
+                                                      discount,
+                                                      tax,
+                                                      bloc.subtotalTicketAmount,
+                                                      bloc.ticketItems['Items'],
+                                                      orderName,
+                                                      clearVariables),
+                                                )));
+                                }
+                                  break;
+                                case 4:
                                   // setState(() {
                                   //   ticketConcept = 'Consumo de Empleados';
                                   //   ticketIcon = Icons.takeout_dining_outlined;
                                   bloc.changeOrderType('Consumo de Empleados');
                                   // });
                                   break;
-                                case 4:
+                                case 5:
                                   // setState(() {
                                   //   ticketConcept = 'Desperdicios';
                                   //   ticketIcon = Icons.coffee_outlined;
@@ -1380,9 +1414,24 @@ class _TicketViewState extends State<TicketView> {
                                           Text("Mesa")
                                         ],
                                       )),
-                                  //Consumo
+                                  //Agendar
                                   PopupMenuItem<int>(
                                       value: 3,
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.calendar_month,
+                                            color: Colors.black,
+                                            size: 16,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text("Agendar Venta")
+                                        ],
+                                      )),
+                                  
+                                  //Consumo
+                                  PopupMenuItem<int>(
+                                      value: 4,
                                       child: Row(
                                         children: [
                                           Icon(
@@ -1396,7 +1445,7 @@ class _TicketViewState extends State<TicketView> {
                                       )),
                                   //Desperdicios
                                   PopupMenuItem<int>(
-                                      value: 4,
+                                      value: 5,
                                       child: Row(
                                         children: [
                                           Icon(

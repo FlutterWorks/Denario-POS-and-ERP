@@ -649,12 +649,16 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                       showModalBottomSheet(
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0)),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15))),
                           isScrollControlled: true,
                           context: context,
                           builder: (context) {
-                            return VendorSearchBar(widget.activeBusiness,
-                                widget.costType, selectVendor);
+                            return SingleChildScrollView(
+                              child: VendorSearchBar(widget.activeBusiness,
+                                  widget.costType, selectVendor),
+                            );
                           });
                     },
                     style: OutlinedButton.styleFrom(

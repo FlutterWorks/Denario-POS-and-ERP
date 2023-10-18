@@ -859,6 +859,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         onPressed: () {
                                           var documentID =
                                               DateTime.now().toString();
+
                                           DatabaseService().saveNewOrder(
                                               documentID,
                                               widget.businessID,
@@ -897,8 +898,6 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                             Navigator.of(context).pop();
                                           }
                                           Navigator.of(context).pop();
-                                          // saveOrder(userProfile, paymentType,
-                                          //     DateTime.now().toString(), false);
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -1039,11 +1038,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                   .paidScheduledSale(
                                                       widget.businessID,
                                                       widget.savedOrderID);
-                                              Navigator.of(context).pop();
                                             }
                                             Navigator.of(context).pop();
-                                            // saveOrder(userProfile, paymentType,
-                                            //     DateTime.now().toString(), false);
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(

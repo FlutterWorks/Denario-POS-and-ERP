@@ -899,7 +899,9 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                           showModalBottomSheet(
                               backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0)),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15))),
                               isScrollControlled: true,
                               context: context,
                               builder: (context) {
@@ -909,13 +911,15 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                       bloc.expenseItems['Vendor']
                                           .toLowerCase()),
                                   initialData: null,
-                                  child: AddExpenseItem(
-                                      addExpenseItem,
-                                      snapshot.data['Items'].length,
-                                      widget.dropdownCategories,
-                                      false,
-                                      true,
-                                      selectedSupplier),
+                                  child: SingleChildScrollView(
+                                    child: AddExpenseItem(
+                                        addExpenseItem,
+                                        snapshot.data['Items'].length,
+                                        widget.dropdownCategories,
+                                        false,
+                                        true,
+                                        selectedSupplier),
+                                  ),
                                 );
                               });
                         },

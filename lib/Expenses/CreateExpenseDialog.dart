@@ -837,16 +837,6 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                             addSupplyToList,
                             widget.activeBusiness)
                         : Container(),
-                    //Tags de productos
-                    // (widget.costType == 'Costo de Ventas')
-                    //     ? StreamProvider<List<Supply>>.value(
-                    //         value: DatabaseService().suppliesListbyVendor(
-                    //             widget.activeBusiness,
-                    //             bloc.expenseItems['Vendor'].toLowerCase()),
-                    //         initialData: null,
-                    //         child: VendorProductsTags(
-                    //             selectedSupplier, addProduct))
-                    //     : SizedBox(),
                     //Total
                     Padding(
                       padding: const EdgeInsets.only(right: 20.0),

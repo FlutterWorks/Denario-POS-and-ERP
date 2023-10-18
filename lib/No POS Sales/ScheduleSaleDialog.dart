@@ -758,16 +758,16 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                         onPressed: () => Navigator.pop(context),
                         icon: Icon(Icons.arrow_back),
                         iconSize: 20.0),
+                    SizedBox(width: 15),
+                    Text(
+                      'Agendar venta',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
                   ],
-                ),
-                // //Titulo
-                Text(
-                  'Agendar venta',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
                 ),
                 SizedBox(height: 30),
                 //Client
@@ -1079,6 +1079,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                     },
                   ),
                 ),
+                SizedBox(height: 15),
                 //Delivery
                 Row(
                   children: [
