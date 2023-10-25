@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class SupplierProductCard extends StatelessWidget {
   final Supply product;
   final String businessID;
-  SupplierProductCard(this.product, this.businessID, {Key key})
+  SupplierProductCard(this.product, this.businessID, {Key? key})
       : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();

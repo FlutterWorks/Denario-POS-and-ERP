@@ -23,7 +23,7 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
   final formatCurrency = new NumberFormat.simpleCurrency();
   bool editMethod = false;
   bool paymentMethodEdited = false;
-  String paymentType;
+  late String paymentType;
   List availablePaymentTypes = [];
 
   @override
@@ -69,11 +69,11 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                     Container(
                         child: Text(
                       DateFormat.MMMd()
-                              .format(widget.sale.savedDate)
+                              .format(widget.sale.savedDate!)
                               .toString() +
                           " - " +
                           DateFormat('HH:mm:ss')
-                              .format(widget.sale.savedDate)
+                              .format(widget.sale.savedDate!)
                               .toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
@@ -85,7 +85,7 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                         child: Text(
                       (widget.sale.orderName == '')
                           ? 'Nombre sin agregar'
-                          : widget.sale.orderName,
+                          : widget.sale.orderName!,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                       ),
@@ -105,7 +105,7 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                 child: Container(
                   child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: widget.sale.orderDetail.length,
+                      itemCount: widget.sale.orderDetail!.length,
                       itemBuilder: (context, i) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 5.0),
@@ -116,16 +116,17 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                                 //Name
                                 Container(
                                   constraints: BoxConstraints(maxWidth: 250),
-                                  child: Text((widget.sale.orderDetail[i].qty ==
+                                  child: Text((widget
+                                              .sale.orderDetail![i].qty ==
                                           1)
-                                      ? widget.sale.orderDetail[i].product
-                                      : widget.sale.orderDetail[i].product +
-                                          ' (${formatCurrency.format(widget.sale.orderDetail[i].price)} x ${widget.sale.orderDetail[i].qty})'),
+                                      ? widget.sale.orderDetail![i].product!
+                                      : widget.sale.orderDetail![i].product! +
+                                          ' (${formatCurrency.format(widget.sale.orderDetail![i].price)} x ${widget.sale.orderDetail![i].qty})'),
                                 ),
                                 //Amount
                                 Spacer(),
                                 Text(
-                                    '${formatCurrency.format(widget.sale.orderDetail[i].total)}'),
+                                    '${formatCurrency.format(widget.sale.orderDetail![i].total)}'),
                               ]),
                         );
                       }),
@@ -200,7 +201,7 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                                 }).toList(),
                                 onChanged: (newValue) {
                                   setState(() {
-                                    paymentType = newValue;
+                                    paymentType = newValue.toString();
                                     paymentMethodEdited = true;
                                   });
                                 },
@@ -255,19 +256,20 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
-                                  return Colors.grey[300];
+                                  return Colors.grey[300]!;
                                 if (states.contains(MaterialState.focused) ||
                                     states.contains(MaterialState.pressed))
-                                  return Colors.grey[300];
-                                return null; // Defer to the widget's default.
+                                  return Colors.grey[300]!;
+                                return Colors.grey[
+                                    300]!; // Defer to the widget's default.
                               },
                             ),
                           ),
                           onPressed: () async {
                             DatabaseService().editSalePaymentMethod(
                                 widget.businessID,
-                                widget.sale.savedDate.year,
-                                widget.sale.savedDate.month,
+                                widget.sale.savedDate!.year,
+                                widget.sale.savedDate!.month,
                                 widget.docID,
                                 paymentType);
 
@@ -276,8 +278,7 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                                 widget.businessID, widget.docID);
 
                             ///////////////////////////Register in Daily Transactions/////
-                            if (widget.registerStatus.registerName != null &&
-                                widget.registerStatus.registerName != '' &&
+                            if (widget.registerStatus.registerName != '' &&
                                 widget.sale.cashRegister ==
                                     widget.registerStatus.registerName) {
                               //Substract previus payment type // Add new
@@ -286,8 +287,8 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                                   .collection('ERP')
                                   .doc(widget.businessID)
                                   .collection(
-                                      widget.sale.savedDate.year.toString())
-                                  .doc(widget.sale.savedDate.month.toString())
+                                      widget.sale.savedDate!.year.toString())
+                                  .doc(widget.sale.savedDate!.month.toString())
                                   .collection('Daily')
                                   .doc(widget.sale.cashRegister);
 
@@ -297,7 +298,8 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                                 if (doc.exists) {
                                   dayStatsRef.update({
                                     'Ventas por Medio.$paymentType':
-                                        FieldValue.increment(widget.sale.total),
+                                        FieldValue.increment(
+                                            widget.sale.total!),
                                   });
                                 }
                               } catch (error) {
@@ -313,8 +315,8 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                                 .collection('ERP')
                                 .doc(widget.businessID)
                                 .collection(
-                                    widget.sale.savedDate.year.toString())
-                                .doc(widget.sale.savedDate.month.toString())
+                                    widget.sale.savedDate!.year.toString())
+                                .doc(widget.sale.savedDate!.month.toString())
                                 .collection('Stats')
                                 .doc('Monthly Stats');
 
@@ -324,7 +326,7 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                               if (doc.exists) {
                                 monthStatsRef.update({
                                   'Sales by Payment Type.$paymentType':
-                                      FieldValue.increment(widget.sale.total),
+                                      FieldValue.increment(widget.sale.total!),
                                 });
                               }
                             } catch (error) {

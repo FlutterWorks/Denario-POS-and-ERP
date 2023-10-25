@@ -19,7 +19,7 @@ class ProductList extends StatelessWidget {
   Widget build(BuildContext context) {
     final products = Provider.of<List<Products>>(context);
 
-    if (products == null) {
+    if (products == []) {
       return SliverList(
           delegate: SliverChildBuilderDelegate((context, i) {
         return const SizedBox();
@@ -38,7 +38,7 @@ class ProductList extends StatelessWidget {
       (context, i) {
         if (i < products.length) {
           double totalCost = 0;
-          List ingredients = products[i].ingredients;
+          List ingredients = products[i].ingredients!;
           if (ingredients.length > 0) {
             for (int x = 0; x < ingredients.length; x++) {
               if (ingredients[x]['Supply Cost'] != null &&
@@ -51,8 +51,7 @@ class ProductList extends StatelessWidget {
                     ingredients[x]['Yield'];
                 if (!ingredientTotal.isNaN &&
                     !ingredientTotal.isInfinite &&
-                    !ingredientTotal.isNegative &&
-                    ingredientTotal != null) {
+                    !ingredientTotal.isNegative) {
                   totalCost = totalCost + ingredientTotal;
                 }
               }
@@ -89,7 +88,7 @@ class ProductList extends StatelessWidget {
                                       BorderRadius.all(Radius.circular(25)),
                                   color: Colors.grey.shade300,
                                   image: DecorationImage(
-                                      image: NetworkImage(products[i].image),
+                                      image: NetworkImage(products[i].image!),
                                       fit: BoxFit.cover)))
                           : Container(
                               height: 75,
@@ -106,7 +105,7 @@ class ProductList extends StatelessWidget {
                           ? Container(
                               width: 150,
                               child: Text(
-                                products[i].product,
+                                products[i].product!,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -121,7 +120,7 @@ class ProductList extends StatelessWidget {
                                     ? Container(
                                         width: 150,
                                         child: Text(
-                                          products[i].code,
+                                          products[i].code!,
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
@@ -135,7 +134,7 @@ class ProductList extends StatelessWidget {
                                 Container(
                                     width: 150,
                                     child: Text(
-                                      products[i].product,
+                                      products[i].product!,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
@@ -146,7 +145,7 @@ class ProductList extends StatelessWidget {
                                 Container(
                                     width: 150,
                                     child: Text(
-                                      products[i].category,
+                                      products[i].category ?? '',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
@@ -160,7 +159,7 @@ class ProductList extends StatelessWidget {
                           ? Container(
                               width: 100,
                               child: Text(
-                                products[i].code,
+                                products[i].code ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -174,7 +173,7 @@ class ProductList extends StatelessWidget {
                           ? Container(
                               width: 150,
                               child: Text(
-                                products[i].category,
+                                products[i].category ?? '',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
@@ -223,17 +222,17 @@ class ProductList extends StatelessWidget {
                                   SizedBox(height: 5),
                                   //Margin
                                   Text(
-                                    '${(((products[i].price - totalCost) / products[i].price) * 100).toStringAsFixed(0)}%',
+                                    '${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color:
-                                            ((((products[i].price - totalCost) /
-                                                            products[i].price) *
-                                                        100) >
-                                                    products[i].lowMarginAlert)
-                                                ? Colors.black54
-                                                : Colors.redAccent[700]),
+                                        color: ((((products[i].price! -
+                                                            totalCost) /
+                                                        products[i].price!) *
+                                                    100) >
+                                                products[i].lowMarginAlert!)
+                                            ? Colors.black54
+                                            : Colors.redAccent[700]),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   )
@@ -244,14 +243,14 @@ class ProductList extends StatelessWidget {
                           ? Container(
                               width: 100,
                               child: Text(
-                                '${(((products[i].price - totalCost) / products[i].price) * 100).toStringAsFixed(0)}%',
+                                '${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: ((((products[i].price - totalCost) /
-                                                    products[i].price) *
+                                    color: ((((products[i].price! - totalCost) /
+                                                    products[i].price!) *
                                                 100) >
-                                            products[i].lowMarginAlert)
+                                            products[i].lowMarginAlert!)
                                         ? Colors.black54
                                         : Colors.redAccent[700]),
                                 maxLines: 1,
@@ -293,7 +292,7 @@ class ProductList extends StatelessWidget {
                                       BorderRadius.all(Radius.circular(25)),
                                   color: Colors.grey.shade300,
                                   image: DecorationImage(
-                                      image: NetworkImage(products[i].image),
+                                      image: NetworkImage(products[i].image!),
                                       fit: BoxFit.cover)))
                           : Container(
                               height: 75,
@@ -317,7 +316,7 @@ class ProductList extends StatelessWidget {
                               Container(
                                   width: 150,
                                   child: Text(
-                                    products[i].code,
+                                    products[i].code!,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -328,7 +327,7 @@ class ProductList extends StatelessWidget {
                               Container(
                                   width: 150,
                                   child: Text(
-                                    products[i].product,
+                                    products[i].product!,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -339,7 +338,7 @@ class ProductList extends StatelessWidget {
                               Container(
                                   width: 150,
                                   child: Text(
-                                    products[i].category,
+                                    products[i].category!,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
@@ -385,16 +384,16 @@ class ProductList extends StatelessWidget {
                                 SizedBox(width: 5),
                                 //Margin
                                 Text(
-                                  '(${(((products[i].price - totalCost) / products[i].price) * 100).toStringAsFixed(0)}%)',
+                                  '(${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%)',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 11,
                                       color:
-                                          ((((products[i].price - totalCost) /
-                                                          products[i].price) *
+                                          ((((products[i].price! - totalCost) /
+                                                          products[i].price!) *
                                                       100) >
-                                                  products[i].lowMarginAlert)
+                                                  products[i].lowMarginAlert!)
                                               ? Colors.black54
                                               : Colors.redAccent[700]),
                                   maxLines: 1,

@@ -15,8 +15,8 @@ class PlateSelectionDesktop extends StatefulWidget {
 
 class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
   bool productExists = false;
-  int itemIndex;
-  List<Products> product;
+  int? itemIndex;
+  List<Products>? product;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +42,13 @@ class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
               childAspectRatio: 1,
             ),
             scrollDirection: Axis.vertical,
-            itemCount: product.length,
+            itemCount: product!.length,
             itemBuilder: (context, i) {
               return ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.white),
-                  overlayColor: MaterialStateProperty.resolveWith<Color>(
+                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
                     (Set<MaterialState> states) {
                       if (states.contains(MaterialState.hovered))
                         return Colors.black12;
@@ -62,7 +62,7 @@ class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
                 onPressed: () {
                   //If ticket contains product, just add
                   for (var x = 0; x < bloc.ticketItems['Items'].length; x++) {
-                    if (product[i].product ==
+                    if (product![i].product ==
                             bloc.ticketItems['Items'][x]["Name"] &&
                         bloc.ticketItems['Items'][x]["Options"].isEmpty) {
                       setState(() {
@@ -76,13 +76,13 @@ class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
                     bloc.addQuantity(itemIndex);
                   } else {
                     bloc.addToCart({
-                      'Name': product[i].product,
-                      'Category': product[i].category,
-                      'Price': product[i].price,
+                      'Name': product![i].product,
+                      'Category': product![i].category,
+                      'Price': product![i].price,
                       'Quantity': 1,
-                      'Total Price': product[i].price,
+                      'Total Price': product![i].price,
                       'Options': [],
-                      'Supplies': product[i].ingredients
+                      'Supplies': product![i].ingredients
                     });
                   }
 
@@ -97,12 +97,12 @@ class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
                       builder: (context) {
                         return POSItemDialog(
                             widget.businessID,
-                            product[i].product,
-                            product[i].productOptions,
-                            product[i].available,
-                            product[i].price.toDouble(),
-                            product[i].category,
-                            product[i].productID);
+                            product![i].product!,
+                            product![i].productOptions!,
+                            product![i].available!,
+                            product![i].price!.toDouble(),
+                            product![i].category!,
+                            product![i].productID!);
                       });
                 },
                 child: Container(
@@ -113,7 +113,7 @@ class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
                     children: <Widget>[
                       //product
                       Text(
-                        product[i].product, //product[index].product,
+                        product![i].product!, //product[index].product,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
@@ -127,7 +127,7 @@ class _PlateSelectionDesktopState extends State<PlateSelectionDesktop> {
 
                       ///Price
                       Text(
-                        "\$${product[i].price}", //'\$120' + //product[index].price.toString(),
+                        "\$${product![i].price}", //'\$120' + //product[index].price.toString(),
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: Colors.black54,

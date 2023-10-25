@@ -14,14 +14,14 @@ class TablesMapDesktop extends StatefulWidget {
 
 class _TablesMapDesktopState extends State<TablesMapDesktop> {
   bool productExists = false;
-  int itemIndex;
+  int? itemIndex;
   final formatCurrency = new NumberFormat.simpleCurrency();
 
   @override
   Widget build(BuildContext context) {
     final tables = Provider.of<List<Tables>>(context);
 
-    if (tables == null) {
+    if (tables == []) {
       return Center();
     }
 
@@ -38,7 +38,7 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                   var tableWidth;
                   var tableShape;
 
-                  tableBaseSize = (table.tableSize *
+                  tableBaseSize = (table.tableSize! *
                           ((MediaQuery.of(context).size.height - 120) *
                               (MediaQuery.of(context).size.width - 36))) /
                       90;
@@ -62,20 +62,22 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                   }
 
                   return Positioned(
-                      left: (MediaQuery.of(context).size.width - 150) * table.x,
-                      top: (MediaQuery.of(context).size.height - 120) * table.y,
+                      left:
+                          (MediaQuery.of(context).size.width - 150) * table.x!,
+                      top:
+                          (MediaQuery.of(context).size.height - 120) * table.y!,
                       child: Container(
                         height: tableHeight,
                         width: tableWidth,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                            backgroundColor: (table.isOpen)
+                            backgroundColor: (table.isOpen!)
                                 ? MaterialStateProperty.all<Color>(
                                     Colors.greenAccent)
                                 : MaterialStateProperty.all<Color>(
                                     Colors.white),
                             overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
                                   return Colors.black12;
@@ -99,7 +101,7 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                                   ),
                           ),
                           onPressed: () {
-                            if (table.isOpen) {
+                            if (table.isOpen!) {
                               //retrieve order
                               bloc.retrieveOrder(
                                   table.table,
@@ -107,13 +109,13 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                                   table.orderDetail,
                                   table.discount,
                                   table.tax,
-                                  Color(table.orderColor),
+                                  Color(table.orderColor!),
                                   true,
                                   'Mesa ${table.table}',
                                   false,
                                   'Mesa',
-                                  (table.client['Name'] == '' ||
-                                          table.client['Name'] == null)
+                                  (table.client!['Name'] == '' ||
+                                          table.client!['Name'] == null)
                                       ? false
                                       : true,
                                   table.client);
@@ -125,7 +127,7 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                                   table.orderDetail,
                                   table.discount,
                                   table.tax,
-                                  Color(table.orderColor),
+                                  Color(table.orderColor!),
                                   false,
                                   'Mesa ${table.table}',
                                   false,
@@ -136,13 +138,13 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                                 duration: Duration(milliseconds: 250),
                                 curve: Curves.easeIn);
                           },
-                          child: (table.isOpen)
+                          child: (table.isOpen!)
                               ? Tooltip(
                                   message:
                                       'Total: ${formatCurrency.format(table.total)}',
                                   child: Center(
                                     child: Text(
-                                      table.table, //product[index].product,
+                                      table.table!, //product[index].product,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       softWrap: true,
@@ -156,7 +158,7 @@ class _TablesMapDesktopState extends State<TablesMapDesktop> {
                                 )
                               : Center(
                                   child: Text(
-                                    table.table, //product[index].product,
+                                    table.table!, //product[index].product,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,

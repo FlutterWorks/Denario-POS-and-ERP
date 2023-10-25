@@ -20,7 +20,7 @@ class _CounterViewDesktopState extends State<CounterViewDesktop> {
   Widget build(BuildContext context) {
     final savedOrders = Provider.of<List<SavedOrders>>(context);
 
-    if (savedOrders == null) {
+    if (savedOrders == []) {
       return Container();
     }
 
@@ -50,7 +50,7 @@ class _CounterViewDesktopState extends State<CounterViewDesktop> {
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.white),
-                      overlayColor: MaterialStateProperty.resolveWith<Color>(
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.hovered))
                             return Colors.black12;
@@ -69,13 +69,13 @@ class _CounterViewDesktopState extends State<CounterViewDesktop> {
                           savedOrders[i].orderDetail,
                           savedOrders[i].discount,
                           savedOrders[i].tax,
-                          Color(savedOrders[i].orderColor),
+                          Color(savedOrders[i].orderColor!),
                           true,
                           savedOrders[i].id,
                           true,
                           savedOrders[i].orderType,
-                          (savedOrders[i].client['Name'] == '' ||
-                                  savedOrders[i].client['Name'] == null)
+                          (savedOrders[i].client!['Name'] == '' ||
+                                  savedOrders[i].client!['Name'] == null)
                               ? false
                               : true,
                           savedOrders[i].client);
@@ -102,17 +102,18 @@ class _CounterViewDesktopState extends State<CounterViewDesktop> {
                                 height:
                                     (savedOrders[i].orderName == '') ? 0 : 10),
                             //Items
-                            (savedOrders[i].orderDetail == null ||
-                                    savedOrders[i].orderDetail == [])
+                            (savedOrders[i].orderDetail == [])
                                 ? SizedBox()
                                 : ListView.builder(
                                     shrinkWrap: true,
                                     itemCount:
-                                        (savedOrders[i].orderDetail.length > 5)
+                                        (savedOrders[i].orderDetail!.length > 5)
                                             ? 5
-                                            : savedOrders[i].orderDetail.length,
+                                            : savedOrders[i]
+                                                .orderDetail!
+                                                .length,
                                     itemBuilder: (context, x) {
-                                      if ((savedOrders[i].orderDetail.length >
+                                      if ((savedOrders[i].orderDetail!.length >
                                               5) &&
                                           x == 4) {
                                         return Padding(
@@ -138,7 +139,7 @@ class _CounterViewDesktopState extends State<CounterViewDesktop> {
                                             Expanded(
                                               flex: 10,
                                               child: Text(
-                                                '${savedOrders[i].orderDetail[x]['Name']}',
+                                                '${savedOrders[i].orderDetail![x]['Name']}',
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 14),
@@ -149,7 +150,7 @@ class _CounterViewDesktopState extends State<CounterViewDesktop> {
                                             Expanded(
                                               flex: 2,
                                               child: Text(
-                                                  'x${savedOrders[i].orderDetail[x]['Quantity']}',
+                                                  'x${savedOrders[i].orderDetail![x]['Quantity']}',
                                                   textAlign: TextAlign.end,
                                                   style: TextStyle(
                                                       color: Colors.black,

@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
 class Tables {
-  String table;
-  String assignedOrder;
-  bool isOpen;
-  DateTime openSince;
-  int numberOfPeople;
-  int subTotal;
-  int total;
-  int tax;
-  int discount;
-  String paymentType;
-  List orderDetail;
-  int orderColor;
-  Map client;
+  String? table;
+  String? assignedOrder;
+  bool? isOpen;
+  DateTime? openSince;
+  int? numberOfPeople;
+  int? subTotal;
+  int? total;
+  int? tax;
+  int? discount;
+  String? paymentType;
+  List? orderDetail;
+  int? orderColor;
+  Map? client;
   //Draggable section
-  bool isOccupied;
-  String shape;
-  double x;
-  double y;
-  double tableSize;
-  String docID;
+  bool? isOccupied;
+  String? shape;
+  double? x;
+  double? y;
+  double? tableSize;
+  String? docID;
 
   Tables(
       {this.table,
@@ -110,7 +110,7 @@ class TablesNotifier extends ChangeNotifier {
   List<Tables> tables = [];
   List<Tables> get myTables => tables;
 
-  TablesNotifier({List<Tables> initialItems}) : tables = initialItems ?? [];
+  TablesNotifier({List<Tables>? initialItems}) : tables = initialItems ?? [];
 
   void addTable(Tables table) {
     tables = [...tables, table];

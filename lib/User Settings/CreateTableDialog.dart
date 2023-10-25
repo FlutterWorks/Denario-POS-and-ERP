@@ -64,7 +64,7 @@ class _CreateTableDialogState extends State<CreateTableDialog> {
     }
   }
 
-  TablesNotifier _tablesNotifier;
+  TablesNotifier? _tablesNotifier;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _CreateTableDialogState extends State<CreateTableDialog> {
   @override
   void dispose() {
     // Dispose the local instance of TablesNotifier
-    _tablesNotifier.dispose();
+    _tablesNotifier!.dispose();
     super.dispose();
   }
 
@@ -133,7 +133,7 @@ class _CreateTableDialogState extends State<CreateTableDialog> {
                             style: TextStyle(color: Colors.black, fontSize: 21),
                             textAlign: TextAlign.center,
                             maxLength: 3,
-                            validator: (val) => (val.isEmpty || val == '')
+                            validator: (val) => (val!.isEmpty || val == '')
                                 ? "Agrega un código"
                                 : null,
                             cursorColor: Colors.grey,
@@ -229,7 +229,7 @@ class _CreateTableDialogState extends State<CreateTableDialog> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.black),
                                 overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                    MaterialStateProperty.resolveWith<Color?>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
                                       return Colors.grey.shade500;
@@ -242,7 +242,7 @@ class _CreateTableDialogState extends State<CreateTableDialog> {
                                 ),
                               ),
                               onPressed: () {
-                                if (_formKey.currentState.validate()) {
+                                if (_formKey.currentState!.validate()) {
                                   final newTable = Tables(
                                       table: tableName,
                                       assignedOrder: '',

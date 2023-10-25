@@ -19,7 +19,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  final bool signedOut;
+  final bool? signedOut;
   MyApp({this.signedOut});
   // This widget is the root of your application.
   @override

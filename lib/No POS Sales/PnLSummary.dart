@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class PnLSummary extends StatefulWidget {
   final String activeBusiness;
-  const PnLSummary(this.activeBusiness, {Key key}) : super(key: key);
+  const PnLSummary(this.activeBusiness, {Key? key}) : super(key: key);
 
   @override
   State<PnLSummary> createState() => _PnLSummaryState();
@@ -24,7 +24,7 @@ class _PnLSummaryState extends State<PnLSummary> {
     return docRef;
   }
 
-  Future currentValuesBuilt;
+  late Future currentValuesBuilt;
 
   String abbreviateCurrency(double amount) {
     if (amount >= 1.0e9) {
@@ -48,7 +48,7 @@ class _PnLSummaryState extends State<PnLSummary> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: currentValuesBuilt,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             double totalVentas;
             double totalCostos;
@@ -103,7 +103,7 @@ class _PnLSummaryState extends State<PnLSummary> {
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: new Offset(0, 0),
                     blurRadius: 10.0,
                   )
@@ -316,7 +316,7 @@ class _PnLSummaryState extends State<PnLSummary> {
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: new Offset(0, 0),
                     blurRadius: 10.0,
                   )

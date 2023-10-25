@@ -6,21 +6,21 @@ import 'package:intl/intl.dart';
 class SupplierIvoiceCard extends StatelessWidget {
   final Payables payable;
   final String businessID;
-  SupplierIvoiceCard(this.payable, this.businessID, {Key key})
+  SupplierIvoiceCard(this.payable, this.businessID, {Key? key})
       : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
 
   @override
   Widget build(BuildContext context) {
-    var ageing = payable.date.difference(DateTime.now()).inDays * -1;
+    var ageing = payable.date!.difference(DateTime.now()).inDays * -1;
 
     return TextButton(
       onPressed: () {
         showDialog(
             context: context,
             builder: (context) {
-              return SinglePayableDialog(payable, businessID, null);
+              return SinglePayableDialog(payable, businessID);
             });
       },
       child: Container(
@@ -50,7 +50,7 @@ class SupplierIvoiceCard extends StatelessWidget {
                       //Date
                       Container(
                         child: Text(
-                          DateFormat.MMMd().format(payable.date).toString(),
+                          DateFormat.MMMd().format(payable.date!).toString(),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
@@ -72,7 +72,7 @@ class SupplierIvoiceCard extends StatelessWidget {
                   width: (MediaQuery.of(context).size.width > 1200) ? 150 : 100,
                   child: Center(
                     child: Text(
-                      (payable.referenceNo != null && payable.referenceNo != '')
+                      (payable.referenceNo != '')
                           ? '${payable.referenceNo}'
                           : 'Sin N° de referencia',
                       textAlign: TextAlign.center,

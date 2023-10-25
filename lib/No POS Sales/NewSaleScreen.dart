@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 class NewSaleScreen extends StatefulWidget {
   final String currentBusiness;
   final bool fromPOS;
-  NewSaleScreen(this.currentBusiness, {this.fromPOS});
+  NewSaleScreen(this.currentBusiness, {required this.fromPOS});
 
   @override
   State<NewSaleScreen> createState() => _NewSaleScreenState();
@@ -27,37 +27,37 @@ class NewSaleScreen extends StatefulWidget {
 class _NewSaleScreenState extends State<NewSaleScreen> {
   final formatCurrency = new NumberFormat.simpleCurrency();
   int numberOfItems = 0;
-  String invoiceNo;
-  DateTime selectedIvoiceDate;
+  late String invoiceNo;
+  late DateTime selectedIvoiceDate;
   String clientName = '';
   final FocusNode _clientNode = FocusNode();
   List saleStatusList = ['Cobrado', 'Venta por cobrar'];
   String saleStatus = 'Cobrado';
 
-  String orderName;
-  double tax;
-  double discount;
+  String? orderName;
+  double? tax;
+  double? discount;
 
   List<TextEditingController> _controllers = [];
-  TextEditingController invoiceController;
-  TextEditingController clientController;
+  late TextEditingController invoiceController;
+  late TextEditingController clientController;
 
   ValueKey redrawObject = ValueKey('List');
 
-  Map<String, dynamic> orderCategories;
-  double salesAmount;
-  String paymentType;
+  Map<String, dynamic>? orderCategories;
+  double? salesAmount;
+  String? paymentType;
 
   //Month Stats Variables
   Map<String, dynamic> orderStats = {};
-  int currentSalesCount;
+  int? currentSalesCount;
   Map<String, dynamic> currentItemsCount = {};
   Map<String, dynamic> currentItemsAmount = {};
   Map<String, dynamic> salesCountbyCategory = {};
   Map<String, dynamic> currentSalesbyOrderType = {};
-  int newSalesCount;
-  int currentTicketItemsCount;
-  int newTicketItemsCount;
+  int? newSalesCount;
+  int? currentTicketItemsCount;
+  int? newTicketItemsCount;
 
   void nothing(BuildContext context) {}
 
@@ -111,12 +111,12 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
     final userProfile = Provider.of<UserData>(context);
     final registerStatus = Provider.of<CashRegister>(context);
 
-    if (userProfile == null || registerStatus == null) {
+    if (registerStatus == CashRegister()) {
       return Container();
     }
 
-    final String businessName = userProfile
-        .businesses[userProfile.businesses
+    final String? businessName = userProfile
+        .businesses![userProfile.businesses!
             .indexWhere((x) => x.businessID == userProfile.activeBusiness)]
         .businessName;
 
@@ -124,7 +124,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
       return StreamBuilder(
           stream: bloc.getStream,
           initialData: bloc.ticketItems,
-          builder: (context, snapshot) {
+          builder: (context, AsyncSnapshot snapshot) {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -183,7 +183,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                             offset: new Offset(0, 0),
                             blurRadius: 10.0,
                           )
@@ -200,7 +200,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                             children: [
                               //Negocio
                               Text(
-                                businessName,
+                                businessName!,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w800, fontSize: 24),
                               ),
@@ -357,7 +357,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                             child: IconButton(
                                               splashRadius: 1,
                                               onPressed: () async {
-                                                DateTime pickedDate =
+                                                DateTime? pickedDate =
                                                     await showDatePicker(
                                                         context: context,
                                                         initialDate:
@@ -394,13 +394,11 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              child: child);
+                                                              child: child!);
                                                         }));
                                                 setState(() {
-                                                  if (pickedDate != null) {
-                                                    selectedIvoiceDate =
-                                                        pickedDate;
-                                                  }
+                                                  selectedIvoiceDate =
+                                                      pickedDate!;
                                                 });
                                               },
                                               padding: EdgeInsets.all(0),
@@ -679,7 +677,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                     context: context,
                                     builder: (context) {
                                       return StreamProvider<CategoryList>.value(
-                                          initialData: null,
+                                          initialData: CategoryList(),
                                           value: DatabaseService()
                                               .categoriesList(
                                                   userProfile.activeBusiness),
@@ -813,8 +811,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                           return ScheduleSaleDialog(
                                               widget.currentBusiness,
                                               bloc.totalTicketAmount,
-                                              discount,
-                                              tax,
+                                              discount!,
+                                              tax!,
                                               bloc.subtotalTicketAmount,
                                               bloc.ticketItems['Items'],
                                               clientName,
@@ -846,7 +844,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                             states.contains(
                                                 MaterialState.pressed))
                                           return Colors.grey.shade300;
-                                        return null; // Defer to the widget's default.
+                                        return Colors.grey
+                                            .shade300; // Defer to the widget's default.
                                       },
                                     ),
                                   ),
@@ -864,16 +863,16 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                               providers: [
                                                 StreamProvider<
                                                         MonthlyStats>.value(
-                                                    initialData: null,
+                                                    initialData: MonthlyStats(),
                                                     value: DatabaseService()
                                                         .monthlyStatsfromSnapshot(
                                                             userProfile
-                                                                .activeBusiness)),
+                                                                .activeBusiness!)),
                                                 StreamProvider<UserData>.value(
-                                                    initialData: null,
+                                                    initialData: UserData(),
                                                     value: DatabaseService()
                                                         .userProfile(
-                                                            userProfile.uid)),
+                                                            userProfile.uid!)),
                                               ],
                                               child: ConfirmOrder(
                                                 total: bloc.totalTicketAmount,
@@ -884,19 +883,19 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                                     .data['Discount Code'],
                                                 orderDetail:
                                                     snapshot.data["Items"],
-                                                orderName: orderName,
+                                                orderName: orderName!,
                                                 subTotal:
                                                     bloc.subtotalTicketAmount,
-                                                tax: tax,
+                                                tax: tax!,
                                                 controller: clientController,
                                                 clearVariables:
                                                     clearControllers,
-                                                paymentTypes:
-                                                    registerStatus.paymentTypes,
+                                                paymentTypes: registerStatus
+                                                    .paymentTypes!,
                                                 isTable: false,
                                                 tableCode: null,
                                                 businessID:
-                                                    userProfile.activeBusiness,
+                                                    userProfile.activeBusiness!,
                                                 tablePageController: null,
                                                 isSavedOrder: false,
                                                 savedOrderID: '',
@@ -932,7 +931,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
       return StreamBuilder(
           stream: bloc.getStream,
           initialData: bloc.ticketItems,
-          builder: (context, snapshot) {
+          builder: (context, AsyncSnapshot snapshot) {
             return SingleChildScrollView(
               child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -961,7 +960,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
 
                             //Negocio
                             Text(
-                              businessName,
+                              businessName!,
                               style: TextStyle(
                                   fontWeight: FontWeight.w800, fontSize: 24),
                             ),
@@ -1094,7 +1093,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                       child: IconButton(
                                         splashRadius: 1,
                                         onPressed: () async {
-                                          DateTime pickedDate =
+                                          DateTime? pickedDate =
                                               await showDatePicker(
                                                   context: context,
                                                   initialDate: DateTime.now(),
@@ -1125,12 +1124,10 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                                             ),
                                                           ),
                                                         ),
-                                                        child: child);
+                                                        child: child!);
                                                   }));
                                           setState(() {
-                                            if (pickedDate != null) {
-                                              selectedIvoiceDate = pickedDate;
-                                            }
+                                            selectedIvoiceDate = pickedDate!;
                                           });
                                         },
                                         padding: EdgeInsets.all(0),
@@ -1205,7 +1202,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                           new BorderRadius.circular(12.0),
                                       boxShadow: <BoxShadow>[
                                         new BoxShadow(
-                                          color: Colors.grey[350],
+                                          color: Colors.grey[350]!,
                                           offset: Offset(0.0, 0.0),
                                           blurRadius: 10.0,
                                         )
@@ -1441,7 +1438,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                   context: context,
                                   builder: (context) {
                                     return StreamProvider<CategoryList>.value(
-                                        initialData: null,
+                                        initialData: CategoryList(),
                                         value: DatabaseService().categoriesList(
                                             userProfile.activeBusiness),
                                         child: SelectItemDialog(userProfile));
@@ -1457,7 +1454,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                   context: context,
                                   builder: (context) {
                                     return StreamProvider<CategoryList>.value(
-                                        initialData: null,
+                                        initialData: CategoryList(),
                                         value: DatabaseService().categoriesList(
                                             userProfile.activeBusiness),
                                         child: SelectItemDialog(userProfile));
@@ -1590,8 +1587,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                                 ScheduleSaleDialog(
                                                     widget.currentBusiness,
                                                     bloc.totalTicketAmount,
-                                                    discount,
-                                                    tax,
+                                                    discount!,
+                                                    tax!,
                                                     bloc.subtotalTicketAmount,
                                                     bloc.ticketItems['Items'],
                                                     clientName,
@@ -1622,7 +1619,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                             states.contains(
                                                 MaterialState.pressed))
                                           return Colors.grey.shade300;
-                                        return null; // Defer to the widget's default.
+                                        return Colors.grey
+                                            .shade300; // Defer to the widget's default.
                                       },
                                     ),
                                   ),
@@ -1640,16 +1638,16 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                               providers: [
                                                 StreamProvider<
                                                         MonthlyStats>.value(
-                                                    initialData: null,
+                                                    initialData: MonthlyStats(),
                                                     value: DatabaseService()
                                                         .monthlyStatsfromSnapshot(
                                                             userProfile
-                                                                .activeBusiness)),
+                                                                .activeBusiness!)),
                                                 StreamProvider<UserData>.value(
-                                                    initialData: null,
+                                                    initialData: UserData(),
                                                     value: DatabaseService()
                                                         .userProfile(
-                                                            userProfile.uid)),
+                                                            userProfile.uid!)),
                                               ],
                                               child: ConfirmOrder(
                                                 total: bloc.totalTicketAmount,

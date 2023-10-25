@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 class PayablesReceivables extends StatefulWidget {
   final String businessID;
-  const PayablesReceivables(this.businessID, {Key key}) : super(key: key);
+  const PayablesReceivables(this.businessID, {Key? key}) : super(key: key);
 
   @override
   State<PayablesReceivables> createState() => _PayablesReceivablesState();
@@ -27,7 +27,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
     final receivables = Provider.of<List<Receivables>>(context);
     final registerStatus = Provider.of<CashRegister>(context);
 
-    if (registerStatus == null || payables == null || receivables == null) {
+    if (payables == []) {
       return Container(
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -35,7 +35,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
           borderRadius: BorderRadius.circular(25),
           boxShadow: <BoxShadow>[
             new BoxShadow(
-              color: Colors.grey[350],
+              color: Colors.grey[350]!,
               offset: new Offset(0, 0),
               blurRadius: 10.0,
             )
@@ -121,7 +121,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
         borderRadius: BorderRadius.circular(25),
         boxShadow: <BoxShadow>[
           new BoxShadow(
-            color: Colors.grey[350],
+            color: Colors.grey[350]!,
             offset: new Offset(0, 0),
             blurRadius: 10.0,
           )
@@ -140,7 +140,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                       bottom: BorderSide(
                           width: (_currentPageIndex == 0) ? 3 : 0,
                           color: (_currentPageIndex == 0)
-                              ? Colors.greenAccent[700]
+                              ? Colors.greenAccent[700]!
                               : Colors.transparent))),
               child: TextButton(
                   onPressed: () {
@@ -158,7 +158,8 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                           return Colors.grey.withOpacity(
                               0.2); // Customize the hover color here
                         }
-                        return null; // Use default overlay color for other states
+                        return Colors.grey.withOpacity(
+                            0.2); // Use default overlay color for other states
                       },
                     ),
                   ),
@@ -184,7 +185,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                       bottom: BorderSide(
                           width: (_currentPageIndex == 1) ? 3 : 0,
                           color: (_currentPageIndex == 1)
-                              ? Colors.greenAccent[700]
+                              ? Colors.greenAccent[700]!
                               : Colors.transparent))),
               child: TextButton(
                   onPressed: () {
@@ -202,7 +203,8 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                           return Colors.grey.withOpacity(
                               0.2); // Customize the hover color here
                         }
-                        return null; // Use default overlay color for other states
+                        return Colors.grey.withOpacity(
+                            0.2); // Use default overlay color for other states
                       },
                     ),
                   ),
@@ -245,22 +247,22 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                     itemBuilder: (context, i) {
                       String description;
 
-                      if (payables[i].items.isEmpty) {
+                      if (payables[i].items!.isEmpty) {
                         description = 'Sin descripción';
-                      } else if (payables[i].items.length > 1) {
-                        if (payables[i].items.length > 2) {
+                      } else if (payables[i].items!.length > 1) {
+                        if (payables[i].items!.length > 2) {
                           description =
-                              '${payables[i].items[0].product}, ${payables[i].items[1].product}...';
+                              '${payables[i].items![0].product}, ${payables[i].items![1].product}...';
                         } else {
                           description =
-                              '${payables[i].items[0].product}, ${payables[i].items[1].product}';
+                              '${payables[i].items![0].product}, ${payables[i].items![1].product}';
                         }
                       } else {
-                        description = payables[i].items.first.product;
+                        description = payables[i].items!.first.product!;
                       }
 
                       var ageing =
-                          payables[i].date.difference(DateTime.now()).inDays *
+                          payables[i].date!.difference(DateTime.now()).inDays *
                               -1;
 
                       return TextButton(
@@ -269,12 +271,12 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                               context: context,
                               builder: (context) {
                                 return StreamProvider<DailyTransactions>.value(
-                                    initialData: null,
+                                    initialData: DailyTransactions(),
                                     value: DatabaseService().dailyTransactions(
                                         widget.businessID,
-                                        registerStatus.registerName),
-                                    child: SinglePayableDialog(payables[i],
-                                        widget.businessID, registerStatus));
+                                        registerStatus.registerName!),
+                                    child: SinglePayableDialog(
+                                        payables[i], widget.businessID));
                               });
                         },
                         child: Container(
@@ -307,7 +309,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                                       Container(
                                         child: Text(
                                           DateFormat.MMMd()
-                                              .format(payables[i].date)
+                                              .format(payables[i].date!)
                                               .toString(),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -383,20 +385,21 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                     itemBuilder: (context, i) {
                       String description;
 
-                      if (receivables[i].orderDetail.length > 1) {
-                        if (receivables[i].orderDetail.length > 2) {
+                      if (receivables[i].orderDetail!.length > 1) {
+                        if (receivables[i].orderDetail!.length > 2) {
                           description =
-                              '${receivables[i].orderDetail[0].product}, ${receivables[i].orderDetail[1].product}...';
+                              '${receivables[i].orderDetail![0].product}, ${receivables[i].orderDetail![1].product}...';
                         } else {
                           description =
-                              '${receivables[i].orderDetail[0].product}, ${receivables[i].orderDetail[1].product}';
+                              '${receivables[i].orderDetail![0].product}, ${receivables[i].orderDetail![1].product}';
                         }
                       } else {
-                        description = receivables[i].orderDetail.first.product;
+                        description =
+                            receivables[i].orderDetail!.first.product!;
                       }
 
                       var ageing = receivables[i]
-                              .savedDate
+                              .savedDate!
                               .difference(DateTime.now())
                               .inDays *
                           -1;
@@ -407,17 +410,17 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                               context: context,
                               builder: (context) {
                                 return StreamProvider<DailyTransactions>.value(
-                                    initialData: null,
-                                    catchError: (_, err) => null,
+                                    initialData: DailyTransactions(),
+                                    catchError: (_, err) => DailyTransactions(),
                                     value: DatabaseService().dailyTransactions(
                                         widget.businessID,
-                                        registerStatus.registerName),
+                                        registerStatus.registerName!),
                                     builder: (context, snapshot) {
                                       return SingleReceivableDialog(
                                           receivables[i],
                                           widget.businessID,
-                                          receivables[i].id,
-                                          registerStatus.paymentTypes,
+                                          receivables[i].id!,
+                                          registerStatus.paymentTypes!,
                                           registerStatus);
                                     });
                               });
@@ -450,7 +453,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                                       Container(
                                         child: Text(
                                           DateFormat.MMMd()
-                                              .format(receivables[i].savedDate)
+                                              .format(receivables[i].savedDate!)
                                               .toString(),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,

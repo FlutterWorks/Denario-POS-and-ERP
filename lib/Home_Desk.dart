@@ -67,8 +67,8 @@ class _HomeDeskState extends State<HomeDesk> {
     );
   }
 
-  List<Widget> navigationBarItems;
-  List<Widget> pageNavigators;
+  List<Widget>? navigationBarItems;
+  List<Widget>? pageNavigators;
   //Roles and fields modifications
   ////User role
   ///Dueño => todo: POS, Daily, Gastos, Stats, Pnl | Productos, Proveedores, Clientes, Stock, Usuarios, Menu, Tienda
@@ -144,7 +144,7 @@ class _HomeDeskState extends State<HomeDesk> {
                                     if (activeBusiness !=
                                         businesess[i].businessID) {
                                       DatabaseService().changeActiveBusiness(
-                                          businesess[i].businessID);
+                                          businesess[i].businessID!);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -215,480 +215,493 @@ class _HomeDeskState extends State<HomeDesk> {
     final userBusiness = Provider.of<BusinessProfile>(context);
     final pendingOrders = Provider.of<List<PendingOrders>>(context);
 
-    if (registerStatus == null ||
-        categoriesProvider == null ||
-        userProfile == null ||
-        userBusiness == null ||
-        pendingOrders == null) {
+    if (categoriesProvider == CategoryList() || userProfile == UserData()) {
       return Loading();
     }
 
-    final businessIndexOnProfile = userProfile.businesses.indexWhere(
-        (element) => element.businessID == userProfile.activeBusiness);
+    try {
+      final businessIndexOnProfile = userProfile.businesses!.indexWhere(
+          (element) => element.businessID == userProfile.activeBusiness);
 
-    if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
-        'Dueñ@') {
-      navigationBarItems = [
-        screenNavigator(
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? 'POS'
-                : 'Inicio',
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? Icons.blur_circular
-                : Icons.home,
-            0),
-        SizedBox(height: 20),
-        (userBusiness.cashBalancing)
-            ? screenNavigator('Caja', Icons.fax, 1)
-            : SizedBox(),
-        (userBusiness.cashBalancing) ? SizedBox(height: 20) : SizedBox(),
-        screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        SizedBox(height: 20),
-        screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
-        SizedBox(height: 20),
-        screenNavigator('Gastos', Icons.multiline_chart, 4),
-        SizedBox(height: 20),
-        screenNavigator('Productos', Icons.assignment, 5),
-        SizedBox(height: 20),
-        screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
-        SizedBox(height: 20),
-        screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
-        SizedBox(height: 20),
-        screenNavigator('PnL', Icons.data_usage, 8)
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Venta Minorista' ||
-                userBusiness.businessField == 'Belleza/Spa') {
-              return POSProducts(categoriesProvider.categoryList[0]);
-            } else {
-              return NoPOSDashboard(userProfile.activeBusiness);
-            }
-          });
-        }),
-        (userBusiness.cashBalancing)
-            ? Navigator(onGenerateRoute: (routeSettings) {
-                return MaterialPageRoute(builder: (context) => DailyDesk());
-              })
-            : Container(),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ScheduleDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness, registerStatus));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ExpensesDesk('Dueñ@'));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => ProductDesk(
-                  userProfile.activeBusiness,
-                  categoriesProvider.categoryList,
-                  userBusiness.businessField,
-                  reloadApp));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => SuppliersDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => SuppliesDesk(userProfile.activeBusiness,
-                  categoriesProvider.categoryList, userBusiness.businessField));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => PnlDesk());
-        }),
-      ];
-    } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
-        'Encargad@') {
-      navigationBarItems = [
-        screenNavigator(
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? 'POS'
-                : 'Inicio',
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? Icons.blur_circular
-                : Icons.home,
-            0),
-        SizedBox(height: 20),
-        (userBusiness.cashBalancing)
-            ? screenNavigator('Caja', Icons.fax, 1)
-            : SizedBox(),
-        (userBusiness.cashBalancing) ? SizedBox(height: 20) : SizedBox(),
-        screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        SizedBox(height: 20),
-        screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
-        SizedBox(height: 20),
-        screenNavigator('Gastos', Icons.multiline_chart, 4),
-        SizedBox(height: 20),
-        screenNavigator('Productos', Icons.assignment, 5),
-        SizedBox(height: 20),
-        screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
-        SizedBox(height: 20),
-        screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList[0]);
-            } else {
-              return NoPOSDashboard(userProfile.activeBusiness);
-            }
-          });
-        }),
-        (userBusiness.cashBalancing)
-            ? Navigator(onGenerateRoute: (routeSettings) {
-                return MaterialPageRoute(builder: (context) => DailyDesk());
-              })
-            : Container(),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ScheduleDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness, registerStatus));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => ExpensesDesk('Encargad@'));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => ProductDesk(
-                  userProfile.activeBusiness,
-                  categoriesProvider.categoryList,
-                  userBusiness.businessField,
-                  reloadApp));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => SuppliersDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => SuppliesDesk(userProfile.activeBusiness,
-                  categoriesProvider.categoryList, userBusiness.businessField));
-        }),
-      ];
-    } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
-        'Cajer@') {
-      navigationBarItems = [
-        screenNavigator(
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? 'POS'
-                : 'Inicio',
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? Icons.blur_circular
-                : Icons.home,
-            0),
-        SizedBox(height: 20),
-        (userBusiness.cashBalancing)
-            ? screenNavigator('Caja', Icons.fax, 1)
-            : SizedBox(),
-        (userBusiness.cashBalancing) ? SizedBox(height: 20) : SizedBox(),
-        screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        SizedBox(height: 20),
-        screenNavigator('Gastos', Icons.multiline_chart, 3),
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList[0]);
-            } else {
-              return NoPOSDashboard(userProfile.activeBusiness);
-            }
-          });
-        }),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
-            ? Navigator(onGenerateRoute: (routeSettings) {
-                return MaterialPageRoute(builder: (context) => DailyDesk());
-              })
-            : Container(),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ScheduleDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => ExpensesDesk('Cajer@'));
-        }),
-      ];
-    } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
-        'Contador(a)') {
-      navigationBarItems = [
-        screenNavigator('Ventas', Icons.insert_chart_outlined, 1),
-        SizedBox(height: 20),
-        screenNavigator('Gastos', Icons.multiline_chart, 4),
-        SizedBox(height: 20),
-        screenNavigator('PnL', Icons.data_usage, 2),
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness, registerStatus));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => ExpensesDesk('Encargad@'));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => PnlDesk());
-        }),
-      ];
-    } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
-            'Moz@' ||
-        userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
-            'Otro') {
-      navigationBarItems = [
-        screenNavigator('POS', Icons.blur_circular, 0),
-        SizedBox(height: 20),
-        screenNavigator('Agenda', Icons.calendar_month_outlined, 1),
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Venta Minorista' ||
-                userBusiness.businessField == 'Belleza/Spa') {
-              return POSProducts(categoriesProvider.categoryList[0]);
-            } else {
-              return NoPOSDashboard(userProfile.activeBusiness);
-            }
-          });
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ScheduleDesk());
-        }),
-      ];
-    }
-    return MultiProvider(
-      providers: [
-        StreamProvider<List<Products>>.value(
-            initialData: null,
-            value:
-                DatabaseService().fullProductList(userProfile.activeBusiness)),
-        StreamProvider<CategoryList>.value(
-            initialData: null,
-            value:
-                DatabaseService().categoriesList(userProfile.activeBusiness)),
-        StreamProvider<HighLevelMapping>.value(
-            initialData: null,
-            value:
-                DatabaseService().highLevelMapping(userProfile.activeBusiness)),
-        StreamProvider<DailyTransactions>.value(
-            initialData: null,
-            catchError: (_, err) => null,
-            value: DatabaseService().dailyTransactions(
-                userProfile.activeBusiness, registerStatus.registerName)),
-        StreamProvider<MonthlyStats>.value(
-            initialData: null,
-            value: DatabaseService()
-                .monthlyStatsfromSnapshot(userProfile.activeBusiness)),
-        StreamProvider<List<DailyTransactions>>.value(
-            initialData: null,
-            value: DatabaseService()
-                .dailyTransactionsList(userProfile.activeBusiness)),
-        StreamProvider<List<PendingOrders>>.value(
-            initialData: null,
-            value:
-                DatabaseService().pendingOrderList(userProfile.activeBusiness)),
-        StreamProvider<AccountsList>.value(
-            initialData: null,
-            value: DatabaseService().accountsList(userProfile.activeBusiness))
-      ],
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            title: Center(
-              child: Container(
-                height: 120,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('images/Denario Logo.png'))),
-              ),
-            ),
-            leading: showUserSettings
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showUserSettings = false;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.black,
-                      size: 16,
-                    ))
-                : Container(),
-            actions: [
-              ///TEST ODER ALERT
-              // IconButton(
-              //     onPressed: () => DatabaseService().totalGaliaExp(),
-              //     icon: Icon(
-              //       Icons.access_alarm,
-              //       color: Colors.black,
-              //     )),
-              //Business Name
-              Container(
-                height: double.infinity,
-                child: Center(
-                  child: Text(
-                    userProfile.businesses[businessIndexOnProfile].businessName,
-                    style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal),
-                  ),
+      if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
+          'Dueñ@') {
+        navigationBarItems = [
+          screenNavigator(
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? 'POS'
+                  : 'Inicio',
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? Icons.blur_circular
+                  : Icons.home,
+              0),
+          SizedBox(height: 20),
+          (userBusiness.cashBalancing!)
+              ? screenNavigator('Caja', Icons.fax, 1)
+              : SizedBox(),
+          (userBusiness.cashBalancing!) ? SizedBox(height: 20) : SizedBox(),
+          screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
+          SizedBox(height: 20),
+          screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
+          SizedBox(height: 20),
+          screenNavigator('Gastos', Icons.multiline_chart, 4),
+          SizedBox(height: 20),
+          screenNavigator('Productos', Icons.assignment, 5),
+          SizedBox(height: 20),
+          screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
+          SizedBox(height: 20),
+          screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
+          SizedBox(height: 20),
+          screenNavigator('PnL', Icons.data_usage, 8)
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) {
+              if (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Venta Minorista' ||
+                  userBusiness.businessField == 'Belleza/Spa') {
+                return POSProducts(categoriesProvider.categoryList![0]);
+              } else {
+                return NoPOSDashboard(userProfile.activeBusiness!);
+              }
+            });
+          }),
+          (userBusiness.cashBalancing!)
+              ? Navigator(onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => DailyDesk());
+                })
+              : Container(),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => ScheduleDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => ExpensesDesk('Dueñ@'));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => ProductDesk(
+                    userProfile.activeBusiness!,
+                    categoriesProvider.categoryList!,
+                    userBusiness.businessField!,
+                    reloadApp));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => SuppliersDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => SuppliesDesk(
+                    userProfile.activeBusiness!,
+                    categoriesProvider.categoryList!,
+                    userBusiness.businessField!));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => PnlDesk());
+          }),
+        ];
+      } else if (userProfile
+              .businesses![businessIndexOnProfile].roleInBusiness ==
+          'Encargad@') {
+        navigationBarItems = [
+          screenNavigator(
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? 'POS'
+                  : 'Inicio',
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? Icons.blur_circular
+                  : Icons.home,
+              0),
+          SizedBox(height: 20),
+          (userBusiness.cashBalancing!)
+              ? screenNavigator('Caja', Icons.fax, 1)
+              : SizedBox(),
+          (userBusiness.cashBalancing!) ? SizedBox(height: 20) : SizedBox(),
+          screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
+          SizedBox(height: 20),
+          screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
+          SizedBox(height: 20),
+          screenNavigator('Gastos', Icons.multiline_chart, 4),
+          SizedBox(height: 20),
+          screenNavigator('Productos', Icons.assignment, 5),
+          SizedBox(height: 20),
+          screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
+          SizedBox(height: 20),
+          screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) {
+              if (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Tienda Minorista') {
+                return POSProducts(categoriesProvider.categoryList![0]);
+              } else {
+                return NoPOSDashboard(userProfile.activeBusiness!);
+              }
+            });
+          }),
+          (userBusiness.cashBalancing!)
+              ? Navigator(onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => DailyDesk());
+                })
+              : Container(),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => ScheduleDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => ExpensesDesk('Encargad@'));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => ProductDesk(
+                    userProfile.activeBusiness!,
+                    categoriesProvider.categoryList!,
+                    userBusiness.businessField!,
+                    reloadApp));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => SuppliersDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => SuppliesDesk(
+                    userProfile.activeBusiness!,
+                    categoriesProvider.categoryList!,
+                    userBusiness.businessField!));
+          }),
+        ];
+      } else if (userProfile
+              .businesses![businessIndexOnProfile].roleInBusiness ==
+          'Cajer@') {
+        navigationBarItems = [
+          screenNavigator(
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? 'POS'
+                  : 'Inicio',
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? Icons.blur_circular
+                  : Icons.home,
+              0),
+          SizedBox(height: 20),
+          (userBusiness.cashBalancing!)
+              ? screenNavigator('Caja', Icons.fax, 1)
+              : SizedBox(),
+          (userBusiness.cashBalancing!) ? SizedBox(height: 20) : SizedBox(),
+          screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
+          SizedBox(height: 20),
+          screenNavigator('Gastos', Icons.multiline_chart, 3),
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) {
+              if (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Tienda Minorista') {
+                return POSProducts(categoriesProvider.categoryList![0]);
+              } else {
+                return NoPOSDashboard(userProfile.activeBusiness!);
+              }
+            });
+          }),
+          (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Tienda Minorista')
+              ? Navigator(onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => DailyDesk());
+                })
+              : Container(),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => ScheduleDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => ExpensesDesk('Cajer@'));
+          }),
+        ];
+      } else if (userProfile
+              .businesses![businessIndexOnProfile].roleInBusiness ==
+          'Contador(a)') {
+        navigationBarItems = [
+          screenNavigator('Ventas', Icons.insert_chart_outlined, 1),
+          SizedBox(height: 20),
+          screenNavigator('Gastos', Icons.multiline_chart, 4),
+          SizedBox(height: 20),
+          screenNavigator('PnL', Icons.data_usage, 2),
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => ExpensesDesk('Encargad@'));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => PnlDesk());
+          }),
+        ];
+      } else if (userProfile
+                  .businesses![businessIndexOnProfile].roleInBusiness ==
+              'Moz@' ||
+          userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
+              'Otro') {
+        navigationBarItems = [
+          screenNavigator('POS', Icons.blur_circular, 0),
+          SizedBox(height: 20),
+          screenNavigator('Agenda', Icons.calendar_month_outlined, 1),
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) {
+              if (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Venta Minorista' ||
+                  userBusiness.businessField == 'Belleza/Spa') {
+                return POSProducts(categoriesProvider.categoryList![0]);
+              } else {
+                return NoPOSDashboard(userProfile.activeBusiness!);
+              }
+            });
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => ScheduleDesk());
+          }),
+        ];
+      }
+
+      return MultiProvider(
+        providers: [
+          StreamProvider<List<Products>>.value(
+              initialData: [],
+              value: DatabaseService()
+                  .fullProductList(userProfile.activeBusiness!)),
+          StreamProvider<CategoryList>.value(
+              initialData: CategoryList(),
+              value:
+                  DatabaseService().categoriesList(userProfile.activeBusiness)),
+          StreamProvider<HighLevelMapping>.value(
+              initialData: HighLevelMapping(),
+              value: DatabaseService()
+                  .highLevelMapping(userProfile.activeBusiness)),
+          StreamProvider<DailyTransactions>.value(
+              initialData: DailyTransactions(),
+              catchError: (_, err) => DailyTransactions(),
+              value: DatabaseService().dailyTransactions(
+                  userProfile.activeBusiness, registerStatus.registerName!)),
+          StreamProvider<MonthlyStats>.value(
+              initialData: MonthlyStats(),
+              value: DatabaseService()
+                  .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
+          StreamProvider<List<DailyTransactions>>.value(
+              initialData: [],
+              value: DatabaseService()
+                  .dailyTransactionsList(userProfile.activeBusiness)),
+          StreamProvider<List<PendingOrders>>.value(
+              initialData: [],
+              value: DatabaseService()
+                  .pendingOrderList(userProfile.activeBusiness)),
+          StreamProvider<AccountsList>.value(
+              initialData: AccountsList(),
+              value: DatabaseService().accountsList(userProfile.activeBusiness))
+        ],
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              title: Center(
+                child: Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('images/Denario Logo.png'))),
                 ),
               ),
-              //Profile Image
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                  child: PopupMenuButton<int>(
-                      tooltip: 'Perfil',
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.grey.shade300),
-                              color: Colors.grey,
-                              image: DecorationImage(
-                                  image: NetworkImage(userProfile.profileImage),
-                                  fit: BoxFit.cover))),
-                      onSelected: (value) {
-                        switch (value) {
-                          case 0:
-                            setState(() {
-                              showUserSettings = true;
-                            });
-                            break;
-                          case 1:
-                            changeBusinessDialog(userProfile.businesses,
-                                userProfile.activeBusiness);
-                            break;
-                          case 2:
-                            _auth.signOut();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Wrapper()));
-                            break;
-                        }
+              leading: showUserSettings
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showUserSettings = false;
+                        });
                       },
-                      itemBuilder: (context) => [
-                            //Settings
-                            PopupMenuItem<int>(
-                              value: 0,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.settings,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text("Configuración")
-                                ],
-                              ),
-                            ),
-                            //Change Business
-                            PopupMenuItem<int>(
-                              value: 1,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.swap_horiz_outlined,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text("Cambiar de negocio")
-                                ],
-                              ),
-                            ),
-                            //Exit
-                            PopupMenuItem<int>(
-                              value: 2,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.exit_to_app,
-                                    color: Colors.black,
-                                    size: 16,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text("Salir")
-                                ],
-                              ),
-                            ),
-                          ]))
-            ],
-          ),
-          body: showUserSettings
-              ? UserSettings()
-              : Container(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                        size: 16,
+                      ))
+                  : Container(),
+              actions: [
+                ///TEST ODER ALERT
+                // IconButton(
+                //     onPressed: () => DatabaseService().totalGaliaExp(),
+                //     icon: Icon(
+                //       Icons.access_alarm,
+                //       color: Colors.black,
+                //     )),
+                //Business Name
+                Container(
                   height: double.infinity,
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //Navigation Bar
-                      Container(
-                          color: Colors.black87,
-                          height: double.infinity,
-                          width: 80,
-                          child: SingleChildScrollView(
-                            child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 5),
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: navigationBarItems)),
-                          )),
-                      //Dynamic Body
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            Container(
-                                child: IndexedStack(
-                                    index: pageIndex,
-                                    children: pageNavigators)),
-                            //Order Alert
-                            (pendingOrders.length > 0)
-                                ? OrderAlert(
-                                    pendingOrders, userProfile.activeBusiness)
-                                : Container()
-                          ],
-                        ),
-                      )
-                    ],
+                  child: Center(
+                    child: Text(
+                      userProfile
+                          .businesses![businessIndexOnProfile].businessName!,
+                      style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal),
+                    ),
                   ),
-                )),
-    );
+                ),
+                //Profile Image
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 5),
+                    child: PopupMenuButton<int>(
+                        tooltip: 'Perfil',
+                        child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.grey.shade300),
+                                color: Colors.grey,
+                                image: DecorationImage(
+                                    image:
+                                        NetworkImage(userProfile.profileImage!),
+                                    fit: BoxFit.cover))),
+                        onSelected: (value) {
+                          switch (value) {
+                            case 0:
+                              setState(() {
+                                showUserSettings = true;
+                              });
+                              break;
+                            case 1:
+                              changeBusinessDialog(userProfile.businesses!,
+                                  userProfile.activeBusiness);
+                              break;
+                            case 2:
+                              _auth.signOut();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Wrapper()));
+                              break;
+                          }
+                        },
+                        itemBuilder: (context) => [
+                              //Settings
+                              PopupMenuItem<int>(
+                                value: 0,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.settings,
+                                      color: Colors.black,
+                                      size: 16,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text("Configuración")
+                                  ],
+                                ),
+                              ),
+                              //Change Business
+                              PopupMenuItem<int>(
+                                value: 1,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.swap_horiz_outlined,
+                                      color: Colors.black,
+                                      size: 16,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text("Cambiar de negocio")
+                                  ],
+                                ),
+                              ),
+                              //Exit
+                              PopupMenuItem<int>(
+                                value: 2,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.exit_to_app,
+                                      color: Colors.black,
+                                      size: 16,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text("Salir")
+                                  ],
+                                ),
+                              ),
+                            ]))
+              ],
+            ),
+            body: showUserSettings
+                ? UserSettings()
+                : Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Navigation Bar
+                        Container(
+                            color: Colors.black87,
+                            height: double.infinity,
+                            width: 80,
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 20, horizontal: 5),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: navigationBarItems!)),
+                            )),
+                        //Dynamic Body
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                  child: IndexedStack(
+                                      index: pageIndex,
+                                      children: pageNavigators!)),
+                              //Order Alert
+                              (pendingOrders.length > 0)
+                                  ? OrderAlert(pendingOrders,
+                                      userProfile.activeBusiness!)
+                                  : Container()
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+      );
+    } catch (e) {
+      return Loading();
+    }
   }
 }

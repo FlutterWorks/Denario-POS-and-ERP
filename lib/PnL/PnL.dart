@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PnL extends StatefulWidget {
-  final List pnlAccountGroups;
-  final Map<dynamic, dynamic> pnlMapping;
-  final int pnlMonth;
-  final int pnlYear;
-  final String activeBusiness;
+  final List? pnlAccountGroups;
+  final Map<dynamic, dynamic>? pnlMapping;
+  final int? pnlMonth;
+  final int? pnlYear;
+  final String? activeBusiness;
 
   PnL(
       {this.pnlAccountGroups,
@@ -38,7 +38,7 @@ class _PnLState extends State<PnL> {
     return docRef;
   }
 
-  Future currentValuesBuilt;
+  late Future currentValuesBuilt;
 
   List categoriesList = [];
 
@@ -53,7 +53,7 @@ class _PnLState extends State<PnL> {
   Widget build(BuildContext context) {
     final categoriesProvider = Provider.of<CategoryList>(context);
 
-    if (categoriesProvider == null) {
+    if (categoriesProvider == CategoryList()) {
       return Container(
         height: MediaQuery.of(context).size.height * 0.6,
         width: double.infinity,
@@ -62,7 +62,7 @@ class _PnLState extends State<PnL> {
 
     return FutureBuilder(
         future: currentValuesBuilt,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             double totalVentas;
             double totalCostodeVentas;
@@ -146,7 +146,7 @@ class _PnLState extends State<PnL> {
                                   snapshot: snapshot,
                                 ),
                                 SizedBox(height: 15),
-                                GrossMarginGraph(widget.activeBusiness,
+                                GrossMarginGraph(widget.activeBusiness!,
                                     snapshot, categoriesProvider)
                               ],
                             ),
@@ -155,8 +155,8 @@ class _PnLState extends State<PnL> {
                           //PnL Card
                           Container(
                             width: MediaQuery.of(context).size.width * 0.3,
-                            child: PnLCard(widget.pnlAccountGroups,
-                                widget.pnlMapping, snapshot),
+                            child: PnLCard(widget.pnlAccountGroups!,
+                                widget.pnlMapping!, snapshot),
                           ),
                         ])
                   : Column(
@@ -175,11 +175,11 @@ class _PnLState extends State<PnL> {
                           ),
                           SizedBox(height: 20),
                           //PnL Card
-                          PnLCard(widget.pnlAccountGroups, widget.pnlMapping,
+                          PnLCard(widget.pnlAccountGroups!, widget.pnlMapping!,
                               snapshot),
                           SizedBox(height: 20),
                           //Graph
-                          GrossMarginGraph(widget.activeBusiness, snapshot,
+                          GrossMarginGraph(widget.activeBusiness!, snapshot,
                               categoriesProvider)
                         ]),
             );

@@ -27,17 +27,17 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
     with SingleTickerProviderStateMixin {
   final formatCurrency = new NumberFormat.simpleCurrency();
 
-  AnimationController _controller;
-  Animation<double> _animation;
+  AnimationController? _controller;
+  Animation<double>? _animation;
   bool _isExpanded = false;
 // • Crear nueva venta
   void _toggleDropdown() {
     setState(() {
       _isExpanded = !_isExpanded;
       if (_isExpanded) {
-        _controller.forward();
+        _controller!.forward();
       } else {
-        _controller.reverse();
+        _controller!.reverse();
       }
     });
   }
@@ -49,7 +49,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
       duration: Duration(milliseconds: 300),
     );
     _animation = CurvedAnimation(
-      parent: _controller,
+      parent: _controller!,
       curve: Curves.easeInOut,
     );
     super.initState();
@@ -60,7 +60,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
     final register = Provider.of<CashRegister>(context);
     final userProfile = Provider.of<UserData>(context);
 
-    if (register == null || userProfile == null) {
+    if (userProfile == UserData()) {
       return Center();
     }
 
@@ -68,11 +68,11 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
       return MultiProvider(
         providers: [
           StreamProvider<List<Payables>>.value(
-              initialData: null,
+              initialData: [],
               value:
                   DatabaseService().payablesList(userProfile.activeBusiness)),
           StreamProvider<List<Receivables>>.value(
-              initialData: null,
+              initialData: [],
               value: DatabaseService()
                   .shortReceivablesList(userProfile.activeBusiness))
         ],
@@ -112,7 +112,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                   Expanded(
                                       flex: 1,
                                       child: PnLSummary(
-                                          userProfile.activeBusiness)),
+                                          userProfile.activeBusiness!)),
                                   SizedBox(height: 20),
                                   //History
                                   Expanded(
@@ -126,7 +126,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                         borderRadius: BorderRadius.circular(25),
                                         boxShadow: <BoxShadow>[
                                           new BoxShadow(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                             offset: Offset(0.0,
                                                 0.0), //offset: new Offset(15.0, 15.0),
                                             blurRadius: 10.0,
@@ -154,7 +154,8 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                                       MaterialPageRoute(
                                                           builder: (context) => StreamProvider<
                                                                   CashRegister>.value(
-                                                              initialData: null,
+                                                              initialData:
+                                                                  CashRegister(),
                                                               value: DatabaseService()
                                                                   .cashRegisterStatus(
                                                                       widget
@@ -268,7 +269,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                         Expanded(
                                             child: StreamProvider<
                                                     List<Sales>>.value(
-                                                initialData: null,
+                                                initialData: [],
                                                 value: DatabaseService()
                                                     .shortsalesList(
                                                         widget.currentBusiness),
@@ -284,8 +285,8 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                         Expanded(
                           flex: 2,
                           child: Container(
-                            child:
-                                PayablesReceivables(userProfile.activeBusiness),
+                            child: PayablesReceivables(
+                                userProfile.activeBusiness!),
                           ),
                         ),
                       ]),
@@ -325,7 +326,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: FadeTransition(
-                            opacity: _animation,
+                            opacity: _animation!,
                             child: Container(
                               height: 35,
                               width: 150,
@@ -345,7 +346,8 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                             states.contains(
                                                 MaterialState.pressed))
                                           return Colors.grey.shade300;
-                                        return null; // Defer to the widget's default.
+                                        return Colors.grey
+                                            .shade300; // Defer to the widget's default.
                                       },
                                     ),
                                   ),
@@ -357,7 +359,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                                 value: DatabaseService()
                                                     .monthlyStatsfromSnapshot(
                                                         widget.currentBusiness),
-                                                initialData: null,
+                                                initialData: MonthlyStats(),
                                                 child: NewSaleScreen(
                                                   widget.currentBusiness,
                                                   fromPOS: false,
@@ -379,7 +381,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: FadeTransition(
-                          opacity: _animation,
+                          opacity: _animation!,
                           child: Container(
                             height: 35,
                             width: 150,
@@ -399,7 +401,8 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                           states
                                               .contains(MaterialState.pressed))
                                         return Colors.grey.shade300;
-                                      return null; // Defer to the widget's default.
+                                      return Colors.grey
+                                          .shade300; // Defer to the widget's default.
                                     },
                                   ),
                                 ),
@@ -429,11 +432,11 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
       return MultiProvider(
         providers: [
           StreamProvider<List<Payables>>.value(
-              initialData: null,
+              initialData: [],
               value:
                   DatabaseService().payablesList(userProfile.activeBusiness)),
           StreamProvider<List<Receivables>>.value(
-              initialData: null,
+              initialData: [],
               value: DatabaseService()
                   .shortReceivablesList(userProfile.activeBusiness))
         ],
@@ -464,14 +467,14 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                         Container(
                             height: 200,
                             width: double.infinity,
-                            child: PnLSummary(userProfile.activeBusiness)),
+                            child: PnLSummary(userProfile.activeBusiness!)),
                         SizedBox(height: 20),
                         //Pending
                         Container(
                           height: 400,
                           width: double.infinity,
                           child:
-                              PayablesReceivables(userProfile.activeBusiness),
+                              PayablesReceivables(userProfile.activeBusiness!),
                         ),
                         SizedBox(height: 20),
                         //History
@@ -485,7 +488,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                             borderRadius: BorderRadius.circular(25),
                             boxShadow: <BoxShadow>[
                               new BoxShadow(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                                 offset: Offset(
                                     0.0, 0.0), //offset: new Offset(15.0, 15.0),
                                 blurRadius: 10.0,
@@ -513,7 +516,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                           MaterialPageRoute(
                                               builder: (context) => StreamProvider<
                                                       CashRegister>.value(
-                                                  initialData: null,
+                                                  initialData: CashRegister(),
                                                   value: DatabaseService()
                                                       .cashRegisterStatus(widget
                                                           .currentBusiness),
@@ -613,7 +616,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                             //List
                             Expanded(
                                 child: StreamProvider<List<Sales>>.value(
-                                    initialData: null,
+                                    initialData: [],
                                     value: DatabaseService()
                                         .shortsalesList(widget.currentBusiness),
                                     child: LastSales()))
@@ -656,7 +659,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: FadeTransition(
-                            opacity: _animation,
+                            opacity: _animation!,
                             child: Container(
                               height: 35,
                               width: 150,
@@ -676,7 +679,8 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                             states.contains(
                                                 MaterialState.pressed))
                                           return Colors.grey.shade300;
-                                        return null; // Defer to the widget's default.
+                                        return Colors.grey
+                                            .shade300; // Defer to the widget's default.
                                       },
                                     ),
                                   ),
@@ -692,7 +696,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                                       .monthlyStatsfromSnapshot(
                                                           widget
                                                               .currentBusiness),
-                                                  initialData: null,
+                                                  initialData: MonthlyStats(),
                                                   child: NewSaleScreen(
                                                     widget.currentBusiness,
                                                     fromPOS: false,
@@ -715,7 +719,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: FadeTransition(
-                          opacity: _animation,
+                          opacity: _animation!,
                           child: Container(
                             height: 35,
                             width: 150,
@@ -735,7 +739,8 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                           states
                                               .contains(MaterialState.pressed))
                                         return Colors.grey.shade300;
-                                      return null; // Defer to the widget's default.
+                                      return Colors.grey
+                                          .shade300; // Defer to the widget's default.
                                     },
                                   ),
                                 ),

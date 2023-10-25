@@ -2,7 +2,6 @@ import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Products.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:intl/intl.dart';
 
 class POSItemDialog extends StatefulWidget {
@@ -21,11 +20,11 @@ class POSItemDialog extends StatefulWidget {
 }
 
 class _POSItemDialogState extends State<POSItemDialog> {
-  bool isAvailable;
-  bool changedAvailability;
-  int quantity;
-  double selectedPrice;
-  double basePrice;
+  late bool isAvailable;
+  late bool changedAvailability;
+  late int quantity;
+  late double selectedPrice;
+  late double basePrice;
   final formatCurrency = new NumberFormat.simpleCurrency();
   List selectedTags = [];
 
@@ -179,85 +178,87 @@ class _POSItemDialogState extends State<POSItemDialog> {
                                   //List
                                   Container(
                                       width: double.infinity,
-                                      child: Tags(
-                                          itemCount: widget.productOptions[i]
-                                              .priceOptions.length,
-                                          itemBuilder: (int x) {
-                                            return ItemTags(
-                                                active: false,
-                                                padding: EdgeInsets.all(12),
-                                                key: Key(widget
-                                                    .productOptions[i]
-                                                    .priceOptions[x]['Option']),
-                                                index: x,
-                                                singleItem: !widget
-                                                    .productOptions[i]
-                                                    .multipleOptions,
-                                                title: widget.productOptions[i]
-                                                    .priceOptions[x]['Option'],
-                                                textColor: Colors.black,
-                                                textActiveColor: Colors.white,
-                                                color: Colors.white,
-                                                border: Border.all(
-                                                    color: Colors.grey),
-                                                activeColor:
-                                                    Colors.greenAccent[400],
-                                                onPressed: (item) {
-                                                  if (!selectedTags.contains(
-                                                      widget.productOptions[i]
-                                                              .priceOptions[x]
-                                                          ['Option'])) {
-                                                    //IF SINGLE CHOICE, REMOVE OTHERS
-                                                    if (!widget
-                                                        .productOptions[i]
-                                                        .multipleOptions) {
-                                                      widget.productOptions[i]
-                                                          .priceOptions
-                                                          .forEach((x) {
-                                                        if (selectedTags
-                                                            .contains(
-                                                                x['Option'])) {
-                                                          selectedTags.remove(
-                                                              x['Option']);
-                                                        }
-                                                      });
-                                                    }
-                                                    //Add new
-                                                    setState(() {
-                                                      selectedTags.add(widget
-                                                              .productOptions[i]
-                                                              .priceOptions[x]
-                                                          ['Option']);
-                                                    });
-                                                  }
-
-                                                  if (widget.productOptions[i]
-                                                              .priceStructure ==
-                                                          'Aditional' &&
-                                                      !selectedTags.contains(widget
-                                                              .productOptions[i]
-                                                              .priceOptions[x]
-                                                          ['Option'])) {
-                                                    setState(() {
-                                                      selectedPrice = selectedPrice +
-                                                          widget
+                                      child: Wrap(
+                                        alignment: WrapAlignment.center,
+                                        spacing: 5,
+                                        children: List.generate(
+                                            widget.productOptions[i]
+                                                .priceOptions.length, (x) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor: (selectedTags
+                                                          .contains(widget
                                                                   .productOptions[i]
                                                                   .priceOptions[
-                                                              x]['Price'];
-                                                    });
-                                                  } else if (widget
-                                                          .productOptions[i]
-                                                          .priceStructure ==
-                                                      'Complete') {
-                                                    setState(() {
-                                                      basePrice = widget
-                                                              .productOptions[i]
-                                                              .priceOptions[x]
-                                                          ['Price'];
+                                                              x]['Option'])
+                                                      ? Colors.greenAccent
+                                                      : Colors.white)),
+                                              onPressed: () {
+                                                if (!selectedTags.contains(
+                                                    widget.productOptions[i]
+                                                            .priceOptions[x]
+                                                        ['Option'])) {
+                                                  //IF SINGLE CHOICE, REMOVE OTHERS
+                                                  if (!widget.productOptions[i]
+                                                      .multipleOptions) {
+                                                    widget.productOptions[i]
+                                                        .priceOptions
+                                                        .forEach((x) {
+                                                      if (selectedTags.contains(
+                                                          x['Option'])) {
+                                                        setState(() {
+                                                          selectedTags.remove(
+                                                              x['Option']);
+                                                        });
+                                                      }
                                                     });
                                                   }
-                                                });
-                                          })),
+                                                  //Add new
+                                                  setState(() {
+                                                    selectedTags.add(widget
+                                                            .productOptions[i]
+                                                            .priceOptions[x]
+                                                        ['Option']);
+                                                  });
+                                                }
+
+                                                if (widget.productOptions[i]
+                                                            .priceStructure ==
+                                                        'Aditional' &&
+                                                    !selectedTags.contains(
+                                                        widget.productOptions[i]
+                                                                .priceOptions[x]
+                                                            ['Option'])) {
+                                                  setState(() {
+                                                    selectedPrice = selectedPrice +
+                                                        widget.productOptions[i]
+                                                                .priceOptions[x]
+                                                            ['Price'];
+                                                  });
+                                                } else if (widget
+                                                        .productOptions[i]
+                                                        .priceStructure ==
+                                                    'Complete') {
+                                                  setState(() {
+                                                    basePrice = widget
+                                                            .productOptions[i]
+                                                            .priceOptions[x]
+                                                        ['Price'];
+                                                  });
+                                                }
+                                              },
+                                              child: Text(
+                                                widget.productOptions[i]
+                                                    .priceOptions[x]['Option'],
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      )),
                                 ],
                               ),
                             );
@@ -278,7 +279,7 @@ class _POSItemDialogState extends State<POSItemDialog> {
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Colors.grey.shade300),
                             overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
                                   return Colors.grey.shade500;
@@ -323,7 +324,7 @@ class _POSItemDialogState extends State<POSItemDialog> {
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Colors.grey.shade300),
                             overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
                                   return Colors.grey.shade500;
@@ -360,7 +361,7 @@ class _POSItemDialogState extends State<POSItemDialog> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.black),
                           overlayColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                              MaterialStateProperty.resolveWith<Color?>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.hovered))
                                 return Colors.grey.shade500;

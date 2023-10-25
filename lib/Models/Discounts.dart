@@ -1,11 +1,11 @@
 class Discounts {
-  String code;
-  String description;
-  double discount;
-  bool active;
-  int numberOfUses;
-  DateTime createdDate;
-  DateTime validUntil;
+  String? code;
+  String? description;
+  double? discount;
+  bool? active;
+  int? numberOfUses;
+  DateTime? createdDate;
+  DateTime? validUntil;
 
   Discounts({
     this.code,

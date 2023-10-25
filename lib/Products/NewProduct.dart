@@ -14,10 +14,10 @@ class NewProduct extends StatefulWidget {
   final String activeBusiness;
   final List categories;
   final String businessField;
-  final Products product;
+  final Products? product;
   const NewProduct(
       this.activeBusiness, this.categories, this.businessField, this.product,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -33,11 +33,11 @@ class _NewProductState extends State<NewProduct> {
   double price = 0;
   String description = '';
   String category = '';
-  bool isAvailable;
-  bool show;
-  bool vegan;
-  bool newProduct;
-  List historicPrices;
+  late bool isAvailable;
+  late bool show;
+  late bool vegan;
+  late bool newProduct;
+  late List historicPrices;
   List listOfIngredients = [];
   bool featured = false;
 
@@ -111,8 +111,8 @@ class _NewProductState extends State<NewProduct> {
     return totalCost;
   }
 
-  double expectedMargin;
-  double lowMarginAlert;
+  double? expectedMargin;
+  double? lowMarginAlert;
 
   //List of product Options
   List productOptions = [];
@@ -132,19 +132,17 @@ class _NewProductState extends State<NewProduct> {
   //Image select and upload to storage
   String image = '';
   Uint8List webImage = Uint8List(8);
-  String downloadUrl;
+  String? downloadUrl;
   bool changedImage = false;
   Future getImage() async {
-    XFile selectedImage =
+    XFile? selectedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (selectedImage != null) {
-      Uint8List uploadFile = await selectedImage.readAsBytes();
-      setState(() {
-        webImage = uploadFile;
-        changedImage = true;
-      });
-    }
+    Uint8List uploadFile = await selectedImage!.readAsBytes();
+    setState(() {
+      webImage = uploadFile;
+      changedImage = true;
+    });
   }
 
   Future uploadPic(businessID) async {
@@ -165,29 +163,30 @@ class _NewProductState extends State<NewProduct> {
   void initState() {
     if (widget.product != null) {
       newProduct = false;
-      category = widget.product.category;
-      isAvailable = widget.product.available;
-      show = widget.product.available;
-      vegan = widget.product.vegan;
-      name = widget.product.product;
-      price = widget.product.price;
-      code = widget.product.code;
-      description = widget.product.description;
-      image = widget.product.image;
-      ingredients = widget.product.ingredients;
-      historicPrices = widget.product.historicPrices;
-      featured = widget.product.featured;
-      expectedMargin = widget.product.expectedMargin;
-      lowMarginAlert = widget.product.lowMarginAlert;
-      if (widget.product.productOptions.length > 0) {
-        for (var x = 0; x < widget.product.productOptions.length; x++) {
+      category = widget.product!.category!;
+      isAvailable = widget.product!.available!;
+      show = widget.product!.available!;
+      vegan = widget.product!.vegan!;
+      name = widget.product!.product!;
+      price = widget.product!.price!;
+      code = widget.product!.code!;
+      description = widget.product!.description!;
+      image = widget.product!.image!;
+      ingredients = widget.product!.ingredients!;
+      historicPrices = widget.product!.historicPrices!;
+      featured = widget.product!.featured!;
+      expectedMargin = widget.product!.expectedMargin!;
+      lowMarginAlert = widget.product!.lowMarginAlert!;
+      if (widget.product!.productOptions!.length > 0) {
+        for (var x = 0; x < widget.product!.productOptions!.length; x++) {
           productOptions.add({
-            'Mandatory': widget.product.productOptions[x].mandatory,
+            'Mandatory': widget.product!.productOptions![x].mandatory,
             'Multiple Options':
-                widget.product.productOptions[x].multipleOptions,
-            'Price Structure': widget.product.productOptions[x].priceStructure,
-            'Title': widget.product.productOptions[x].title,
-            'Price Options': widget.product.productOptions[x].priceOptions
+                widget.product!.productOptions![x].multipleOptions,
+            'Price Structure':
+                widget.product!.productOptions![x].priceStructure,
+            'Title': widget.product!.productOptions![x].title,
+            'Price Options': widget.product!.productOptions![x].priceOptions
           });
         }
       } else {
@@ -252,7 +251,7 @@ class _NewProductState extends State<NewProduct> {
                             borderRadius: BorderRadius.circular(25),
                             boxShadow: <BoxShadow>[
                               new BoxShadow(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                                 offset: new Offset(0, 0),
                                 blurRadius: 10.0,
                               )
@@ -300,7 +299,7 @@ class _NewProductState extends State<NewProduct> {
                                               color: Colors.grey.shade200,
                                               image: DecorationImage(
                                                   image: NetworkImage(
-                                                      widget.product.image),
+                                                      widget.product!.image!),
                                                   fit: BoxFit.cover)),
                                         )
                                       : Container(
@@ -369,7 +368,7 @@ class _NewProductState extends State<NewProduct> {
                             borderRadius: BorderRadius.circular(25),
                             boxShadow: <BoxShadow>[
                               new BoxShadow(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                                 offset: new Offset(0, 0),
                                 blurRadius: 10.0,
                               )
@@ -432,7 +431,7 @@ class _NewProductState extends State<NewProduct> {
                                                       new BorderRadius.circular(
                                                           12.0),
                                                   borderSide: new BorderSide(
-                                                    color: Colors.grey[350],
+                                                    color: Colors.grey[350]!,
                                                   ),
                                                 ),
                                                 focusedBorder:
@@ -496,7 +495,7 @@ class _NewProductState extends State<NewProduct> {
                                                       new BorderRadius.circular(
                                                           12.0),
                                                   borderSide: new BorderSide(
-                                                    color: Colors.grey[350],
+                                                    color: Colors.grey[350]!,
                                                   ),
                                                 ),
                                                 focusedBorder:
@@ -592,7 +591,7 @@ class _NewProductState extends State<NewProduct> {
                                                       new BorderRadius.circular(
                                                           12.0),
                                                   borderSide: new BorderSide(
-                                                    color: Colors.grey[350],
+                                                    color: Colors.grey[350]!,
                                                   ),
                                                 ),
                                                 focusedBorder:
@@ -606,8 +605,7 @@ class _NewProductState extends State<NewProduct> {
                                                 ),
                                               ),
                                               onChanged: (value) {
-                                                if (value != '' &&
-                                                    value != null) {
+                                                if (value != '') {
                                                   setState(() {
                                                     price = double.parse(value);
                                                   });
@@ -749,7 +747,8 @@ class _NewProductState extends State<NewProduct> {
                                                 }).toList(),
                                                 onChanged: (newValue) {
                                                   setState(() {
-                                                    category = newValue;
+                                                    category =
+                                                        newValue.toString();
                                                   });
                                                 },
                                               )),
@@ -826,7 +825,7 @@ class _NewProductState extends State<NewProduct> {
                                       borderRadius:
                                           new BorderRadius.circular(12.0),
                                       borderSide: new BorderSide(
-                                        color: Colors.grey[350],
+                                        color: Colors.grey[350]!,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -1087,7 +1086,7 @@ class _NewProductState extends State<NewProduct> {
                                                         return Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   bottom: 15.0),
                                                           child: Text(
                                                               '• ${productOptions[i]['Price Options'][x]['Option']}  (+\$${productOptions[i]['Price Options'][x]['Price']})'),
@@ -1096,7 +1095,7 @@ class _NewProductState extends State<NewProduct> {
                                                         return Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   bottom: 15.0),
                                                           child: Text(
                                                               '• ${productOptions[i]['Price Options'][x]['Option']}'),
@@ -1195,19 +1194,19 @@ class _NewProductState extends State<NewProduct> {
                                                             new OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
                                                             color: Colors
-                                                                .grey[350],
+                                                                .grey[350]!,
                                                           ),
                                                         ),
                                                         focusedBorder:
                                                             OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
@@ -1282,19 +1281,19 @@ class _NewProductState extends State<NewProduct> {
                                                             new OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
                                                             color: Colors
-                                                                .grey[350],
+                                                                .grey[350]!,
                                                           ),
                                                         ),
                                                         focusedBorder:
                                                             OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
@@ -1380,19 +1379,19 @@ class _NewProductState extends State<NewProduct> {
                                                             new OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
                                                             color: Colors
-                                                                .grey[350],
+                                                                .grey[350]!,
                                                           ),
                                                         ),
                                                         focusedBorder:
                                                             OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
@@ -1430,11 +1429,11 @@ class _NewProductState extends State<NewProduct> {
                                                             BoxDecoration(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           border: Border.all(
                                                             color: Colors
-                                                                .grey[350],
+                                                                .grey[350]!,
                                                           ),
                                                         ),
                                                         padding:
@@ -1579,7 +1578,7 @@ class _NewProductState extends State<NewProduct> {
                                                             color: ((((price - totalIngredientsCost()) /
                                                                             price) *
                                                                         100) <
-                                                                    lowMarginAlert)
+                                                                    lowMarginAlert!)
                                                                 ? Colors.red
                                                                 : Colors.greenAccent[
                                                                     700])),
@@ -1648,7 +1647,7 @@ class _NewProductState extends State<NewProduct> {
                                                         borderSide:
                                                             new BorderSide(
                                                           color:
-                                                              Colors.grey[350],
+                                                              Colors.grey[350]!,
                                                         ),
                                                       ),
                                                       focusedBorder:
@@ -1733,7 +1732,7 @@ class _NewProductState extends State<NewProduct> {
                                                         borderSide:
                                                             new BorderSide(
                                                           color:
-                                                              Colors.grey[350],
+                                                              Colors.grey[350]!,
                                                         ),
                                                       ),
                                                       focusedBorder:
@@ -1769,7 +1768,7 @@ class _NewProductState extends State<NewProduct> {
                                               MaterialStateProperty.all<Color>(
                                                   Colors.black),
                                           overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                              .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
@@ -1785,7 +1784,7 @@ class _NewProductState extends State<NewProduct> {
                                         ),
                                         onPressed: () {
                                           if (newProduct) {
-                                            if (_formKey.currentState
+                                            if (_formKey.currentState!
                                                 .validate()) {
                                               if (ingredients.length > 0) {
                                                 for (int i = 0;
@@ -1848,7 +1847,7 @@ class _NewProductState extends State<NewProduct> {
                                               Navigator.of(context).pop();
                                             }
                                           } else {
-                                            if (_formKey.currentState
+                                            if (_formKey.currentState!
                                                 .validate()) {
                                               if (ingredients.length > 0) {
                                                 for (int i = 0;
@@ -1860,7 +1859,7 @@ class _NewProductState extends State<NewProduct> {
                                                 }
                                               }
                                               if (changedImage) {
-                                                if (widget.product.price !=
+                                                if (widget.product!.price !=
                                                     price) {
                                                   try {
                                                     historicPrices
@@ -1890,7 +1889,7 @@ class _NewProductState extends State<NewProduct> {
                                                         .editProduct(
                                                             widget
                                                                 .activeBusiness,
-                                                            widget.product
+                                                            widget.product!
                                                                 .productID,
                                                             isAvailable,
                                                             name,
@@ -1911,10 +1910,10 @@ class _NewProductState extends State<NewProduct> {
                                                             show,
                                                             historicPrices,
                                                             featured,
-                                                            expectedMargin,
-                                                            lowMarginAlert));
+                                                            expectedMargin!,
+                                                            lowMarginAlert!));
                                               } else {
-                                                if (widget.product.price !=
+                                                if (widget.product!.price !=
                                                     price) {
                                                   try {
                                                     historicPrices
@@ -1941,7 +1940,7 @@ class _NewProductState extends State<NewProduct> {
                                                 }
                                                 DatabaseService().editProduct(
                                                     widget.activeBusiness,
-                                                    widget.product.productID,
+                                                    widget.product!.productID,
                                                     isAvailable,
                                                     name,
                                                     image,
@@ -1961,8 +1960,8 @@ class _NewProductState extends State<NewProduct> {
                                                     show,
                                                     historicPrices,
                                                     featured,
-                                                    expectedMargin,
-                                                    lowMarginAlert);
+                                                    expectedMargin!,
+                                                    lowMarginAlert!);
                                               }
                                               Navigator.of(context).pop();
                                             }
@@ -1991,7 +1990,8 @@ class _NewProductState extends State<NewProduct> {
                                                                 Colors.black),
                                                     overlayColor:
                                                         MaterialStateProperty
-                                                            .resolveWith<Color>(
+                                                            .resolveWith<
+                                                                Color?>(
                                                       (Set<MaterialState>
                                                           states) {
                                                         if (states.contains(
@@ -2012,11 +2012,11 @@ class _NewProductState extends State<NewProduct> {
                                                   ),
                                                   onPressed: () {
                                                     if (newProduct) {
-                                                      if (_formKey.currentState
+                                                      if (_formKey.currentState!
                                                           .validate()) {
                                                         if (widget
-                                                                .product
-                                                                .ingredients
+                                                                .product!
+                                                                .ingredients!
                                                                 .length >
                                                             0) {
                                                           for (int i = 0;
@@ -2082,7 +2082,7 @@ class _NewProductState extends State<NewProduct> {
                                                             .pop();
                                                       }
                                                     } else {
-                                                      if (_formKey.currentState
+                                                      if (_formKey.currentState!
                                                           .validate()) {
                                                         if (ingredients.length >
                                                             0) {
@@ -2098,7 +2098,7 @@ class _NewProductState extends State<NewProduct> {
                                                           }
                                                         }
                                                         if (changedImage) {
-                                                          if (widget.product
+                                                          if (widget.product!
                                                                   .price !=
                                                               price) {
                                                             if (historicPrices
@@ -2134,7 +2134,7 @@ class _NewProductState extends State<NewProduct> {
                                                           uploadPic(widget.activeBusiness).then((value) => DatabaseService().editProduct(
                                                               widget
                                                                   .activeBusiness,
-                                                              widget.product
+                                                              widget.product!
                                                                   .productID,
                                                               isAvailable,
                                                               name,
@@ -2155,10 +2155,10 @@ class _NewProductState extends State<NewProduct> {
                                                               show,
                                                               historicPrices,
                                                               featured,
-                                                              expectedMargin,
-                                                              lowMarginAlert));
+                                                              expectedMargin!,
+                                                              lowMarginAlert!));
                                                         } else {
-                                                          if (widget.product
+                                                          if (widget.product!
                                                                   .price !=
                                                               price) {
                                                             if (historicPrices
@@ -2194,7 +2194,7 @@ class _NewProductState extends State<NewProduct> {
                                                           DatabaseService().editProduct(
                                                               widget
                                                                   .activeBusiness,
-                                                              widget.product
+                                                              widget.product!
                                                                   .productID,
                                                               isAvailable,
                                                               name,
@@ -2215,8 +2215,8 @@ class _NewProductState extends State<NewProduct> {
                                                               show,
                                                               historicPrices,
                                                               featured,
-                                                              expectedMargin,
-                                                              lowMarginAlert);
+                                                              expectedMargin!,
+                                                              lowMarginAlert!);
                                                         }
                                                         Navigator.of(context)
                                                             .pop();
@@ -2225,7 +2225,7 @@ class _NewProductState extends State<NewProduct> {
                                                   },
                                                   child: Padding(
                                                     padding: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 20,
                                                         vertical: 15),
                                                     child: Center(
@@ -2254,7 +2254,8 @@ class _NewProductState extends State<NewProduct> {
                                                                 Colors.white70),
                                                     overlayColor:
                                                         MaterialStateProperty
-                                                            .resolveWith<Color>(
+                                                            .resolveWith<
+                                                                Color?>(
                                                       (Set<MaterialState>
                                                           states) {
                                                         if (states.contains(
@@ -2278,8 +2279,8 @@ class _NewProductState extends State<NewProduct> {
                                                         .deleteProduct(
                                                             widget
                                                                 .activeBusiness,
-                                                            widget.product
-                                                                .productID);
+                                                            widget.product!
+                                                                .productID!);
                                                     Navigator.of(context).pop();
                                                   },
                                                   child: Center(
@@ -2317,7 +2318,7 @@ class _NewProductState extends State<NewProduct> {
                           borderRadius: BorderRadius.circular(25),
                           boxShadow: <BoxShadow>[
                             new BoxShadow(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                               offset: new Offset(0, 0),
                               blurRadius: 10.0,
                             )
@@ -2365,7 +2366,7 @@ class _NewProductState extends State<NewProduct> {
                                             color: Colors.grey.shade200,
                                             image: DecorationImage(
                                                 image: NetworkImage(
-                                                    widget.product.image),
+                                                    widget.product!.image!),
                                                 fit: BoxFit.cover)),
                                       )
                                     : Container(
@@ -2433,7 +2434,7 @@ class _NewProductState extends State<NewProduct> {
                             borderRadius: BorderRadius.circular(25),
                             boxShadow: <BoxShadow>[
                               new BoxShadow(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                                 offset: new Offset(0, 0),
                                 blurRadius: 10.0,
                               )
@@ -2496,7 +2497,7 @@ class _NewProductState extends State<NewProduct> {
                                                       new BorderRadius.circular(
                                                           12.0),
                                                   borderSide: new BorderSide(
-                                                    color: Colors.grey[350],
+                                                    color: Colors.grey[350]!,
                                                   ),
                                                 ),
                                                 focusedBorder:
@@ -2560,7 +2561,7 @@ class _NewProductState extends State<NewProduct> {
                                                       new BorderRadius.circular(
                                                           12.0),
                                                   borderSide: new BorderSide(
-                                                    color: Colors.grey[350],
+                                                    color: Colors.grey[350]!,
                                                   ),
                                                 ),
                                                 focusedBorder:
@@ -2656,7 +2657,7 @@ class _NewProductState extends State<NewProduct> {
                                                       new BorderRadius.circular(
                                                           12.0),
                                                   borderSide: new BorderSide(
-                                                    color: Colors.grey[350],
+                                                    color: Colors.grey[350]!,
                                                   ),
                                                 ),
                                                 focusedBorder:
@@ -2670,8 +2671,7 @@ class _NewProductState extends State<NewProduct> {
                                                 ),
                                               ),
                                               onChanged: (value) {
-                                                if (value != '' &&
-                                                    value != null) {
+                                                if (value != '') {
                                                   setState(() {
                                                     price = double.parse(value);
                                                   });
@@ -2813,7 +2813,8 @@ class _NewProductState extends State<NewProduct> {
                                                 }).toList(),
                                                 onChanged: (newValue) {
                                                   setState(() {
-                                                    category = newValue;
+                                                    category =
+                                                        newValue.toString();
                                                   });
                                                 },
                                               )),
@@ -2890,7 +2891,7 @@ class _NewProductState extends State<NewProduct> {
                                       borderRadius:
                                           new BorderRadius.circular(12.0),
                                       borderSide: new BorderSide(
-                                        color: Colors.grey[350],
+                                        color: Colors.grey[350]!,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -3151,7 +3152,7 @@ class _NewProductState extends State<NewProduct> {
                                                         return Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   bottom: 15.0),
                                                           child: Text(
                                                               '• ${productOptions[i]['Price Options'][x]['Option']}  (+\$${productOptions[i]['Price Options'][x]['Price']})'),
@@ -3160,7 +3161,7 @@ class _NewProductState extends State<NewProduct> {
                                                         return Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   bottom: 15.0),
                                                           child: Text(
                                                               '• ${productOptions[i]['Price Options'][x]['Option']}'),
@@ -3259,19 +3260,19 @@ class _NewProductState extends State<NewProduct> {
                                                             new OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
                                                             color: Colors
-                                                                .grey[350],
+                                                                .grey[350]!,
                                                           ),
                                                         ),
                                                         focusedBorder:
                                                             OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
@@ -3346,19 +3347,19 @@ class _NewProductState extends State<NewProduct> {
                                                             new OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
                                                             color: Colors
-                                                                .grey[350],
+                                                                .grey[350]!,
                                                           ),
                                                         ),
                                                         focusedBorder:
                                                             OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
@@ -3444,19 +3445,19 @@ class _NewProductState extends State<NewProduct> {
                                                             new OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
                                                             color: Colors
-                                                                .grey[350],
+                                                                .grey[350]!,
                                                           ),
                                                         ),
                                                         focusedBorder:
                                                             OutlineInputBorder(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           borderSide:
                                                               new BorderSide(
@@ -3494,11 +3495,11 @@ class _NewProductState extends State<NewProduct> {
                                                             BoxDecoration(
                                                           borderRadius:
                                                               new BorderRadius
-                                                                      .circular(
+                                                                  .circular(
                                                                   12.0),
                                                           border: Border.all(
                                                             color: Colors
-                                                                .grey[350],
+                                                                .grey[350]!,
                                                           ),
                                                         ),
                                                         padding:
@@ -3643,7 +3644,7 @@ class _NewProductState extends State<NewProduct> {
                                                             color: ((((price - totalIngredientsCost()) /
                                                                             price) *
                                                                         100) <
-                                                                    lowMarginAlert)
+                                                                    lowMarginAlert!)
                                                                 ? Colors.red
                                                                 : Colors.greenAccent[
                                                                     700])),
@@ -3712,7 +3713,7 @@ class _NewProductState extends State<NewProduct> {
                                                         borderSide:
                                                             new BorderSide(
                                                           color:
-                                                              Colors.grey[350],
+                                                              Colors.grey[350]!,
                                                         ),
                                                       ),
                                                       focusedBorder:
@@ -3797,7 +3798,7 @@ class _NewProductState extends State<NewProduct> {
                                                         borderSide:
                                                             new BorderSide(
                                                           color:
-                                                              Colors.grey[350],
+                                                              Colors.grey[350]!,
                                                         ),
                                                       ),
                                                       focusedBorder:
@@ -3833,7 +3834,7 @@ class _NewProductState extends State<NewProduct> {
                                               MaterialStateProperty.all<Color>(
                                                   Colors.black),
                                           overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                              .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
@@ -3849,7 +3850,7 @@ class _NewProductState extends State<NewProduct> {
                                         ),
                                         onPressed: () {
                                           if (newProduct) {
-                                            if (_formKey.currentState
+                                            if (_formKey.currentState!
                                                 .validate()) {
                                               if (ingredients.length > 0) {
                                                 for (int i = 0;
@@ -3912,7 +3913,7 @@ class _NewProductState extends State<NewProduct> {
                                               Navigator.of(context).pop();
                                             }
                                           } else {
-                                            if (_formKey.currentState
+                                            if (_formKey.currentState!
                                                 .validate()) {
                                               if (ingredients.length > 0) {
                                                 for (int i = 0;
@@ -3924,7 +3925,7 @@ class _NewProductState extends State<NewProduct> {
                                                 }
                                               }
                                               if (changedImage) {
-                                                if (widget.product.price !=
+                                                if (widget.product!.price !=
                                                     price) {
                                                   try {
                                                     historicPrices
@@ -3954,7 +3955,7 @@ class _NewProductState extends State<NewProduct> {
                                                         .editProduct(
                                                             widget
                                                                 .activeBusiness,
-                                                            widget.product
+                                                            widget.product!
                                                                 .productID,
                                                             isAvailable,
                                                             name,
@@ -3975,10 +3976,10 @@ class _NewProductState extends State<NewProduct> {
                                                             show,
                                                             historicPrices,
                                                             featured,
-                                                            expectedMargin,
-                                                            lowMarginAlert));
+                                                            expectedMargin!,
+                                                            lowMarginAlert!));
                                               } else {
-                                                if (widget.product.price !=
+                                                if (widget.product!.price !=
                                                     price) {
                                                   try {
                                                     historicPrices
@@ -4005,7 +4006,7 @@ class _NewProductState extends State<NewProduct> {
                                                 }
                                                 DatabaseService().editProduct(
                                                     widget.activeBusiness,
-                                                    widget.product.productID,
+                                                    widget.product!.productID,
                                                     isAvailable,
                                                     name,
                                                     image,
@@ -4025,8 +4026,8 @@ class _NewProductState extends State<NewProduct> {
                                                     show,
                                                     historicPrices,
                                                     featured,
-                                                    expectedMargin,
-                                                    lowMarginAlert);
+                                                    expectedMargin!,
+                                                    lowMarginAlert!);
                                               }
                                               Navigator.of(context).pop();
                                             }
@@ -4055,7 +4056,8 @@ class _NewProductState extends State<NewProduct> {
                                                                 Colors.black),
                                                     overlayColor:
                                                         MaterialStateProperty
-                                                            .resolveWith<Color>(
+                                                            .resolveWith<
+                                                                Color?>(
                                                       (Set<MaterialState>
                                                           states) {
                                                         if (states.contains(
@@ -4076,11 +4078,11 @@ class _NewProductState extends State<NewProduct> {
                                                   ),
                                                   onPressed: () {
                                                     if (newProduct) {
-                                                      if (_formKey.currentState
+                                                      if (_formKey.currentState!
                                                           .validate()) {
                                                         if (widget
-                                                                .product
-                                                                .ingredients
+                                                                .product!
+                                                                .ingredients!
                                                                 .length >
                                                             0) {
                                                           for (int i = 0;
@@ -4146,7 +4148,7 @@ class _NewProductState extends State<NewProduct> {
                                                             .pop();
                                                       }
                                                     } else {
-                                                      if (_formKey.currentState
+                                                      if (_formKey.currentState!
                                                           .validate()) {
                                                         if (ingredients.length >
                                                             0) {
@@ -4162,7 +4164,7 @@ class _NewProductState extends State<NewProduct> {
                                                           }
                                                         }
                                                         if (changedImage) {
-                                                          if (widget.product
+                                                          if (widget.product!
                                                                   .price !=
                                                               price) {
                                                             if (historicPrices
@@ -4198,7 +4200,7 @@ class _NewProductState extends State<NewProduct> {
                                                           uploadPic(widget.activeBusiness).then((value) => DatabaseService().editProduct(
                                                               widget
                                                                   .activeBusiness,
-                                                              widget.product
+                                                              widget.product!
                                                                   .productID,
                                                               isAvailable,
                                                               name,
@@ -4219,10 +4221,10 @@ class _NewProductState extends State<NewProduct> {
                                                               show,
                                                               historicPrices,
                                                               featured,
-                                                              expectedMargin,
-                                                              lowMarginAlert));
+                                                              expectedMargin!,
+                                                              lowMarginAlert!));
                                                         } else {
-                                                          if (widget.product
+                                                          if (widget.product!
                                                                   .price !=
                                                               price) {
                                                             if (historicPrices
@@ -4258,7 +4260,7 @@ class _NewProductState extends State<NewProduct> {
                                                           DatabaseService().editProduct(
                                                               widget
                                                                   .activeBusiness,
-                                                              widget.product
+                                                              widget.product!
                                                                   .productID,
                                                               isAvailable,
                                                               name,
@@ -4279,8 +4281,8 @@ class _NewProductState extends State<NewProduct> {
                                                               show,
                                                               historicPrices,
                                                               featured,
-                                                              expectedMargin,
-                                                              lowMarginAlert);
+                                                              expectedMargin!,
+                                                              lowMarginAlert!);
                                                         }
                                                         Navigator.of(context)
                                                             .pop();
@@ -4289,7 +4291,7 @@ class _NewProductState extends State<NewProduct> {
                                                   },
                                                   child: Padding(
                                                     padding: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 20,
                                                         vertical: 15),
                                                     child: Center(
@@ -4318,7 +4320,8 @@ class _NewProductState extends State<NewProduct> {
                                                                 Colors.white70),
                                                     overlayColor:
                                                         MaterialStateProperty
-                                                            .resolveWith<Color>(
+                                                            .resolveWith<
+                                                                Color?>(
                                                       (Set<MaterialState>
                                                           states) {
                                                         if (states.contains(
@@ -4342,8 +4345,8 @@ class _NewProductState extends State<NewProduct> {
                                                         .deleteProduct(
                                                             widget
                                                                 .activeBusiness,
-                                                            widget.product
-                                                                .productID);
+                                                            widget.product!
+                                                                .productID!);
                                                     Navigator.of(context).pop();
                                                   },
                                                   child: Center(
@@ -4430,7 +4433,7 @@ class _NewProductState extends State<NewProduct> {
                                 border: Border.all(color: Colors.grey.shade300),
                                 color: Colors.grey.shade200,
                                 image: DecorationImage(
-                                    image: NetworkImage(widget.product.image),
+                                    image: NetworkImage(widget.product!.image!),
                                     fit: BoxFit.cover)),
                           )
                         : Container(
@@ -4514,7 +4517,7 @@ class _NewProductState extends State<NewProduct> {
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(12.0),
                               borderSide: new BorderSide(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -4563,7 +4566,7 @@ class _NewProductState extends State<NewProduct> {
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(12.0),
                               borderSide: new BorderSide(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -4626,7 +4629,7 @@ class _NewProductState extends State<NewProduct> {
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(12.0),
                               borderSide: new BorderSide(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -4637,7 +4640,7 @@ class _NewProductState extends State<NewProduct> {
                             ),
                           ),
                           onChanged: (value) {
-                            if (value != '' && value != null) {
+                            if (value != '') {
                               setState(() {
                                 price = double.parse(value);
                               });
@@ -4776,7 +4779,7 @@ class _NewProductState extends State<NewProduct> {
                                         }).toList(),
                                         onChanged: (newValue) {
                                           setState(() {
-                                            category = newValue;
+                                            category = newValue.toString();
                                           });
                                         },
                                       )),
@@ -4848,7 +4851,7 @@ class _NewProductState extends State<NewProduct> {
                           border: new OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(12.0),
                             borderSide: new BorderSide(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -5484,7 +5487,7 @@ class _NewProductState extends State<NewProduct> {
                                               ((((price - totalIngredientsCost()) /
                                                               price) *
                                                           100) <
-                                                      lowMarginAlert)
+                                                      lowMarginAlert!)
                                                   ? Colors.red
                                                   : Colors.greenAccent[700])),
                                   SizedBox(height: 20),
@@ -5612,7 +5615,7 @@ class _NewProductState extends State<NewProduct> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.black),
                                 overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                    MaterialStateProperty.resolveWith<Color?>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
                                       return Colors.grey;
@@ -5626,7 +5629,7 @@ class _NewProductState extends State<NewProduct> {
                               ),
                               onPressed: () {
                                 if (newProduct) {
-                                  if (_formKey.currentState.validate()) {
+                                  if (_formKey.currentState!.validate()) {
                                     if (ingredients.length > 0) {
                                       for (int i = 0;
                                           i < ingredients.length;
@@ -5685,7 +5688,7 @@ class _NewProductState extends State<NewProduct> {
                                     Navigator.of(context).pop();
                                   }
                                 } else {
-                                  if (_formKey.currentState.validate()) {
+                                  if (_formKey.currentState!.validate()) {
                                     if (ingredients.length > 0) {
                                       for (int i = 0;
                                           i < ingredients.length;
@@ -5695,7 +5698,7 @@ class _NewProductState extends State<NewProduct> {
                                       }
                                     }
                                     if (changedImage) {
-                                      if (widget.product.price != price) {
+                                      if (widget.product!.price != price) {
                                         try {
                                           historicPrices.last['To Date'] =
                                               DateTime.now();
@@ -5720,7 +5723,7 @@ class _NewProductState extends State<NewProduct> {
                                           (value) => DatabaseService()
                                               .editProduct(
                                                   widget.activeBusiness,
-                                                  widget.product.productID,
+                                                  widget.product!.productID,
                                                   isAvailable,
                                                   name,
                                                   downloadUrl,
@@ -5740,10 +5743,10 @@ class _NewProductState extends State<NewProduct> {
                                                   show,
                                                   historicPrices,
                                                   featured,
-                                                  expectedMargin,
-                                                  lowMarginAlert));
+                                                  expectedMargin!,
+                                                  lowMarginAlert!));
                                     } else {
-                                      if (widget.product.price != price) {
+                                      if (widget.product!.price != price) {
                                         try {
                                           historicPrices.last['To Date'] =
                                               DateTime.now();
@@ -5766,7 +5769,7 @@ class _NewProductState extends State<NewProduct> {
                                       }
                                       DatabaseService().editProduct(
                                           widget.activeBusiness,
-                                          widget.product.productID,
+                                          widget.product!.productID,
                                           isAvailable,
                                           name,
                                           image,
@@ -5785,8 +5788,8 @@ class _NewProductState extends State<NewProduct> {
                                           show,
                                           historicPrices,
                                           featured,
-                                          expectedMargin,
-                                          lowMarginAlert);
+                                          expectedMargin!,
+                                          lowMarginAlert!);
                                     }
                                     Navigator.of(context).pop();
                                   }
@@ -5813,7 +5816,7 @@ class _NewProductState extends State<NewProduct> {
                                               MaterialStateProperty.all<Color>(
                                                   Colors.black),
                                           overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                              .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
@@ -5829,9 +5832,9 @@ class _NewProductState extends State<NewProduct> {
                                         ),
                                         onPressed: () {
                                           if (newProduct) {
-                                            if (_formKey.currentState
+                                            if (_formKey.currentState!
                                                 .validate()) {
-                                              if (widget.product.ingredients
+                                              if (widget.product!.ingredients!
                                                       .length >
                                                   0) {
                                                 for (int i = 0;
@@ -5894,7 +5897,7 @@ class _NewProductState extends State<NewProduct> {
                                               Navigator.of(context).pop();
                                             }
                                           } else {
-                                            if (_formKey.currentState
+                                            if (_formKey.currentState!
                                                 .validate()) {
                                               if (ingredients.length > 0) {
                                                 for (int i = 0;
@@ -5906,7 +5909,7 @@ class _NewProductState extends State<NewProduct> {
                                                 }
                                               }
                                               if (changedImage) {
-                                                if (widget.product.price !=
+                                                if (widget.product!.price !=
                                                     price) {
                                                   if (historicPrices.length >
                                                       0) {
@@ -5936,7 +5939,7 @@ class _NewProductState extends State<NewProduct> {
                                                         .editProduct(
                                                             widget
                                                                 .activeBusiness,
-                                                            widget.product
+                                                            widget.product!
                                                                 .productID,
                                                             isAvailable,
                                                             name,
@@ -5957,10 +5960,10 @@ class _NewProductState extends State<NewProduct> {
                                                             show,
                                                             historicPrices,
                                                             featured,
-                                                            expectedMargin,
-                                                            lowMarginAlert));
+                                                            expectedMargin!,
+                                                            lowMarginAlert!));
                                               } else {
-                                                if (widget.product.price !=
+                                                if (widget.product!.price !=
                                                     price) {
                                                   if (historicPrices.length >
                                                       0) {
@@ -5987,7 +5990,7 @@ class _NewProductState extends State<NewProduct> {
                                                 }
                                                 DatabaseService().editProduct(
                                                     widget.activeBusiness,
-                                                    widget.product.productID,
+                                                    widget.product!.productID,
                                                     isAvailable,
                                                     name,
                                                     image,
@@ -6007,8 +6010,8 @@ class _NewProductState extends State<NewProduct> {
                                                     show,
                                                     historicPrices,
                                                     featured,
-                                                    expectedMargin,
-                                                    lowMarginAlert);
+                                                    expectedMargin!,
+                                                    lowMarginAlert!);
                                               }
                                               Navigator.of(context).pop();
                                             }
@@ -6041,7 +6044,7 @@ class _NewProductState extends State<NewProduct> {
                                               MaterialStateProperty.all<Color>(
                                                   Colors.white70),
                                           overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                              .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
@@ -6058,7 +6061,7 @@ class _NewProductState extends State<NewProduct> {
                                         onPressed: () {
                                           DatabaseService().deleteProduct(
                                               widget.activeBusiness,
-                                              widget.product.productID);
+                                              widget.product!.productID!);
                                           Navigator.of(context).pop();
                                         },
                                         child: Center(

@@ -5,7 +5,6 @@ import 'package:denario/Backend/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 
 class Onboarding extends StatefulWidget {
   @override
@@ -140,7 +139,7 @@ class _OnboardingState extends State<Onboarding> {
                           TextFormField(
                             style: TextStyle(color: Colors.black, fontSize: 14),
                             validator: (val) =>
-                                val.isEmpty ? "Agrega un nombre" : null,
+                                val!.isEmpty ? "Agrega un nombre" : null,
                             autofocus: true,
                             cursorColor: Colors.grey,
                             focusNode: _nameNode,
@@ -184,7 +183,7 @@ class _OnboardingState extends State<Onboarding> {
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                             ],
-                            validator: (val) => val.isEmpty
+                            validator: (val) => val!.isEmpty
                                 ? "Agrega un celular válido"
                                 : (val.length > 9)
                                     ? null
@@ -219,7 +218,7 @@ class _OnboardingState extends State<Onboarding> {
                               _tlfNode.unfocus();
                             },
                             onChanged: (val) {
-                              setState(() => phone = int.parse(val));
+                              setState(() => phone = int.parse(val.toString()));
                             },
                           ),
                           //Rol en el negocio
@@ -262,7 +261,7 @@ class _OnboardingState extends State<Onboarding> {
                               }).toList(),
                               onChanged: (x) {
                                 setState(() {
-                                  rol = x;
+                                  rol = x.toString();
                                 });
                               },
                             ),
@@ -286,7 +285,7 @@ class _OnboardingState extends State<Onboarding> {
                           children: <Widget>[
                             ////// About text
                             Text(
-                              'Sobre tu negocio',
+                              '$name, contanos sobre tu negocio',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.black,
@@ -299,7 +298,7 @@ class _OnboardingState extends State<Onboarding> {
                               style:
                                   TextStyle(color: Colors.black, fontSize: 14),
                               validator: (val) =>
-                                  val.isEmpty ? "Agrega un nombre" : null,
+                                  val!.isEmpty ? "Agrega un nombre" : null,
                               cursorColor: Colors.grey,
                               focusNode: _businessNameNode,
                               textInputAction: TextInputAction.next,
@@ -375,7 +374,7 @@ class _OnboardingState extends State<Onboarding> {
                                 }).toList(),
                                 onChanged: (x) {
                                   setState(() {
-                                    businessField = x;
+                                    businessField = x.toString();
                                   });
                                 },
                               ),
@@ -385,7 +384,7 @@ class _OnboardingState extends State<Onboarding> {
                             TextFormField(
                               style:
                                   TextStyle(color: Colors.black, fontSize: 14),
-                              validator: (val) => val.isEmpty ? "" : null,
+                              validator: (val) => val!.isEmpty ? "" : null,
                               cursorColor: Colors.grey,
                               focusNode: _businessLocationNode,
                               textInputAction: TextInputAction.next,
@@ -426,7 +425,7 @@ class _OnboardingState extends State<Onboarding> {
                             TextFormField(
                               style:
                                   TextStyle(color: Colors.black, fontSize: 14),
-                              validator: (val) => val.isEmpty
+                              validator: (val) => val!.isEmpty
                                   ? "Agrega un numero válido"
                                   : null,
                               keyboardType: TextInputType.number,
@@ -462,7 +461,7 @@ class _OnboardingState extends State<Onboarding> {
                               ),
                               onFieldSubmitted: (term) {
                                 _businessSizeNode.unfocus();
-                                if (_formKey2.currentState.validate()) {
+                                if (_formKey2.currentState!.validate()) {
                                   controller.nextPage(
                                       duration: Duration(milliseconds: 500),
                                       curve: Curves.ease);
@@ -587,27 +586,39 @@ class _OnboardingState extends State<Onboarding> {
                           //Tags
                           Container(
                               width: 500,
-                              child: Tags(
-                                  itemCount: purposeTags.length,
-                                  itemBuilder: (int i) {
-                                    return ItemTags(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 8),
-                                        key: Key(i.toString()),
-                                        index: i,
-                                        title: purposeTags[i],
-                                        textColor: Colors.white,
-                                        textActiveColor: Colors.black,
-                                        color: Colors.green,
-                                        activeColor: Colors.white,
-                                        onPressed: (item) {
-                                          if (!item.active) {
-                                            selectedTags.add(item.title);
-                                          } else {
-                                            selectedTags.remove(item.title);
-                                          }
-                                        });
-                                  })),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 5,
+                                children:
+                                    List.generate(purposeTags.length, (i) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: (selectedTags
+                                                  .contains(purposeTags[i])
+                                              ? Colors.greenAccent
+                                              : Colors.white)),
+                                      onPressed: () {
+                                        if (!selectedTags
+                                            .contains(purposeTags[i])) {
+                                          setState(() {
+                                            selectedTags.add(purposeTags[i]);
+                                          });
+                                        } else {
+                                          setState(() {
+                                            selectedTags.remove(purposeTags[i]);
+                                          });
+                                        }
+                                      },
+                                      child: Text(
+                                        purposeTags[i],
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              )),
                           SizedBox(height: 25),
                         ],
                       ),
@@ -639,7 +650,8 @@ class _OnboardingState extends State<Onboarding> {
                     if (states.contains(MaterialState.focused) ||
                         states.contains(MaterialState.pressed))
                       return Colors.grey.shade500;
-                    return null; // Defer to the widget's default.
+                    return Colors
+                        .grey.shade500; // Defer to the widget's default.
                   },
                 ),
               ),
@@ -647,20 +659,20 @@ class _OnboardingState extends State<Onboarding> {
                 final businessID = generateRandomString();
 
                 if (currentpage == 0) {
-                  if (_formKey.currentState.validate()) {
+                  if (_formKey.currentState!.validate()) {
                     controller.nextPage(
                         duration: Duration(milliseconds: 500),
                         curve: Curves.ease);
                   }
                 } else if (currentpage == 1) {
-                  if (_formKey2.currentState.validate()) {
+                  if (_formKey2.currentState!.validate()) {
                     controller.nextPage(
                         duration: Duration(milliseconds: 500),
                         curve: Curves.ease);
                   }
                 } else {
-                  final User user = FirebaseAuth.instance.currentUser;
-                  final String uid = user.uid.toString();
+                  final User? user = FirebaseAuth.instance.currentUser;
+                  final String uid = user!.uid.toString();
                   //Save user data to Firestore
                   DatabaseService().createUserProfile(uid, name, phone, rol,
                       businessName, businessID, selectedTags);

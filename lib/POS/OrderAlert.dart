@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 class OrderAlert extends StatefulWidget {
   final List<PendingOrders> pendingOrders;
   final String businessID;
-  const OrderAlert(this.pendingOrders, this.businessID, {Key key})
+  const OrderAlert(this.pendingOrders, this.businessID, {Key? key})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class _OrderAlertState extends State<OrderAlert> {
   final formatCurrency = new NumberFormat.simpleCurrency();
   AudioPlayer audioPlayer = AudioPlayer();
   // PlayerState audioPlayerState = PlayerState.playing;
-  AudioCache audioCache;
+  AudioCache? audioCache;
   String audioPath = 'sounds/service-bell-ring.mp3';
 
   @override
@@ -45,8 +45,6 @@ class _OrderAlertState extends State<OrderAlert> {
 
   @override
   void dispose() {
-    audioPlayer.stop();
-    audioPlayer.release();
     audioPlayer.dispose();
     super.dispose();
     // audioCache.clearAll();
@@ -136,7 +134,7 @@ class _OrderAlertState extends State<OrderAlert> {
                     ),
                     SizedBox(width: 20),
                     Text(
-                      '(${widget.pendingOrders.last.orderDetail.length} items)',
+                      '(${widget.pendingOrders.last.orderDetail!.length} items)',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -152,7 +150,7 @@ class _OrderAlertState extends State<OrderAlert> {
                 child: Container(
                   child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: widget.pendingOrders.last.orderDetail.length,
+                      itemCount: widget.pendingOrders.last.orderDetail!.length,
                       itemBuilder: (context, i) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 15.0),
@@ -160,19 +158,19 @@ class _OrderAlertState extends State<OrderAlert> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                '${widget.pendingOrders.last.orderDetail[i]['Quantity']} x',
+                                '${widget.pendingOrders.last.orderDetail![i]['Quantity']} x',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               SizedBox(width: 25),
                               Text(
-                                '${widget.pendingOrders.last.orderDetail[i]['Name']}',
+                                '${widget.pendingOrders.last.orderDetail![i]['Name']}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 16),
                               ),
                               Spacer(),
                               Text(
-                                '${formatCurrency.format(widget.pendingOrders.last.orderDetail[i]['Total Price'])}',
+                                '${formatCurrency.format(widget.pendingOrders.last.orderDetail![i]['Total Price'])}',
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.black54),
                               ),
@@ -317,6 +315,8 @@ class _OrderAlertState extends State<OrderAlert> {
                                                   foregroundColor: Colors.black,
                                                 ),
                                                 onPressed: () {
+                                                  audioPlayer.stop();
+
                                                   Navigator.of(context).pop();
                                                   DatabaseService()
                                                       .deletePendingOrder(
@@ -364,6 +364,8 @@ class _OrderAlertState extends State<OrderAlert> {
                           ),
                         ),
                         onPressed: () {
+                          audioPlayer.stop();
+
                           DatabaseService().saveOrder(
                               widget.businessID,
                               DateTime.now().toString(),

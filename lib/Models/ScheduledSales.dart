@@ -1,18 +1,18 @@
 class ScheduledSales {
-  String orderName;
-  double subTotal;
-  double total;
-  double tax;
-  double discount;
-  List orderDetail;
-  String id;
-  DateTime savedDate;
-  DateTime dueDate;
-  Map client;
-  double initialPayment;
-  double remainingBalance;
-  bool pending;
-  String note;
+  String? orderName;
+  double? subTotal;
+  double? total;
+  double? tax;
+  double? discount;
+  List? orderDetail;
+  String? id;
+  DateTime? savedDate;
+  DateTime? dueDate;
+  Map? client;
+  double? initialPayment;
+  double? remainingBalance;
+  bool? pending;
+  String? note;
 
   ScheduledSales(
       {this.orderName,

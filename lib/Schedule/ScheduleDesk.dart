@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ScheduleDesk extends StatefulWidget {
-  const ScheduleDesk({Key key}) : super(key: key);
+  const ScheduleDesk({Key? key}) : super(key: key);
 
   @override
   State<ScheduleDesk> createState() => _ScheduleDeskState();
@@ -25,10 +25,10 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
     'Próxima semana'
   ];
   List weekFilterList = ['Esta semana', 'Semana anterior', 'Próxima semana'];
-  String selectedFilter;
-  DateTime selectedDate;
+  late String selectedFilter;
+  late DateTime selectedDate;
 
-  String selectedWeekFilter;
+  late String selectedWeekFilter;
   DateTime selectedWeek = DateTime.now();
 
   final List<String> meses = [
@@ -88,7 +88,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
   Widget build(BuildContext context) {
     final userProfile = Provider.of<UserData>(context);
 
-    if (userProfile == null) {
+    if (userProfile == UserData()) {
       return Container();
     }
 
@@ -123,7 +123,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                             child: IconButton(
                               splashRadius: 1,
                               onPressed: () async {
-                                DateTime pickedDate = await showDatePicker(
+                                DateTime? pickedDate = await showDatePicker(
                                     context: context,
                                     initialDate: DateTime.now(),
                                     firstDate: DateTime.now()
@@ -149,12 +149,10 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                               ),
                                             ),
                                           ),
-                                          child: child);
+                                          child: child!);
                                     }));
                                 setState(() {
-                                  if (pickedDate != null) {
-                                    selectedDate = pickedDate;
-                                  }
+                                  selectedDate = pickedDate!;
                                 });
 
                                 DateTime initDate =
@@ -212,7 +210,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                 ),
                                 onPressed: () {
                                   final User user =
-                                      FirebaseAuth.instance.currentUser;
+                                      FirebaseAuth.instance.currentUser!;
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -220,7 +218,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                                 providers: [
                                                   StreamProvider<
                                                           UserData>.value(
-                                                      initialData: null,
+                                                      initialData: UserData(),
                                                       value: DatabaseService()
                                                           .userProfile(user.uid
                                                               .toString())),
@@ -229,13 +227,13 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                                     value: DatabaseService()
                                                         .monthlyStatsfromSnapshot(
                                                             userProfile
-                                                                .activeBusiness),
-                                                    initialData: null,
+                                                                .activeBusiness!),
+                                                    initialData: MonthlyStats(),
                                                   )
                                                 ],
                                                 child: Scaffold(
                                                     body: NewSaleScreen(
-                                                  userProfile.activeBusiness,
+                                                  userProfile.activeBusiness!,
                                                   fromPOS: false,
                                                 )),
                                               )));
@@ -261,7 +259,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                       SizedBox(height: 20),
                       //List of tasks within list of days
                       Expanded(
-                        child: DaysList(userProfile.activeBusiness,
+                        child: DaysList(userProfile.activeBusiness!,
                             selectedFilter, selectedDate),
                       )
                     ],
@@ -315,7 +313,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                             : MaterialStateProperty.all<Color>(
                                                 Colors.black),
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered))
@@ -364,7 +362,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                           child: ListView.builder(
                               itemCount: 7,
                               itemBuilder: ((context, i) {
-                                DateTime now;
+                                DateTime? now;
 
                                 if (selectedWeekFilter == 'Esta semana') {
                                   now = DateTime.now();
@@ -377,7 +375,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                   now = DateTime.now().add(Duration(days: 7));
                                 }
 
-                                int currentDay = now.weekday;
+                                int currentDay = now!.weekday;
                                 DateTime dayOfWeek = now.subtract(
                                     Duration(days: currentDay - (i + 1)));
                                 return Container(
@@ -403,13 +401,13 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                         SizedBox(height: 10),
                                         StreamProvider<
                                                 List<ScheduledSales>>.value(
-                                            initialData: null,
+                                            initialData: [],
                                             value: DatabaseService()
                                                 .scheduledList(
                                                     userProfile.activeBusiness,
                                                     dayOfWeek),
                                             child: TaskWeeklyList(
-                                                userProfile.activeBusiness)),
+                                                userProfile.activeBusiness!)),
                                       ],
                                     ));
                               })))
@@ -451,7 +449,7 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                             child: IconButton(
                               splashRadius: 1,
                               onPressed: () async {
-                                DateTime pickedDate = await showDatePicker(
+                                DateTime? pickedDate = await showDatePicker(
                                     context: context,
                                     initialDate: DateTime.now(),
                                     firstDate: DateTime.now()
@@ -477,12 +475,10 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                               ),
                                             ),
                                           ),
-                                          child: child);
+                                          child: child!);
                                     }));
                                 setState(() {
-                                  if (pickedDate != null) {
-                                    selectedDate = pickedDate;
-                                  }
+                                  selectedDate = pickedDate!;
                                 });
 
                                 DateTime initDate =
@@ -534,14 +530,14 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                             foregroundColor: Colors.black,
                             onPressed: () {
                               final User user =
-                                  FirebaseAuth.instance.currentUser;
+                                  FirebaseAuth.instance.currentUser!;
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => MultiProvider(
                                             providers: [
                                               StreamProvider<UserData>.value(
-                                                  initialData: null,
+                                                  initialData: UserData(),
                                                   value: DatabaseService()
                                                       .userProfile(
                                                           user.uid.toString())),
@@ -550,13 +546,13 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                                 value: DatabaseService()
                                                     .monthlyStatsfromSnapshot(
                                                         userProfile
-                                                            .activeBusiness),
-                                                initialData: null,
+                                                            .activeBusiness!),
+                                                initialData: MonthlyStats(),
                                               )
                                             ],
                                             child: Scaffold(
                                                 body: NewSaleScreen(
-                                              userProfile.activeBusiness,
+                                              userProfile.activeBusiness!,
                                               fromPOS: false,
                                             )),
                                           )));
@@ -628,10 +624,10 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
             ),
             //List of tasks within list of days
             StreamProvider<List<ScheduledSales>>.value(
-                initialData: null,
+                initialData: [],
                 value: DatabaseService()
                     .scheduledList(userProfile.activeBusiness, selectedDate),
-                child: TaskList(userProfile.activeBusiness)),
+                child: TaskList(userProfile.activeBusiness!)),
           ],
         ),
       );

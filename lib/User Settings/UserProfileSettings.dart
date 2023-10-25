@@ -31,24 +31,22 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
   bool changedImage = false;
 
   Uint8List webImage = Uint8List(8);
-  String downloadUrl;
+  String? downloadUrl;
 
   Future getImage() async {
-    XFile selectedImage =
+    XFile? selectedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (selectedImage != null) {
-      Uint8List uploadFile = await selectedImage.readAsBytes();
-      setState(() {
-        webImage = uploadFile;
-        changedImage = true;
-      });
-    }
+    Uint8List uploadFile = await selectedImage!.readAsBytes();
+    setState(() {
+      webImage = uploadFile;
+      changedImage = true;
+    });
   }
 
   Future uploadPic() async {
     ////Upload to Clod Storage
-    final User user = FirebaseAuth.instance.currentUser;
+    final User user = FirebaseAuth.instance.currentUser!;
     final String uid = user.uid.toString();
 
     String fileName = 'Profile Images/' + uid + '.png';
@@ -92,7 +90,7 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[350],
+                          color: Colors.grey[350]!,
                           offset: new Offset(0, 0),
                           blurRadius: 10.0,
                         )
@@ -190,7 +188,7 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 14),
                                   validator: (val) =>
-                                      val.isEmpty ? "Agrega un nombre" : null,
+                                      val!.isEmpty ? "Agrega un nombre" : null,
                                   autofocus: true,
                                   cursorColor: Colors.grey,
                                   cursorHeight: 25,
@@ -242,7 +240,7 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
                                     FilteringTextInputFormatter.digitsOnly,
                                     LengthLimitingTextInputFormatter(10),
                                   ],
-                                  validator: (val) => val.isEmpty
+                                  validator: (val) => val!.isEmpty
                                       ? "Agrega un celular válido"
                                       : (val.length == 10)
                                           ? null
@@ -313,7 +311,8 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
                             }
                             if (changedImage) {
                               uploadPic().then((value) => DatabaseService()
-                                  .updateUserProfile(name, phone, downloadUrl));
+                                  .updateUserProfile(
+                                      name, phone, downloadUrl!));
                             } else {
                               DatabaseService().updateUserProfile(
                                   name, phone, widget.profileImage);
@@ -436,7 +435,8 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
                   //Nombre
                   TextFormField(
                     style: TextStyle(color: Colors.black, fontSize: 14),
-                    validator: (val) => val.isEmpty ? "Agrega un nombre" : null,
+                    validator: (val) =>
+                        val!.isEmpty ? "Agrega un nombre" : null,
                     autofocus: true,
                     cursorColor: Colors.grey,
                     cursorHeight: 25,
@@ -482,7 +482,7 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(10),
                     ],
-                    validator: (val) => val.isEmpty
+                    validator: (val) => val!.isEmpty
                         ? "Agrega un celular válido"
                         : (val.length == 10)
                             ? null
@@ -547,7 +547,7 @@ class _UserProfileSettingsState extends State<UserProfileSettings> {
               }
               if (changedImage) {
                 uploadPic().then((value) => DatabaseService()
-                    .updateUserProfile(name, phone, downloadUrl));
+                    .updateUserProfile(name, phone, downloadUrl!));
               } else {
                 DatabaseService()
                     .updateUserProfile(name, phone, widget.profileImage);

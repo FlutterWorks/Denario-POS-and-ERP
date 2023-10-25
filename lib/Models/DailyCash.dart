@@ -1,32 +1,32 @@
 class CashRegister {
-  bool registerisOpen;
-  String registerName;
-  List paymentTypes;
+  bool? registerisOpen;
+  String? registerName;
+  List? paymentTypes;
   CashRegister({this.registerName, this.registerisOpen, this.paymentTypes});
 }
 
 class DailyTransactions {
-  DateTime openDate;
-  DateTime closeDate;
-  String user;
-  double initialAmount;
-  bool isOpen;
-  double dailyTransactions;
-  List registerTransactionList;
-  double sales;
-  double inflows;
-  double outflows;
-  double closeAmount;
-  Map salesByMedium;
-  int totalItemsSold;
-  int totalSalesCount;
-  Map salesCountbyProduct;
-  Map salesCountbyCategory;
-  Map salesAmountbyProduct;
-  Map salesbyCategory;
-  Map salesbyOrderType;
-  Map salesAmountbyCategory;
-  double totalSuppliesCost;
+  DateTime? openDate;
+  DateTime? closeDate;
+  String? user;
+  double? initialAmount;
+  bool? isOpen;
+  double? dailyTransactions;
+  List? registerTransactionList;
+  double? sales;
+  double? inflows;
+  double? outflows;
+  double? closeAmount;
+  Map? salesByMedium;
+  int? totalItemsSold;
+  int? totalSalesCount;
+  Map? salesCountbyProduct;
+  Map? salesCountbyCategory;
+  Map? salesAmountbyProduct;
+  Map? salesbyCategory;
+  Map? salesbyOrderType;
+  Map? salesAmountbyCategory;
+  double? totalSuppliesCost;
 
   DailyTransactions(
       {this.openDate,

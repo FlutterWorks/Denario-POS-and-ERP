@@ -1,17 +1,17 @@
 class SavedOrders {
-  String orderName;
-  double subTotal;
-  double total;
-  double tax;
-  double discount;
-  String paymentType;
-  List orderDetail;
-  int orderColor;
-  String id;
-  bool isTable;
-  String orderType;
-  DateTime savedDate;
-  Map client;
+  String? orderName;
+  double? subTotal;
+  double? total;
+  double? tax;
+  double? discount;
+  String? paymentType;
+  List? orderDetail;
+  int? orderColor;
+  String? id;
+  bool? isTable;
+  String? orderType;
+  DateTime? savedDate;
+  Map? client;
 
   SavedOrders(
       {this.orderName,

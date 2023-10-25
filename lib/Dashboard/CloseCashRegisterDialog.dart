@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class CloseCashRegisterDialog extends StatefulWidget {
   final String currentRegister;
-  CloseCashRegisterDialog({this.currentRegister});
+  CloseCashRegisterDialog({required this.currentRegister});
 
   @override
   _CloseCashRegisterDialogState createState() =>
@@ -19,8 +19,8 @@ class _CloseCashRegisterDialogState extends State<CloseCashRegisterDialog> {
   final controller = PageController(initialPage: 0);
   final int totalPages = 2;
 
-  FocusNode nameNode;
-  FocusNode amountNode;
+  late FocusNode nameNode = FocusNode();
+  late FocusNode amountNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class _CloseCashRegisterDialogState extends State<CloseCashRegisterDialog> {
                     style: TextStyle(color: Colors.black, fontSize: 40),
                     initialValue: '\$0.00',
                     validator: (val) =>
-                        val.isEmpty ? "Agrega un monto válido" : null,
+                        val!.isEmpty ? "Agrega un monto válido" : null,
                     inputFormatters: <TextInputFormatter>[
                       CurrencyTextInputFormatter(
                         name: '\$',
@@ -102,7 +102,7 @@ class _CloseCashRegisterDialogState extends State<CloseCashRegisterDialog> {
                     ),
                     onChanged: (val) {
                       setState(() => closeAmount = double.tryParse(
-                          (val.substring(1)).replaceAll(',', '')));
+                          (val.substring(1)).replaceAll(',', ''))!);
                     },
                   ),
                   SizedBox(

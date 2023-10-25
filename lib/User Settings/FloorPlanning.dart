@@ -8,7 +8,7 @@ class FloorPlanning extends StatefulWidget {
   final double baseSize;
   final TablesNotifier tablesNotifier;
   const FloorPlanning(this.businessID, this.baseSize, this.tablesNotifier,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class FloorPlanning extends StatefulWidget {
 }
 
 class _FloorPlanningState extends State<FloorPlanning> {
-  TablesNotifier _tablesNotifier;
+  TablesNotifier? _tablesNotifier;
   bool isHovered = false;
 
   Widget _buildTableWidget(TablesNotifier tablesNotifier, Tables table, int i) {
@@ -42,7 +42,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
               color: Colors.white,
               boxShadow: <BoxShadow>[
                 new BoxShadow(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                   offset: Offset(0.0, 0.0),
                   blurRadius: 10.0,
                 )
@@ -50,7 +50,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
             ),
             child: Center(
               child: Text(
-                table.table,
+                table.table!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 softWrap: true,
@@ -83,7 +83,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
               color: Colors.white,
               boxShadow: <BoxShadow>[
                 new BoxShadow(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                   offset: Offset(0.0, 0.0),
                   blurRadius: 10.0,
                 )
@@ -91,7 +91,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
             ),
             child: Center(
               child: Text(
-                table.table,
+                table.table!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 softWrap: true,
@@ -127,7 +127,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
                 color: Colors.white,
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: Offset(0.0, 0.0),
                     blurRadius: 10.0,
                   )
@@ -155,7 +155,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
                   // : Container(),
                   Center(
                     child: Text(
-                      table.table,
+                      table.table!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
@@ -194,7 +194,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
                 color: Colors.white,
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: Offset(0.0, 0.0),
                     blurRadius: 10.0,
                   )
@@ -222,7 +222,7 @@ class _FloorPlanningState extends State<FloorPlanning> {
                   //     : Container(),
                   Center(
                     child: Text(
-                      table.table,
+                      table.table!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
@@ -257,8 +257,8 @@ class _FloorPlanningState extends State<FloorPlanning> {
         child: Stack(
           children: [
             ...tables.map((table) => Positioned(
-                  left: MediaQuery.of(context).size.width * table.x,
-                  top: MediaQuery.of(context).size.height * table.y,
+                  left: MediaQuery.of(context).size.width * table.x!,
+                  top: MediaQuery.of(context).size.height * table.y!,
                   child: Draggable(
                     data: table,
                     child: _buildTableWidget(

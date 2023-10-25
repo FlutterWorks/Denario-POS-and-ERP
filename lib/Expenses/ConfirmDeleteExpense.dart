@@ -11,7 +11,7 @@ class ConfirmDeleteExpense extends StatefulWidget {
   final DailyTransactions dailyTransactions;
   const ConfirmDeleteExpense(this.businessID, this.expense, this.registerStatus,
       this.dailyTransactions,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
     return docRef;
   }
 
-  Future currentValuesBuilt;
+  late Future currentValuesBuilt;
 
   setSearchParam(String caseNumber) {
     List<String> caseSearchList = [];
@@ -56,7 +56,7 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
     return Center(
       child: FutureBuilder(
           future: currentValuesBuilt,
-          builder: (context, snap) {
+          builder: (context, AsyncSnapshot snap) {
             if (snap.connectionState == ConnectionState.waiting ||
                 snap.connectionState == ConnectionState.none) {
               return Dialog(
@@ -183,12 +183,13 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                     MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
-                                      return Colors.grey[300];
+                                      return Colors.grey[300]!;
                                     if (states
                                             .contains(MaterialState.focused) ||
                                         states.contains(MaterialState.pressed))
-                                      return Colors.grey[300];
-                                    return null; // Defer to the widget's default.
+                                      return Colors.grey[300]!;
+                                    return Colors.grey[
+                                        300]!; // Defer to the widget's default.
                                   },
                                 ),
                               ),
@@ -197,15 +198,16 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                 List<Map> items = [];
 
                                 for (var i = 0;
-                                    i < widget.expense.items.length;
+                                    i < widget.expense.items!.length;
                                     i++) {
                                   items.add({
-                                    'Name': widget.expense.items[i].product,
+                                    'Name': widget.expense.items![i].product,
                                     'Category':
-                                        widget.expense.items[i].category,
-                                    'Price': widget.expense.items[i].price,
-                                    'Quantity': widget.expense.items[i].qty,
-                                    'Total Price': widget.expense.items[i].total
+                                        widget.expense.items![i].category,
+                                    'Price': widget.expense.items![i].price,
+                                    'Quantity': widget.expense.items![i].qty,
+                                    'Total Price':
+                                        widget.expense.items![i].total
                                   });
                                 }
 
@@ -214,19 +216,19 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                     widget.businessID,
                                     widget.expense.costType,
                                     widget.expense.vendor,
-                                    widget.expense.total * -1,
+                                    widget.expense.total! * -1,
                                     widget.expense.paymentType,
                                     items,
-                                    widget.expense.date,
+                                    widget.expense.date!,
                                     DateTime.now().year.toString(),
                                     DateTime.now().month.toString(),
                                     widget.expense.cashRegister,
                                     true,
                                     widget.expense.usedCashfromRegister,
                                     widget.expense.amountFromRegister,
-                                    widget.expense.expenseID + '-1',
+                                    widget.expense.expenseID! + '-1',
                                     setSearchParam(
-                                      widget.expense.vendor,
+                                      widget.expense.vendor!,
                                     ),
                                     widget.expense.referenceNo);
 
@@ -234,8 +236,8 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                 DatabaseService().markExpenseReversed(
                                     widget.businessID,
                                     widget.expense.expenseID,
-                                    widget.expense.date.year.toString(),
-                                    widget.expense.date.month.toString());
+                                    widget.expense.date!.year.toString(),
+                                    widget.expense.date!.month.toString());
 
                                 try {
                                   DatabaseService().deletePayable(
@@ -246,9 +248,11 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                 //Delete from PnL
                                 var currentCostTypeAmount;
 
-                                currentCostTypeAmount =
-                                    snap.data[widget.expense.costType] -
-                                        widget.expense.total;
+                                if (snap.hasData) {
+                                  currentCostTypeAmount =
+                                      snap.data[widget.expense.costType] -
+                                          widget.expense.total;
+                                }
 
                                 //Create map to get categories totals
                                 Map<String, dynamic> expenseCategories = {};
@@ -304,14 +308,14 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                 });
 
                                 //Add cost type account to MAP
-                                expenseCategories[widget.expense.costType] =
+                                expenseCategories[widget.expense.costType!] =
                                     currentCostTypeAmount;
 
                                 DatabaseService().saveExpenseType(
                                     widget.businessID,
                                     expenseCategories,
-                                    widget.expense.date.year.toString(),
-                                    widget.expense.date.month.toString());
+                                    widget.expense.date!.year.toString(),
+                                    widget.expense.date!.month.toString());
 
                                 //If cash register is open and it was on current and it was cash, reverse
 
@@ -321,12 +325,13 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                     widget.expense.cashRegister ==
                                         widget.registerStatus.registerName) {
                                   double totalTransactionAmount =
-                                      widget.dailyTransactions.outflows -
-                                          widget.expense.amountFromRegister;
+                                      widget.dailyTransactions.outflows! -
+                                          widget.expense.amountFromRegister!;
 
                                   double totalTransactions = widget
-                                          .dailyTransactions.dailyTransactions +
-                                      widget.expense.amountFromRegister;
+                                          .dailyTransactions
+                                          .dailyTransactions! +
+                                      widget.expense.amountFromRegister!;
 
                                   DatabaseService().updateCashRegister(
                                       widget.businessID,
@@ -370,12 +375,13 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                     MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
-                                      return Colors.grey[300];
+                                      return Colors.grey[300]!;
                                     if (states
                                             .contains(MaterialState.focused) ||
                                         states.contains(MaterialState.pressed))
-                                      return Colors.grey[300];
-                                    return null; // Defer to the widget's default.
+                                      return Colors.grey[300]!;
+                                    return Colors.grey[
+                                        300]!; // Defer to the widget's default.
                                   },
                                 ),
                               ),

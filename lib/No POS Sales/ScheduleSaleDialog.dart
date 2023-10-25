@@ -27,12 +27,12 @@ class ScheduleSaleDialog extends StatefulWidget {
 class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
   DateTime selectedDate = DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day, 10, 00);
-  String orderName;
+  String? orderName;
   int phone = 0;
   String email = '';
   double initialPayment = 0;
-  String invoiceNo;
-  String address;
+  String? invoiceNo;
+  String? address;
   bool delivery = false;
   String note = '';
   final FocusNode _clientNode = FocusNode();
@@ -41,11 +41,11 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
   final FocusNode _initialPaymentNode = FocusNode();
   final FocusNode _addressNode = FocusNode();
   final FocusNode _noteNode = FocusNode();
-  TextEditingController clientController;
+  late TextEditingController clientController;
   final _formKey = GlobalKey<FormState>();
 
   void openSchedule() async {
-    DateTime pickedDate = await showDatePicker(
+    DateTime? pickedDate = await showDatePicker(
         context: context,
         helpText: 'Día de retiro',
         confirmText: 'Guardar',
@@ -67,18 +67,16 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                   ),
                 ),
               ),
-              child: child);
+              child: child!);
         }));
     setState(() {
-      if (pickedDate != null) {
-        selectedDate =
-            DateTime(pickedDate.year, pickedDate.month, pickedDate.day, 10);
-      }
+      selectedDate =
+          DateTime(pickedDate!.year, pickedDate.month, pickedDate.day, 10);
     });
   }
 
   void openTime() async {
-    TimeOfDay pickedTime = await showTimePicker(
+    TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialEntryMode: TimePickerEntryMode.input,
         helpText: 'Horario de retiro',
@@ -101,13 +99,11 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                   ),
                 ),
               ),
-              child: child);
+              child: child!);
         }));
     setState(() {
-      if (pickedTime != null) {
-        selectedDate = DateTime(selectedDate.year, selectedDate.month,
-            selectedDate.day, pickedTime.hour, pickedTime.minute);
-      }
+      selectedDate = DateTime(selectedDate.year, selectedDate.month,
+          selectedDate.day, pickedTime!.hour, pickedTime.minute);
     });
   }
 
@@ -498,7 +494,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                                                     color: Colors.black,
                                                     fontSize: 14),
                                                 validator: (val) =>
-                                                    (delivery && val.isEmpty)
+                                                    (delivery && val!.isEmpty)
                                                         ? "Agrega una dirección"
                                                         : null,
                                                 cursorColor: Colors.grey,
@@ -621,7 +617,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                                         onChanged: (val) {
                                           setState(() => initialPayment =
                                               double.tryParse((val.substring(1))
-                                                  .replaceAll(',', '')));
+                                                  .replaceAll(',', ''))!);
                                         },
                                       ),
                                     ),
@@ -697,10 +693,10 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                                 ),
                               ),
                               onPressed: () {
-                                if (_formKey.currentState.validate()) {
+                                if (_formKey.currentState!.validate()) {
                                   DatabaseService().scheduleSale(
                                       widget.businessID,
-                                      invoiceNo,
+                                      invoiceNo!,
                                       widget.subTotal,
                                       widget.discount,
                                       widget.tax,
@@ -1075,7 +1071,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                     },
                     onChanged: (val) {
                       setState(() => initialPayment = double.tryParse(
-                          (val.substring(1)).replaceAll(',', '')));
+                          (val.substring(1)).replaceAll(',', ''))!);
                     },
                   ),
                 ),
@@ -1111,7 +1107,7 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                         ? TextFormField(
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(color: Colors.black, fontSize: 14),
-                            validator: (val) => (delivery && val.isEmpty)
+                            validator: (val) => (delivery && val!.isEmpty)
                                 ? "Agrega una dirección"
                                 : null,
                             cursorColor: Colors.grey,
@@ -1225,10 +1221,10 @@ class _ScheduleSaleDialogState extends State<ScheduleSaleDialog> {
                             ),
                           ),
                           onPressed: () {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               DatabaseService().scheduleSale(
                                   widget.businessID,
-                                  invoiceNo,
+                                  invoiceNo!,
                                   widget.subTotal,
                                   widget.discount,
                                   widget.tax,

@@ -20,7 +20,7 @@ class FilteredExpenseList extends StatelessWidget {
   Widget build(BuildContext context) {
     final expensesListfromSnap = Provider.of<List<Expenses>>(context);
 
-    if (expensesListfromSnap == null) {
+    if (expensesListfromSnap == []) {
       return SliverList(
           delegate: SliverChildBuilderDelegate((context, i) {
         return const SizedBox();
@@ -39,13 +39,13 @@ class FilteredExpenseList extends StatelessWidget {
       //Identify accounts in the expense
       var account = '';
 
-      if (expensesList[i].items.length == 1) {
-        account = expensesList[i].items[0].category;
+      if (expensesList[i].items!.length == 1) {
+        account = expensesList[i].items![0].category!;
       } else {
-        account = expensesList[i].items[0].category;
-        for (var x = 0; x < expensesList[i].items.length; x++) {
-          if (expensesList[i].items[x].category !=
-              expensesList[i].items[0].category) {
+        account = expensesList[i].items![0].category!;
+        for (var x = 0; x < expensesList[i].items!.length; x++) {
+          if (expensesList[i].items![x].category !=
+              expensesList[i].items![0].category) {
             account = 'Varios';
           }
         }
@@ -58,9 +58,9 @@ class FilteredExpenseList extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return StreamProvider<DailyTransactions>.value(
-                      initialData: null,
+                      initialData: DailyTransactions(),
                       value: DatabaseService().dailyTransactions(
-                          businessID, registerStatus.registerName),
+                          businessID, registerStatus.registerName!),
                       child: SingleExpenseDialog(
                           expensesList[i], businessID, registerStatus));
                 });
@@ -82,7 +82,7 @@ class FilteredExpenseList extends StatelessWidget {
                       children: [
                         Text(
                           DateFormat.MMMd()
-                              .format(expensesList[i].date)
+                              .format(expensesList[i].date!)
                               .toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, color: Colors.black),
@@ -91,7 +91,7 @@ class FilteredExpenseList extends StatelessWidget {
                         SizedBox(height: 5),
                         Text(
                           DateFormat('HH:mm')
-                              .format(expensesList[i].date)
+                              .format(expensesList[i].date!)
                               .toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.normal,
@@ -156,13 +156,14 @@ class FilteredExpenseList extends StatelessWidget {
                               height: 5,
                             ),
                             Text(
-                              (expensesList[i].items.isEmpty)
+                              (expensesList[i].items!.isEmpty)
                                   ? 'Sin descripción'
-                                  : (expensesList[i].items.length > 1)
+                                  : (expensesList[i].items!.length > 1)
                                       ? 'Varios'
-                                      : (expensesList[i].items[0].product == '')
+                                      : (expensesList[i].items![0].product ==
+                                              '')
                                           ? 'Sin descripción'
-                                          : '${expensesList[i].items[0].product}',
+                                          : '${expensesList[i].items![0].product}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
@@ -180,13 +181,13 @@ class FilteredExpenseList extends StatelessWidget {
                     ? Container(
                         width: 120,
                         child: Text(
-                          (expensesList[i].items.isEmpty)
+                          (expensesList[i].items!.isEmpty)
                               ? 'Sin descripción'
-                              : (expensesList[i].items.length > 1)
+                              : (expensesList[i].items!.length > 1)
                                   ? 'Varios'
-                                  : (expensesList[i].items[0].product == '')
+                                  : (expensesList[i].items![0].product == '')
                                       ? 'Sin descripción'
-                                      : '${expensesList[i].items[0].product}',
+                                      : '${expensesList[i].items![0].product}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
@@ -230,9 +231,9 @@ class FilteredExpenseList extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return StreamProvider<DailyTransactions>.value(
-                      initialData: null,
+                      initialData: DailyTransactions(),
                       value: DatabaseService().dailyTransactions(
-                          businessID, registerStatus.registerName),
+                          businessID, registerStatus.registerName!),
                       child: SingleExpenseDialog(
                           expensesList[i], businessID, registerStatus));
                 });
@@ -255,7 +256,7 @@ class FilteredExpenseList extends StatelessWidget {
                     children: [
                       Text(
                         DateFormat.MMMd()
-                            .format(expensesList[i].date)
+                            .format(expensesList[i].date!)
                             .toString(),
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.black),
@@ -264,7 +265,7 @@ class FilteredExpenseList extends StatelessWidget {
                       SizedBox(height: 5),
                       Text(
                         DateFormat('HH:mm')
-                            .format(expensesList[i].date)
+                            .format(expensesList[i].date!)
                             .toString(),
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
@@ -322,13 +323,13 @@ class FilteredExpenseList extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          (expensesList[i].items.isEmpty)
+                          (expensesList[i].items!.isEmpty)
                               ? 'Sin descripción'
-                              : (expensesList[i].items.length > 1)
+                              : (expensesList[i].items!.length > 1)
                                   ? 'Varios'
-                                  : (expensesList[i].items[0].product == '')
+                                  : (expensesList[i].items![0].product == '')
                                       ? 'Sin descripción'
-                                      : '${expensesList[i].items[0].product}',
+                                      : '${expensesList[i].items![0].product}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,

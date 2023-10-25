@@ -6,14 +6,14 @@ import 'package:provider/provider.dart';
 
 class POSProducts extends StatelessWidget {
   final String firstCategory;
-  final GlobalKey<ScaffoldState> scaffoldKeyMobile;
-  const POSProducts(this.firstCategory, {this.scaffoldKeyMobile, Key key})
+  final GlobalKey<ScaffoldState>? scaffoldKeyMobile;
+  const POSProducts(this.firstCategory, {this.scaffoldKeyMobile, Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final List<Products> productList = Provider.of<List<Products>>(context);
-    if (productList == null) {
+    if (productList == []) {
       return Container();
     }
 
@@ -23,7 +23,7 @@ class POSProducts extends StatelessWidget {
         firstCategory: firstCategory,
       );
     } else {
-      return POSMobile(firstCategory, productList, scaffoldKeyMobile);
+      return POSMobile(firstCategory, productList, scaffoldKeyMobile!);
     }
   }
 }

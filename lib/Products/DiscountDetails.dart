@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 class DiscountDetails extends StatefulWidget {
   final Discounts currentDiscount;
   final String activeBusiness;
-  const DiscountDetails(this.currentDiscount, this.activeBusiness, {Key key})
+  const DiscountDetails(this.currentDiscount, this.activeBusiness, {Key? key})
       : super(key: key);
 
   @override
@@ -71,7 +71,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: new Offset(0, 0),
                     blurRadius: 10.0,
                   )
@@ -85,7 +85,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                   children: [
                     //Code
                     Text(
-                      discount.code,
+                      discount.code!,
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                               SizedBox(height: 10),
                               Text(
                                 DateFormat.yMMMd()
-                                    .format(discount.createdDate)
+                                    .format(discount.createdDate!)
                                     .toString(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
@@ -175,7 +175,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                               ),
                               SizedBox(height: 10),
                               Switch(
-                                value: discount.active,
+                                value: discount.active!,
                                 onChanged: (value) {
                                   setState(() {
                                     discount.active = value;
@@ -213,7 +213,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                         border: new OutlineInputBorder(
                           borderRadius: new BorderRadius.circular(12.0),
                           borderSide: new BorderSide(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -244,7 +244,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                                       MaterialStateProperty.all<Color>(
                                           Colors.black),
                                   overlayColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                      MaterialStateProperty.resolveWith<Color?>(
                                     (Set<MaterialState> states) {
                                       if (states
                                           .contains(MaterialState.hovered))
@@ -259,12 +259,12 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  if (_formKey.currentState.validate()) {
+                                  if (_formKey.currentState!.validate()) {
                                     DatabaseService().editDiscount(
                                         widget.activeBusiness,
-                                        discount.code,
-                                        discount.description,
-                                        discount.active);
+                                        discount.code!,
+                                        discount.description!,
+                                        discount.active!);
                                     Navigator.of(context).pop();
                                   }
                                 },
@@ -292,7 +292,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                                       MaterialStateProperty.all<Color>(
                                           Colors.white70),
                                   overlayColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                      MaterialStateProperty.resolveWith<Color?>(
                                     (Set<MaterialState> states) {
                                       if (states
                                           .contains(MaterialState.hovered))
@@ -309,7 +309,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
                                 onPressed: () {
                                   DatabaseService().deleteDiscount(
                                     widget.activeBusiness,
-                                    discount.code,
+                                    discount.code!,
                                   );
                                   Navigator.of(context).pop();
                                 },

@@ -1,17 +1,17 @@
 class AppUser {
-  final String uid;
+  final String? uid;
 
   AppUser({this.uid});
 }
 
 class UserData {
-  final String uid;
-  final String name;
-  final int phone;
-  final String profileImage;
-  final String activeBusiness;
-  final List<UserBusinessData> businesses;
-  final List usage;
+  final String? uid;
+  final String? name;
+  final int? phone;
+  final String? profileImage;
+  final String? activeBusiness;
+  final List<UserBusinessData>? businesses;
+  final List? usage;
 
   UserData(
       {this.uid,
@@ -24,30 +24,30 @@ class UserData {
 }
 
 class UserBusinessData {
-  final String businessID;
-  final String businessName;
-  final String roleInBusiness;
-  final bool tableView;
+  final String? businessID;
+  final String? businessName;
+  final String? roleInBusiness;
+  final bool? tableView;
 
   UserBusinessData(
       this.businessID, this.businessName, this.roleInBusiness, this.tableView);
 }
 
 class BusinessProfile {
-  final String businessID;
-  final String businessName;
-  final String roleInBusiness;
-  final String businessImage;
-  final String businessField;
-  final String businessLocation;
-  final int businessSize;
-  final List businessUsers;
-  final List businessSchedule;
-  final String businessBackgroundImage;
-  final List socialMedia;
-  final List visibleStoreCategories;
-  final List paymentMethods;
-  final bool cashBalancing;
+  final String? businessID;
+  final String? businessName;
+  final String? roleInBusiness;
+  final String? businessImage;
+  final String? businessField;
+  final String? businessLocation;
+  final int? businessSize;
+  final List? businessUsers;
+  final List? businessSchedule;
+  final String? businessBackgroundImage;
+  final List? socialMedia;
+  final List? visibleStoreCategories;
+  final List? paymentMethods;
+  final bool? cashBalancing;
 
   BusinessProfile(
       {this.businessID,

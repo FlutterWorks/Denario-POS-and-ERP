@@ -20,7 +20,7 @@ class CreateExpenseDialogForm extends StatefulWidget {
 
   const CreateExpenseDialogForm(this.costType, this.dropdownCategories,
       this.removeSupplyFromList, this.addSupplyToList, this.activeBusiness,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -41,7 +41,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
   TextEditingController descriptionController =
       new TextEditingController(text: '');
   List<TextEditingController> _controllers = [];
-  Supplier selectedSupplier;
+  Supplier? selectedSupplier;
 
   var random = new Random();
   Map updateSuppliesFromList = {};
@@ -64,7 +64,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
     return StreamBuilder(
         stream: bloc.getExpenseStream,
         initialData: bloc.expenseItems,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           if (MediaQuery.of(context).size.width > 650) {
             return Column(
               children: [
@@ -176,7 +176,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                             fontWeight: FontWeight.w400,
                                             fontSize: 14,
                                             color: Colors.grey[700]),
-                                        validator: (val) => val.isEmpty
+                                        validator: (val) => val!.isEmpty
                                             ? "No olvides agregar una descripción"
                                             : null,
                                         inputFormatters: [
@@ -232,7 +232,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                             fontWeight: FontWeight.w400,
                                             fontSize: 14,
                                             color: Colors.grey[700]),
-                                        validator: (val) => val.contains(',')
+                                        validator: (val) => val!.contains(',')
                                             ? "Usa punto"
                                             : null,
                                         inputFormatters: [
@@ -303,7 +303,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                               fontSize: 16,
                                               color: Colors.grey[700]),
                                           validator: (val) {
-                                            if (val.isEmpty) {
+                                            if (val!.isEmpty) {
                                               return 'Agrega un precio';
                                             } else {
                                               return null;
@@ -357,7 +357,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                             ),
                                           ),
                                           onChanged: (val) {
-                                            if (val != null && val != '') {
+                                            if (val != '') {
                                               bloc.editPrice(
                                                   i, double.tryParse((val)));
                                               // bloc.editPrice(
@@ -469,7 +469,8 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                                     states.contains(
                                                         MaterialState.pressed))
                                                   return Colors.grey.shade200;
-                                                return null; // Defer to the widget's default.
+                                                return Colors.grey
+                                                    .shade200; // Defer to the widget's default.
                                               },
                                             ),
                                           ),
@@ -538,29 +539,26 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                           }
 
                           if (widget.costType == 'Costo de Ventas' &&
-                              selectedSupplier != null &&
-                              selectedSupplier.predefinedCategory != null &&
-                              selectedSupplier.predefinedCategory != '') {
+                              selectedSupplier!.predefinedCategory != '') {
                             bloc.addToExpenseList({
                               'Name': '',
                               'Price': 0,
                               'Quantity': 1,
                               'Total Price': 0,
-                              'Category': (selectedSupplier.predefinedCategory),
+                              'Category':
+                                  (selectedSupplier!.predefinedCategory),
                             });
                           } else if (widget.costType != 'Costo de Ventas' &&
-                              selectedSupplier != null &&
-                              selectedSupplier.predefinedAccount != null &&
-                              selectedSupplier.predefinedAccount != '') {
+                              selectedSupplier!.predefinedAccount != '') {
                             bloc.addToExpenseList({
                               'Name':
-                                  selectedSupplier.initialExpenseDescription,
+                                  selectedSupplier!.initialExpenseDescription,
                               'Price': 0,
                               'Quantity': 1,
                               'Total Price': 0,
                               'Category': (widget.dropdownCategories.contains(
-                                      selectedSupplier.predefinedAccount))
-                                  ? selectedSupplier.predefinedAccount
+                                      selectedSupplier!.predefinedAccount))
+                                  ? selectedSupplier!.predefinedAccount
                                   : widget.dropdownCategories[0],
                             });
                           } else {
@@ -676,7 +674,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                         widget.dropdownCategories,
                                         true,
                                         false,
-                                        selectedSupplier,
+                                        selectedSupplier!,
                                         product: snapshot.data["Items"][i]
                                             ['Name'],
                                         price: snapshot.data["Items"][i]
@@ -804,7 +802,8 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                                                         .pressed))
                                                               return Colors.grey
                                                                   .shade200;
-                                                            return null; // Defer to the widget's default.
+                                                            return Colors.grey
+                                                                .shade200; // Defer to the widget's default.
                                                           },
                                                         ),
                                                       ),
@@ -910,7 +909,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                       widget.activeBusiness,
                                       bloc.expenseItems['Vendor']
                                           .toLowerCase()),
-                                  initialData: null,
+                                  initialData: [],
                                   child: SingleChildScrollView(
                                     child: AddExpenseItem(
                                         addExpenseItem,
@@ -918,7 +917,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                         widget.dropdownCategories,
                                         false,
                                         true,
-                                        selectedSupplier),
+                                        selectedSupplier!),
                                   ),
                                 );
                               });

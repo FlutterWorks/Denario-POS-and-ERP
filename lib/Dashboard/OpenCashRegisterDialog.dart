@@ -12,7 +12,7 @@ class OpenCashRegisterDialog extends StatefulWidget {
 
 class _OpenCashRegisterDialogState extends State<OpenCashRegisterDialog> {
   double initialAmount = 0;
-  FocusNode amountNode;
+  FocusNode? amountNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class _OpenCashRegisterDialogState extends State<OpenCashRegisterDialog> {
                     style: TextStyle(color: Colors.black, fontSize: 40),
                     initialValue: '\$0.00',
                     validator: (val) =>
-                        val.isEmpty ? "Agrega un monto válido" : null,
+                        val!.isEmpty ? "Agrega un monto válido" : null,
                     inputFormatters: <TextInputFormatter>[
                       CurrencyTextInputFormatter(
                         name: '\$',
@@ -93,7 +93,7 @@ class _OpenCashRegisterDialogState extends State<OpenCashRegisterDialog> {
                     ),
                     onChanged: (val) {
                       setState(() => initialAmount = double.tryParse(
-                          (val.substring(1)).replaceAll(',', '')));
+                          (val.substring(1)).replaceAll(',', ''))!);
                     },
                   ),
                   SizedBox(

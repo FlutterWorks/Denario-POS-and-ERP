@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 
 class SupplierPendingInvoices extends StatelessWidget {
   final String businessID;
-  const SupplierPendingInvoices(this.businessID, {Key key}) : super(key: key);
+  const SupplierPendingInvoices(this.businessID, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final invoices = Provider.of<List<Payables>>(context);
 
-    if (invoices == null) {
+    if (invoices == []) {
       return Container();
     }
     if (invoices.length < 1) {

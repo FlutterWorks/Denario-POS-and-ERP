@@ -9,7 +9,7 @@ class BusinessScheduleSettings extends StatefulWidget {
   final BusinessProfile userBusiness;
   const BusinessScheduleSettings(this.rol, this.businessOpens,
       this.changeCloseTime, this.changeOpenTime, this.userBusiness,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class BusinessScheduleSettings extends StatefulWidget {
 }
 
 class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
-  List businessSchedule;
+  List? businessSchedule;
   List daysOfWeek = [
     'Lunes',
     'Martes',
@@ -30,7 +30,7 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
   ];
 
   void openTime(i) async {
-    TimeOfDay pickedTime = await showTimePicker(
+    TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialEntryMode: TimePickerEntryMode.input,
         helpText: 'Horario de apertura',
@@ -57,21 +57,19 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
                     ),
                   ),
                 ),
-                child: child),
+                child: child!),
           );
         }));
     setState(() {
-      if (pickedTime != null) {
-        businessSchedule[i]
-            ['Open'] = {'Hour': pickedTime.hour, 'Minute': pickedTime.minute};
-        widget.changeOpenTime(
-            {'Hour': pickedTime.hour, 'Minute': pickedTime.minute}, i);
-      }
+      businessSchedule![i]
+          ['Open'] = {'Hour': pickedTime!.hour, 'Minute': pickedTime.minute};
+      widget.changeOpenTime(
+          {'Hour': pickedTime.hour, 'Minute': pickedTime.minute}, i);
     });
   }
 
   void closeTime(i) async {
-    TimeOfDay pickedTime = await showTimePicker(
+    TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialEntryMode: TimePickerEntryMode.input,
         helpText: 'Horario de cierre',
@@ -98,22 +96,20 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
                     ),
                   ),
                 ),
-                child: child),
+                child: child!),
           );
         }));
     setState(() {
-      if (pickedTime != null) {
-        businessSchedule[i]
-            ['Close'] = {'Hour': pickedTime.hour, 'Minute': pickedTime.minute};
-        widget.changeCloseTime(
-            {'Hour': pickedTime.hour, 'Minute': pickedTime.minute}, i);
-      }
+      businessSchedule![i]
+          ['Close'] = {'Hour': pickedTime!.hour, 'Minute': pickedTime.minute};
+      widget.changeCloseTime(
+          {'Hour': pickedTime.hour, 'Minute': pickedTime.minute}, i);
     });
   }
 
   @override
   void initState() {
-    if (widget.userBusiness.businessSchedule.isNotEmpty) {
+    if (widget.userBusiness.businessSchedule!.isNotEmpty) {
       businessSchedule = widget.userBusiness.businessSchedule;
     } else {
       businessSchedule = [
@@ -160,7 +156,7 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: businessSchedule.length,
+      itemCount: businessSchedule!.length,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: ((context, i) {
@@ -182,10 +178,10 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
                   ),
                   SizedBox(width: 10),
                   Switch(
-                    value: businessSchedule[i]['Opens'],
+                    value: businessSchedule![i]['Opens'],
                     onChanged: (value) {
                       setState(() {
-                        businessSchedule[i]['Opens'] = value;
+                        businessSchedule![i]['Opens'] = value;
                         widget.businessOpens(value, i);
                         widget.changeOpenTime({'Hour': 0, 'Minute': 0}, i);
                         widget.changeCloseTime({'Hour': 0, 'Minute': 0}, i);
@@ -198,7 +194,7 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
               ),
               SizedBox(height: 5),
               //Time
-              (businessSchedule[i]['Opens'])
+              (businessSchedule![i]['Opens'])
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +213,7 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
                                       BorderRadius.all(Radius.circular(12))),
                               child: Center(
                                 child: Text(
-                                  '${businessSchedule[i]['Open']['Hour'].toString().padLeft(2, '0')} : ${businessSchedule[i]['Open']['Minute'].toString().padLeft(2, '0')}',
+                                  '${businessSchedule![i]['Open']['Hour'].toString().padLeft(2, '0')} : ${businessSchedule![i]['Open']['Minute'].toString().padLeft(2, '0')}',
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
@@ -243,7 +239,7 @@ class _BusinessScheduleSettingsState extends State<BusinessScheduleSettings> {
                                       BorderRadius.all(Radius.circular(12))),
                               child: Center(
                                 child: Text(
-                                  '${businessSchedule[i]['Close']['Hour'].toString().padLeft(2, '0')} : ${businessSchedule[i]['Close']['Minute'].toString().padLeft(2, '0')}',
+                                  '${businessSchedule![i]['Close']['Hour'].toString().padLeft(2, '0')} : ${businessSchedule![i]['Close']['Minute'].toString().padLeft(2, '0')}',
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,

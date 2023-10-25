@@ -20,14 +20,14 @@ class SalesDetailsFilters extends StatefulWidget {
 }
 
 class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
-  DateTime initDate;
-  DateTime endDate;
-  String paymentType;
-  bool filtered;
-  List paymentTypes = [];
+  DateTime? initDate;
+  DateTime? endDate;
+  String? paymentType;
+  late bool filtered;
+  List? paymentTypes = [];
 
-  bool dateFiltered;
-  bool paymentFiltered;
+  late bool dateFiltered;
+  late bool paymentFiltered;
 
   @override
   void initState() {
@@ -40,12 +40,12 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
     dateFiltered = false;
     paymentFiltered = false;
 
-    for (var i = 0; i < widget.registerStatus.paymentTypes.length; i++) {
-      paymentTypes.add(widget.registerStatus.paymentTypes[i]['Type']);
+    for (var i = 0; i < widget.registerStatus.paymentTypes!.length; i++) {
+      paymentTypes!.add(widget.registerStatus.paymentTypes![i]['Type']);
     }
 
-    paymentTypes.insert(0, 'Todos');
-    paymentTypes.add('Por Cobrar');
+    paymentTypes!.insert(0, 'Todos');
+    paymentTypes!.add('Por Cobrar');
     paymentType = 'Todos';
 
     super.initState();
@@ -102,7 +102,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                           foregroundColor: Colors.black,
                                         ),
                                         onPressed: () {
-                                          final User user =
+                                          final User? user =
                                               FirebaseAuth.instance.currentUser;
                                           Navigator.push(
                                               context,
@@ -112,9 +112,10 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                         providers: [
                                                           StreamProvider<
                                                                   UserData>.value(
-                                                              initialData: null,
+                                                              initialData:
+                                                                  UserData(),
                                                               value: DatabaseService()
-                                                                  .userProfile(user
+                                                                  .userProfile(user!
                                                                       .uid
                                                                       .toString())),
                                                           StreamProvider<
@@ -123,7 +124,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                                 .monthlyStatsfromSnapshot(
                                                                     widget
                                                                         .currentBusiness),
-                                                            initialData: null,
+                                                            initialData:
+                                                                MonthlyStats(),
                                                           )
                                                         ],
                                                         child: Scaffold(
@@ -173,22 +175,298 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                 ]),
                           ),
                     //Filters
-                    (MediaQuery.of(context).size.width > 800)
-                        ? Container(
-                            height: 70,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(25),
-                              boxShadow: <BoxShadow>[
-                                new BoxShadow(
-                                  color: Colors.grey[350],
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 10.0,
-                                )
-                              ],
+                    if (MediaQuery.of(context).size.width > 800)
+                      Container(
+                        height: 70,
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                          boxShadow: <BoxShadow>[
+                            new BoxShadow(
+                              color: Colors.grey[350]!,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 10.0,
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            //Fecha
+                            Container(
+                              width: 150,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey[350]!),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              padding: EdgeInsets.all(12),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    DateFormat('dd/MM/yyyy').format(initDate!),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16),
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                    height: 20,
+                                    width: 20,
+                                    child: IconButton(
+                                      splashRadius: 1,
+                                      onPressed: () async {
+                                        DateTime? pickedDate =
+                                            await showDatePicker(
+                                                context: context,
+                                                initialDate: initDate!,
+                                                firstDate: DateTime.now()
+                                                    .subtract(
+                                                        Duration(days: 730)),
+                                                lastDate: DateTime.now(),
+                                                builder: ((context, child) {
+                                                  return Theme(
+                                                      data: Theme.of(context)
+                                                          .copyWith(
+                                                        colorScheme:
+                                                            ColorScheme.light(
+                                                          primary: Colors
+                                                              .black, // header background color
+                                                          onPrimary: Colors
+                                                              .white, // header text color
+                                                          onSurface: Colors
+                                                              .black, // body text color
+                                                        ),
+                                                        textButtonTheme:
+                                                            TextButtonThemeData(
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            foregroundColor: Colors
+                                                                .black, // button text color
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      child: child!);
+                                                }));
+                                        setState(() {
+                                          initDate = pickedDate;
+                                          endDate = DateTime(pickedDate!.year,
+                                              pickedDate.month + 1, 0);
+                                          filtered = true;
+                                        });
+                                      },
+                                      padding: EdgeInsets.all(0),
+                                      tooltip: 'Selecciona un fecha inicial',
+                                      iconSize: 18,
+                                      icon: Icon(Icons.calendar_month),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                            child: Row(
+                            SizedBox(width: 10),
+                            Container(
+                                width: 150,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey[350]!),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                padding: EdgeInsets.all(12),
+                                child: //(DateTime.now().difference(initDate).inDays > 1)
+                                    // ?
+                                    Row(
+                                  children: [
+                                    Text(
+                                      (endDate == null)
+                                          ? 'Hasta fecha'
+                                          : DateFormat('dd/MM/yyyy')
+                                              .format(endDate!),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16),
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                      height: 20,
+                                      width: 20,
+                                      child: IconButton(
+                                        splashRadius: 1,
+                                        onPressed: () async {
+                                          DateTime? pickedDate =
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate: initDate!
+                                                      .add(Duration(days: 1)),
+                                                  firstDate: initDate!,
+                                                  lastDate: DateTime(
+                                                      initDate!.year,
+                                                      initDate!.month + 1,
+                                                      0),
+                                                  builder: ((context, child) {
+                                                    return Theme(
+                                                        data: Theme.of(context)
+                                                            .copyWith(
+                                                          colorScheme:
+                                                              ColorScheme.light(
+                                                            primary: Colors
+                                                                .black, // header background color
+                                                            onPrimary: Colors
+                                                                .white, // header text color
+                                                            onSurface: Colors
+                                                                .black, // body text color
+                                                          ),
+                                                          textButtonTheme:
+                                                              TextButtonThemeData(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              foregroundColor:
+                                                                  Colors
+                                                                      .black, // button text color
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        child: child!);
+                                                  }));
+                                          setState(() {
+                                            endDate = pickedDate!.add(Duration(
+                                                hours: 23, minutes: 59));
+                                            filtered = true;
+                                          });
+                                        },
+                                        padding: EdgeInsets.all(0),
+                                        tooltip: 'Selecciona un fecha final',
+                                        iconSize: 18,
+                                        icon: Icon(Icons.calendar_month),
+                                      ),
+                                    )
+                                  ],
+                                )),
+                            SizedBox(width: 20),
+
+                            //Medio de pago
+                            Container(
+                              width: 250,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey[350]!),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: DropdownButton(
+                                isExpanded: true,
+                                underline: SizedBox(),
+                                hint: Text(
+                                  'Método de pago',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                ),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color: Colors.black),
+                                value: paymentType,
+                                items: paymentTypes!.map((i) {
+                                  return new DropdownMenuItem(
+                                    value: i,
+                                    child: new Text(i),
+                                  );
+                                }).toList(),
+                                onChanged: (x) {
+                                  setState(() {
+                                    paymentType = x as String?;
+                                    filtered = true;
+                                  });
+                                },
+                              ),
+                            ),
+
+                            Spacer(),
+                            //Boton de filtrar
+                            Container(
+                              height: 40,
+                              width: 40,
+                              child: Tooltip(
+                                message: 'Quitar filtros',
+                                child: OutlinedButton(
+                                  style: ButtonStyle(
+                                    padding: MaterialStateProperty.all<
+                                        EdgeInsetsGeometry>(EdgeInsets.all(5)),
+                                    alignment: Alignment.center,
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white70),
+                                    overlayColor: MaterialStateProperty
+                                        .resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.hovered))
+                                          return Colors.grey.shade300;
+                                        if (states.contains(
+                                                MaterialState.focused) ||
+                                            states.contains(
+                                                MaterialState.pressed))
+                                          return Colors.white;
+                                        return Colors
+                                            .white; // Defer to the widget's default.
+                                      },
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      paymentType = 'Todos';
+                                      initDate = DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              0,
+                                              0,
+                                              0)
+                                          .subtract(Duration(days: 1));
+                                      endDate = DateTime(
+                                          DateTime.now().year,
+                                          DateTime.now().month,
+                                          DateTime.now().day,
+                                          23,
+                                          59,
+                                          59);
+                                      filtered = false;
+                                    });
+                                  },
+                                  child: Center(
+                                      child: Icon(
+                                    Icons.filter_alt_off_outlined,
+                                    color: Colors.black,
+                                    size: 18,
+                                  )),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      Container(
+                        height: 120,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                          boxShadow: <BoxShadow>[
+                            new BoxShadow(
+                              color: Colors.grey[350]!,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 10.0,
+                            )
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 //Fecha
@@ -196,7 +474,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                   width: 150,
                                   height: 45,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey[350]),
+                                    border:
+                                        Border.all(color: Colors.grey[350]!),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   padding: EdgeInsets.all(12),
@@ -204,7 +483,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                     children: [
                                       Text(
                                         DateFormat('dd/MM/yyyy')
-                                            .format(initDate),
+                                            .format(initDate!),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16),
@@ -216,10 +495,10 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                         child: IconButton(
                                           splashRadius: 1,
                                           onPressed: () async {
-                                            DateTime pickedDate =
+                                            DateTime? pickedDate =
                                                 await showDatePicker(
                                                     context: context,
-                                                    initialDate: initDate,
+                                                    initialDate: initDate!,
                                                     firstDate: DateTime.now()
                                                         .subtract(Duration(
                                                             days: 730)),
@@ -249,17 +528,15 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                               ),
                                                             ),
                                                           ),
-                                                          child: child);
+                                                          child: child!);
                                                     }));
                                             setState(() {
-                                              if (pickedDate != null) {
-                                                initDate = pickedDate;
-                                                endDate = DateTime(
-                                                    pickedDate.year,
-                                                    pickedDate.month + 1,
-                                                    0);
-                                                filtered = true;
-                                              }
+                                              initDate = pickedDate;
+                                              endDate = DateTime(
+                                                  pickedDate!.year,
+                                                  pickedDate.month + 1,
+                                                  0);
+                                              filtered = true;
                                             });
                                           },
                                           padding: EdgeInsets.all(0),
@@ -278,7 +555,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                     height: 45,
                                     decoration: BoxDecoration(
                                       border:
-                                          Border.all(color: Colors.grey[350]),
+                                          Border.all(color: Colors.grey[350]!),
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     padding: EdgeInsets.all(12),
@@ -290,7 +567,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                           (endDate == null)
                                               ? 'Hasta fecha'
                                               : DateFormat('dd/MM/yyyy')
-                                                  .format(endDate),
+                                                  .format(endDate!),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 16),
@@ -302,15 +579,16 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                           child: IconButton(
                                             splashRadius: 1,
                                             onPressed: () async {
-                                              DateTime pickedDate =
+                                              DateTime? pickedDate =
                                                   await showDatePicker(
                                                       context: context,
-                                                      initialDate: initDate.add(
-                                                          Duration(days: 1)),
-                                                      firstDate: initDate,
+                                                      initialDate: initDate!
+                                                          .add(Duration(
+                                                              days: 1)),
+                                                      firstDate: initDate!,
                                                       lastDate: DateTime(
-                                                          initDate.year,
-                                                          initDate.month + 1,
+                                                          initDate!.year,
+                                                          initDate!.month + 1,
                                                           0),
                                                       builder:
                                                           ((context, child) {
@@ -338,16 +616,14 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            child: child);
+                                                            child: child!);
                                                       }));
                                               setState(() {
-                                                if (pickedDate != null) {
-                                                  endDate = pickedDate.add(
-                                                      Duration(
-                                                          hours: 23,
-                                                          minutes: 59));
-                                                  filtered = true;
-                                                }
+                                                endDate = pickedDate!.add(
+                                                    Duration(
+                                                        hours: 23,
+                                                        minutes: 59));
+                                                filtered = true;
                                               });
                                             },
                                             padding: EdgeInsets.all(0),
@@ -359,14 +635,19 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                         )
                                       ],
                                     )),
-                                SizedBox(width: 20),
-
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
                                 //Medio de pago
                                 Container(
                                   width: 250,
                                   height: 45,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey[350]),
+                                    border:
+                                        Border.all(color: Colors.grey[350]!),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   padding: EdgeInsets.symmetric(horizontal: 12),
@@ -385,7 +666,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                         fontSize: 16,
                                         color: Colors.black),
                                     value: paymentType,
-                                    items: paymentTypes.map((i) {
+                                    items: paymentTypes!.map((i) {
                                       return new DropdownMenuItem(
                                         value: i,
                                         child: new Text(i),
@@ -393,14 +674,13 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                     }).toList(),
                                     onChanged: (x) {
                                       setState(() {
-                                        paymentType = x;
+                                        paymentType = x as String;
                                         filtered = true;
                                       });
                                     },
                                   ),
                                 ),
-
-                                Spacer(),
+                                SizedBox(width: 20),
                                 //Boton de filtrar
                                 Container(
                                   height: 40,
@@ -427,7 +707,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                 states.contains(
                                                     MaterialState.pressed))
                                               return Colors.white;
-                                            return null; // Defer to the widget's default.
+                                            return Colors
+                                                .white; // Defer to the widget's default.
                                           },
                                         ),
                                       ),
@@ -463,320 +744,9 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                 ),
                               ],
                             ),
-                          )
-                        : Container(
-                            height: 120,
-                            padding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(25),
-                              boxShadow: <BoxShadow>[
-                                new BoxShadow(
-                                  color: Colors.grey[350],
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 10.0,
-                                )
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    //Fecha
-                                    Container(
-                                      width: 150,
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.grey[350]),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      padding: EdgeInsets.all(12),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            DateFormat('dd/MM/yyyy')
-                                                .format(initDate),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 16),
-                                          ),
-                                          Spacer(),
-                                          Container(
-                                            height: 20,
-                                            width: 20,
-                                            child: IconButton(
-                                              splashRadius: 1,
-                                              onPressed: () async {
-                                                DateTime pickedDate =
-                                                    await showDatePicker(
-                                                        context: context,
-                                                        initialDate: initDate,
-                                                        firstDate: DateTime
-                                                                .now()
-                                                            .subtract(Duration(
-                                                                days: 730)),
-                                                        lastDate:
-                                                            DateTime.now(),
-                                                        builder:
-                                                            ((context, child) {
-                                                          return Theme(
-                                                              data: Theme.of(
-                                                                      context)
-                                                                  .copyWith(
-                                                                colorScheme:
-                                                                    ColorScheme
-                                                                        .light(
-                                                                  primary: Colors
-                                                                      .black, // header background color
-                                                                  onPrimary: Colors
-                                                                      .white, // header text color
-                                                                  onSurface: Colors
-                                                                      .black, // body text color
-                                                                ),
-                                                                textButtonTheme:
-                                                                    TextButtonThemeData(
-                                                                  style: TextButton
-                                                                      .styleFrom(
-                                                                    foregroundColor:
-                                                                        Colors
-                                                                            .black, // button text color
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              child: child);
-                                                        }));
-                                                setState(() {
-                                                  if (pickedDate != null) {
-                                                    initDate = pickedDate;
-                                                    endDate = DateTime(
-                                                        pickedDate.year,
-                                                        pickedDate.month + 1,
-                                                        0);
-                                                    filtered = true;
-                                                  }
-                                                });
-                                              },
-                                              padding: EdgeInsets.all(0),
-                                              tooltip:
-                                                  'Selecciona un fecha inicial',
-                                              iconSize: 18,
-                                              icon: Icon(Icons.calendar_month),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Container(
-                                        width: 150,
-                                        height: 45,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.grey[350]),
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                        ),
-                                        padding: EdgeInsets.all(12),
-                                        child: //(DateTime.now().difference(initDate).inDays > 1)
-                                            // ?
-                                            Row(
-                                          children: [
-                                            Text(
-                                              (endDate == null)
-                                                  ? 'Hasta fecha'
-                                                  : DateFormat('dd/MM/yyyy')
-                                                      .format(endDate),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 16),
-                                            ),
-                                            Spacer(),
-                                            Container(
-                                              height: 20,
-                                              width: 20,
-                                              child: IconButton(
-                                                splashRadius: 1,
-                                                onPressed: () async {
-                                                  DateTime pickedDate =
-                                                      await showDatePicker(
-                                                          context: context,
-                                                          initialDate: initDate
-                                                              .add(Duration(
-                                                                  days: 1)),
-                                                          firstDate: initDate,
-                                                          lastDate: DateTime(
-                                                              initDate.year,
-                                                              initDate.month +
-                                                                  1,
-                                                              0),
-                                                          builder: ((context,
-                                                              child) {
-                                                            return Theme(
-                                                                data: Theme.of(
-                                                                        context)
-                                                                    .copyWith(
-                                                                  colorScheme:
-                                                                      ColorScheme
-                                                                          .light(
-                                                                    primary: Colors
-                                                                        .black, // header background color
-                                                                    onPrimary:
-                                                                        Colors
-                                                                            .white, // header text color
-                                                                    onSurface:
-                                                                        Colors
-                                                                            .black, // body text color
-                                                                  ),
-                                                                  textButtonTheme:
-                                                                      TextButtonThemeData(
-                                                                    style: TextButton
-                                                                        .styleFrom(
-                                                                      foregroundColor:
-                                                                          Colors
-                                                                              .black, // button text color
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                child: child);
-                                                          }));
-                                                  setState(() {
-                                                    if (pickedDate != null) {
-                                                      endDate = pickedDate.add(
-                                                          Duration(
-                                                              hours: 23,
-                                                              minutes: 59));
-                                                      filtered = true;
-                                                    }
-                                                  });
-                                                },
-                                                padding: EdgeInsets.all(0),
-                                                tooltip:
-                                                    'Selecciona un fecha final',
-                                                iconSize: 18,
-                                                icon:
-                                                    Icon(Icons.calendar_month),
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    //Medio de pago
-                                    Container(
-                                      width: 250,
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.grey[350]),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 12),
-                                      child: DropdownButton(
-                                        isExpanded: true,
-                                        underline: SizedBox(),
-                                        hint: Text(
-                                          'Método de pago',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 16,
-                                              color: Colors.black),
-                                        ),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 16,
-                                            color: Colors.black),
-                                        value: paymentType,
-                                        items: paymentTypes.map((i) {
-                                          return new DropdownMenuItem(
-                                            value: i,
-                                            child: new Text(i),
-                                          );
-                                        }).toList(),
-                                        onChanged: (x) {
-                                          setState(() {
-                                            paymentType = x;
-                                            filtered = true;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(width: 20),
-                                    //Boton de filtrar
-                                    Container(
-                                      height: 40,
-                                      width: 40,
-                                      child: Tooltip(
-                                        message: 'Quitar filtros',
-                                        child: OutlinedButton(
-                                          style: ButtonStyle(
-                                            padding: MaterialStateProperty.all<
-                                                    EdgeInsetsGeometry>(
-                                                EdgeInsets.all(5)),
-                                            alignment: Alignment.center,
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                    Color>(Colors.white70),
-                                            overlayColor: MaterialStateProperty
-                                                .resolveWith<Color>(
-                                              (Set<MaterialState> states) {
-                                                if (states.contains(
-                                                    MaterialState.hovered))
-                                                  return Colors.grey.shade300;
-                                                if (states.contains(
-                                                        MaterialState
-                                                            .focused) ||
-                                                    states.contains(
-                                                        MaterialState.pressed))
-                                                  return Colors.white;
-                                                return null; // Defer to the widget's default.
-                                              },
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              paymentType = 'Todos';
-                                              initDate = DateTime(
-                                                      DateTime.now().year,
-                                                      DateTime.now().month,
-                                                      DateTime.now().day,
-                                                      0,
-                                                      0,
-                                                      0)
-                                                  .subtract(Duration(days: 1));
-                                              endDate = DateTime(
-                                                  DateTime.now().year,
-                                                  DateTime.now().month,
-                                                  DateTime.now().day,
-                                                  23,
-                                                  59,
-                                                  59);
-                                              filtered = false;
-                                            });
-                                          },
-                                          child: Center(
-                                              child: Icon(
-                                            Icons.filter_alt_off_outlined,
-                                            color: Colors.black,
-                                            size: 18,
-                                          )),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
+                          ],
+                        ),
+                      )
                   ],
                 ),
               ),
@@ -869,13 +839,13 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
           //Historical Details
           (filtered)
               ? StreamProvider<List<Sales>>.value(
-                  initialData: null,
+                  initialData: [],
                   value: DatabaseService().filteredSalesList(
-                      widget.currentBusiness, initDate, endDate, paymentType),
+                      widget.currentBusiness, initDate!, endDate, paymentType!),
                   child: SalesDetailsView(
                       widget.currentBusiness, widget.registerStatus))
               : StreamProvider<List<Sales>>.value(
-                  initialData: null,
+                  initialData: [],
                   value: DatabaseService().salesList(widget.currentBusiness),
                   child: SalesDetailsView(
                       widget.currentBusiness, widget.registerStatus))
@@ -939,7 +909,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors.greenAccent.withOpacity(
+                                        0.2); // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -947,9 +918,9 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                         Colors.grey.shade300.withOpacity(0.2)),
                               ),
                               onPressed: () async {
-                                DateTime pickedDate = await showDatePicker(
+                                DateTime? pickedDate = await showDatePicker(
                                     context: context,
-                                    initialDate: initDate,
+                                    initialDate: initDate!,
                                     firstDate: DateTime.now()
                                         .subtract(Duration(days: 730)),
                                     lastDate: DateTime.now(),
@@ -972,16 +943,14 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                               ),
                                             ),
                                           ),
-                                          child: child);
+                                          child: child!);
                                     }));
                                 setState(() {
-                                  if (pickedDate != null) {
-                                    initDate = pickedDate;
-                                    endDate = DateTime(pickedDate.year,
-                                        pickedDate.month + 1, 0);
-                                    filtered = true;
-                                    dateFiltered = true;
-                                  }
+                                  initDate = pickedDate;
+                                  endDate = DateTime(pickedDate!.year,
+                                      pickedDate.month + 1, 0);
+                                  filtered = true;
+                                  dateFiltered = true;
                                 });
                               },
                               child: Row(
@@ -995,7 +964,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                   Text(
                                     dateFiltered
                                         ? DateFormat('dd/MM/yyyy')
-                                            .format(initDate)
+                                            .format(initDate!)
                                         : 'Desde',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -1020,7 +989,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors.greenAccent.withOpacity(
+                                        0.2); // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -1028,13 +998,13 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                         Colors.grey.shade300.withOpacity(0.2)),
                               ),
                               onPressed: () async {
-                                DateTime pickedDate = await showDatePicker(
+                                DateTime? pickedDate = await showDatePicker(
                                     context: context,
                                     initialDate:
-                                        initDate.add(Duration(days: 1)),
-                                    firstDate: initDate,
+                                        initDate!.add(Duration(days: 1)),
+                                    firstDate: initDate!,
                                     lastDate: DateTime(
-                                        initDate.year, initDate.month + 1, 0),
+                                        initDate!.year, initDate!.month + 1, 0),
                                     builder: ((context, child) {
                                       return Theme(
                                           data: Theme.of(context).copyWith(
@@ -1054,15 +1024,13 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                               ),
                                             ),
                                           ),
-                                          child: child);
+                                          child: child!);
                                     }));
                                 setState(() {
-                                  if (pickedDate != null) {
-                                    endDate = pickedDate
-                                        .add(Duration(hours: 23, minutes: 59));
-                                    filtered = true;
-                                    dateFiltered = true;
-                                  }
+                                  endDate = pickedDate!
+                                      .add(Duration(hours: 23, minutes: 59));
+                                  filtered = true;
+                                  dateFiltered = true;
                                 });
                               },
                               child: Row(
@@ -1076,7 +1044,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                   Text(
                                     dateFiltered
                                         ? DateFormat('dd/MM/yyyy')
-                                            .format(endDate)
+                                            .format(endDate!)
                                         : 'Hasta',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -1101,7 +1069,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors.greenAccent.withOpacity(
+                                        0.2); // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -1164,7 +1133,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                   //Payment Methods
                                                   ListView.builder(
                                                       itemCount:
-                                                          paymentTypes.length,
+                                                          paymentTypes!.length,
                                                       shrinkWrap: true,
                                                       physics:
                                                           NeverScrollableScrollPhysics(),
@@ -1173,7 +1142,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                         return Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   bottom: 10.0),
                                                           child: Container(
                                                             decoration: BoxDecoration(
@@ -1189,7 +1158,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                               onTap: () {
                                                                 setState(() {
                                                                   paymentType =
-                                                                      paymentTypes[
+                                                                      paymentTypes?[
                                                                           i];
                                                                   filtered =
                                                                       true;
@@ -1203,7 +1172,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                               child: Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .all(
+                                                                        .all(
                                                                         12.0),
                                                                 child: Row(
                                                                   mainAxisAlignment:
@@ -1215,7 +1184,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                                   children: [
                                                                     //Name
                                                                     Text(
-                                                                      paymentTypes[
+                                                                      paymentTypes?[
                                                                           i],
                                                                       style: TextStyle(
                                                                           fontSize:
@@ -1246,7 +1215,7 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                   SizedBox(width: 10),
                                   Text(
                                     paymentFiltered
-                                        ? paymentType
+                                        ? paymentType!
                                         : 'Medio de Pago',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -1271,7 +1240,8 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors
+                                        .transparent; // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -1317,13 +1287,13 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
           //Historical Details
           (filtered)
               ? StreamProvider<List<Sales>>.value(
-                  initialData: null,
+                  initialData: [],
                   value: DatabaseService().filteredSalesList(
-                      widget.currentBusiness, initDate, endDate, paymentType),
+                      widget.currentBusiness, initDate!, endDate, paymentType!),
                   child: SalesDetailsView(
                       widget.currentBusiness, widget.registerStatus))
               : StreamProvider<List<Sales>>.value(
-                  initialData: null,
+                  initialData: [],
                   value: DatabaseService().salesList(widget.currentBusiness),
                   child: SalesDetailsView(
                       widget.currentBusiness, widget.registerStatus))

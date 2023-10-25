@@ -11,13 +11,13 @@ class AddExpenseItem extends StatefulWidget {
   final int itemIndex;
   final List dropdownCategories;
   final bool editItem;
-  final String product;
-  final String category;
-  final double price;
-  final double qty;
+  final String? product;
+  final String? category;
+  final double? price;
+  final double? qty;
   final bool newItem;
   final Supplier selectedSupplier;
-  final double basePrice;
+  final double? basePrice;
   const AddExpenseItem(
       this.addExpenseItem,
       this.itemIndex,
@@ -25,7 +25,7 @@ class AddExpenseItem extends StatefulWidget {
       this.editItem,
       this.newItem,
       this.selectedSupplier,
-      {Key key,
+      {Key? key,
       this.product,
       this.category,
       this.price,
@@ -38,12 +38,12 @@ class AddExpenseItem extends StatefulWidget {
 }
 
 class _AddExpenseItemState extends State<AddExpenseItem> {
-  String product;
-  String category;
-  double qty;
-  double price;
-  bool newItem;
-  double basePrice;
+  late String product;
+  late String category;
+  late double qty;
+  late double price;
+  late bool newItem;
+  late double basePrice;
 
   final FocusNode _productNode = FocusNode();
   final FocusNode _qtyNode = FocusNode();
@@ -52,11 +52,11 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
   @override
   void initState() {
     if (widget.editItem) {
-      product = widget.product;
-      category = widget.category;
-      qty = widget.qty;
-      price = widget.price;
-      basePrice = widget.basePrice;
+      product = widget.product!;
+      category = widget.category!;
+      qty = widget.qty!;
+      price = widget.price!;
+      basePrice = widget.basePrice!;
       newItem = false;
     } else {
       product = '';
@@ -64,7 +64,7 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
       qty = 1;
       price = 0;
       newItem = true;
-      basePrice = null;
+      basePrice = 0;
     }
 
     super.initState();
@@ -74,7 +74,7 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
   Widget build(BuildContext context) {
     final supplies = Provider.of<List<Supply>>(context);
 
-    if (supplies == null) {
+    if (supplies == []) {
       return Container();
     }
 
@@ -151,12 +151,12 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
                                 return TextButton(
                                     onPressed: () {
                                       setState(() {
-                                        product = supplies[i].supply;
-                                        price = supplies[i].price;
+                                        product = supplies[i].supply!;
+                                        price = supplies[i].price!;
                                         qty = 1;
                                         category =
                                             widget.dropdownCategories.first;
-                                        basePrice = supplies[i].price;
+                                        basePrice = supplies[i].price!;
                                         newItem = false;
                                       });
                                     },
@@ -172,7 +172,7 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
                                           Expanded(
                                               flex: 5,
                                               child: Text(
-                                                supplies[i].supply,
+                                                supplies[i].supply!,
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
                                                     color: Colors.black,
@@ -327,7 +327,7 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
-                                  category = newValue;
+                                  category = newValue.toString();
                                 });
                               },
                             )),
@@ -366,7 +366,7 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
                                               fontWeight: FontWeight.w400,
                                               fontSize: 14,
                                               color: Colors.grey[700]),
-                                          validator: (val) => val.contains(',')
+                                          validator: (val) => val!.contains(',')
                                               ? "Usa punto"
                                               : null,
                                           inputFormatters: [
@@ -416,9 +416,9 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
                                                 .requestFocus(_priceNode);
                                           },
                                           onChanged: (val) {
-                                            if (val != null && val != '') {
+                                            if (val != '') {
                                               setState(() {
-                                                qty = double.tryParse(val);
+                                                qty = double.tryParse(val)!;
                                               });
                                             } else if (val == '') {
                                               setState(() {
@@ -457,7 +457,7 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
                                               fontWeight: FontWeight.w400,
                                               fontSize: 14,
                                               color: Colors.grey[700]),
-                                          validator: (val) => val.contains(',')
+                                          validator: (val) => val!.contains(',')
                                               ? "Usa punto"
                                               : null,
                                           inputFormatters: [
@@ -506,9 +506,9 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
                                             _priceNode.unfocus();
                                           },
                                           onChanged: (val) {
-                                            if (val != null && val != '') {
+                                            if (val != '') {
                                               setState(() {
-                                                price = double.tryParse(val);
+                                                price = double.tryParse(val)!;
                                               });
                                             } else if (val == '') {
                                               setState(() {

@@ -11,22 +11,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SuppliersDesk extends StatefulWidget {
-  const SuppliersDesk({Key key}) : super(key: key);
+  const SuppliersDesk({Key? key}) : super(key: key);
 
   @override
   State<SuppliersDesk> createState() => _SuppliersDeskState();
 }
 
 class _SuppliersDeskState extends State<SuppliersDesk> {
-  String vendorName;
+  String? vendorName;
   String selectedVendor = '';
   bool showSearchOptions = false;
   TextEditingController searchController = new TextEditingController();
 
   void selectVendor(Supplier vendor) {
     setState(() {
-      selectedVendor = vendor.name;
-      searchController.text = vendor.name;
+      selectedVendor = vendor.name!;
+      searchController.text = vendor.name!;
       showSearchOptions = false;
     });
   }
@@ -50,11 +50,11 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                   SizedBox(height: 75),
                   StreamProvider<Supplier>.value(
                       value: DatabaseService().supplierfromSnapshot(
-                          userProfile.activeBusiness, selectedVendor),
-                      initialData: null,
+                          userProfile.activeBusiness!, selectedVendor),
+                      initialData: Supplier(),
                       child: SupplierDetails(
                           selectedVendor,
-                          userProfile.activeBusiness,
+                          userProfile.activeBusiness!,
                           categoriesProvider,
                           highLevelMapping))
                 ]),
@@ -100,7 +100,7 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(12.0),
                                 borderSide: new BorderSide(
-                                  color: Colors.grey[350],
+                                  color: Colors.grey[350]!,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -126,9 +126,9 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                         (showSearchOptions)
                             ? StreamProvider<List<Supplier>>.value(
                                 value: DatabaseService().suppliersList(
-                                    userProfile.activeBusiness,
-                                    vendorName.toLowerCase()),
-                                initialData: null,
+                                    userProfile.activeBusiness!,
+                                    vendorName!.toLowerCase()),
+                                initialData: [],
                                 child: SupplierSearchBar(selectVendor, null),
                               )
                             : SizedBox()
@@ -142,7 +142,7 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                           showDialog(
                               context: context,
                               builder: ((context) => SuppliersListDialog(
-                                  selectVendor, userProfile.activeBusiness)));
+                                  selectVendor, userProfile.activeBusiness!)));
                         },
                         icon: Icon(
                           Icons.list_rounded,
@@ -155,12 +155,12 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                       child: ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.greenAccent[400]),
+                                Colors.greenAccent[400]!),
                             overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
-                                  return Colors.green[300];
+                                  return Colors.green[300]!;
                                 if (states.contains(MaterialState.focused) ||
                                     states.contains(MaterialState.pressed))
                                   return Colors.lightGreenAccent;
@@ -173,7 +173,7 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => NewSupplier(
-                                        userProfile.activeBusiness,
+                                        userProfile.activeBusiness!,
                                         categoriesProvider,
                                         highLevelMapping)));
                           },
@@ -248,7 +248,7 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(12.0),
                               borderSide: new BorderSide(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -279,7 +279,7 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                           showDialog(
                               context: context,
                               builder: ((context) => SuppliersListDialog(
-                                  selectVendor, userProfile.activeBusiness)));
+                                  selectVendor, userProfile.activeBusiness!)));
                         },
                         icon: Icon(
                           Icons.list_rounded,
@@ -296,7 +296,7 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => NewSupplier(
-                                      userProfile.activeBusiness,
+                                      userProfile.activeBusiness!,
                                       categoriesProvider,
                                       highLevelMapping)));
                         },
@@ -313,19 +313,19 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
                 (showSearchOptions)
                     ? StreamProvider<List<Supplier>>.value(
                         value: DatabaseService().suppliersList(
-                            userProfile.activeBusiness,
-                            vendorName.toLowerCase()),
-                        initialData: null,
+                            userProfile.activeBusiness!,
+                            vendorName!.toLowerCase()),
+                        initialData: [],
                         child: SupplierSearchBar(selectVendor, null),
                       )
                     : Column(children: [
                         StreamProvider<Supplier>.value(
                             value: DatabaseService().supplierfromSnapshot(
-                                userProfile.activeBusiness, selectedVendor),
-                            initialData: null,
+                                userProfile.activeBusiness!, selectedVendor),
+                            initialData: Supplier(),
                             child: SupplierDetails(
                                 selectedVendor,
-                                userProfile.activeBusiness,
+                                userProfile.activeBusiness!,
                                 categoriesProvider,
                                 highLevelMapping))
                       ]),

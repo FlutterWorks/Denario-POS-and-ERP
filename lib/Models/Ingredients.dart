@@ -1,10 +1,10 @@
 class Ingredients {
-  String name;
-  String quantity;
-  int cost;
-  String unitOfMeasure;
-  List searchName;
-  String ingredientID;
+  String? name;
+  String? quantity;
+  int? cost;
+  String? unitOfMeasure;
+  List? searchName;
+  String? ingredientID;
 
   Ingredients(
       {this.name,

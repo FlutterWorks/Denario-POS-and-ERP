@@ -10,8 +10,8 @@ class PnlDesk extends StatefulWidget {
 }
 
 class _PnlDeskState extends State<PnlDesk> {
-  int pnlYear;
-  int pnlMonth;
+  late int pnlYear;
+  late int pnlMonth;
 
   @override
   void initState() {
@@ -25,12 +25,12 @@ class _PnlDeskState extends State<PnlDesk> {
     final highLevelMapping = Provider.of<HighLevelMapping>(context);
     final userProfile = Provider.of<UserData>(context);
 
-    if (highLevelMapping == null) {
+    if (highLevelMapping == HighLevelMapping()) {
       return Center();
     }
 
-    final List pnlAccountGroups = highLevelMapping.pnlAccountGroups;
-    final Map<dynamic, dynamic> pnlMapping = highLevelMapping.pnlMapping;
+    final List pnlAccountGroups = highLevelMapping.pnlAccountGroups!;
+    final Map<dynamic, dynamic> pnlMapping = highLevelMapping.pnlMapping!;
 
     if (MediaQuery.of(context).size.width > 650) {
       return SingleChildScrollView(
@@ -64,7 +64,7 @@ class _PnlDeskState extends State<PnlDesk> {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                             offset: Offset(0.0, 0.0),
                             blurRadius: 10.0,
                           )
@@ -107,9 +107,9 @@ class _PnlDeskState extends State<PnlDesk> {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600),
                               ),
-                              onChanged: (String value) {
+                              onChanged: (value) {
                                 setState(() {
-                                  pnlMonth = int.parse(value);
+                                  pnlMonth = int.parse(value!);
                                 });
                               },
                             ),
@@ -150,9 +150,9 @@ class _PnlDeskState extends State<PnlDesk> {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600),
                               ),
-                              onChanged: (String value) {
+                              onChanged: (value) {
                                 setState(() {
-                                  pnlYear = int.parse(value);
+                                  pnlYear = int.parse(value!);
                                 });
                               },
                             ),
@@ -198,7 +198,7 @@ class _PnlDeskState extends State<PnlDesk> {
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
@@ -241,9 +241,9 @@ class _PnlDeskState extends State<PnlDesk> {
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600),
                             ),
-                            onChanged: (String value) {
+                            onChanged: (value) {
                               setState(() {
-                                pnlMonth = int.parse(value);
+                                pnlMonth = int.parse(value!);
                               });
                             },
                           ),
@@ -284,9 +284,9 @@ class _PnlDeskState extends State<PnlDesk> {
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600),
                             ),
-                            onChanged: (String value) {
+                            onChanged: (value) {
                               setState(() {
-                                pnlYear = int.parse(value);
+                                pnlYear = int.parse(value!);
                               });
                             },
                           ),

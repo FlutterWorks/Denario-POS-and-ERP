@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 class SaveVendorButton extends StatefulWidget {
   final String vendorName;
   final saveNewVendor;
-  const SaveVendorButton(this.vendorName, this.saveNewVendor, {Key key})
+  const SaveVendorButton(this.vendorName, this.saveNewVendor, {Key? key})
       : super(key: key);
 
   @override
@@ -13,8 +13,8 @@ class SaveVendorButton extends StatefulWidget {
 }
 
 class _SaveVendorButtonState extends State<SaveVendorButton> {
-  bool saveVendor;
-  bool saveVendorPressed;
+  late bool saveVendor;
+  late bool saveVendorPressed;
   bool vendorExists = false;
 
   @override
@@ -28,7 +28,7 @@ class _SaveVendorButtonState extends State<SaveVendorButton> {
   Widget build(BuildContext context) {
     final suppliers = Provider.of<List<Supplier>>(context);
 
-    if (suppliers == null) {
+    if (suppliers == []) {
       return Container();
     }
 
@@ -42,7 +42,7 @@ class _SaveVendorButtonState extends State<SaveVendorButton> {
       }
     }
 
-    if (vendorExists || widget.vendorName == '' || widget.vendorName == null) {
+    if (vendorExists || widget.vendorName == '') {
       return SizedBox();
     }
 
@@ -60,13 +60,13 @@ class _SaveVendorButtonState extends State<SaveVendorButton> {
                   : MaterialStateProperty.all<Color>(Colors.white),
               side: MaterialStateProperty.all<BorderSide>(BorderSide(
                   color: Colors.grey, width: (saveVendorPressed) ? 0 : 1)),
-              overlayColor: MaterialStateProperty.resolveWith<Color>(
+              overlayColor: MaterialStateProperty.resolveWith<Color?>(
                 (Set<MaterialState> states) {
                   if (states.contains(MaterialState.hovered))
-                    return Colors.grey[300];
+                    return Colors.grey[300]!;
                   if (states.contains(MaterialState.focused) ||
                       states.contains(MaterialState.pressed))
-                    return Colors.grey[300];
+                    return Colors.grey[300]!;
                   return null; // Defer to the widget's default.
                 },
               ),

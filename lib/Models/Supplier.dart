@@ -1,17 +1,17 @@
 class Supplier {
-  String name;
-  List searchName;
-  int id;
-  String email;
-  int phone;
-  String address;
-  List products;
-  List invoices;
-  String predefinedAccount;
-  String predefinedCategory;
-  String initialExpenseDescription;
-  List costTypeAssociated;
-  String docID;
+  String? name;
+  List? searchName;
+  int? id;
+  String? email;
+  int? phone;
+  String? address;
+  List? products;
+  List? invoices;
+  String? predefinedAccount;
+  String? predefinedCategory;
+  String? initialExpenseDescription;
+  List? costTypeAssociated;
+  String? docID;
 
   Supplier(
       {this.name,

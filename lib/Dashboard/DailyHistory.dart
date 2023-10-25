@@ -12,7 +12,7 @@ class DailyHistory extends StatelessWidget {
     final dailyTransactionsListOrigina =
         Provider.of<List<DailyTransactions>>(context);
 
-    if (dailyTransactionsListOrigina == null) {
+    if (dailyTransactionsListOrigina == []) {
       return Scaffold(
           body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -176,7 +176,7 @@ class DailyHistory extends StatelessWidget {
                                       child: Text(
                                         DateFormat.MMMd()
                                             .format(dailyTransactionsList[i]
-                                                .openDate)
+                                                .openDate!)
                                             .toString(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.w400,
@@ -188,7 +188,7 @@ class DailyHistory extends StatelessWidget {
                                       child: Text(
                                         DateFormat('HH:mm:ss')
                                             .format(dailyTransactionsList[i]
-                                                .openDate)
+                                                .openDate!)
                                             .toString(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.w400,
@@ -200,7 +200,7 @@ class DailyHistory extends StatelessWidget {
                                       child: Text(
                                         DateFormat('HH:mm:ss')
                                             .format(dailyTransactionsList[i]
-                                                .closeDate)
+                                                .closeDate!)
                                             .toString(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -211,7 +211,7 @@ class DailyHistory extends StatelessWidget {
                                   Container(
                                       width: 120,
                                       child: Text(
-                                        dailyTransactionsList[i].user,
+                                        dailyTransactionsList[i].user!,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -255,7 +255,7 @@ class DailyHistory extends StatelessWidget {
                                             builder: (context) =>
                                                 DailyTransactionsList(
                                                     dailyTransactionsList[i]
-                                                        .registerTransactionList))),
+                                                        .registerTransactionList!))),
                                   )
                                 ],
                               ),
@@ -305,7 +305,7 @@ class DailyHistory extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => DailyTransactionsList(
                                     dailyTransactionsList[i]
-                                        .registerTransactionList))),
+                                        .registerTransactionList!))),
                         child: Container(
                           height: 70,
                           width: double.infinity,
@@ -326,8 +326,8 @@ class DailyHistory extends StatelessWidget {
                                     //Date
                                     Text(
                                       DateFormat.MMMd()
-                                          .format(
-                                              dailyTransactionsList[i].openDate)
+                                          .format(dailyTransactionsList[i]
+                                              .openDate!)
                                           .toString(),
                                       style: TextStyle(
                                         color: Colors.black,
@@ -347,7 +347,7 @@ class DailyHistory extends StatelessWidget {
                                         Text(
                                           DateFormat('HH:mm')
                                               .format(dailyTransactionsList[i]
-                                                  .openDate)
+                                                  .openDate!)
                                               .toString(),
                                           style: TextStyle(
                                               color: Colors.grey,
@@ -364,7 +364,7 @@ class DailyHistory extends StatelessWidget {
                                               : DateFormat('HH:mm')
                                                   .format(
                                                       dailyTransactionsList[i]
-                                                          .closeDate)
+                                                          .closeDate!)
                                                   .toString(),
                                           style: TextStyle(
                                               color: Colors.red,
@@ -381,7 +381,7 @@ class DailyHistory extends StatelessWidget {
                                 flex: 3,
                                 child: Container(
                                     child: Text(
-                                  dailyTransactionsList[i].user,
+                                  dailyTransactionsList[i].user!,
                                   textAlign: TextAlign.center,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,

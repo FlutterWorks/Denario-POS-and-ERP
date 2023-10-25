@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class FloorPlanConfig extends StatefulWidget {
   final String businessID;
-  const FloorPlanConfig(this.businessID, {Key key}) : super(key: key);
+  const FloorPlanConfig(this.businessID, {Key? key}) : super(key: key);
 
   @override
   State<FloorPlanConfig> createState() => _FloorPlanConfigState();
@@ -23,16 +23,18 @@ class _FloorPlanConfigState extends State<FloorPlanConfig> {
 
     QuerySnapshot querySnapshot = await docRef.get();
 
-    final List<Tables> tableList = querySnapshot.docs
-        .map((doc) => Tables.fromFirestore(doc.data(), doc.id))
-        .toList();
+    final List<Tables> tableList = querySnapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>?; // Cast to nullable Map
+      return Tables.fromFirestore(
+          data ?? {}, doc.id); // Provide a default empty Map if data is null
+    }).toList();
 
     return tableList;
   }
 
-  Future tablesFromSnap;
+  late Future tablesFromSnap;
   List<Tables> newTables = [];
-  double baseSize;
+  late double baseSize;
 
   @override
   void initState() {
@@ -45,7 +47,7 @@ class _FloorPlanConfigState extends State<FloorPlanConfig> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: tablesFromSnap,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(); // or any other loading indicator
           } else if (snapshot.hasError) {
@@ -63,14 +65,14 @@ class _FloorPlanConfigState extends State<FloorPlanConfig> {
 
 class FloorPlanNotifier extends StatefulWidget {
   final String businessID;
-  const FloorPlanNotifier(this.businessID, {Key key}) : super(key: key);
+  const FloorPlanNotifier(this.businessID, {Key? key}) : super(key: key);
 
   @override
   State<FloorPlanNotifier> createState() => _FloorPlanNotifierState();
 }
 
 class _FloorPlanNotifierState extends State<FloorPlanNotifier> {
-  double baseSize;
+  late double baseSize;
 
   @override
   void initState() {
@@ -106,7 +108,7 @@ class _FloorPlanNotifierState extends State<FloorPlanNotifier> {
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.black),
-                    overlayColor: MaterialStateProperty.resolveWith<Color>(
+                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.hovered))
                           return Colors.grey.shade500;
@@ -128,10 +130,10 @@ class _FloorPlanNotifierState extends State<FloorPlanNotifier> {
                         //Update firestore doc
                         DatabaseService().updateExistingTable(
                             widget.businessID,
-                            i.docID,
-                            i.table,
-                            i.x,
-                            i.y,
+                            i.docID!,
+                            i.table!,
+                            i.x!,
+                            i.y!,
                             (baseSize /
                                     (MediaQuery.of(context).size.height *
                                         MediaQuery.of(context).size.width)) *

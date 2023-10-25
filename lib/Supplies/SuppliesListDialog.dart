@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class SuppliesListDialog extends StatefulWidget {
   final selectSupply;
   final String businessID;
-  SuppliesListDialog(this.selectSupply, this.businessID, {Key key})
+  SuppliesListDialog(this.selectSupply, this.businessID, {Key? key})
       : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class SuppliesListDialog extends StatefulWidget {
 
 class _SuppliesListDialogState extends State<SuppliesListDialog> {
   String name = '';
-  int limitSearch;
+  late int limitSearch;
   void loadMore() {
     setState(() {
       limitSearch = limitSearch + 10;
@@ -66,7 +66,7 @@ class _SuppliesListDialogState extends State<SuppliesListDialog> {
                           border: new OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(12.0),
                             borderSide: new BorderSide(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -102,7 +102,7 @@ class _SuppliesListDialogState extends State<SuppliesListDialog> {
               ),
               SizedBox(height: 20),
               //List of  Suppliers
-              (name == '' || name == null)
+              (name == '')
                   ? StreamProvider.value(
                       value: DatabaseService()
                           .allSuppliesList(widget.businessID, limitSearch),
@@ -125,7 +125,7 @@ class ListofSupplies extends StatelessWidget {
   final selectSupply;
   final loadMore;
   final int limitSearch;
-  ListofSupplies(this.selectSupply, this.limitSearch, this.loadMore, {Key key})
+  ListofSupplies(this.selectSupply, this.limitSearch, this.loadMore, {Key? key})
       : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
@@ -134,12 +134,12 @@ class ListofSupplies extends StatelessWidget {
   Widget build(BuildContext context) {
     final supplies = Provider.of<List<Supply>>(context);
 
-    if (supplies == null) {
+    if (supplies == []) {
       return Container();
     }
 
     return Expanded(
-        child: (supplies == null)
+        child: (supplies == [])
             ? ListView.builder(
                 shrinkWrap: true,
                 itemCount: 3,
@@ -176,7 +176,7 @@ class ListofSupplies extends StatelessWidget {
                                     //Name
                                     Container(
                                       width: 150,
-                                      child: Text(supplies[i].supply,
+                                      child: Text(supplies[i].supply!,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.black,
@@ -197,7 +197,7 @@ class ListofSupplies extends StatelessWidget {
                                     Container(
                                       width: 100,
                                       child: Text(
-                                        supplies[i].unit,
+                                        supplies[i].unit!,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.grey,
@@ -238,7 +238,7 @@ class ListofSupplies extends StatelessWidget {
                                       flex: 3,
                                       child: Container(
                                         child: Text(
-                                          supplies[i].supply,
+                                          supplies[i].supply!,
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
@@ -264,7 +264,7 @@ class ListofSupplies extends StatelessWidget {
                                           ),
                                           SizedBox(height: 5),
                                           Text(
-                                            supplies[i].unit,
+                                            supplies[i].unit!,
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(

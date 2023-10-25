@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 
 class VendorsSelection extends StatelessWidget {
   final selectVendor;
-  const VendorsSelection(this.selectVendor, {Key key}) : super(key: key);
+  const VendorsSelection(this.selectVendor, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final suppliers = Provider.of<List<Supplier>>(context);
 
-    if (suppliers == null || suppliers.length < 0) {
+    if (suppliers.length < 0) {
       return Container();
     }
 
@@ -37,12 +37,13 @@ class VendorsSelection extends StatelessWidget {
                           if (states.contains(MaterialState.focused) ||
                               states.contains(MaterialState.pressed))
                             return Colors.black26;
-                          return null; // Defer to the widget's default.
+                          return Colors
+                              .black26; // Defer to the widget's default.
                         },
                       ),
                     ),
                     child: Text(
-                      suppliers[i].name,
+                      suppliers[i].name!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.black),

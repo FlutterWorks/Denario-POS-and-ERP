@@ -49,20 +49,18 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
   String businessImage = '';
 
   Uint8List webImage = Uint8List(8);
-  String downloadUrl;
+  String? downloadUrl;
   bool changedImage = false;
 
   Future getImage() async {
-    XFile selectedImage =
+    XFile? selectedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (selectedImage != null) {
-      Uint8List uploadFile = await selectedImage.readAsBytes();
-      setState(() {
-        webImage = uploadFile;
-        changedImage = true;
-      });
-    }
+    Uint8List uploadFile = await selectedImage!.readAsBytes();
+    setState(() {
+      webImage = uploadFile;
+      changedImage = true;
+    });
   }
 
   Future uploadPic(businessID) async {
@@ -150,23 +148,23 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
     final userBusiness = Provider.of<BusinessProfile>(context);
     final businessCategories = Provider.of<CategoryList>(context);
 
-    if (userBusiness == null || businessCategories == null) {
+    if (businessCategories == CategoryList()) {
       return Container();
     }
 
     //Get social media links
-    for (var x = 0; x < userBusiness.socialMedia.length; x++) {
-      if (userBusiness.socialMedia[x]['Link'] != '') {
+    for (var x = 0; x < userBusiness.socialMedia!.length; x++) {
+      if (userBusiness.socialMedia![x]['Link'] != '') {
         int index = socialMedia.indexWhere((element) =>
             element['Social Media'] ==
-            userBusiness.socialMedia[x]['Social Media']);
-        socialMedia[index]['Link'] = userBusiness.socialMedia[x]['Link'];
+            userBusiness.socialMedia![x]['Social Media']);
+        socialMedia[index]['Link'] = userBusiness.socialMedia![x]['Link'];
         socialMedia[index]['Active'] = true;
       }
     }
 
-    if (userBusiness.businessSchedule.isNotEmpty) {
-      businessSchedule = userBusiness.businessSchedule;
+    if (userBusiness.businessSchedule!.isNotEmpty) {
+      businessSchedule = userBusiness.businessSchedule!;
     }
 
     return PageView(
@@ -200,7 +198,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: <BoxShadow>[
                                   new BoxShadow(
-                                    color: Colors.grey[350],
+                                    color: Colors.grey[350]!,
                                     offset: new Offset(0, 0),
                                     blurRadius: 10.0,
                                   )
@@ -226,7 +224,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                                       fit: BoxFit.cover,
                                                     ).image
                                                   : NetworkImage(userBusiness
-                                                      .businessImage),
+                                                      .businessImage!),
                                               fit: BoxFit.cover))),
                                   SizedBox(height: 5),
                                   TextButton(
@@ -358,7 +356,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: <BoxShadow>[
                                   new BoxShadow(
-                                    color: Colors.grey[350],
+                                    color: Colors.grey[350]!,
                                     offset: new Offset(0, 0),
                                     blurRadius: 10.0,
                                   )
@@ -383,8 +381,9 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                   TextFormField(
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 14),
-                                    validator: (val) =>
-                                        val.isEmpty ? "Agrega un nombre" : null,
+                                    validator: (val) => val!.isEmpty
+                                        ? "Agrega un nombre"
+                                        : null,
                                     autofocus: true,
                                     readOnly:
                                         (widget.rol == 'Dueñ@') ? false : true,
@@ -433,7 +432,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                   TextFormField(
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 14),
-                                    validator: (val) => val.isEmpty
+                                    validator: (val) => val!.isEmpty
                                         ? "Agrega una ubicación válida"
                                         : null,
                                     readOnly:
@@ -487,7 +486,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly
                                     ],
-                                    validator: (val) => val.isEmpty
+                                    validator: (val) => val!.isEmpty
                                         ? "Agrega un número válido"
                                         : null,
                                     readOnly:
@@ -550,7 +549,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: <BoxShadow>[
                                   new BoxShadow(
-                                    color: Colors.grey[350],
+                                    color: Colors.grey[350]!,
                                     offset: new Offset(0, 0),
                                     blurRadius: 10.0,
                                   )
@@ -580,14 +579,14 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                             showDialog(
                                               context: context,
                                               builder: (context) => StoreConfig(
-                                                  userBusiness.businessID,
+                                                  userBusiness.businessID!,
                                                   'http://mi-denario.web.app/?id=${userBusiness.businessID}',
                                                   userBusiness
-                                                      .businessBackgroundImage,
+                                                      .businessBackgroundImage!,
                                                   userBusiness
-                                                      .visibleStoreCategories,
+                                                      .visibleStoreCategories!,
                                                   businessCategories
-                                                      .categoryList),
+                                                      .categoryList!),
                                             );
                                           },
                                           icon: Icon(Icons.edit)),
@@ -652,7 +651,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                                     format:
                                                         ImageByteFormat.png);
                                             final bytes =
-                                                byteData.buffer.asUint8List();
+                                                byteData!.buffer.asUint8List();
 
                                             final blob = html.Blob([bytes]);
                                             final url = html.Url
@@ -664,7 +663,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                               ..download =
                                                   '${userBusiness.businessName} QR.png';
                                             anchor.click();
-                                            html.document.body.children
+                                            html.document.body!.children
                                                 .remove(anchor);
                                             html.Url.revokeObjectUrl(url);
                                           },
@@ -687,7 +686,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: <BoxShadow>[
                                   new BoxShadow(
-                                    color: Colors.grey[350],
+                                    color: Colors.grey[350]!,
                                     offset: new Offset(0, 0),
                                     blurRadius: 10.0,
                                   )
@@ -732,10 +731,10 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                                               value: DatabaseService()
                                                                   .tableList(
                                                                       userBusiness
-                                                                          .businessID),
+                                                                          .businessID!),
                                                               child: FloorPlanConfig(
                                                                   userBusiness
-                                                                      .businessID))));
+                                                                      .businessID!))));
                                                 },
                                                 icon: Icon(Icons.edit)),
                                           ],
@@ -762,9 +761,9 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                                 context: context,
                                                 builder: (context) {
                                                   return PaymentMethodDialog(
-                                                      userBusiness.businessID,
+                                                      userBusiness.businessID!,
                                                       userBusiness
-                                                          .paymentMethods);
+                                                          .paymentMethods!);
                                                 });
                                           },
                                           icon: Icon(Icons.edit)),
@@ -786,7 +785,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: <BoxShadow>[
                                   new BoxShadow(
-                                    color: Colors.grey[350],
+                                    color: Colors.grey[350]!,
                                     offset: new Offset(0, 0),
                                     blurRadius: 10.0,
                                   )
@@ -826,7 +825,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: <BoxShadow>[
                                   new BoxShadow(
-                                    color: Colors.grey[350],
+                                    color: Colors.grey[350]!,
                                     offset: new Offset(0, 0),
                                     blurRadius: 10.0,
                                   )
@@ -873,34 +872,34 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                                   backgroundColor: Colors.black),
                               onPressed: () {
                                 if (businessName == '') {
-                                  businessName = userBusiness.businessName;
+                                  businessName = userBusiness.businessName!;
                                 }
                                 if (businessLocation == '') {
                                   businessLocation =
-                                      userBusiness.businessLocation;
+                                      userBusiness.businessLocation!;
                                 }
                                 if (businessImage == '') {
-                                  businessImage = userBusiness.businessName;
+                                  businessImage = userBusiness.businessName!;
                                 }
                                 if (changedImage) {
                                   uploadPic(userBusiness.businessID).then(
                                       (value) =>
                                           DatabaseService().updateUserBusiness(
-                                              userBusiness.businessID,
+                                              userBusiness.businessID!,
                                               businessName,
                                               businessLocation,
                                               businessSize,
-                                              downloadUrl,
+                                              downloadUrl!,
                                               // catalogBackgroundImage,
                                               socialMedia,
                                               businessSchedule));
                                 } else {
                                   DatabaseService().updateUserBusiness(
-                                      userBusiness.businessID,
+                                      userBusiness.businessID!,
                                       businessName,
                                       businessLocation,
                                       businessSize,
-                                      userBusiness.businessImage,
+                                      userBusiness.businessImage!,
                                       // catalogBackgroundImage,
                                       socialMedia,
                                       businessSchedule);
@@ -980,7 +979,7 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: new Offset(0, 0),
                     blurRadius: 10.0,
                   )
@@ -1029,8 +1028,8 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return AddUserDialog(userBusiness.businessID,
-                                    userBusiness.businessName);
+                                return AddUserDialog(userBusiness.businessID!,
+                                    userBusiness.businessName!);
                               });
                         },
                         child: Container(
@@ -1099,13 +1098,13 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                       height: 400,
                       width: double.infinity,
                       child: ListView.builder(
-                          itemCount: userBusiness.businessUsers.length,
+                          itemCount: userBusiness.businessUsers!.length,
                           itemBuilder: (context, i) {
                             return StreamProvider<UserData>.value(
-                                initialData: null,
-                                value: DatabaseService()
-                                    .userProfile(userBusiness.businessUsers[i]),
-                                child: UserCard(userBusiness.businessID));
+                                initialData: UserData(),
+                                value: DatabaseService().userProfile(
+                                    userBusiness.businessUsers![i]),
+                                child: UserCard(userBusiness.businessID!));
                           }),
                     ),
                   )

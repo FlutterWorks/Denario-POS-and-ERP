@@ -8,7 +8,8 @@ class SuppliesList extends StatelessWidget {
   final String currentBusiness;
   final loadMore;
   final int limitSearch;
-  SuppliesList(this.currentBusiness, this.loadMore, this.limitSearch, {Key key})
+  SuppliesList(this.currentBusiness, this.loadMore, this.limitSearch,
+      {Key? key})
       : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
@@ -17,7 +18,7 @@ class SuppliesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final supplies = Provider.of<List<Supply>>(context);
 
-    if (supplies == null || supplies.length < 1) {
+    if (supplies.length < 1) {
       return SliverList(
           delegate: SliverChildBuilderDelegate((context, i) {
         return const SizedBox();
@@ -29,18 +30,18 @@ class SuppliesList extends StatelessWidget {
         (context, i) {
           if (i < supplies.length) {
             String description;
-            if (supplies[i].suppliers.isEmpty) {
+            if (supplies[i].suppliers!.isEmpty) {
               description = 'Sin proveedor';
-            } else if (supplies[i].suppliers.length > 1) {
-              if (supplies[i].suppliers.length > 2) {
+            } else if (supplies[i].suppliers!.length > 1) {
+              if (supplies[i].suppliers!.length > 2) {
                 description =
-                    '${supplies[i].suppliers[0]}, ${supplies[i].suppliers[1]}...';
+                    '${supplies[i].suppliers![0]}, ${supplies[i].suppliers![1]}...';
               } else {
                 description =
-                    '${supplies[i].suppliers[0]}, ${supplies[i].suppliers[1]}';
+                    '${supplies[i].suppliers![0]}, ${supplies[i].suppliers![1]}';
               }
             } else {
-              description = supplies[i].suppliers.first;
+              description = supplies[i].suppliers!.first;
             }
 
             if (MediaQuery.of(context).size.width > 650) {
@@ -77,7 +78,7 @@ class SuppliesList extends StatelessWidget {
                           ? Container(
                               width: 150,
                               child: Text(
-                                supplies[i].supply,
+                                supplies[i].supply!,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.black),
@@ -87,7 +88,7 @@ class SuppliesList extends StatelessWidget {
                                 Container(
                                     width: 150,
                                     child: Text(
-                                      supplies[i].supply,
+                                      supplies[i].supply!,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
@@ -120,7 +121,7 @@ class SuppliesList extends StatelessWidget {
                       Container(
                           width: 100,
                           child: Text(
-                            supplies[i].unit,
+                            supplies[i].unit!,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.black),
@@ -164,7 +165,7 @@ class SuppliesList extends StatelessWidget {
                             children: [
                               Container(
                                   child: Text(
-                                supplies[i].supply,
+                                supplies[i].supply!,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -200,7 +201,7 @@ class SuppliesList extends StatelessWidget {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              supplies[i].unit,
+                              supplies[i].unit!,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style:

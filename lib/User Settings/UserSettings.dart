@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UserSettings extends StatefulWidget {
-  const UserSettings({Key key}) : super(key: key);
+  const UserSettings({Key? key}) : super(key: key);
 
   @override
   State<UserSettings> createState() => _UserSettingsState();
@@ -30,7 +30,7 @@ class _UserSettingsState extends State<UserSettings> {
   Widget build(BuildContext context) {
     final userProfile = Provider.of<UserData>(context);
 
-    if (userProfile == null) {
+    if (userProfile == UserData()) {
       return Container();
     }
 
@@ -44,10 +44,10 @@ class _UserSettingsState extends State<UserSettings> {
             children: [
               //Pages
               PageView(controller: _controller, children: [
-                UserProfileSettings(userProfile.name, userProfile.phone,
-                    userProfile.profileImage, userProfile.uid),
+                UserProfileSettings(userProfile.name!, userProfile.phone!,
+                    userProfile.profileImage!, userProfile.uid!),
                 UserBusinessSettings(
-                    userProfile.businesses, userProfile.activeBusiness),
+                    userProfile.businesses!, userProfile.activeBusiness!),
               ]),
               //Mi perfil/Negocio selection
               Container(
@@ -164,10 +164,10 @@ class _UserSettingsState extends State<UserSettings> {
               child: SizedBox(
                 height: 550,
                 child: PageView(controller: _controller, children: [
-                  UserProfileSettings(userProfile.name, userProfile.phone,
-                      userProfile.profileImage, userProfile.uid),
+                  UserProfileSettings(userProfile.name!, userProfile.phone!,
+                      userProfile.profileImage!, userProfile.uid!),
                   UserBusinessSettings(
-                      userProfile.businesses, userProfile.activeBusiness),
+                      userProfile.businesses!, userProfile.activeBusiness!),
                 ]),
               ),
             ),

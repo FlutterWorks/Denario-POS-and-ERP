@@ -1,23 +1,23 @@
 class Sales {
-  String account;
-  DateTime date;
-  double discount;
-  double tax;
-  List<SoldItems> soldItems;
-  String orderName;
-  String orderID;
-  double subTotal;
-  double total;
-  String paymentType;
-  String clientName;
-  Map clientDetails;
-  String transactionID;
-  String docID;
-  String cashRegister;
-  bool reversed;
-  String orderType;
-  List splitPaymentDetails;
-  double totalSuppliesCost;
+  String? account;
+  DateTime? date;
+  double? discount;
+  double? tax;
+  List<SoldItems>? soldItems;
+  String? orderName;
+  String? orderID;
+  double? subTotal;
+  double? total;
+  String? paymentType;
+  String? clientName;
+  Map? clientDetails;
+  String? transactionID;
+  String? docID;
+  String? cashRegister;
+  bool? reversed;
+  String? orderType;
+  List? splitPaymentDetails;
+  double? totalSuppliesCost;
 
   Sales(
       {this.account,
@@ -42,12 +42,12 @@ class Sales {
 }
 
 class SoldItems {
-  String product;
-  String category;
-  double price;
-  double qty;
-  double total;
-  List supplies;
+  String? product;
+  String? category;
+  double? price;
+  double? qty;
+  double? total;
+  List? supplies;
 
   SoldItems(
       {this.product,

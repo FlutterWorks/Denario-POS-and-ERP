@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class DiscountCreate extends StatefulWidget {
   final String activeBusiness;
-  const DiscountCreate(this.activeBusiness, {Key key}) : super(key: key);
+  const DiscountCreate(this.activeBusiness, {Key? key}) : super(key: key);
 
   @override
   State<DiscountCreate> createState() => _DiscountCreateState();
@@ -13,14 +13,14 @@ class DiscountCreate extends StatefulWidget {
 class _DiscountCreateState extends State<DiscountCreate> {
   final _formKey = GlobalKey<FormState>();
 
-  String code;
-  int discount;
-  String description;
+  String? code;
+  int? discount;
+  String? description;
 
   final FocusNode _codeNode = FocusNode();
   final FocusNode _discountNode = FocusNode();
   final FocusNode _descriptionNode = FocusNode();
-  TextEditingController descriptionController;
+  TextEditingController? descriptionController;
 
   @override
   Widget build(BuildContext context) {
@@ -234,12 +234,12 @@ class _DiscountCreateState extends State<DiscountCreate> {
                             ),
                           ),
                           onPressed: () {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               DatabaseService().createDiscount(
                                   widget.activeBusiness,
-                                  code,
-                                  description,
-                                  discount.toDouble());
+                                  code!,
+                                  description!,
+                                  discount!.toDouble());
                               Navigator.of(context).pop();
                             }
                           },
@@ -471,12 +471,12 @@ class _DiscountCreateState extends State<DiscountCreate> {
                             ),
                           ),
                           onPressed: () {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               DatabaseService().createDiscount(
                                   widget.activeBusiness,
-                                  code,
-                                  description,
-                                  discount.toDouble());
+                                  code!,
+                                  description!,
+                                  discount!.toDouble());
                               Navigator.of(context).pop();
                             }
                           },

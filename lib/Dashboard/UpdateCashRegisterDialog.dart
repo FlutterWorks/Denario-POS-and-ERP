@@ -12,10 +12,10 @@ class UpdateCashRegisterDialog extends StatefulWidget {
   final double currentTransactions;
 
   UpdateCashRegisterDialog(
-      {this.currentRegister,
-      this.transactionType,
-      this.transactionAmount,
-      this.currentTransactions});
+      {required this.currentRegister,
+      required this.transactionType,
+      required this.transactionAmount,
+      required this.currentTransactions});
 
   @override
   _UpdateCashRegisterDialogState createState() =>
@@ -23,14 +23,14 @@ class UpdateCashRegisterDialog extends StatefulWidget {
 }
 
 class _UpdateCashRegisterDialogState extends State<UpdateCashRegisterDialog> {
-  double amount;
-  String motive;
+  double? amount;
+  String? motive;
   Map registerTransactionDetails = {};
   final controller = PageController(initialPage: 0);
   final int totalPages = 2;
 
-  FocusNode nameNode;
-  FocusNode amountNode;
+  FocusNode? nameNode = FocusNode();
+  FocusNode? amountNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class _UpdateCashRegisterDialogState extends State<UpdateCashRegisterDialog> {
                           initialValue: '\$0.00',
                           maxLength: 12,
                           validator: (val) =>
-                              val.isEmpty ? "Agrega un monto válido" : null,
+                              val!.isEmpty ? "Agrega un monto válido" : null,
                           inputFormatters: <TextInputFormatter>[
                             CurrencyTextInputFormatter(
                               name: '\$',
@@ -145,8 +145,8 @@ class _UpdateCashRegisterDialogState extends State<UpdateCashRegisterDialog> {
                               controller.nextPage(
                                   duration: Duration(milliseconds: 500),
                                   curve: Curves.ease);
-                              amountNode.unfocus();
-                              nameNode.requestFocus();
+                              amountNode!.unfocus();
+                              nameNode!.requestFocus();
                             },
                             child: Text(
                               "SIGUIENTE",
@@ -205,7 +205,7 @@ class _UpdateCashRegisterDialogState extends State<UpdateCashRegisterDialog> {
                           style: TextStyle(color: Colors.black, fontSize: 24),
                           autofocus: true,
                           maxLines: 2,
-                          validator: (val) => val.isEmpty
+                          validator: (val) => val!.isEmpty
                               ? "No olvides agregar un motivo"
                               : null,
                           inputFormatters: [
@@ -254,15 +254,15 @@ class _UpdateCashRegisterDialogState extends State<UpdateCashRegisterDialog> {
                             ),
                             onPressed: () {
                               double totalTransactionAmount =
-                                  widget.transactionAmount + amount;
+                                  widget.transactionAmount + amount!;
                               double totalTransactions = 0.0;
 
                               if (widget.transactionType == 'Egresos') {
                                 totalTransactions =
-                                    widget.currentTransactions - amount;
+                                    widget.currentTransactions - amount!;
                               } else {
                                 totalTransactions =
-                                    widget.currentTransactions + amount;
+                                    widget.currentTransactions + amount!;
                               }
 
                               registerTransactionDetails['Time'] =

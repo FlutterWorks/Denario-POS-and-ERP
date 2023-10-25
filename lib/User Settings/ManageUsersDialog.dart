@@ -17,7 +17,7 @@ class _ManageUsersDialogState extends State<ManageUsersDialog> {
 
   @override
   void initState() {
-    rol = widget.userProfile.businesses[widget.index].roleInBusiness;
+    rol = widget.userProfile.businesses![widget.index].roleInBusiness!;
     super.initState();
   }
 
@@ -193,22 +193,21 @@ class _ManageUsersDialogState extends State<ManageUsersDialog> {
                         if (madeChanges) {
                           DatabaseService().deleteUserBusiness({
                             'Business ID': widget.userProfile
-                                .businesses[widget.index].businessID,
+                                .businesses![widget.index].businessID,
                             'Business Name': widget.userProfile
-                                .businesses[widget.index].businessName,
+                                .businesses![widget.index].businessName,
                             'Business Rol': widget.userProfile
-                                .businesses[widget.index].roleInBusiness,
+                                .businesses![widget.index].roleInBusiness,
                             'Table View': widget
-                                .userProfile.businesses[widget.index].tableView
+                                .userProfile.businesses![widget.index].tableView
                           }, widget.userProfile.uid).then((value) {
                             DatabaseService().updateUserBusinessProfile({
                               'Business ID': widget.userProfile
-                                  .businesses[widget.index].businessID,
+                                  .businesses![widget.index].businessID,
                               'Business Name': widget.userProfile
-                                  .businesses[widget.index].businessName,
+                                  .businesses![widget.index].businessName,
                               'Business Rol': rol,
                               'Table View': widget.userProfile
-                                  .businesses[widget.index].tableView
                             }, widget.userProfile.uid);
                           });
 

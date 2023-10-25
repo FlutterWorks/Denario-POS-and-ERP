@@ -7,14 +7,14 @@ class SupplierSearchBar extends StatelessWidget {
   final showVendorTagsfromParent;
 
   const SupplierSearchBar(this.selectVendor, this.showVendorTagsfromParent,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final suppliers = Provider.of<List<Supplier>>(context);
 
-    if (suppliers == null) {
+    if (suppliers == []) {
       return Container();
     }
 
@@ -49,7 +49,7 @@ class SupplierSearchBar extends StatelessWidget {
           color: Colors.white,
           boxShadow: <BoxShadow>[
             new BoxShadow(
-              color: Colors.grey[350],
+              color: Colors.grey[350]!,
               offset: new Offset(0, 0),
               blurRadius: 10.0,
             )
@@ -71,7 +71,7 @@ class SupplierSearchBar extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       child: Text(
-                        suppliers[i].name,
+                        suppliers[i].name!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
@@ -99,7 +99,7 @@ class SupplierSearchBar extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        suppliers[i].name,
+                        suppliers[i].name!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,

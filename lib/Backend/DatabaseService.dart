@@ -17,7 +17,7 @@ import 'package:denario/Models/Tables.dart';
 import 'package:denario/Models/User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:async';
 import '../Models/Discounts.dart';
 
 class DatabaseService {
@@ -44,8 +44,8 @@ class DatabaseService {
   }
 
   Future updateUserProfile(String name, int tlf, String pic) async {
-    final User user = FirebaseAuth.instance.currentUser;
-    final String uid = user.uid.toString();
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String uid = user!.uid.toString();
 
     return await FirebaseFirestore.instance
         .collection('Users')
@@ -110,8 +110,8 @@ class DatabaseService {
   }
 
   Future changeActiveBusiness(String businessID) async {
-    final User user = FirebaseAuth.instance.currentUser;
-    final String uid = user.uid.toString();
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String uid = user!.uid.toString();
 
     return await FirebaseFirestore.instance
         .collection('Users')
@@ -145,7 +145,7 @@ class DatabaseService {
           usage: snapshot['App Intended Usage']);
     } catch (e) {
       print(e);
-      return null;
+      return UserData();
     }
   }
 
@@ -228,12 +228,12 @@ class DatabaseService {
               : true);
     } catch (e) {
       print(e);
-      return null;
+      return BusinessProfile();
     }
   }
 
   //User Business Stream
-  Stream<BusinessProfile> userBusinessProfile(String businessID) async* {
+  Stream<BusinessProfile> userBusinessProfile(businessID) async* {
     yield* FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -670,7 +670,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -690,8 +690,8 @@ class DatabaseService {
       vegan,
       show,
       featured,
-      double expectedMargin,
-      double lowMarginAlert) async {
+      double? expectedMargin,
+      double? lowMarginAlert) async {
     return await FirebaseFirestore.instance
         .collection('Products')
         .doc(businessID)
@@ -937,13 +937,12 @@ class DatabaseService {
             //Add Ingredient Total to product cost if not null
             if (!ingredientTotal.isNaN &&
                 !ingredientTotal.isInfinite &&
-                !ingredientTotal.isNegative &&
-                ingredientTotal != null) {
+                !ingredientTotal.isNegative) {
               totalCost = totalCost + ingredientTotal;
             }
           }
         }
-        if (totalCost != null && totalCost > 0) {
+        if (totalCost > 0) {
           totalCostOfIngredients = totalCostOfIngredients + totalCost;
         }
       }
@@ -1307,7 +1306,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -1359,7 +1358,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -1443,8 +1442,8 @@ class DatabaseService {
     totalSale,
     orderDetail,
   ) async {
-    final User user = FirebaseAuth.instance.currentUser;
-    final String uid = user.uid.toString();
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String uid = user!.uid.toString();
 
     return await FirebaseFirestore.instance
         .collection('ERP')
@@ -1464,12 +1463,13 @@ class DatabaseService {
   }
 
   //Save Wastage Details
-  Future saveWastageDetails(String ticketConcept, Map wastageByCategory) async {
+  Future saveWastageDetails(
+      String ticketConcept, Map<String, dynamic> wastageByCategory) async {
     var year = DateTime.now().year.toString();
     var month = DateTime.now().month.toString();
 
-    final User user = FirebaseAuth.instance.currentUser;
-    final String uid = user.uid.toString();
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String uid = user!.uid.toString();
 
     if (ticketConcept == 'Desperdicios') {
       try {
@@ -1515,7 +1515,8 @@ class DatabaseService {
   }
 
   //Save Account/Category
-  Future saveOrderType(String businessID, Map salesByCategory) async {
+  Future saveOrderType(
+      String businessID, Map<String, dynamic> salesByCategory) async {
     var year = DateTime.now().year.toString();
     var month = DateTime.now().month.toString();
 
@@ -1537,7 +1538,8 @@ class DatabaseService {
   }
 
   //Save Stats Details
-  Future saveOrderStats(String businessID, Map orderStats) async {
+  Future saveOrderStats(
+      String businessID, Map<String, dynamic> orderStats) async {
     var year = DateTime.now().year.toString();
     var month = DateTime.now().month.toString();
 
@@ -1721,7 +1723,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -1909,7 +1911,7 @@ class DatabaseService {
           expenseGroups: snapshot['Expense Group Mapping']);
     } catch (e) {
       print(e);
-      return null;
+      return HighLevelMapping();
     }
   }
 
@@ -1940,7 +1942,7 @@ class DatabaseService {
       return CategoryList(categoryList: snapshot['Category List']);
     } catch (e) {
       print(e);
-      return null;
+      return CategoryList();
     }
   }
 
@@ -1961,7 +1963,7 @@ class DatabaseService {
       return AccountsList(accountsMapping: snapshot['Account Mapping']);
     } catch (e) {
       print(e);
-      return null;
+      return AccountsList();
     }
   }
 
@@ -2030,7 +2032,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -2251,7 +2253,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -2393,7 +2395,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -2661,10 +2663,10 @@ class DatabaseService {
               : false,
           paymentTypes: snapshot.data().toString().contains('Payment Types')
               ? snapshot['Payment Types']
-              : false);
+              : []);
     } catch (e) {
       print(e);
-      return null;
+      return CashRegister();
     }
   }
 
@@ -2755,7 +2757,7 @@ class DatabaseService {
       );
     } catch (e) {
       print(e);
-      return null;
+      return DailyTransactions();
     }
   }
 
@@ -2832,7 +2834,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -2944,7 +2946,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -3062,7 +3064,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -3091,10 +3093,8 @@ class DatabaseService {
 
   //Filtered Sales
   Stream<List<Sales>> filteredSalesList(String businessID, DateTime dateFrom,
-      DateTime dateTo, String paymentMethod) async* {
-    if (paymentMethod == null ||
-        paymentMethod == '' ||
-        paymentMethod == 'Todos') {
+      DateTime? dateTo, String paymentMethod) async* {
+    if (paymentMethod == '' || paymentMethod == 'Todos') {
       if (dateTo == null) {
         yield* FirebaseFirestore.instance
             .collection('ERP')
@@ -3168,7 +3168,7 @@ class DatabaseService {
   }
 
   Stream<List<Sales>> shortFilteredSalesList(
-      String businessID, DateTime dateFrom, DateTime dateTo) async* {
+      String businessID, DateTime dateFrom, DateTime? dateTo) async* {
     if (dateTo == null) {
       yield* FirebaseFirestore.instance
           .collection('ERP')
@@ -3298,7 +3298,7 @@ class DatabaseService {
       );
     } catch (e) {
       print(e);
-      return null;
+      return MonthlyStats();
     }
   }
 
@@ -3414,7 +3414,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -3547,7 +3547,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -3643,7 +3643,7 @@ class DatabaseService {
           docID: snapshot.id);
     } catch (e) {
       print(e);
-      return null;
+      return Supplier();
     }
   }
 
@@ -3785,7 +3785,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -3826,7 +3826,7 @@ class DatabaseService {
           docID: doc.id);
     } catch (e) {
       print(e);
-      return null;
+      return Supply();
     }
   }
 
@@ -3928,7 +3928,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 
@@ -4052,7 +4052,7 @@ class DatabaseService {
       }).toList();
     } catch (e) {
       print(e);
-      return null;
+      return [];
     }
   }
 

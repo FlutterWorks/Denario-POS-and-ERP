@@ -15,8 +15,8 @@ class PlateSelectionMobile extends StatefulWidget {
 
 class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
   bool productExists = false;
-  int itemIndex;
-  List<Products> product;
+  int? itemIndex;
+  List<Products>? product;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +37,12 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
             ),
             delegate: SliverChildBuilderDelegate(
               (context, i) {
-                var itemCount = 0;
+                double itemCount = 0;
                 for (var x = 0; x < bloc.ticketItems['Items'].length; x++) {
-                  if (product[i].product ==
+                  if (product![i].product ==
                       bloc.ticketItems['Items'][x]["Name"]) {
                     itemCount =
-                        itemCount + bloc.ticketItems['Items'][x]["Quantity"];
+                        itemCount + bloc.ticketItems['Items'][x]["Quantity"]!;
                   }
                 }
 
@@ -54,7 +54,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                           EdgeInsets.zero),
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.white),
-                      overlayColor: MaterialStateProperty.resolveWith<Color>(
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.hovered))
                             return Colors.black12;
@@ -70,7 +70,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                       for (var x = 0;
                           x < bloc.ticketItems['Items'].length;
                           x++) {
-                        if (product[i].product ==
+                        if (product![i].product ==
                                 bloc.ticketItems['Items'][x]["Name"] &&
                             bloc.ticketItems['Items'][x]["Options"].isEmpty) {
                           setState(() {
@@ -84,13 +84,13 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                         bloc.addQuantity(itemIndex);
                       } else {
                         bloc.addToCart({
-                          'Name': product[i].product,
-                          'Category': product[i].category,
-                          'Price': product[i].price,
+                          'Name': product![i].product,
+                          'Category': product![i].category,
+                          'Price': product![i].price,
                           'Quantity': 1,
-                          'Total Price': product[i].price,
+                          'Total Price': product![i].price,
                           'Options': [],
-                          'Supplies': product[i].ingredients
+                          'Supplies': product![i].ingredients
                         });
                       }
 
@@ -105,12 +105,12 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                           builder: (context) {
                             return POSItemDialog(
                                 widget.businessID,
-                                product[i].product,
-                                product[i].productOptions,
-                                product[i].available,
-                                product[i].price.toDouble(),
-                                product[i].category,
-                                product[i].productID);
+                                product![i].product!,
+                                product![i].productOptions!,
+                                product![i].available!,
+                                product![i].price!.toDouble(),
+                                product![i].category!,
+                                product![i].productID!);
                           });
                     },
                     child: Container(
@@ -130,8 +130,8 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                                 children: <Widget>[
                                   //product
                                   Text(
-                                    product[i]
-                                        .product, //product[index].product,
+                                    product![i]
+                                        .product!, //product[index].product,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
@@ -147,7 +147,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      "\$${product[i].price}", //'\$120' + //product[index].price.toString(),
+                                      "\$${product![i].price}", //'\$120' + //product[index].price.toString(),
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                         color: Colors.black54,
@@ -186,7 +186,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                   ),
                 );
               },
-              childCount: product.length,
+              childCount: product!.length,
             ));
       },
     );

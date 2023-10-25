@@ -1,6 +1,5 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Models/Categories.dart';
-import 'package:denario/Models/PendingOrders.dart';
 import 'package:denario/Models/Products.dart';
 import 'package:denario/Models/SavedOrders.dart';
 import 'package:denario/Models/Tables.dart';
@@ -23,14 +22,14 @@ class _POSMobileState extends State<POSMobile> {
   // final GlobalKey<ScaffoldState> _scaffoldKeyMobile =
   //     GlobalKey<ScaffoldState>();
 
-  String category;
+  late String category;
   List categories = [];
-  int businessIndex;
-  bool showTableView;
+  int? businessIndex;
+  bool? showTableView;
 
   //Mostrar mesas o mostrar pendientes de delivery/takeaway
   List tableViewTags = ['Mesas', 'Mostrador'];
-  String selectedTag;
+  String? selectedTag;
 
   final tableController = PageController();
 
@@ -44,29 +43,26 @@ class _POSMobileState extends State<POSMobile> {
   Widget build(BuildContext context) {
     final categoriesProvider = Provider.of<CategoryList>(context);
     final userProfile = Provider.of<UserData>(context);
-    final pendingOrders = Provider.of<List<PendingOrders>>(context);
 
-    if (categoriesProvider == null ||
-        userProfile == null ||
-        pendingOrders == null) {
+    if (userProfile == UserData()) {
       return Container();
     }
 
-    userProfile.businesses.forEach((element) {
+    userProfile.businesses!.forEach((element) {
       if (element.businessID == userProfile.activeBusiness) {
-        businessIndex = userProfile.businesses.indexOf(element);
+        businessIndex = userProfile.businesses!.indexOf(element);
       }
     });
-    categories = categoriesProvider.categoryList;
+    categories = categoriesProvider.categoryList!;
 
     return MultiProvider(
       providers: [
         StreamProvider<List<Tables>>.value(
           initialData: [],
-          value: DatabaseService().tableList(userProfile.activeBusiness),
+          value: DatabaseService().tableList(userProfile.activeBusiness!),
         ),
         StreamProvider<List<SavedOrders>>.value(
-            initialData: null,
+            initialData: [],
             value: DatabaseService()
                 .savedCounterOrders(userProfile.activeBusiness)),
       ],
@@ -128,7 +124,7 @@ class _POSMobileState extends State<POSMobile> {
 
               //Plates GridView
               PlateSelectionMobile(
-                  userProfile.activeBusiness, category, widget.productList),
+                  userProfile.activeBusiness!, category, widget.productList),
             ],
           ),
           //Ticket
@@ -138,7 +134,7 @@ class _POSMobileState extends State<POSMobile> {
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
                   onPressed: () =>
-                      widget.scaffoldKeyMobile.currentState.openEndDrawer(),
+                      widget.scaffoldKeyMobile.currentState!.openEndDrawer(),
                   backgroundColor: Colors.black,
                   child: Center(
                       child: Icon(Icons.format_list_bulleted,

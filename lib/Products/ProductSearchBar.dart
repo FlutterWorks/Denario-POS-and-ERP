@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 
 class ProductSearchBar extends StatelessWidget {
   final selectProduct;
-  const ProductSearchBar(this.selectProduct, {Key key}) : super(key: key);
+  const ProductSearchBar(this.selectProduct, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<List<Products>>(context);
 
-    if (products == null || products.length < 1) {
+    if (products.length < 1) {
       return Container();
     }
 
@@ -42,7 +42,7 @@ class ProductSearchBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: <BoxShadow>[
           new BoxShadow(
-            color: Colors.grey[350],
+            color: Colors.grey[350]!,
             offset: new Offset(0, 0),
             blurRadius: 10.0,
           )
@@ -61,7 +61,7 @@ class ProductSearchBar extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     child: Text(
-                      products[i].product,
+                      products[i].product!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,

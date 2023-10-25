@@ -26,11 +26,11 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
   Widget build(BuildContext context) {
     final categoriesProvider = Provider.of<CategoryList>(context);
 
-    if (categoriesProvider == null) {
+    if (categoriesProvider == CategoryList()) {
       return Dialog();
     }
 
-    List categories = categoriesProvider.categoryList;
+    List categories = categoriesProvider.categoryList!;
 
     if (MediaQuery.of(context).size.width > 650) {
       if (!categoryisSelected) {
@@ -117,7 +117,8 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                                                     states.contains(
                                                         MaterialState.pressed))
                                                   return Colors.black26;
-                                                return null; // Defer to the widget's default.
+                                                return Colors
+                                                    .black26; // Defer to the widget's default.
                                               },
                                             ),
                                           ),
@@ -169,7 +170,8 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                                                           MaterialState
                                                               .pressed))
                                                     return Colors.black26;
-                                                  return null; // Defer to the widget's default.
+                                                  return Colors
+                                                      .black26; // Defer to the widget's default.
                                                 },
                                               ),
                                             ),
@@ -301,7 +303,7 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                                   initialData: [],
                                   value: DatabaseService().productList(
                                       selectedCategory,
-                                      widget.userProfile.activeBusiness),
+                                      widget.userProfile.activeBusiness!),
                                   child: ProductSelection()))),
                     ],
                   ),
@@ -478,7 +480,7 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                       child: StreamProvider<List<Products>>.value(
                           initialData: [],
                           value: DatabaseService().productList(selectedCategory,
-                              widget.userProfile.activeBusiness),
+                              widget.userProfile.activeBusiness!),
                           child: ProductSelection()))),
             ],
           ),

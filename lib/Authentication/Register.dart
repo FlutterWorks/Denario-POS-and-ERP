@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
-  Register({this.toggleView});
+  Register({required this.toggleView});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -49,7 +49,7 @@ class _RegisterState extends State<Register> {
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.black, fontSize: 14),
             validator: (val) =>
-                !(emailValid.hasMatch(val)) ? "Agrega un email válido" : null,
+                !(emailValid.hasMatch(val!)) ? "Agrega un email válido" : null,
             cursorColor: Colors.grey,
             focusNode: _emailNode,
             textInputAction: TextInputAction.next,
@@ -87,7 +87,7 @@ class _RegisterState extends State<Register> {
           SizedBox(height: 25),
           TextFormField(
             style: TextStyle(color: Colors.black, fontSize: 14),
-            validator: (val) => val.length < 6
+            validator: (val) => val!.length < 6
                 ? "La contraseña debe tener al menos 6 caracteres"
                 : null,
             cursorColor: Colors.grey,
@@ -189,7 +189,7 @@ class _RegisterState extends State<Register> {
             onFieldSubmitted: (val) {
               //Loading
               setState(() => loading = true);
-              if (_formKey.currentState.validate()) {
+              if (_formKey.currentState!.validate()) {
                 //Loading
                 setState(() => loading = true);
 
@@ -226,14 +226,14 @@ class _RegisterState extends State<Register> {
                   if (states.contains(MaterialState.focused) ||
                       states.contains(MaterialState.pressed))
                     return Colors.grey.shade500;
-                  return null; // Defer to the widget's default.
+                  return Colors.grey.shade500; // Defer to the widget's default.
                 },
               ),
             ),
             onPressed: () async {
               //Loading
               setState(() => loading = true);
-              if (_formKey.currentState.validate()) {
+              if (_formKey.currentState!.validate()) {
                 //Loading
                 setState(() => loading = true);
 

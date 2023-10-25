@@ -16,7 +16,7 @@ class EditTableDialog extends StatefulWidget {
 
 class _EditTableDialogState extends State<EditTableDialog> {
   String tableName = '';
-  String _selectedShape;
+  late String _selectedShape;
   final _formKey = GlobalKey<FormState>();
 
   List shapeList = ['Square', 'Circle', 'Wide Rectangle', 'Tall Rectangle'];
@@ -71,8 +71,8 @@ class _EditTableDialogState extends State<EditTableDialog> {
   @override
   void initState() {
     super.initState();
-    tableName = widget.currentTable.table;
-    _selectedShape = widget.currentTable.shape;
+    tableName = widget.currentTable.table!;
+    _selectedShape = widget.currentTable.shape!;
   }
 
   @override
@@ -125,7 +125,7 @@ class _EditTableDialogState extends State<EditTableDialog> {
                       style: TextStyle(color: Colors.black, fontSize: 21),
                       textAlign: TextAlign.center,
                       maxLength: 3,
-                      validator: (val) => (val.isEmpty || val == '')
+                      validator: (val) => (val!.isEmpty || val == '')
                           ? "Agrega un código"
                           : null,
                       cursorColor: Colors.grey,
@@ -229,7 +229,7 @@ class _EditTableDialogState extends State<EditTableDialog> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.white70),
                                 overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                    MaterialStateProperty.resolveWith<Color?>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
                                       return Colors.grey.shade300;
@@ -248,7 +248,7 @@ class _EditTableDialogState extends State<EditTableDialog> {
                                 if (widget.currentTable.docID != '') {
                                   DatabaseService()
                                       .deleteTable(widget.businessID,
-                                          widget.currentTable.docID)
+                                          widget.currentTable.docID!)
                                       .then((value) =>
                                           Navigator.of(context).pop());
                                 } else {
@@ -276,7 +276,7 @@ class _EditTableDialogState extends State<EditTableDialog> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.black),
                                 overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                    MaterialStateProperty.resolveWith<Color?>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
                                       return Colors.grey.shade500;
@@ -289,7 +289,7 @@ class _EditTableDialogState extends State<EditTableDialog> {
                                 ),
                               ),
                               onPressed: () {
-                                if (_formKey.currentState.validate()) {
+                                if (_formKey.currentState!.validate()) {
                                   final newTable = Tables(
                                       table: tableName,
                                       assignedOrder: '',

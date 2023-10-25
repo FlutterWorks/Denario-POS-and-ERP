@@ -142,7 +142,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                         width: double.infinity,
                         height: 45,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey[350]),
+                          border: Border.all(color: Colors.grey[350]!),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 12),
@@ -161,7 +161,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           }).toList(),
                           onChanged: (x) {
                             setState(() {
-                              rol = x;
+                              rol = x.toString();
                             });
                           },
                         ),
@@ -172,9 +172,10 @@ class _AddUserDialogState extends State<AddUserDialog> {
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(color: Colors.black, fontSize: 14),
-                        validator: (val) => !(emailValid.hasMatch(val))
-                            ? "Agrega un email válido"
-                            : null,
+                        validator: (val) =>
+                            !(emailValid.hasMatch(val.toString()))
+                                ? "Agrega un email válido"
+                                : null,
                         cursorColor: Colors.grey,
                         focusNode: _emailNode,
                         textInputAction: TextInputAction.next,
@@ -214,7 +215,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                       SizedBox(height: 25),
                       TextFormField(
                         style: TextStyle(color: Colors.black, fontSize: 14),
-                        validator: (val) => val.length < 6
+                        validator: (val) => val!.length < 6
                             ? "La contraseña debe tener al menos 6 caracteres"
                             : null,
                         cursorColor: Colors.grey,
@@ -260,7 +261,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.black),
                           overlayColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                              MaterialStateProperty.resolveWith<Color?>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.hovered))
                                 return Colors.grey.shade800;
@@ -272,7 +273,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           ),
                         ),
                         onPressed: () async {
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             try {
                               FirebaseApp app = await Firebase.initializeApp(
                                   name: 'Secondary',
@@ -282,7 +283,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                                       .createUserWithEmailAndPassword(
                                           email: email, password: password);
                               DatabaseService().createUserProfile(
-                                  userCredential.user.uid,
+                                  userCredential.user!.uid,
                                   name,
                                   0,
                                   rol,
@@ -290,7 +291,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                                   widget.businessID,
                                   ['Sub-usuario']);
                               DatabaseService().addUsertoBusiness(
-                                  widget.businessID, userCredential.user.uid);
+                                  widget.businessID, userCredential.user!.uid);
 
                               await app.delete();
                               Navigator.of(context).pop();

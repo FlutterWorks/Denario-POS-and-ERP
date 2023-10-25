@@ -16,7 +16,7 @@ class ProductDesk extends StatefulWidget {
   final reloadApp;
   const ProductDesk(
       this.currentBusiness, this.categories, this.businessField, this.reloadApp,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -24,15 +24,15 @@ class ProductDesk extends StatefulWidget {
 }
 
 class _ProductDeskState extends State<ProductDesk> {
-  String name;
+  late String name;
   TextEditingController nameController = new TextEditingController(text: '');
-  String selectedProduct;
-  List searchName;
-  bool filtered;
+  String? selectedProduct;
+  List? searchName;
+  late bool filtered;
   List listOfCategories = [];
   String selectedCategory = 'Todas las categorías';
-  bool showSearchOptions;
-  int limitSearch;
+  late bool showSearchOptions;
+  late int limitSearch;
   void loadMore() {
     setState(() {
       limitSearch = limitSearch + 10;
@@ -42,7 +42,7 @@ class _ProductDeskState extends State<ProductDesk> {
   void selectProduct(Products product) {
     setState(() {
       selectedProduct = product.product;
-      nameController.text = product.product;
+      nameController.text = product.product!;
       searchName = product.searchName;
       showSearchOptions = false;
       selectedCategory = 'Todas las categorías';
@@ -67,7 +67,7 @@ class _ProductDeskState extends State<ProductDesk> {
   Widget build(BuildContext context) {
     final categoriesProvider = Provider.of<CategoryList>(context);
 
-    if (categoriesProvider == null) {
+    if (categoriesProvider == CategoryList()) {
       return Container();
     }
 
@@ -115,7 +115,7 @@ class _ProductDeskState extends State<ProductDesk> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: <BoxShadow>[
                               new BoxShadow(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                                 offset: Offset(0.0, 0.0),
                                 blurRadius: 10.0,
                               )
@@ -157,7 +157,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                       borderRadius:
                                           new BorderRadius.circular(12.0),
                                       borderSide: new BorderSide(
-                                        color: Colors.grey[350],
+                                        color: Colors.grey[350]!,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -192,7 +192,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                 width: 200,
                                 height: 45,
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey[350]),
+                                  border: Border.all(color: Colors.grey[350]!),
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 padding: EdgeInsets.symmetric(horizontal: 12),
@@ -219,7 +219,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                   }).toList(),
                                   onChanged: (x) {
                                     setState(() {
-                                      selectedCategory = x;
+                                      selectedCategory = x.toString();
                                       selectedProduct = null;
                                       nameController.text = '';
                                       name = '';
@@ -243,7 +243,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                           MaterialStateProperty.all<Color>(
                                               Colors.white70),
                                       overlayColor: MaterialStateProperty
-                                          .resolveWith<Color>(
+                                          .resolveWith<Color?>(
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.hovered))
@@ -293,7 +293,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                           MaterialStateProperty.all<Color>(
                                               Colors.white70),
                                       overlayColor: MaterialStateProperty
-                                          .resolveWith<Color>(
+                                          .resolveWith<Color?>(
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.hovered))
@@ -314,7 +314,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                               builder: (context) =>
                                                   StreamProvider<
                                                       List<Discounts>>.value(
-                                                    initialData: null,
+                                                    initialData: [],
                                                     value: DatabaseService()
                                                         .allDiscountsList(widget
                                                             .currentBusiness),
@@ -347,7 +347,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                           MaterialPageRoute(
                                               builder: (context) => StreamProvider<
                                                       List<Products>>.value(
-                                                  initialData: null,
+                                                  initialData: [],
                                                   value: DatabaseService()
                                                       .allProductListNoLimit(
                                                           widget
@@ -355,7 +355,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                                   child: CategoriesDesk(
                                                       widget.currentBusiness,
                                                       categoriesProvider
-                                                          .categoryList,
+                                                          .categoryList!,
                                                       widget.reloadApp))));
                                     },
                                     child: Padding(
@@ -374,14 +374,14 @@ class _ProductDeskState extends State<ProductDesk> {
                                 child: ElevatedButton(
                                     style: ButtonStyle(
                                       backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.greenAccent[400]),
+                                          MaterialStateProperty.all<Color?>(
+                                              Colors.greenAccent[400]!),
                                       overlayColor: MaterialStateProperty
-                                          .resolveWith<Color>(
+                                          .resolveWith<Color?>(
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.hovered))
-                                            return Colors.greenAccent[300];
+                                            return Colors.greenAccent[300]!;
                                           if (states.contains(
                                                   MaterialState.focused) ||
                                               states.contains(
@@ -398,7 +398,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                               builder: (context) => NewProduct(
                                                   widget.currentBusiness,
                                                   categoriesProvider
-                                                      .categoryList,
+                                                      .categoryList!,
                                                   widget.businessField,
                                                   null)));
                                     },
@@ -435,7 +435,7 @@ class _ProductDeskState extends State<ProductDesk> {
                             borderRadius: BorderRadius.circular(25),
                             boxShadow: <BoxShadow>[
                               new BoxShadow(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                                 offset: Offset(0.0, 0.0),
                                 blurRadius: 10.0,
                               )
@@ -483,7 +483,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -521,7 +521,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                     height: 45,
                                     decoration: BoxDecoration(
                                       border:
-                                          Border.all(color: Colors.grey[350]),
+                                          Border.all(color: Colors.grey[350]!),
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     padding:
@@ -549,7 +549,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                       }).toList(),
                                       onChanged: (x) {
                                         setState(() {
-                                          selectedCategory = x;
+                                          selectedCategory = x.toString();
                                           selectedProduct = null;
                                           nameController.text = '';
                                           name = '';
@@ -573,7 +573,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                               MaterialStateProperty.all<Color>(
                                                   Colors.white70),
                                           overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                              .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
@@ -628,7 +628,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                               MaterialStateProperty.all<Color>(
                                                   Colors.white70),
                                           overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                              .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
@@ -650,7 +650,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                                       StreamProvider<
                                                           List<
                                                               Discounts>>.value(
-                                                        initialData: null,
+                                                        initialData: [],
                                                         value: DatabaseService()
                                                             .allDiscountsList(widget
                                                                 .currentBusiness),
@@ -684,7 +684,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                               MaterialPageRoute(
                                                   builder: (context) => StreamProvider<
                                                           List<Products>>.value(
-                                                      initialData: null,
+                                                      initialData: [],
                                                       value: DatabaseService()
                                                           .allProductListNoLimit(
                                                               widget
@@ -693,7 +693,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                                           widget
                                                               .currentBusiness,
                                                           categoriesProvider
-                                                              .categoryList,
+                                                              .categoryList!,
                                                           widget.reloadApp))));
                                         },
                                         child: Padding(
@@ -714,13 +714,13 @@ class _ProductDeskState extends State<ProductDesk> {
                                         style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all<Color>(
-                                                  Colors.greenAccent[400]),
+                                                  Colors.greenAccent[400]!),
                                           overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                              .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
-                                                return Colors.greenAccent[300];
+                                                return Colors.greenAccent[300]!;
                                               if (states.contains(
                                                       MaterialState.focused) ||
                                                   states.contains(
@@ -739,7 +739,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                                           widget
                                                               .currentBusiness,
                                                           categoriesProvider
-                                                              .categoryList,
+                                                              .categoryList!,
                                                           widget.businessField,
                                                           null)));
                                         },
@@ -877,35 +877,35 @@ class _ProductDeskState extends State<ProductDesk> {
           ),
         ),
         //List of Products
-        (name != null && name != '')
+        (name != '')
             ? StreamProvider<List<Products>>.value(
-                initialData: null,
+                initialData: [],
                 value: DatabaseService().productListbyName(
                     name.toLowerCase(), widget.currentBusiness),
                 child: ProductList(
                     widget.currentBusiness,
-                    categoriesProvider.categoryList,
+                    categoriesProvider.categoryList!,
                     widget.businessField,
                     loadMore,
                     limitSearch))
             : (selectedCategory != 'Todas las categorías')
                 ? StreamProvider<List<Products>>.value(
-                    initialData: null,
+                    initialData: [],
                     value: DatabaseService().productListbyCategory(
                         selectedCategory, widget.currentBusiness, limitSearch),
                     child: ProductList(
                         widget.currentBusiness,
-                        categoriesProvider.categoryList,
+                        categoriesProvider.categoryList!,
                         widget.businessField,
                         loadMore,
                         limitSearch))
                 : StreamProvider<List<Products>>.value(
-                    initialData: null,
+                    initialData: [],
                     value: DatabaseService()
                         .allProductList(widget.currentBusiness, limitSearch),
                     child: ProductList(
                         widget.currentBusiness,
-                        categoriesProvider.categoryList,
+                        categoriesProvider.categoryList!,
                         widget.businessField,
                         loadMore,
                         limitSearch))
@@ -956,7 +956,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.white70),
                                 overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                    MaterialStateProperty.resolveWith<Color?>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
                                       return Colors.grey.shade300;
@@ -974,7 +974,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                     MaterialPageRoute(
                                         builder: (context) => StreamProvider<
                                                 List<Discounts>>.value(
-                                              initialData: null,
+                                              initialData: [],
                                               value: DatabaseService()
                                                   .allDiscountsList(
                                                       widget.currentBusiness),
@@ -1010,14 +1010,14 @@ class _ProductDeskState extends State<ProductDesk> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           StreamProvider<List<Products>>.value(
-                                              initialData: null,
+                                              initialData: [],
                                               value: DatabaseService()
                                                   .allProductListNoLimit(
                                                       widget.currentBusiness),
                                               child: CategoriesDesk(
                                                   widget.currentBusiness,
                                                   categoriesProvider
-                                                      .categoryList,
+                                                      .categoryList!,
                                                   widget.reloadApp))));
                             },
                             child: Center(
@@ -1041,7 +1041,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                   MaterialPageRoute(
                                       builder: (context) => NewProduct(
                                           widget.currentBusiness,
-                                          categoriesProvider.categoryList,
+                                          categoriesProvider.categoryList!,
                                           widget.businessField,
                                           null)));
                             },
@@ -1096,7 +1096,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                 border: new OutlineInputBorder(
                                   borderRadius: new BorderRadius.circular(12.0),
                                   borderSide: new BorderSide(
-                                    color: Colors.grey[350],
+                                    color: Colors.grey[350]!,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -1132,7 +1132,7 @@ class _ProductDeskState extends State<ProductDesk> {
                           child: TextButton(
                             style: ButtonStyle(
                               overlayColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                                  MaterialStateProperty.resolveWith<Color?>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.hovered)) {
                                     return Colors.greenAccent.withOpacity(
@@ -1207,7 +1207,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                                       return Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                    .only(
+                                                                .only(
                                                                 bottom: 10.0),
                                                         child: Container(
                                                           decoration: BoxDecoration(
@@ -1239,7 +1239,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                                             child: Padding(
                                                               padding:
                                                                   const EdgeInsets
-                                                                          .all(
+                                                                      .all(
                                                                       12.0),
                                                               child: Row(
                                                                 mainAxisAlignment:
@@ -1299,7 +1299,7 @@ class _ProductDeskState extends State<ProductDesk> {
                           child: TextButton(
                             style: ButtonStyle(
                               overlayColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                                  MaterialStateProperty.resolveWith<Color?>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.hovered)) {
                                     return Colors.greenAccent.withOpacity(
@@ -1334,35 +1334,35 @@ class _ProductDeskState extends State<ProductDesk> {
           ),
         ),
         //List of Products
-        (name != null && name != '')
+        (name != '')
             ? StreamProvider<List<Products>>.value(
-                initialData: null,
+                initialData: [],
                 value: DatabaseService().productListbyName(
                     name.toLowerCase(), widget.currentBusiness),
                 child: ProductList(
                     widget.currentBusiness,
-                    categoriesProvider.categoryList,
+                    categoriesProvider.categoryList!,
                     widget.businessField,
                     loadMore,
                     limitSearch))
             : (selectedCategory != 'Todas las categorías')
                 ? StreamProvider<List<Products>>.value(
-                    initialData: null,
+                    initialData: [],
                     value: DatabaseService().productListbyCategory(
                         selectedCategory, widget.currentBusiness, limitSearch),
                     child: ProductList(
                         widget.currentBusiness,
-                        categoriesProvider.categoryList,
+                        categoriesProvider.categoryList!,
                         widget.businessField,
                         loadMore,
                         limitSearch))
                 : StreamProvider<List<Products>>.value(
-                    initialData: null,
+                    initialData: [],
                     value: DatabaseService()
                         .allProductList(widget.currentBusiness, limitSearch),
                     child: ProductList(
                         widget.currentBusiness,
-                        categoriesProvider.categoryList,
+                        categoriesProvider.categoryList!,
                         widget.businessField,
                         loadMore,
                         limitSearch))

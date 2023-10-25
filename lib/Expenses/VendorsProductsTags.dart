@@ -1,46 +1,62 @@
 import 'package:denario/Models/Supplier.dart';
 import 'package:denario/Models/Supply.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:provider/provider.dart';
 
-class VendorProductsTags extends StatelessWidget {
+class VendorProductsTags extends StatefulWidget {
   final Supplier selectedVendor;
   final selectProduct;
-  const VendorProductsTags(this.selectedVendor, this.selectProduct, {Key key})
+  const VendorProductsTags(this.selectedVendor, this.selectProduct, {Key? key})
       : super(key: key);
+
+  @override
+  State<VendorProductsTags> createState() => _VendorProductsTagsState();
+}
+
+class _VendorProductsTagsState extends State<VendorProductsTags> {
+  List selectedSupplies = [];
 
   @override
   Widget build(BuildContext context) {
     final supplies = Provider.of<List<Supply>>(context);
 
-    if (supplies == null || supplies.length < 0) {
+    if (supplies.length < 0) {
       return Container();
     }
 
-    return Tags(
-        itemCount: supplies.length,
-        itemBuilder: (int i) {
-          return Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: ItemTags(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                border: Border.all(color: Colors.grey[200]),
-                padding: EdgeInsets.all(12),
-                key: Key(i.toString()),
-                index: i,
-                title: supplies[i].supply,
-                textColor: Colors.white,
-                textActiveColor: Colors.black,
-                color: Colors.greenAccent,
-                activeColor: Colors.white,
-                elevation: 1,
-                onPressed: (item) {
-                  if (!item.active) {
-                    selectProduct(selectedVendor, supplies[i]);
+    return Container(
+        width: 500,
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 5,
+          children: List.generate(supplies.length, (i) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        (selectedSupplies.contains(supplies[i].supply)
+                            ? Colors.greenAccent
+                            : Colors.white)),
+                onPressed: () {
+                  if (!selectedSupplies.contains(supplies[i].supply)) {
+                    setState(() {
+                      selectedSupplies.add(supplies[i].supply);
+                      widget.selectProduct(widget.selectedVendor, supplies[i]);
+                    });
+                  } else {
+                    setState(() {
+                      selectedSupplies.remove(supplies[i].supply);
+                    });
                   }
-                }),
-          );
-        });
+                },
+                child: Text(
+                  supplies[i].supply!,
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            );
+          }),
+        ));
   }
 }

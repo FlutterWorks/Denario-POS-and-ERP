@@ -23,27 +23,27 @@ class GrossMarginGraphState extends State<GrossMarginGraph> {
 
   double maxAmount = 0;
   List<BarChartGroupData> listOfBarGroups = [];
-  AsyncSnapshot snapshot;
-  List categoryList;
+  AsyncSnapshot? snapshot;
+  List? categoryList;
 
   @override
   void initState() {
     snapshot = widget.snapshot;
     categoryList = widget.categoryList.categoryList;
 
-    for (var x = 0; x < categoryList.length; x++) {
-      var category = categoryList[x];
+    for (var x = 0; x < categoryList!.length; x++) {
+      var category = categoryList![x];
       double categorySales;
       double categoryCosts;
 
       try {
-        categorySales = snapshot.data["Ventas de $category"];
+        categorySales = snapshot!.data["Ventas de $category"];
       } catch (e) {
         categorySales = 0;
       }
 
       try {
-        categoryCosts = snapshot.data["Costos de $category"];
+        categoryCosts = snapshot!.data["Costos de $category"];
       } catch (e) {
         categoryCosts = 0;
       }
@@ -74,7 +74,7 @@ class GrossMarginGraphState extends State<GrossMarginGraph> {
         borderRadius: BorderRadius.circular(25),
         boxShadow: <BoxShadow>[
           new BoxShadow(
-            color: Colors.grey[350],
+            color: Colors.grey[350]!,
             offset: Offset(0.0, 0.0),
             blurRadius: 10.0,
           )
@@ -113,7 +113,7 @@ class GrossMarginGraphState extends State<GrossMarginGraph> {
                         showTitles: true,
                         getTitlesWidget: (double value, meta) {
                           Widget text = Text(
-                            categoryList[value.toInt()],
+                            categoryList![value.toInt()],
                             style: const TextStyle(
                               color: Color(0xff7589a2),
                               fontWeight: FontWeight.normal,

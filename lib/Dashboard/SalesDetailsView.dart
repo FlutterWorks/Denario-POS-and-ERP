@@ -16,7 +16,7 @@ class SalesDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final salesListfromSnap = Provider.of<List<Sales>>(context);
 
-    if (salesListfromSnap == null || registerStatus == null) {
+    if (registerStatus == CashRegister()) {
       return SliverList(
           delegate: SliverChildBuilderDelegate((context, i) {
         return const SizedBox();
@@ -43,7 +43,7 @@ class SalesDetailsView extends StatelessWidget {
                 Container(
                     width: 50,
                     child: Text(
-                      DateFormat.MMMd().format(salesList[i].date).toString(),
+                      DateFormat.MMMd().format(salesList[i].date!).toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -54,7 +54,7 @@ class SalesDetailsView extends StatelessWidget {
                     width: 75,
                     child: Text(
                       DateFormat('HH:mm:ss')
-                          .format(salesList[i].date)
+                          .format(salesList[i].date!)
                           .toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -110,16 +110,16 @@ class SalesDetailsView extends StatelessWidget {
                         context: context,
                         builder: (context) {
                           return StreamProvider<DailyTransactions>.value(
-                              initialData: null,
-                              catchError: (_, err) => null,
+                              initialData: DailyTransactions(),
+                              catchError: (_, err) => DailyTransactions(),
                               value: DatabaseService().dailyTransactions(
-                                  businessID, registerStatus.registerName),
+                                  businessID, registerStatus.registerName!),
                               builder: (context, snapshot) {
                                 return SingleSaleDialog(
                                     salesList[i],
                                     businessID,
-                                    salesList[i].docID,
-                                    registerStatus.paymentTypes,
+                                    salesList[i].docID!,
+                                    registerStatus.paymentTypes!,
                                     registerStatus);
                               });
                         });
@@ -137,16 +137,16 @@ class SalesDetailsView extends StatelessWidget {
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return StreamProvider<DailyTransactions>.value(
-                  initialData: null,
-                  catchError: (_, err) => null,
+                  initialData: DailyTransactions(),
+                  catchError: (_, err) => DailyTransactions(),
                   value: DatabaseService().dailyTransactions(
-                      businessID, registerStatus.registerName),
+                      businessID, registerStatus.registerName!),
                   builder: (context, snapshot) {
                     return SingleSaleDialog(
                         salesList[i],
                         businessID,
-                        salesList[i].docID,
-                        registerStatus.paymentTypes,
+                        salesList[i].docID!,
+                        registerStatus.paymentTypes!,
                         registerStatus);
                   });
             }));
@@ -171,7 +171,7 @@ class SalesDetailsView extends StatelessWidget {
                       children: [
                         Text(
                           DateFormat.MMMd()
-                              .format(salesList[i].date)
+                              .format(salesList[i].date!)
                               .toString(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -182,7 +182,7 @@ class SalesDetailsView extends StatelessWidget {
                         SizedBox(height: 5),
                         Text(
                           DateFormat('HH:mm')
-                              .format(salesList[i].date)
+                              .format(salesList[i].date!)
                               .toString(),
                           textAlign: TextAlign.center,
                           style: TextStyle(

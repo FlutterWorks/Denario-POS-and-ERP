@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class DiscountsList extends StatelessWidget {
   final String activeBusiness;
-  const DiscountsList(this.activeBusiness, {Key key}) : super(key: key);
+  const DiscountsList(this.activeBusiness, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +172,7 @@ class DiscountsList extends StatelessWidget {
               ),
             ),
             //List of Categories
-            (discountList == null)
+            (discountList == [])
                 ? SliverToBoxAdapter(child: Container())
                 : (discountList.length < 1)
                     ? SliverToBoxAdapter(
@@ -204,13 +204,13 @@ class DiscountsList extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     //Date
-                                    discountList[i].active
+                                    discountList[i].active!
                                         ? Container(
                                             width: 100,
                                             child: Text(
                                               DateFormat.yMMMd()
                                                   .format(discountList[i]
-                                                      .createdDate)
+                                                      .createdDate!)
                                                   .toString(),
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.center,
@@ -226,7 +226,7 @@ class DiscountsList extends StatelessWidget {
                                                 Text(
                                                   DateFormat.yMMMd()
                                                       .format(discountList[i]
-                                                          .createdDate)
+                                                          .createdDate!)
                                                       .toString(),
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -241,7 +241,7 @@ class DiscountsList extends StatelessWidget {
                                                   decoration: BoxDecoration(
                                                     border: Border.all(
                                                         color:
-                                                            Colors.grey[350]),
+                                                            Colors.grey[350]!),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12.0),
@@ -424,7 +424,7 @@ class DiscountsList extends StatelessWidget {
               ),
             ),
             //List of Categories
-            (discountList == null)
+            (discountList == [])
                 ? SliverToBoxAdapter(child: Container())
                 : (discountList.length < 1)
                     ? SliverToBoxAdapter(
@@ -456,7 +456,7 @@ class DiscountsList extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     //Date
-                                    discountList[i].active
+                                    discountList[i].active!
                                         ? Expanded(
                                             flex: 4,
                                             child: Container(
@@ -477,7 +477,7 @@ class DiscountsList extends StatelessWidget {
                                                   Text(
                                                     DateFormat.yMd()
                                                         .format(discountList[i]
-                                                            .createdDate)
+                                                            .createdDate!)
                                                         .toString(),
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -499,7 +499,7 @@ class DiscountsList extends StatelessWidget {
                                                 Text(
                                                   DateFormat.yMd()
                                                       .format(discountList[i]
-                                                          .createdDate)
+                                                          .createdDate!)
                                                       .toString(),
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -514,7 +514,7 @@ class DiscountsList extends StatelessWidget {
                                                   decoration: BoxDecoration(
                                                     border: Border.all(
                                                         color:
-                                                            Colors.grey[350]),
+                                                            Colors.grey[350]!),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12.0),

@@ -1,5 +1,4 @@
 import 'package:denario/Backend/DatabaseService.dart';
-import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Payables.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,8 +6,10 @@ import 'package:intl/intl.dart';
 class SinglePayableDialog extends StatefulWidget {
   final String businessID;
   final Payables expense;
-  final CashRegister registerStatus;
-  SinglePayableDialog(this.expense, this.businessID, this.registerStatus);
+  SinglePayableDialog(
+    this.expense,
+    this.businessID,
+  );
 
   @override
   _SinglePayableDialogState createState() => _SinglePayableDialogState();
@@ -18,7 +19,7 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
   final formatCurrency = new NumberFormat.simpleCurrency();
   bool editMethod = false;
   bool paymentMethodEdited = false;
-  String paymentType;
+  late String paymentType;
   List availablePaymentTypes = [
     'Efectivo',
     'MercadoPago',
@@ -28,7 +29,7 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
 
   @override
   void initState() {
-    paymentType = widget.expense.paymentType;
+    paymentType = widget.expense.paymentType!;
     super.initState();
   }
 
@@ -54,7 +55,7 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                 children: [
                   Container(
                       child: Text(
-                    'Creado: ${DateFormat.MMMd().format(widget.expense.creationDate)}',
+                    'Creado: ${DateFormat.MMMd().format(widget.expense.creationDate!)}',
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
                     ),
@@ -78,7 +79,7 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                     //Time and date
                     Container(
                         child: Text(
-                      '${DateFormat.MMMd().format(widget.expense.date)} - ${DateFormat('HH:mm:ss').format(widget.expense.date)}',
+                      '${DateFormat.MMMd().format(widget.expense.date!)} - ${DateFormat('HH:mm:ss').format(widget.expense.date!)}',
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                       ),
@@ -87,7 +88,7 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                     //Name
                     Container(
                         child: Text(
-                      widget.expense.vendor,
+                      widget.expense.vendor!,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                       ),
@@ -103,7 +104,7 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      widget.expense.costType,
+                      widget.expense.costType!,
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.normal,
@@ -124,7 +125,7 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                 child: Container(
                   child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: widget.expense.items.length,
+                      itemCount: widget.expense.items!.length,
                       itemBuilder: (context, i) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 5.0),
@@ -135,15 +136,16 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                                 //Name
                                 Container(
                                   constraints: BoxConstraints(maxWidth: 250),
-                                  child: Text((widget.expense.items[i].qty == 1)
-                                      ? widget.expense.items[i].product
-                                      : widget.expense.items[i].product +
-                                          ' (${formatCurrency.format(widget.expense.items[i].price)} x ${widget.expense.items[i].qty})'),
+                                  child: Text((widget.expense.items![i].qty ==
+                                          1)
+                                      ? widget.expense.items![i].product!
+                                      : widget.expense.items![i].product! +
+                                          ' (${formatCurrency.format(widget.expense.items![i].price)} x ${widget.expense.items![i].qty})'),
                                 ),
                                 //Amount
                                 Spacer(),
                                 Text(
-                                    '${formatCurrency.format(widget.expense.items[i].total)}'),
+                                    '${formatCurrency.format(widget.expense.items![i].total)}'),
                               ]),
                         );
                       }),
@@ -220,7 +222,7 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                                   }).toList(),
                                   onChanged: (newValue) {
                                     setState(() {
-                                      paymentType = newValue;
+                                      paymentType = newValue.toString();
                                       paymentMethodEdited = true;
                                     });
                                   },
@@ -293,11 +295,12 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
-                                  return Colors.grey[300];
+                                  return Colors.grey[300]!;
                                 if (states.contains(MaterialState.focused) ||
                                     states.contains(MaterialState.pressed))
-                                  return Colors.grey[300];
-                                return null; // Defer to the widget's default.
+                                  return Colors.grey[300]!;
+                                return Colors.grey[
+                                    300]!; // Defer to the widget's default.
                               },
                             ),
                           ),
@@ -307,8 +310,8 @@ class _SinglePayableDialogState extends State<SinglePayableDialog> {
                             DatabaseService().markExpensePaid(
                                 widget.businessID,
                                 widget.expense.expenseID,
-                                widget.expense.date.year.toString(),
-                                widget.expense.date.month.toString(),
+                                widget.expense.date!.year.toString(),
+                                widget.expense.date!.month.toString(),
                                 paymentType);
 
                             Navigator.of(context).pop();

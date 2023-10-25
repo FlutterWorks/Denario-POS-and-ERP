@@ -12,7 +12,7 @@ class CategoriesDesk extends StatefulWidget {
   final List categories;
   final reloadApp;
   const CategoriesDesk(this.activeBusiness, this.categories, this.reloadApp,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
     final products = Provider.of<List<Products>>(context);
     final highLevelMapping = Provider.of<HighLevelMapping>(context);
 
-    if (products == null || highLevelMapping == null) {
+    if (highLevelMapping == HighLevelMapping()) {
       return Container();
     }
     if (MediaQuery.of(context).size.width > 800) {
@@ -332,7 +332,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -464,13 +464,13 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                             (categoriesList != [])
-                                ? Colors.greenAccent[400]
+                                ? Colors.greenAccent[400]!
                                 : Colors.grey),
                         overlayColor: (categoriesList != [])
-                            ? MaterialStateProperty.resolveWith<Color>(
+                            ? MaterialStateProperty.resolveWith<Color?>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.hovered))
-                                    return Colors.greenAccent[300];
+                                    return Colors.greenAccent[300]!;
                                   if (states.contains(MaterialState.focused) ||
                                       states.contains(MaterialState.pressed))
                                     return Colors.lightGreenAccent;
@@ -560,11 +560,11 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                                 MaterialStateProperty.all<
                                                                     Color>(Colors
                                                                         .greenAccent[
-                                                                    400]),
+                                                                    400]!),
                                                             overlayColor:
                                                                 MaterialStateProperty
                                                                     .resolveWith<
-                                                                        Color>(
+                                                                        Color?>(
                                                               (Set<MaterialState>
                                                                   states) {
                                                                 if (states.contains(
@@ -572,7 +572,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                                         .hovered))
                                                                   return Colors
                                                                           .greenAccent[
-                                                                      300];
+                                                                      300]!;
                                                                 if (states.contains(
                                                                         MaterialState
                                                                             .focused) ||
@@ -628,7 +628,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                                         'Category']);
                                                           }
 
-                                                          newCategoriesMapping[
+                                                          newCategoriesMapping![
                                                                   'Ventas'] =
                                                               salesCategories;
                                                           newCategoriesMapping[
@@ -647,7 +647,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                         child: Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .symmetric(
+                                                                  .symmetric(
                                                                   horizontal:
                                                                       15,
                                                                   vertical: 5),
@@ -677,7 +677,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                         child: Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .symmetric(
+                                                                  .symmetric(
                                                                   horizontal:
                                                                       15,
                                                                   vertical: 5),
@@ -851,13 +851,13 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                             (categoriesList != [])
-                                ? Colors.greenAccent[400]
+                                ? Colors.greenAccent[400]!
                                 : Colors.grey),
                         overlayColor: (categoriesList != [])
-                            ? MaterialStateProperty.resolveWith<Color>(
+                            ? MaterialStateProperty.resolveWith<Color?>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.hovered))
-                                    return Colors.greenAccent[300];
+                                    return Colors.greenAccent[300]!;
                                   if (states.contains(MaterialState.focused) ||
                                       states.contains(MaterialState.pressed))
                                     return Colors.lightGreenAccent;
@@ -947,11 +947,11 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                                 MaterialStateProperty.all<
                                                                     Color>(Colors
                                                                         .greenAccent[
-                                                                    400]),
+                                                                    400]!),
                                                             overlayColor:
                                                                 MaterialStateProperty
                                                                     .resolveWith<
-                                                                        Color>(
+                                                                        Color?>(
                                                               (Set<MaterialState>
                                                                   states) {
                                                                 if (states.contains(
@@ -959,7 +959,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                                         .hovered))
                                                                   return Colors
                                                                           .greenAccent[
-                                                                      300];
+                                                                      300]!;
                                                                 if (states.contains(
                                                                         MaterialState
                                                                             .focused) ||
@@ -1015,7 +1015,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                                         'Category']);
                                                           }
 
-                                                          newCategoriesMapping[
+                                                          newCategoriesMapping![
                                                                   'Ventas'] =
                                                               salesCategories;
                                                           newCategoriesMapping[
@@ -1034,7 +1034,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                         child: Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .symmetric(
+                                                                  .symmetric(
                                                                   horizontal:
                                                                       15,
                                                                   vertical: 5),
@@ -1064,7 +1064,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                         child: Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .symmetric(
+                                                                  .symmetric(
                                                                   horizontal:
                                                                       15,
                                                                   vertical: 5),

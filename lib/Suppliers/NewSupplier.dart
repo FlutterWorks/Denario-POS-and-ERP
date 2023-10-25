@@ -5,14 +5,13 @@ import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/Mapping.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 
 class NewSupplier extends StatefulWidget {
   final String activeBusiness;
   final CategoryList categories;
   final HighLevelMapping highLevelMapping;
   const NewSupplier(this.activeBusiness, this.categories, this.highLevelMapping,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -54,11 +53,11 @@ class _NewSupplierState extends State<NewSupplier> {
 
   @override
   void initState() {
-    category = widget.categories.categoryList.first;
+    category = widget.categories.categoryList!.first;
 
-    costTypes = widget.highLevelMapping.expenseGroups;
+    costTypes = widget.highLevelMapping.expenseGroups!;
     var otherCost = costTypes.firstWhere((x) => x != 'Costo de Ventas');
-    widget.highLevelMapping.pnlMapping[otherCost]
+    widget.highLevelMapping.pnlMapping![otherCost]
         .forEach((x) => dropdownAccounts.add(x));
     account = dropdownAccounts.first;
 
@@ -112,7 +111,7 @@ class _NewSupplierState extends State<NewSupplier> {
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: new Offset(0, 0),
                     blurRadius: 10.0,
                   )
@@ -171,7 +170,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -227,7 +226,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -290,7 +289,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -352,7 +351,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -398,7 +397,7 @@ class _NewSupplierState extends State<NewSupplier> {
                           border: new OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(12.0),
                             borderSide: new BorderSide(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -441,47 +440,51 @@ class _NewSupplierState extends State<NewSupplier> {
                     SizedBox(height: 20),
                     Container(
                         width: double.infinity,
-                        child: Tags(
-                            itemCount: costTypeTags.length,
-                            itemBuilder: (int i) {
-                              return ItemTags(
-                                  padding: EdgeInsets.all(12),
-                                  key: Key(i.toString()),
-                                  index: i,
-                                  title: costTypeTags[i],
-                                  textColor: Colors.white,
-                                  textActiveColor: Colors.black,
-                                  color: Colors.greenAccent[400],
-                                  activeColor: Colors.white,
-                                  onPressed: (item) {
-                                    if (!item.active) {
-                                      setState(() {
-                                        selectedTags.add(item.title);
-                                      });
-                                    } else {
-                                      setState(() {
-                                        selectedTags.remove(item.title);
-                                      });
-                                    }
-
-                                    if ((!selectedTags
-                                                .contains('Costo de Ventas') &&
-                                            selectedTags.length >= 1) ||
-                                        (selectedTags
-                                                .contains('Costo de Ventas') &&
-                                            selectedTags.length > 1)) {
-                                      setState(() {
-                                        account = widget.highLevelMapping
-                                            .pnlMapping[costTypeTags[i]][0];
-                                        dropdownAccounts = [];
-                                      });
-                                      widget.highLevelMapping
-                                          .pnlMapping[costTypeTags[i]]
-                                          .forEach(
-                                              (x) => dropdownAccounts.add(x));
-                                    }
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 5,
+                          children: List.generate(costTypeTags.length, (i) {
+                            return TextButton(
+                              onPressed: () {
+                                if (!selectedTags.contains(costTypeTags[i])) {
+                                  setState(() {
+                                    selectedTags.add(costTypeTags[i]);
                                   });
-                            })),
+                                } else {
+                                  setState(() {
+                                    selectedTags.remove(costTypeTags[i]);
+                                  });
+                                }
+
+                                if ((!selectedTags
+                                            .contains('Costo de Ventas') &&
+                                        selectedTags.length >= 1) ||
+                                    (selectedTags.contains('Costo de Ventas') &&
+                                        selectedTags.length > 1)) {
+                                  setState(() {
+                                    account = widget.highLevelMapping
+                                        .pnlMapping![costTypeTags[i]][0];
+                                    dropdownAccounts = [];
+                                  });
+                                  widget.highLevelMapping
+                                      .pnlMapping![costTypeTags[i]]
+                                      .forEach((x) => dropdownAccounts.add(x));
+                                }
+                              },
+                              child: Container(
+                                  key: Key(i.toString()),
+                                  decoration: BoxDecoration(
+                                      color: (selectedTags
+                                              .contains(costTypeTags[i])
+                                          ? Colors.greenAccent
+                                          : Colors.white)),
+                                  child: Text(
+                                    costTypeTags[i],
+                                    style: TextStyle(color: Colors.black),
+                                  )),
+                            );
+                          }),
+                        )),
                     //Predefined Category
                     (selectedTags.contains('Costo de Ventas'))
                         ? SizedBox(height: 25)
@@ -533,7 +536,8 @@ class _NewSupplierState extends State<NewSupplier> {
                                             isExpanded: true,
                                             underline: SizedBox(),
                                             hint: Text(
-                                              widget.categories.categoryList[0],
+                                              widget
+                                                  .categories.categoryList![0],
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 14,
@@ -545,7 +549,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                                 color: Colors.grey[700]),
                                             value: category,
                                             items: widget
-                                                .categories.categoryList
+                                                .categories.categoryList!
                                                 .map((x) {
                                               return new DropdownMenuItem(
                                                 value: x,
@@ -559,7 +563,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                             }).toList(),
                                             onChanged: (newValue) {
                                               setState(() {
-                                                category = newValue;
+                                                category = newValue.toString();
                                               });
                                             },
                                           )),
@@ -708,7 +712,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                             }).toList(),
                                             onChanged: (newValue) {
                                               setState(() {
-                                                account = newValue;
+                                                account = newValue.toString();
                                               });
                                             },
                                           )),
@@ -778,7 +782,7 @@ class _NewSupplierState extends State<NewSupplier> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.black),
                           overlayColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                              MaterialStateProperty.resolveWith<Color?>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.hovered))
                                 return Colors.grey;
@@ -790,7 +794,7 @@ class _NewSupplierState extends State<NewSupplier> {
                           ),
                         ),
                         onPressed: () {
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             int min =
                                 10000; //min and max values act as your 6 digit range
                             int max = 99999;
@@ -888,7 +892,7 @@ class _NewSupplierState extends State<NewSupplier> {
                     border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(12.0),
                       borderSide: new BorderSide(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -927,7 +931,7 @@ class _NewSupplierState extends State<NewSupplier> {
                     border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(12.0),
                       borderSide: new BorderSide(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -965,7 +969,7 @@ class _NewSupplierState extends State<NewSupplier> {
                     border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(12.0),
                       borderSide: new BorderSide(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -1011,7 +1015,7 @@ class _NewSupplierState extends State<NewSupplier> {
                     border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(12.0),
                       borderSide: new BorderSide(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -1047,7 +1051,7 @@ class _NewSupplierState extends State<NewSupplier> {
                     border: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(12.0),
                       borderSide: new BorderSide(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -1090,44 +1094,48 @@ class _NewSupplierState extends State<NewSupplier> {
               SizedBox(height: 20),
               Container(
                   width: double.infinity,
-                  child: Tags(
-                      itemCount: costTypeTags.length,
-                      itemBuilder: (int i) {
-                        return ItemTags(
-                            padding: EdgeInsets.all(12),
-                            key: Key(i.toString()),
-                            index: i,
-                            title: costTypeTags[i],
-                            textColor: Colors.white,
-                            textActiveColor: Colors.black,
-                            color: Colors.greenAccent[400],
-                            activeColor: Colors.white,
-                            onPressed: (item) {
-                              if (!item.active) {
-                                setState(() {
-                                  selectedTags.add(item.title);
-                                });
-                              } else {
-                                setState(() {
-                                  selectedTags.remove(item.title);
-                                });
-                              }
-
-                              if ((!selectedTags.contains('Costo de Ventas') &&
-                                      selectedTags.length >= 1) ||
-                                  (selectedTags.contains('Costo de Ventas') &&
-                                      selectedTags.length > 1)) {
-                                setState(() {
-                                  account = widget.highLevelMapping
-                                      .pnlMapping[costTypeTags[i]][0];
-                                  dropdownAccounts = [];
-                                });
-                                widget.highLevelMapping
-                                    .pnlMapping[costTypeTags[i]]
-                                    .forEach((x) => dropdownAccounts.add(x));
-                              }
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 5,
+                    children: List.generate(costTypeTags.length, (i) {
+                      return TextButton(
+                        onPressed: () {
+                          if (!selectedTags.contains(costTypeTags[i])) {
+                            setState(() {
+                              selectedTags.add(costTypeTags[i]);
                             });
-                      })),
+                          } else {
+                            setState(() {
+                              selectedTags.remove(costTypeTags[i]);
+                            });
+                          }
+
+                          if ((!selectedTags.contains('Costo de Ventas') &&
+                                  selectedTags.length >= 1) ||
+                              (selectedTags.contains('Costo de Ventas') &&
+                                  selectedTags.length > 1)) {
+                            setState(() {
+                              account = widget.highLevelMapping
+                                  .pnlMapping![costTypeTags[i]][0];
+                              dropdownAccounts = [];
+                            });
+                            widget.highLevelMapping.pnlMapping![costTypeTags[i]]
+                                .forEach((x) => dropdownAccounts.add(x));
+                          }
+                        },
+                        child: Container(
+                            key: Key(i.toString()),
+                            decoration: BoxDecoration(
+                                color: (selectedTags.contains(costTypeTags[i])
+                                    ? Colors.greenAccent
+                                    : Colors.white)),
+                            child: Text(
+                              costTypeTags[i],
+                              style: TextStyle(color: Colors.black),
+                            )),
+                      );
+                    }),
+                  )),
               //Predefined Category
               (selectedTags.contains('Costo de Ventas'))
                   ? SizedBox(height: 25)
@@ -1176,7 +1184,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                       isExpanded: true,
                                       underline: SizedBox(),
                                       hint: Text(
-                                        widget.categories.categoryList[0],
+                                        widget.categories.categoryList![0],
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 14,
@@ -1187,7 +1195,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                           fontSize: 14,
                                           color: Colors.grey[700]),
                                       value: category,
-                                      items: widget.categories.categoryList
+                                      items: widget.categories.categoryList!
                                           .map((x) {
                                         return new DropdownMenuItem(
                                           value: x,
@@ -1201,7 +1209,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                       }).toList(),
                                       onChanged: (newValue) {
                                         setState(() {
-                                          category = newValue;
+                                          category = newValue.toString();
                                         });
                                       },
                                     )),
@@ -1343,7 +1351,7 @@ class _NewSupplierState extends State<NewSupplier> {
                                       }).toList(),
                                       onChanged: (newValue) {
                                         setState(() {
-                                          account = newValue;
+                                          account = newValue.toString();
                                         });
                                       },
                                     )),
@@ -1410,7 +1418,7 @@ class _NewSupplierState extends State<NewSupplier> {
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.black),
-                    overlayColor: MaterialStateProperty.resolveWith<Color>(
+                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.hovered))
                           return Colors.grey;
@@ -1422,7 +1430,7 @@ class _NewSupplierState extends State<NewSupplier> {
                     ),
                   ),
                   onPressed: () {
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       int min =
                           10000; //min and max values act as your 6 digit range
                       int max = 99999;

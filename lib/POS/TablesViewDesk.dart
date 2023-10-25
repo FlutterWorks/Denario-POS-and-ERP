@@ -14,14 +14,14 @@ class TablesViewDesktop extends StatefulWidget {
 
 class _TablesViewDesktopState extends State<TablesViewDesktop> {
   bool productExists = false;
-  int itemIndex;
+  int? itemIndex;
   final formatCurrency = new NumberFormat.simpleCurrency();
 
   @override
   Widget build(BuildContext context) {
     final tables = Provider.of<List<Tables>>(context);
 
-    if (tables == null) {
+    if (tables == []) {
       return Center();
     }
 
@@ -45,10 +45,10 @@ class _TablesViewDesktopState extends State<TablesViewDesktop> {
               if (i < tables.length) {
                 return ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: (tables[i].isOpen)
+                    backgroundColor: (tables[i].isOpen!)
                         ? MaterialStateProperty.all<Color>(Colors.greenAccent)
                         : MaterialStateProperty.all<Color>(Colors.white),
-                    overlayColor: MaterialStateProperty.resolveWith<Color>(
+                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.hovered))
                           return Colors.black12;
@@ -60,7 +60,7 @@ class _TablesViewDesktopState extends State<TablesViewDesktop> {
                     ),
                   ),
                   onPressed: () {
-                    if (tables[i].isOpen) {
+                    if (tables[i].isOpen!) {
                       //retrieve order
                       bloc.retrieveOrder(
                           tables[i].table,
@@ -68,13 +68,13 @@ class _TablesViewDesktopState extends State<TablesViewDesktop> {
                           tables[i].orderDetail,
                           tables[i].discount,
                           tables[i].tax,
-                          Color(tables[i].orderColor),
+                          Color(tables[i].orderColor!),
                           true,
                           'Mesa ${tables[i].table}',
                           false,
                           'Mesa',
-                          (tables[i].client['Name'] == '' ||
-                                  tables[i].client['Name'] == null)
+                          (tables[i].client!['Name'] == '' ||
+                                  tables[i].client!['Name'] == null)
                               ? false
                               : true,
                           tables[i].client);
@@ -86,7 +86,7 @@ class _TablesViewDesktopState extends State<TablesViewDesktop> {
                           tables[i].orderDetail,
                           tables[i].discount,
                           tables[i].tax,
-                          Color(tables[i].orderColor),
+                          Color(tables[i].orderColor!),
                           false,
                           'Mesa ${tables[i].table}',
                           false,
@@ -106,7 +106,7 @@ class _TablesViewDesktopState extends State<TablesViewDesktop> {
                       children: [
                         Center(
                           child: Text(
-                            tables[i].table, //product[index].product,
+                            tables[i].table!, //product[index].product,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
@@ -117,7 +117,7 @@ class _TablesViewDesktopState extends State<TablesViewDesktop> {
                                 fontWeight: FontWeight.w800),
                           ),
                         ),
-                        (tables[i].isOpen)
+                        (tables[i].isOpen!)
                             ? Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(

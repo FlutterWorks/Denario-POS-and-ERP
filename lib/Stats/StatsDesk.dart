@@ -18,13 +18,13 @@ class StatsDesk extends StatefulWidget {
 
 class _StatsDeskState extends State<StatsDesk>
     with SingleTickerProviderStateMixin {
-  bool showMonthlyStats;
+  late bool showMonthlyStats;
 
-  AnimationController _controller;
-  Animation<double> _animation;
+  late AnimationController _controller;
+  late Animation<double> _animation;
   bool _isExpanded = false;
-  String dateFilter;
-  DateTime selectedDate;
+  late String dateFilter;
+  late DateTime selectedDate;
 
   @override
   void initState() {
@@ -94,7 +94,7 @@ class _StatsDeskState extends State<StatsDesk>
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
@@ -138,7 +138,7 @@ class _StatsDeskState extends State<StatsDesk>
                       break;
                     case 2:
                       //Open dialog box to select date
-                      DateTime pickedDate = await showDatePicker(
+                      DateTime? pickedDate = await showDatePicker(
                           context: context,
                           initialDate: selectedDate,
                           firstDate:
@@ -161,12 +161,10 @@ class _StatsDeskState extends State<StatsDesk>
                                     ),
                                   ),
                                 ),
-                                child: child);
+                                child: child!);
                           }));
                       setState(() {
-                        if (pickedDate != null) {
-                          selectedDate = pickedDate;
-                        }
+                        selectedDate = pickedDate!;
                         showMonthlyStats = false;
                         dateFilter = 'Fecha';
                       });
@@ -256,7 +254,7 @@ class _StatsDeskState extends State<StatsDesk>
                                     MaterialStateProperty.all<Color>(
                                         Colors.white),
                                 overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                    MaterialStateProperty.resolveWith<Color?>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
                                       return Colors.grey;
@@ -278,7 +276,7 @@ class _StatsDeskState extends State<StatsDesk>
                                               value: DatabaseService()
                                                   .monthlyStatsfromSnapshot(
                                                       widget.businessID),
-                                              initialData: null,
+                                              initialData: MonthlyStats(),
                                               child: NewSaleScreen(
                                                 widget.businessID,
                                                 fromPOS: false,
@@ -310,7 +308,7 @@ class _StatsDeskState extends State<StatsDesk>
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white),
                               overlayColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                                  MaterialStateProperty.resolveWith<Color?>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.hovered))
                                     return Colors.grey;

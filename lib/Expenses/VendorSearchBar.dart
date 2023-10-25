@@ -10,7 +10,7 @@ class VendorSearchBar extends StatefulWidget {
   final String costType;
   final selectVendor;
   const VendorSearchBar(this.activeBusiness, this.costType, this.selectVendor,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -51,7 +51,7 @@ class _VendorSearchBarState extends State<VendorSearchBar> {
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(12.0),
                     borderSide: new BorderSide(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -80,12 +80,12 @@ class _VendorSearchBarState extends State<VendorSearchBar> {
               ? StreamProvider<List<Supplier>>.value(
                   value: DatabaseService().suppliersListbyCategory(
                       widget.activeBusiness, widget.costType),
-                  initialData: null,
+                  initialData: [],
                   child: VendorsSelection(widget.selectVendor))
               : StreamProvider<List<Supplier>>.value(
                   value: DatabaseService().suppliersList(
                       widget.activeBusiness, vendorName.toLowerCase()),
-                  initialData: null,
+                  initialData: [],
                   child: VendorsSelection(widget.selectVendor))
         ],
       ),

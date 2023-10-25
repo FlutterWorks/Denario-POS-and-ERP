@@ -7,7 +7,7 @@ class PnLCard extends StatefulWidget {
   final AsyncSnapshot<dynamic> snapshot;
 
   const PnLCard(this.pnlAccountGroups, this.pnlMapping, this.snapshot,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class _PnLCardState extends State<PnLCard> {
         borderRadius: BorderRadius.circular(25),
         boxShadow: <BoxShadow>[
           new BoxShadow(
-            color: Colors.grey[350],
+            color: Colors.grey[350]!,
             offset: Offset(0.0, 0.0),
             blurRadius: 10.0,
           )

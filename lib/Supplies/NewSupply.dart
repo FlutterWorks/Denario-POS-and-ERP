@@ -12,8 +12,8 @@ import 'package:intl/intl.dart';
 
 class NewSupply extends StatefulWidget {
   final String activeBusiness;
-  final Supply supply;
-  const NewSupply(this.activeBusiness, this.supply, {Key key})
+  final Supply? supply;
+  const NewSupply(this.activeBusiness, this.supply, {Key? key})
       : super(key: key);
 
   @override
@@ -27,10 +27,10 @@ class _NewSupplyState extends State<NewSupply> {
   String name = '';
   String unit = '';
   double price = 0;
-  double qty;
+  double? qty;
   List sellers = [];
-  List historicPrices;
-  bool newSupply;
+  List? historicPrices;
+  bool? newSupply;
   List selectedVendors = [];
   List unitList = [
     'Unidades',
@@ -106,14 +106,14 @@ class _NewSupplyState extends State<NewSupply> {
   void initState() {
     if (widget.supply != null) {
       newSupply = false;
-      name = widget.supply.supply;
-      price = widget.supply.price;
-      unit = widget.supply.unit;
-      qty = widget.supply.qty;
-      sellers = widget.supply.suppliers;
-      ingredients = widget.supply.recipe;
-      historicPrices = widget.supply.priceHistory;
-      if (widget.supply.recipe.length > 0) {
+      name = widget.supply!.supply!;
+      price = widget.supply!.price!;
+      unit = widget.supply!.unit!;
+      qty = widget.supply!.qty;
+      sellers = widget.supply!.suppliers!;
+      ingredients = widget.supply!.recipe!;
+      historicPrices = widget.supply!.priceHistory;
+      if (widget.supply!.recipe!.length > 0) {
         priceController.text = totalIngredientsCost().toString();
       } else {
         ingredients = [];
@@ -154,7 +154,7 @@ class _NewSupplyState extends State<NewSupply> {
                 Text(
                   (widget.supply == null)
                       ? 'Agregar Insumo'
-                      : widget.supply.supply,
+                      : widget.supply!.supply!,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontWeight: (MediaQuery.of(context).size.width > 650)
@@ -180,7 +180,7 @@ class _NewSupplyState extends State<NewSupply> {
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: new Offset(0, 0),
                         blurRadius: 10.0,
                       )
@@ -225,7 +225,7 @@ class _NewSupplyState extends State<NewSupply> {
                         border: new OutlineInputBorder(
                           borderRadius: new BorderRadius.circular(12.0),
                           borderSide: new BorderSide(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -312,7 +312,7 @@ class _NewSupplyState extends State<NewSupply> {
                                                     new BorderRadius.circular(
                                                         12.0),
                                                 borderSide: new BorderSide(
-                                                  color: Colors.grey[350],
+                                                  color: Colors.grey[350]!,
                                                 ),
                                               ),
                                               focusedBorder: OutlineInputBorder(
@@ -325,8 +325,7 @@ class _NewSupplyState extends State<NewSupply> {
                                               ),
                                             ),
                                             onChanged: (value) {
-                                              if (value != '' &&
-                                                  value != null) {
+                                              if (value != '') {
                                                 setState(() {
                                                   price = double.parse(value);
                                                 });
@@ -365,7 +364,7 @@ class _NewSupplyState extends State<NewSupply> {
                                                     new BorderRadius.circular(
                                                         12.0),
                                                 borderSide: new BorderSide(
-                                                  color: Colors.grey[350],
+                                                  color: Colors.grey[350]!,
                                                 ),
                                               ),
                                               focusedBorder: OutlineInputBorder(
@@ -419,7 +418,7 @@ class _NewSupplyState extends State<NewSupply> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -492,7 +491,7 @@ class _NewSupplyState extends State<NewSupply> {
                                         }).toList(),
                                         onChanged: (newValue) {
                                           setState(() {
-                                            unit = newValue;
+                                            unit = newValue.toString();
                                           });
                                         },
                                       )),
@@ -558,7 +557,7 @@ class _NewSupplyState extends State<NewSupply> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -570,7 +569,7 @@ class _NewSupplyState extends State<NewSupply> {
                                         ),
                                       ),
                                       onChanged: (value) {
-                                        if (value != '' && value != null) {
+                                        if (value != '') {
                                           setState(() {
                                             price = double.parse(value);
                                           });
@@ -607,7 +606,7 @@ class _NewSupplyState extends State<NewSupply> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -664,7 +663,7 @@ class _NewSupplyState extends State<NewSupply> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -737,7 +736,7 @@ class _NewSupplyState extends State<NewSupply> {
                                         }).toList(),
                                         onChanged: (newValue) {
                                           setState(() {
-                                            unit = newValue;
+                                            unit = newValue.toString();
                                           });
                                         },
                                       )),
@@ -1128,13 +1127,13 @@ class _NewSupplyState extends State<NewSupply> {
                   ),
                   //Button
                   SizedBox(height: 35),
-                  (newSupply)
+                  (newSupply!)
                       ? ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(Colors.black),
                             overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
                                   return Colors.grey;
@@ -1146,7 +1145,7 @@ class _NewSupplyState extends State<NewSupply> {
                             ),
                           ),
                           onPressed: () {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               //Add all characters to the list
                               for (int x = 0; x < sellers.length; x++) {
                                 String temp = "";
@@ -1168,7 +1167,7 @@ class _NewSupplyState extends State<NewSupply> {
                                       ? totalIngredientsCost()
                                       : price,
                                   unit,
-                                  qty,
+                                  qty!,
                                   sellers,
                                   selectedVendors,
                                   ingredients,
@@ -1203,7 +1202,7 @@ class _NewSupplyState extends State<NewSupply> {
                                           MaterialStateProperty.all<Color>(
                                               Colors.black),
                                       overlayColor: MaterialStateProperty
-                                          .resolveWith<Color>(
+                                          .resolveWith<Color?>(
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.hovered))
@@ -1218,12 +1217,12 @@ class _NewSupplyState extends State<NewSupply> {
                                       ),
                                     ),
                                     onPressed: () async {
-                                      if (_formKey.currentState.validate()) {
-                                        if (widget.supply.price != price) {
+                                      if (_formKey.currentState!.validate()) {
+                                        if (widget.supply!.price != price) {
                                           //Edit supply history
-                                          historicPrices.last['To Date'] =
+                                          historicPrices!.last['To Date'] =
                                               DateTime.now();
-                                          historicPrices.add({
+                                          historicPrices!.add({
                                             'From Date': DateTime.now(),
                                             'To Date': null,
                                             'Price': price
@@ -1340,18 +1339,18 @@ class _NewSupplyState extends State<NewSupply> {
                                         }
                                         DatabaseService().editSuppy(
                                             widget.activeBusiness,
-                                            widget.supply.docID,
+                                            widget.supply!.docID!,
                                             name,
                                             setSearchParam(name.toLowerCase()),
                                             (totalIngredientsCost() > 0)
                                                 ? totalIngredientsCost()
                                                 : price,
                                             unit,
-                                            qty,
+                                            qty!,
                                             sellers,
                                             selectedVendors,
                                             ingredients,
-                                            historicPrices,
+                                            historicPrices!,
                                             listofIngredients);
                                       }
                                       Navigator.of(context).pop();
@@ -1381,7 +1380,7 @@ class _NewSupplyState extends State<NewSupply> {
                                           MaterialStateProperty.all<Color>(
                                               Colors.white70),
                                       overlayColor: MaterialStateProperty
-                                          .resolveWith<Color>(
+                                          .resolveWith<Color?>(
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.hovered))

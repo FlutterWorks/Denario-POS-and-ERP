@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 //////////////////// //////////////////////// /////// This is were we manage the Sign in/Register Page /////////////////////////////////////
 class LogIn extends StatefulWidget {
   final Function toggleView;
-  LogIn({this.toggleView});
+  LogIn({required this.toggleView});
 
   @override
   _LogInState createState() => _LogInState();
@@ -55,7 +55,7 @@ class _LogInState extends State<LogIn> {
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   style: TextStyle(color: Colors.black, fontSize: 14),
-                  validator: (val) => val.isEmpty ? "Agrega un email" : null,
+                  validator: (val) => val!.isEmpty ? "Agrega un email" : null,
                   cursorColor: Colors.grey,
                   focusNode: _emailNode,
                   textInputAction: TextInputAction.next,
@@ -94,7 +94,7 @@ class _LogInState extends State<LogIn> {
                 SizedBox(height: 25),
                 TextFormField(
                   style: TextStyle(color: Colors.black, fontSize: 14),
-                  validator: (val) => val.length < 6
+                  validator: (val) => val!.length < 6
                       ? "La contraseña debe tener al menos 6 caracteres"
                       : null,
                   cursorColor: Colors.grey,
@@ -140,7 +140,7 @@ class _LogInState extends State<LogIn> {
                   ),
                   obscureText: (showPass) ? false : true,
                   onFieldSubmitted: (val) async {
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       //Loading
                       setState(() => loading = true);
 
@@ -198,13 +198,14 @@ class _LogInState extends State<LogIn> {
                         if (states.contains(MaterialState.focused) ||
                             states.contains(MaterialState.pressed))
                           return Colors.grey.shade500;
-                        return null; // Defer to the widget's default.
+                        return Colors
+                            .grey.shade500; // Defer to the widget's default.
                       },
                     ),
                   ),
                   onPressed: () async {
                     print(FirebaseAuth.instance.currentUser);
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       //Loading
                       setState(() => loading = true);
 

@@ -18,7 +18,7 @@ class CreateExpenseUseCashierMoney extends StatefulWidget {
       this.selectPayment,
       this.dailyTransactions,
       this.registerStatus,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -151,9 +151,7 @@ class _CreateExpenseUseCashierMoneyState
           height: 5,
         ),
         // Use cashier money text
-        (paymentType == 'Efectivo' &&
-                widget.registerStatus != null &&
-                widget.dailyTransactions != null)
+        (paymentType == 'Efectivo')
             ? Text(
                 "¿Usar dinero de la caja?",
                 textAlign: TextAlign.center,
@@ -168,7 +166,7 @@ class _CreateExpenseUseCashierMoneyState
           height: 12,
         ),
         // Use money in petty cash?
-        (paymentType == 'Efectivo' && widget.dailyTransactions != null)
+        (paymentType == 'Efectivo')
             //Money from cashier
             ? Container(
                 width: double.infinity,
@@ -199,7 +197,8 @@ class _CreateExpenseUseCashierMoneyState
                                 if (states.contains(MaterialState.focused) ||
                                     states.contains(MaterialState.pressed))
                                   return Colors.grey.shade200;
-                                return null; // Defer to the widget's default.
+                                return Colors.grey
+                                    .shade200; // Defer to the widget's default.
                               },
                             ),
                           ),
@@ -253,7 +252,7 @@ class _CreateExpenseUseCashierMoneyState
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 14),
                               autofocus: true,
-                              validator: (val) => val.isEmpty
+                              validator: (val) => val!.isEmpty
                                   ? "No olvides agregar un monto"
                                   : null,
                               inputFormatters: <TextInputFormatter>[
@@ -293,7 +292,8 @@ class _CreateExpenseUseCashierMoneyState
                                   if (states.contains(MaterialState.focused) ||
                                       states.contains(MaterialState.pressed))
                                     return Colors.grey.shade200;
-                                  return null; // Defer to the widget's default.
+                                  return Colors.grey
+                                      .shade200; // Defer to the widget's default.
                                 },
                               ),
                             ),

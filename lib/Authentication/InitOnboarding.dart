@@ -2,7 +2,7 @@ import 'package:denario/Authentication/Onboarding.dart';
 import 'package:flutter/material.dart';
 
 class InitOnboarding extends StatefulWidget {
-  const InitOnboarding({Key key}) : super(key: key);
+  const InitOnboarding({Key? key}) : super(key: key);
 
   @override
   State<InitOnboarding> createState() => _InitOnboardingState();
@@ -10,7 +10,7 @@ class InitOnboarding extends StatefulWidget {
 
 class _InitOnboardingState extends State<InitOnboarding> {
   bool starting = true;
-  bool newBusiness;
+  late bool newBusiness;
 
   @override
   Widget build(BuildContext context) {

@@ -1,22 +1,22 @@
 class Products {
-  String product;
-  double price;
-  String image;
-  String category;
-  String description;
-  List<ProductOptions> productOptions;
-  bool available;
-  String productID;
-  List historicPrices;
-  String code;
-  List listOfIngredients;
-  List ingredients;
-  List searchName;
-  bool vegan;
-  bool showOnMenu;
-  bool featured;
-  double expectedMargin;
-  double lowMarginAlert;
+  String? product;
+  double? price;
+  String? image;
+  String? category;
+  String? description;
+  List<ProductOptions>? productOptions;
+  bool? available;
+  String? productID;
+  List? historicPrices;
+  String? code;
+  List? listOfIngredients;
+  List? ingredients;
+  List? searchName;
+  bool? vegan;
+  bool? showOnMenu;
+  bool? featured;
+  double? expectedMargin;
+  double? lowMarginAlert;
 
   Products(
       {this.product,

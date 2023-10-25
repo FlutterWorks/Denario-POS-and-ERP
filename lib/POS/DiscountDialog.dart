@@ -6,20 +6,20 @@ import 'package:flutter/services.dart';
 
 class DiscountDialog extends StatefulWidget {
   final String businessID;
-  const DiscountDialog(this.businessID, {Key key}) : super(key: key);
+  const DiscountDialog(this.businessID, {Key? key}) : super(key: key);
 
   @override
   State<DiscountDialog> createState() => _DiscountDialogState();
 }
 
 class _DiscountDialogState extends State<DiscountDialog> {
-  bool fixedDiscount;
-  bool coupon;
+  late bool fixedDiscount;
+  late bool coupon;
   String couponCode = '';
-  double discount;
+  late double discount;
   String errorMsg = '';
 
-  Future<DocumentSnapshot> fetchDocument(String businessID, documentId) async {
+  Future<DocumentSnapshot?> fetchDocument(String businessID, documentId) async {
     try {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('ERP')
@@ -56,7 +56,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
     return StreamBuilder(
         stream: bloc.getStream,
         initialData: bloc.ticketItems,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           return SingleChildScrollView(
             child: Dialog(
               shape: RoundedRectangleBorder(
@@ -209,7 +209,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                       textAlign: TextAlign.center,
                                       onFieldSubmitted: ((value) async {
                                         if (coupon) {
-                                          DocumentSnapshot document =
+                                          DocumentSnapshot? document =
                                               await fetchDocument(
                                                   widget.businessID,
                                                   couponCode);
@@ -272,7 +272,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                       cursorColor: Colors.grey,
                                       initialValue: '',
                                       onChanged: (val) {
-                                        if (val == null || val == '') {
+                                        if (val == '') {
                                           setState(() {
                                             discount = 0;
                                             couponCode = '';
@@ -335,7 +335,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                           ? discount.toString()
                                           : '\$0.00',
                                       onChanged: (val) {
-                                        if (val == null || val == '') {
+                                        if (val == '') {
                                           setState(() {
                                             discount = 0;
                                           });
@@ -343,7 +343,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                           setState(() {
                                             discount = double.tryParse(
                                                 (val.substring(1))
-                                                    .replaceAll(',', ''));
+                                                    .replaceAll(',', ''))!;
                                             bloc.setDiscountAmount(discount);
                                           });
                                         }
@@ -399,7 +399,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                                   onChanged: (val) {
                                     setState(() {
                                       discount = totalAmount(snapshot) *
-                                          (double.tryParse((val)) / 100);
+                                          (double.tryParse((val))! / 100);
                                     });
 
                                     bloc.setDiscountAmount(discount);
@@ -437,7 +437,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
                           ),
                           onPressed: () async {
                             if (coupon) {
-                              DocumentSnapshot document = await fetchDocument(
+                              DocumentSnapshot? document = await fetchDocument(
                                   widget.businessID, couponCode);
                               if (document != null) {
                                 // You can access document data using document.data()

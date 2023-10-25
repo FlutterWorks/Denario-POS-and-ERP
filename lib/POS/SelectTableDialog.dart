@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../Backend/DatabaseService.dart';
 
 class SelectTableDialog extends StatefulWidget {
-  final TextEditingController orderNameController;
+  final TextEditingController? orderNameController;
   final List<Tables> tables;
   final bool changeTables;
   final String activeBusiness;
@@ -23,7 +23,7 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.tables == null) {
+    if (widget.tables == []) {
       return Dialog();
     } else if (widget.tables.length == 0) {
       return SingleChildScrollView(
@@ -88,7 +88,7 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
     return StreamBuilder(
         stream: bloc.getStream,
         initialData: bloc.ticketItems,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           return SingleChildScrollView(
               child: Dialog(
                   shape: RoundedRectangleBorder(
@@ -164,7 +164,7 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
                                             onPressed: () {
                                               //Switch tables if that is the case
                                               if (widget.changeTables) {
-                                                if (widget.tables[i].isOpen) {
+                                                if (widget.tables[i].isOpen!) {
                                                   //You cannot do this if the table is open
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(snackBar);
@@ -239,7 +239,7 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
                                                 }
                                               } else {
                                                 //Check if open
-                                                if (widget.tables[i].isOpen) {
+                                                if (widget.tables[i].isOpen!) {
                                                   //retrieve order
                                                   bloc.retrieveOrder(
                                                       widget.tables[i].table,
@@ -250,16 +250,16 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
                                                       widget.tables[i].discount,
                                                       widget.tables[i].tax,
                                                       Color(widget.tables[i]
-                                                          .orderColor),
+                                                          .orderColor!),
                                                       true,
                                                       'Mesa ${widget.tables[i].table}',
                                                       false,
                                                       'Mesa',
-                                                      (widget.tables[i].client[
+                                                      (widget.tables[i].client![
                                                                       'Name'] ==
                                                                   '' ||
                                                               widget.tables[i]
-                                                                          .client[
+                                                                          .client![
                                                                       'Name'] ==
                                                                   null)
                                                           ? false
@@ -271,23 +271,23 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
                                                   bloc.changeOrderName(
                                                       '${widget.tables[i].table}');
                                                   bloc.changeTableStatus(false);
-                                                  widget.orderNameController
+                                                  widget.orderNameController!
                                                           .text =
-                                                      widget.tables[i].table;
+                                                      widget.tables[i].table!;
                                                 }
                                                 Navigator.of(context).pop();
                                               }
                                             },
                                             style: ButtonStyle(
                                               backgroundColor: (widget
-                                                      .tables[i].isOpen)
+                                                      .tables[i].isOpen!)
                                                   ? MaterialStateProperty.all<
                                                       Color>(Colors.greenAccent)
                                                   : MaterialStateProperty.all<
                                                       Color>(Colors.white),
                                               overlayColor:
                                                   MaterialStateProperty
-                                                      .resolveWith<Color>(
+                                                      .resolveWith<Color?>(
                                                 (Set<MaterialState> states) {
                                                   if (states.contains(
                                                       MaterialState.hovered))
@@ -310,7 +310,7 @@ class _SelectTableDialogState extends State<SelectTableDialog> {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    widget.tables[i].table,
+                                                    widget.tables[i].table!,
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontWeight:

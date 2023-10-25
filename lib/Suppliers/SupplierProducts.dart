@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 
 class SupplierProducts extends StatelessWidget {
   final String businessID;
-  const SupplierProducts(this.businessID, {Key key}) : super(key: key);
+  const SupplierProducts(this.businessID, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<List<Supply>>(context);
 
-    if (products == null) {
+    if (products == []) {
       return Container();
     }
     if (products.length < 1) {

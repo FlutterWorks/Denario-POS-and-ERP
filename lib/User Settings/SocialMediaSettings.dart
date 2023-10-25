@@ -9,7 +9,7 @@ class SocialMediaSettings extends StatefulWidget {
   final activeRRSS;
   const SocialMediaSettings(
       this.rol, this.userBusiness, this.changeLink, this.activeRRSS,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -61,23 +61,24 @@ class _SocialMediaSettingsState extends State<SocialMediaSettings> {
 
   @override
   void initState() {
-    for (var x = 0; x < widget.userBusiness.socialMedia.length; x++) {
-      if (widget.userBusiness.socialMedia[x]['Link'] != '') {
+    for (var x = 0; x < widget.userBusiness.socialMedia!.length; x++) {
+      if (widget.userBusiness.socialMedia![x]['Link'] != '') {
         int index = socialMedia.indexWhere((element) =>
             element['Social Media'] ==
-            widget.userBusiness.socialMedia[x]['Social Media']);
-        socialMedia[index]['Link'] = widget.userBusiness.socialMedia[x]['Link'];
+            widget.userBusiness.socialMedia![x]['Social Media']);
+        socialMedia[index]['Link'] =
+            widget.userBusiness.socialMedia![x]['Link'];
         socialMedia[index]['Active'] = true;
       }
     }
 
     //If whatsapp is used, editPhoneNumber = false
     try {
-      var whatsappIndex = widget.userBusiness.socialMedia
+      var whatsappIndex = widget.userBusiness.socialMedia!
           .indexWhere((element) => element['Social Media'] == 'Whatsapp');
 
-      if (widget.userBusiness.socialMedia[whatsappIndex]['Link'] != null &&
-          widget.userBusiness.socialMedia[whatsappIndex]['Link'] != '') {
+      if (widget.userBusiness.socialMedia![whatsappIndex]['Link'] != null &&
+          widget.userBusiness.socialMedia![whatsappIndex]['Link'] != '') {
         editPhoneNumber = false;
       }
     } catch (e) {
@@ -168,7 +169,7 @@ class _SocialMediaSettingsState extends State<SocialMediaSettings> {
                           : TextFormField(
                               style:
                                   TextStyle(color: Colors.black, fontSize: 14),
-                              validator: (val) => val.isEmpty
+                              validator: (val) => val!.isEmpty
                                   ? "Agrega un link válido"
                                   : val.length < 6
                                       ? 'El número debe tener al menos 6 caracteres'
@@ -194,7 +195,7 @@ class _SocialMediaSettingsState extends State<SocialMediaSettings> {
                                               initialSelectedLocale: 'AR',
                                               context: context);
                                       setState(() {
-                                        countryCode = code;
+                                        countryCode = code!;
                                       });
                                       // Null check
                                       if (code != null) print(code.code);
@@ -221,8 +222,7 @@ class _SocialMediaSettingsState extends State<SocialMediaSettings> {
                                                 color: Colors.black,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8.0))),
-                                            child: Text(
-                                                countryCode?.dialCode ?? '+58',
+                                            child: Text(countryCode.dialCode,
                                                 style: const TextStyle(
                                                     color: Colors.white)),
                                           ),
@@ -258,7 +258,7 @@ class _SocialMediaSettingsState extends State<SocialMediaSettings> {
                       : TextFormField(
                           style: TextStyle(color: Colors.black, fontSize: 14),
                           validator: (val) =>
-                              val.isEmpty ? "Agrega un link válido" : null,
+                              val!.isEmpty ? "Agrega un link válido" : null,
                           autofocus: true,
                           readOnly: (widget.rol == 'Dueñ@') ? false : true,
                           cursorColor: Colors.grey,

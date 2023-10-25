@@ -10,7 +10,7 @@ class ActiveOrders extends StatelessWidget {
   Widget build(BuildContext context) {
     final savedOrders = Provider.of<List<SavedOrders>>(context);
 
-    if (savedOrders == null || savedOrders.length == 0) {
+    if (savedOrders.length == 0) {
       return SizedBox();
     }
 
@@ -37,29 +37,29 @@ class ActiveOrders extends StatelessWidget {
                           savedOrders[i].orderDetail,
                           savedOrders[i].discount,
                           savedOrders[i].tax,
-                          Color(savedOrders[i].orderColor),
+                          Color(savedOrders[i].orderColor!),
                           true,
                           savedOrders[i].id,
-                          (savedOrders[i].isTable) ? false : true,
+                          (savedOrders[i].isTable!) ? false : true,
                           savedOrders[i].orderType,
-                          (savedOrders[i].client['Name'] == '' ||
-                                  savedOrders[i].client['Name'] == null)
+                          (savedOrders[i].client!['Name'] == '' ||
+                                  savedOrders[i].client!['Name'] == null)
                               ? false
                               : true,
                           savedOrders[i].client);
-                      orderNameController.text = savedOrders[i].orderName;
+                      orderNameController.text = savedOrders[i].orderName!;
                     },
                     child: Container(
                       height: 35,
                       width: 35,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(savedOrders[i].orderColor)),
+                          color: Color(savedOrders[i].orderColor!)),
                       child: Center(
                           child: Text(
                         (savedOrders[i].orderName == '')
                             ? ''
-                            : savedOrders[i].orderName[0],
+                            : savedOrders[i].orderName![0],
                         style: TextStyle(color: Colors.white, fontSize: 14),
                       )),
                     ),

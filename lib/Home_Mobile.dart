@@ -35,8 +35,8 @@ class _HomeMobileState extends State<HomeMobile> {
   final _auth = AuthService();
   int pageIndex = 0;
   bool showUserSettings = false;
-  List<Widget> navigationBarItems;
-  List<Widget> pageNavigators;
+  List<Widget>? navigationBarItems;
+  List<Widget>? pageNavigators;
 
   //Change Business Dialog
   void changeBusinessDialog(List<UserBusinessData> businesess, activeBusiness) {
@@ -98,7 +98,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                     if (activeBusiness !=
                                         businesess[i].businessID) {
                                       DatabaseService().changeActiveBusiness(
-                                          businesess[i].businessID);
+                                          businesess[i].businessID!);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -165,7 +165,7 @@ class _HomeMobileState extends State<HomeMobile> {
         setState(() {
           pageIndex = index;
         });
-        _scaffoldKey.currentState.closeDrawer();
+        _scaffoldKey.currentState!.closeDrawer();
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -186,7 +186,7 @@ class _HomeMobileState extends State<HomeMobile> {
   }
 
   void openDrawer() {
-    _scaffoldKey.currentState.openDrawer();
+    _scaffoldKey.currentState!.openDrawer();
   }
 
   void reloadApp() {
@@ -199,11 +199,8 @@ class _HomeMobileState extends State<HomeMobile> {
     final categoriesProvider = Provider.of<CategoryList>(context);
     final userProfile = Provider.of<UserData>(context);
     final userBusiness = Provider.of<BusinessProfile>(context);
-    final pendingOrders = Provider.of<List<PendingOrders>>(context);
 
-    if (categoriesProvider == null ||
-        userProfile == null ||
-        pendingOrders == null) {
+    if (userProfile == UserData()) {
       return Container();
     }
 
@@ -219,10 +216,10 @@ class _HomeMobileState extends State<HomeMobile> {
     //     });
     //   }),
     // ];
-    final businessIndexOnProfile = userProfile.businesses.indexWhere(
+    final businessIndexOnProfile = userProfile.businesses!.indexWhere(
         (element) => element.businessID == userProfile.activeBusiness);
 
-    if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
+    if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
         'Dueñ@') {
       navigationBarItems = [
         screenNavigator(
@@ -237,7 +234,7 @@ class _HomeMobileState extends State<HomeMobile> {
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        (userBusiness.cashBalancing)
+        (userBusiness.cashBalancing!)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
@@ -254,13 +251,13 @@ class _HomeMobileState extends State<HomeMobile> {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Venta Minorista' ||
                 userBusiness.businessField == 'Belleza/Spa') {
-              return POSProducts(categoriesProvider.categoryList[0]);
+              return POSProducts(categoriesProvider.categoryList![0]);
             } else {
-              return NoPOSDashboard(userProfile.activeBusiness);
+              return NoPOSDashboard(userProfile.activeBusiness!);
             }
           });
         }),
-        (userBusiness.cashBalancing)
+        (userBusiness.cashBalancing!)
             ? Navigator(onGenerateRoute: (routeSettings) {
                 return MaterialPageRoute(builder: (context) => DailyDesk());
               })
@@ -271,7 +268,7 @@ class _HomeMobileState extends State<HomeMobile> {
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
               builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness, registerStatus));
+                  StatsDesk(userProfile.activeBusiness!, registerStatus));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) => ExpensesDesk('Dueñ@'));
@@ -279,9 +276,9 @@ class _HomeMobileState extends State<HomeMobile> {
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
               builder: (context) => ProductDesk(
-                  userProfile.activeBusiness,
-                  categoriesProvider.categoryList,
-                  userBusiness.businessField,
+                  userProfile.activeBusiness!,
+                  categoriesProvider.categoryList!,
+                  userBusiness.businessField!,
                   reloadApp));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
@@ -289,14 +286,14 @@ class _HomeMobileState extends State<HomeMobile> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => SuppliesDesk(userProfile.activeBusiness,
-                  categoriesProvider.categoryList, userBusiness.businessField));
+              builder: (context) => SuppliesDesk(userProfile.activeBusiness!,
+                  categoriesProvider.categoryList!, userBusiness.businessField!));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) => PnlDesk());
         }),
       ];
-    } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
+    } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
         'Encargad@') {
       navigationBarItems = [
         screenNavigator(
@@ -311,10 +308,10 @@ class _HomeMobileState extends State<HomeMobile> {
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        (userBusiness.cashBalancing)
+        (userBusiness.cashBalancing!)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
-        (userBusiness.cashBalancing) ? SizedBox(height: 20) : SizedBox(),
+        (userBusiness.cashBalancing!) ? SizedBox(height: 20) : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
         screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
         screenNavigator('Gastos', Icons.multiline_chart, 4),
@@ -327,13 +324,13 @@ class _HomeMobileState extends State<HomeMobile> {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList[0]);
+              return POSProducts(categoriesProvider.categoryList![0]);
             } else {
-              return NoPOSDashboard(userProfile.activeBusiness);
+              return NoPOSDashboard(userProfile.activeBusiness!);
             }
           });
         }),
-        (userBusiness.cashBalancing)
+        (userBusiness.cashBalancing!)
             ? Navigator(onGenerateRoute: (routeSettings) {
                 return MaterialPageRoute(builder: (context) => DailyDesk());
               })
@@ -344,7 +341,7 @@ class _HomeMobileState extends State<HomeMobile> {
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
               builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness, registerStatus));
+                  StatsDesk(userProfile.activeBusiness!, registerStatus));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
@@ -353,9 +350,9 @@ class _HomeMobileState extends State<HomeMobile> {
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
               builder: (context) => ProductDesk(
-                  userProfile.activeBusiness,
-                  categoriesProvider.categoryList,
-                  userBusiness.businessField,
+                  userProfile.activeBusiness!,
+                  categoriesProvider.categoryList!,
+                  userBusiness.businessField!,
                   reloadApp));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
@@ -363,11 +360,11 @@ class _HomeMobileState extends State<HomeMobile> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => SuppliesDesk(userProfile.activeBusiness,
-                  categoriesProvider.categoryList, userBusiness.businessField));
+              builder: (context) => SuppliesDesk(userProfile.activeBusiness!,
+                  categoriesProvider.categoryList!, userBusiness.businessField!));
         }),
       ];
-    } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
+    } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
         'Cajer@') {
       navigationBarItems = [
         screenNavigator(
@@ -382,7 +379,7 @@ class _HomeMobileState extends State<HomeMobile> {
                 ? Icons.blur_circular
                 : Icons.home,
             0),
-        (userBusiness.cashBalancing)
+        (userBusiness.cashBalancing!)
             ? screenNavigator('Caja', Icons.fax, 1)
             : SizedBox(),
         screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
@@ -393,9 +390,9 @@ class _HomeMobileState extends State<HomeMobile> {
           return MaterialPageRoute(builder: (context) {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList[0]);
+              return POSProducts(categoriesProvider.categoryList![0]);
             } else {
-              return NoPOSDashboard(userProfile.activeBusiness);
+              return NoPOSDashboard(userProfile.activeBusiness!);
             }
           });
         }),
@@ -413,7 +410,7 @@ class _HomeMobileState extends State<HomeMobile> {
               builder: (context) => ExpensesDesk('Cajer@'));
         }),
       ];
-    } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
+    } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
         'Contador(a)') {
       navigationBarItems = [
         screenNavigator('Ventas', Icons.insert_chart_outlined, 1),
@@ -424,7 +421,7 @@ class _HomeMobileState extends State<HomeMobile> {
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
               builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness, registerStatus));
+                  StatsDesk(userProfile.activeBusiness!, registerStatus));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
@@ -434,9 +431,9 @@ class _HomeMobileState extends State<HomeMobile> {
           return MaterialPageRoute(builder: (context) => PnlDesk());
         }),
       ];
-    } else if (userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
+    } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
             'Moz@' ||
-        userProfile.businesses[businessIndexOnProfile].roleInBusiness ==
+        userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
             'Otro') {
       navigationBarItems = [
         screenNavigator('POS', Icons.blur_circular, 0),
@@ -448,9 +445,9 @@ class _HomeMobileState extends State<HomeMobile> {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Venta Minorista' ||
                 userBusiness.businessField == 'Belleza/Spa') {
-              return POSProducts(categoriesProvider.categoryList[0]);
+              return POSProducts(categoriesProvider.categoryList![0]);
             } else {
-              return NoPOSDashboard(userProfile.activeBusiness);
+              return NoPOSDashboard(userProfile.activeBusiness!);
             }
           });
         }),
@@ -462,43 +459,43 @@ class _HomeMobileState extends State<HomeMobile> {
     return MultiProvider(
       providers: [
         StreamProvider<List<Products>>.value(
-            initialData: null,
+            initialData: [],
             value:
-                DatabaseService().fullProductList(userProfile.activeBusiness)),
+                DatabaseService().fullProductList(userProfile.activeBusiness!)),
         StreamProvider<CategoryList>.value(
-            initialData: null,
+            initialData: CategoryList(),
             value:
                 DatabaseService().categoriesList(userProfile.activeBusiness)),
         StreamProvider<HighLevelMapping>.value(
-            initialData: null,
+            initialData: HighLevelMapping(),
             value:
                 DatabaseService().highLevelMapping(userProfile.activeBusiness)),
         StreamProvider<DailyTransactions>.value(
-            initialData: null,
-            catchError: (_, err) => null,
+            initialData: DailyTransactions(),
+            catchError: (_, err) => DailyTransactions(),
             value: DatabaseService().dailyTransactions(
-                userProfile.activeBusiness, registerStatus.registerName)),
+                userProfile.activeBusiness, registerStatus.registerName!)),
         StreamProvider<MonthlyStats>.value(
-            initialData: null,
+            initialData: MonthlyStats(),
             value: DatabaseService()
-                .monthlyStatsfromSnapshot(userProfile.activeBusiness)),
+                .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
         StreamProvider<List<DailyTransactions>>.value(
-            initialData: null,
+            initialData: [],
             value: DatabaseService()
                 .dailyTransactionsList(userProfile.activeBusiness)),
         StreamProvider<List<PendingOrders>>.value(
-            initialData: null,
+            initialData: [],
             value:
                 DatabaseService().pendingOrderList(userProfile.activeBusiness)),
         StreamProvider<AccountsList>.value(
-            initialData: null,
+            initialData: AccountsList(),
             value: DatabaseService().accountsList(userProfile.activeBusiness)),
         StreamProvider<List<Tables>>.value(
           initialData: [],
-          value: DatabaseService().tableList(userProfile.activeBusiness),
+          value: DatabaseService().tableList(userProfile.activeBusiness!),
         ),
         StreamProvider<List<SavedOrders>>.value(
-            initialData: null,
+            initialData: [],
             value: DatabaseService()
                 .savedCounterOrders(userProfile.activeBusiness)),
       ],
@@ -542,7 +539,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                             color: Colors.grey,
                                             image: DecorationImage(
                                                 image: NetworkImage(
-                                                    userProfile.profileImage),
+                                                    userProfile.profileImage!),
                                                 fit: BoxFit.cover))),
                                     SizedBox(width: 10),
                                     //Name
@@ -554,7 +551,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                       children: [
                                         //Name
                                         Text(
-                                          userProfile.name,
+                                          userProfile.name!,
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14,
@@ -564,9 +561,9 @@ class _HomeMobileState extends State<HomeMobile> {
                                         //Current business
                                         Text(
                                           userProfile
-                                              .businesses[
+                                              .businesses![
                                                   businessIndexOnProfile]
-                                              .businessName,
+                                              .businessName!,
                                           style: TextStyle(
                                               color: Colors.grey.shade300,
                                               fontSize: 11,
@@ -592,7 +589,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                 foregroundColor: Colors.grey,
                               ),
                               onPressed: () {
-                                changeBusinessDialog(userProfile.businesses,
+                                changeBusinessDialog(userProfile.businesses!,
                                     userProfile.activeBusiness);
                               },
                               child: Padding(
@@ -634,10 +631,10 @@ class _HomeMobileState extends State<HomeMobile> {
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: navigationBarItems.length,
+                              itemCount: navigationBarItems!.length,
                               itemExtent: null,
                               itemBuilder: (context, i) {
-                                return navigationBarItems[i];
+                                return navigationBarItems![i];
                               })),
                       //Sign out
                       Container(
@@ -711,7 +708,7 @@ class _HomeMobileState extends State<HomeMobile> {
           children: [
             Container(
                 child:
-                    IndexedStack(index: pageIndex, children: pageNavigators)),
+                    IndexedStack(index: pageIndex, children: pageNavigators!)),
           ],
         ),
       ),

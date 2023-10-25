@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TotalsSummary extends StatelessWidget {
-  final DailyTransactions dayStats;
-  final MonthlyStats monthlyStats;
-  TotalsSummary({this.dayStats, this.monthlyStats, Key key}) : super(key: key);
+  final DailyTransactions? dayStats;
+  final MonthlyStats? monthlyStats;
+  TotalsSummary({this.dayStats, this.monthlyStats, Key? key}) : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
   String abbreviateCurrency(double amount) {
@@ -43,7 +43,7 @@ class TotalsSummary extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )
@@ -82,7 +82,7 @@ class TotalsSummary extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )
@@ -119,7 +119,7 @@ class TotalsSummary extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )
@@ -156,7 +156,7 @@ class TotalsSummary extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )
@@ -211,7 +211,7 @@ class TotalsSummary extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[350],
+                          color: Colors.grey[350]!,
                           offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
@@ -250,7 +250,7 @@ class TotalsSummary extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[350],
+                          color: Colors.grey[350]!,
                           offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
@@ -292,7 +292,7 @@ class TotalsSummary extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[350],
+                          color: Colors.grey[350]!,
                           offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
@@ -329,7 +329,7 @@ class TotalsSummary extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[350],
+                          color: Colors.grey[350]!,
                           offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
@@ -388,7 +388,7 @@ class TotalsSummary extends StatelessWidget {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                             offset: Offset(0.0, 0.0),
                             blurRadius: 10.0,
                           )
@@ -430,7 +430,7 @@ class TotalsSummary extends StatelessWidget {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                             offset: Offset(0.0, 0.0),
                             blurRadius: 10.0,
                           )
@@ -475,7 +475,7 @@ class TotalsSummary extends StatelessWidget {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                             offset: Offset(0.0, 0.0),
                             blurRadius: 10.0,
                           )
@@ -515,7 +515,7 @@ class TotalsSummary extends StatelessWidget {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                             offset: Offset(0.0, 0.0),
                             blurRadius: 10.0,
                           )

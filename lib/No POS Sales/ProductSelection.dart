@@ -42,7 +42,7 @@ class ProductSelection extends StatelessWidget {
                       if (states.contains(MaterialState.focused) ||
                           states.contains(MaterialState.pressed))
                         return Colors.black26;
-                      return null; // Defer to the widget's default.
+                      return Colors.black26; // Defer to the widget's default.
                     },
                   ),
                 ),
@@ -51,7 +51,7 @@ class ProductSelection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        product[i].product,
+                        product[i].product!,
                         style: TextStyle(color: Colors.black),
                       ),
                       SizedBox(height: 8),
@@ -90,7 +90,7 @@ class ProductSelection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          product[i].product,
+                          product[i].product!,
                           style: TextStyle(color: Colors.black),
                         ),
                         SizedBox(height: 8),

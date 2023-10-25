@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PnlMargins extends StatefulWidget {
-  final List pnlAccountGroups;
-  final Map<dynamic, dynamic> pnlMapping;
-  final double grossMargin;
-  final double gross;
-  final double operatingMargin;
-  final double operating;
-  final double profitMargin;
-  final double profit;
-  final AsyncSnapshot snapshot;
+  final List? pnlAccountGroups;
+  final Map<dynamic, dynamic>? pnlMapping;
+  final double? grossMargin;
+  final double? gross;
+  final double? operatingMargin;
+  final double? operating;
+  final double? profitMargin;
+  final double? profit;
+  final AsyncSnapshot? snapshot;
 
   PnlMargins(
       {this.pnlAccountGroups,
@@ -42,7 +42,7 @@ class _PnlMarginsState extends State<PnlMargins> {
         borderRadius: BorderRadius.circular(25),
         boxShadow: <BoxShadow>[
           new BoxShadow(
-            color: Colors.grey[350],
+            color: Colors.grey[350]!,
             offset: Offset(0.0, 0.0),
             blurRadius: 10.0,
           )
@@ -152,27 +152,28 @@ class _PnlMarginsState extends State<PnlMargins> {
             //Gross Margin
             marginBox(
                 'Gross Margin',
-                (!widget.grossMargin.isNaN && !widget.grossMargin.isInfinite)
-                    ? widget.grossMargin
+                (!widget.grossMargin!.isNaN && !widget.grossMargin!.isInfinite)
+                    ? widget.grossMargin!
                     : 0,
-                widget.gross,
+                widget.gross!,
                 context),
             //Op. Margin
             marginBox(
                 'Operating Margin',
-                (!widget.operatingMargin.isNaN &&
-                        !widget.operatingMargin.isInfinite)
-                    ? widget.operatingMargin
+                (!widget.operatingMargin!.isNaN &&
+                        !widget.operatingMargin!.isInfinite)
+                    ? widget.operatingMargin!
                     : 0,
-                widget.operating,
+                widget.operating!,
                 context),
             //Profit Margin
             marginBox(
                 'Profit Margin',
-                (!widget.profitMargin.isNaN && !widget.profitMargin.isInfinite)
-                    ? widget.profitMargin
+                (!widget.profitMargin!.isNaN &&
+                        !widget.profitMargin!.isInfinite)
+                    ? widget.profitMargin!
                     : 0,
-                widget.profit,
+                widget.profit!,
                 context),
           ],
         ),
@@ -185,7 +186,7 @@ class _PnlMarginsState extends State<PnlMargins> {
           borderRadius: BorderRadius.circular(25),
           boxShadow: <BoxShadow>[
             new BoxShadow(
-              color: Colors.grey[350],
+              color: Colors.grey[350]!,
               offset: Offset(0.0, 0.0),
               blurRadius: 10.0,
             )
@@ -199,10 +200,10 @@ class _PnlMarginsState extends State<PnlMargins> {
             //Gross Margin
             phoneMarginBox(
                 'Gross Margin',
-                (!widget.grossMargin.isNaN && !widget.grossMargin.isInfinite)
-                    ? widget.grossMargin
+                (!widget.grossMargin!.isNaN && !widget.grossMargin!.isInfinite)
+                    ? widget.grossMargin!
                     : 0,
-                widget.gross,
+                widget.gross!,
                 context),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -216,11 +217,11 @@ class _PnlMarginsState extends State<PnlMargins> {
             //Op. Margin
             phoneMarginBox(
                 'Operating Margin',
-                (!widget.operatingMargin.isNaN &&
-                        !widget.operatingMargin.isInfinite)
-                    ? widget.operatingMargin
+                (!widget.operatingMargin!.isNaN &&
+                        !widget.operatingMargin!.isInfinite)
+                    ? widget.operatingMargin!
                     : 0,
-                widget.operating,
+                widget.operating!,
                 context),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -234,10 +235,11 @@ class _PnlMarginsState extends State<PnlMargins> {
             //Profit Margin
             phoneMarginBox(
                 'Profit Margin',
-                (!widget.profitMargin.isNaN && !widget.profitMargin.isInfinite)
-                    ? widget.profitMargin
+                (!widget.profitMargin!.isNaN &&
+                        !widget.profitMargin!.isInfinite)
+                    ? widget.profitMargin!
                     : 0,
-                widget.profit,
+                widget.profit!,
                 context),
           ],
         ),

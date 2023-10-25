@@ -25,7 +25,7 @@ class DailyDesk extends StatelessWidget {
                         borderRadius: new BorderRadius.circular(12.0),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                             offset: Offset(0.0, 0.0),
                             blurRadius: 10.0,
                           )
@@ -63,7 +63,7 @@ class DailyDesk extends StatelessWidget {
                   borderRadius: new BorderRadius.circular(12.0),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )

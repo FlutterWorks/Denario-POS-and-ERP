@@ -20,7 +20,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
   final formatCurrency = new NumberFormat.simpleCurrency();
   bool editMethod = false;
   bool paymentMethodEdited = false;
-  String paymentType;
+  late String paymentType;
   List availablePaymentTypes = [
     'Efectivo',
     'MercadoPago',
@@ -30,7 +30,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
 
   @override
   void initState() {
-    paymentType = widget.expense.paymentType;
+    paymentType = widget.expense.paymentType!;
     super.initState();
   }
 
@@ -56,7 +56,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
               //Go Back
               Row(
                 children: [
-                  (widget.expense.reversed)
+                  (widget.expense.reversed!)
                       ? SizedBox()
                       : IconButton(
                           tooltip: 'Reversar gasto',
@@ -78,7 +78,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                   SizedBox(width: 5),
                   Container(
                       child: Text(
-                    'Creado: ${DateFormat.MMMd().format(widget.expense.creationDate)}',
+                    'Creado: ${DateFormat.MMMd().format(widget.expense.creationDate!)}',
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
                     ),
@@ -102,7 +102,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                     //Time and date
                     Container(
                         child: Text(
-                      '${DateFormat.MMMd().format(widget.expense.date)} - ${DateFormat('HH:mm:ss').format(widget.expense.date)}',
+                      '${DateFormat.MMMd().format(widget.expense.date!)} - ${DateFormat('HH:mm:ss').format(widget.expense.date!)}',
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                       ),
@@ -111,7 +111,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                     //Name
                     Container(
                         child: Text(
-                      widget.expense.vendor,
+                      widget.expense.vendor!,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                       ),
@@ -127,7 +127,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      widget.expense.costType,
+                      widget.expense.costType!,
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.normal,
@@ -148,7 +148,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                 child: Container(
                   child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: widget.expense.items.length,
+                      itemCount: widget.expense.items!.length,
                       itemBuilder: (context, i) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 5.0),
@@ -159,15 +159,16 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                                 //Name
                                 Container(
                                   constraints: BoxConstraints(maxWidth: 250),
-                                  child: Text((widget.expense.items[i].qty == 1)
-                                      ? widget.expense.items[i].product
-                                      : widget.expense.items[i].product +
-                                          ' (${formatCurrency.format(widget.expense.items[i].price)} x ${widget.expense.items[i].qty})'),
+                                  child: Text((widget.expense.items![i].qty ==
+                                          1)
+                                      ? widget.expense.items![i].product!
+                                      : widget.expense.items![i].product! +
+                                          ' (${formatCurrency.format(widget.expense.items![i].price)} x ${widget.expense.items![i].qty})'),
                                 ),
                                 //Amount
                                 Spacer(),
                                 Text(
-                                    '${formatCurrency.format(widget.expense.items[i].total)}'),
+                                    '${formatCurrency.format(widget.expense.items![i].total)}'),
                               ]),
                         );
                       }),
@@ -244,7 +245,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                                   }).toList(),
                                   onChanged: (newValue) {
                                     setState(() {
-                                      paymentType = newValue;
+                                      paymentType = newValue.toString();
                                       paymentMethodEdited = true;
                                     });
                                   },
@@ -272,7 +273,7 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                         : SizedBox(),
 
                     SizedBox(width: 10),
-                    (widget.expense.usedCashfromRegister)
+                    (widget.expense.usedCashfromRegister!)
                         ? Tooltip(
                             message:
                                 'Usó dinero de caja (${formatCurrency.format(widget.expense.amountFromRegister)})',
@@ -307,11 +308,12 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
-                                  return Colors.grey[300];
+                                  return Colors.grey[300]!;
                                 if (states.contains(MaterialState.focused) ||
                                     states.contains(MaterialState.pressed))
-                                  return Colors.grey[300];
-                                return null; // Defer to the widget's default.
+                                  return Colors.grey[300]!;
+                                return Colors.grey[
+                                    300]!; // Defer to the widget's default.
                               },
                             ),
                           ),
@@ -319,8 +321,8 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
                             DatabaseService().markExpensePaid(
                                 widget.businessID,
                                 widget.expense.expenseID,
-                                widget.expense.date.year.toString(),
-                                widget.expense.date.month.toString(),
+                                widget.expense.date!.year.toString(),
+                                widget.expense.date!.month.toString(),
                                 paymentType);
                             DatabaseService().markPayablePaid(widget.businessID,
                                 widget.expense.expenseID, paymentType);

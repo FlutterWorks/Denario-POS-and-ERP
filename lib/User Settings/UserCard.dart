@@ -11,17 +11,14 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProfile = Provider.of<UserData>(context);
 
-    if (userProfile == null) {
+    if (userProfile == UserData()) {
       return Container();
     }
 
-    final index = userProfile.businesses
+    final index = userProfile.businesses!
         .indexWhere((element) => element.businessID == businessID);
 
-    if (index != null &&
-        index != -1 &&
-        userProfile.businesses != null &&
-        userProfile.businesses != []) {
+    if (index != -1 && userProfile.businesses != []) {
       return Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: TextButton(
@@ -52,7 +49,7 @@ class UserCard extends StatelessWidget {
                           border: Border.all(color: Colors.grey.shade300),
                           color: Colors.grey,
                           image: DecorationImage(
-                              image: NetworkImage(userProfile.profileImage),
+                              image: NetworkImage(userProfile.profileImage!),
                               fit: BoxFit.scaleDown))),
                 ),
                 //Name
@@ -60,7 +57,7 @@ class UserCard extends StatelessWidget {
                   width: 100,
                   child: Center(
                       child: Text(
-                    userProfile.name,
+                    userProfile.name!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   )),
@@ -76,8 +73,10 @@ class UserCard extends StatelessWidget {
                 Container(
                   width: 100,
                   child: Center(
-                      child: Text(userProfile.businesses[index].roleInBusiness,
-                          maxLines: 1, overflow: TextOverflow.ellipsis)),
+                      child: Text(
+                          userProfile.businesses![index].roleInBusiness!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis)),
                 )
               ],
             ),

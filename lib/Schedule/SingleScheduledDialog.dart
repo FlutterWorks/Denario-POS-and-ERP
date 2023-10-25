@@ -12,8 +12,8 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:provider/provider.dart';
 
 class SingleScheduledDialog extends StatefulWidget {
-  final ScheduledSales order;
-  final String businessID;
+  final ScheduledSales? order;
+  final String? businessID;
 
   SingleScheduledDialog({this.order, this.businessID});
 
@@ -24,21 +24,21 @@ class SingleScheduledDialog extends StatefulWidget {
 class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
   final formatCurrency = new NumberFormat.simpleCurrency();
   final controller = PageController(initialPage: 0);
-  FocusNode amountNode;
+  late FocusNode amountNode;
   double initialAmount = 0;
 
-  Map<String, dynamic> orderCategories;
+  Map<String, dynamic> orderCategories = {};
 
   //Month Stats Variables
   Map<String, dynamic> orderStats = {};
-  int currentSalesCount;
+  int? currentSalesCount;
   Map<String, dynamic> currentItemsCount = {};
   Map<String, dynamic> currentItemsAmount = {};
   Map<String, dynamic> salesCountbyCategory = {};
   Map<String, dynamic> currentSalesbyOrderType = {};
-  int newSalesCount;
-  int currentTicketItemsCount;
-  int newTicketItemsCount;
+  int? newSalesCount;
+  int? currentTicketItemsCount;
+  int? newTicketItemsCount;
 
   Future currentValue() async {
     var year = DateTime.now().year.toString();
@@ -55,7 +55,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
     return docRef;
   }
 
-  Future currentValuesBuilt;
+  Future? currentValuesBuilt;
 
   void clearControllers() {
     setState(() {
@@ -74,7 +74,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
     final monthlyStats = Provider.of<MonthlyStats>(context);
     final registerStatus = Provider.of<CashRegister>(context);
 
-    if (monthlyStats == null) {
+    if (monthlyStats == MonthlyStats() || widget.order == null) {
       currentSalesCount = 0;
       currentTicketItemsCount = 0;
       currentItemsCount = {};
@@ -91,12 +91,12 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
       //
     }
     try {
-      currentItemsCount = monthlyStats.salesCountbyProduct;
+      currentItemsCount = monthlyStats.salesCountbyProduct!;
     } catch (e) {
       currentItemsCount = {};
     }
     try {
-      currentItemsAmount = monthlyStats.salesAmountbyProduct;
+      currentItemsAmount = monthlyStats.salesAmountbyProduct!;
     } catch (e) {
       currentItemsAmount = {};
     }
@@ -106,19 +106,19 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
       currentTicketItemsCount = 0;
     }
     try {
-      salesCountbyCategory = monthlyStats.salesCountbyCategory;
+      salesCountbyCategory = monthlyStats.salesCountbyCategory!;
     } catch (e) {
       salesCountbyCategory = {};
     }
     try {
-      currentSalesbyOrderType = monthlyStats.salesbyOrderType;
+      currentSalesbyOrderType = monthlyStats.salesbyOrderType!;
     } catch (e) {
       currentSalesbyOrderType = {};
     }
 
     return FutureBuilder(
         future: currentValuesBuilt,
-        builder: (context, snap) {
+        builder: (context, AsyncSnapshot snap) {
           if (snap.connectionState == ConnectionState.done) {
             if (MediaQuery.of(context).size.width > 650) {
               return SingleChildScrollView(
@@ -157,11 +157,11 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                   Container(
                                       child: Text(
                                     DateFormat.MMMd()
-                                            .format(widget.order.savedDate)
+                                            .format(widget.order!.savedDate!)
                                             .toString() +
                                         " - " +
                                         DateFormat('HH:mm:ss')
-                                            .format(widget.order.savedDate)
+                                            .format(widget.order!.savedDate!)
                                             .toString(),
                                     style: TextStyle(
                                       fontWeight: FontWeight.normal,
@@ -171,9 +171,9 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                   //Name
                                   Container(
                                       child: Text(
-                                    (widget.order.orderName == '')
+                                    (widget.order!.orderName == '')
                                         ? 'Nombre sin agregar'
-                                        : widget.order.orderName,
+                                        : widget.order!.orderName!,
                                     style: TextStyle(
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -182,12 +182,12 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                               ),
                             ),
                             SizedBox(
-                                height: (widget.order.client['Address'] != '')
+                                height: (widget.order!.client!['Address'] != '')
                                     ? 10
                                     : 20),
                             //If delivery
-                            (widget.order.client['Address'] != null &&
-                                    widget.order.client['Address'] != '')
+                            (widget.order!.client!['Address'] != null &&
+                                    widget.order!.client!['Address'] != '')
                                 ? Container(
                                     width: double.infinity,
                                     child: Row(
@@ -201,7 +201,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                         ),
                                         Container(
                                             child: Text(
-                                          '${widget.order.client['Address']}',
+                                          '${widget.order!.client!['Address']}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.normal),
                                         )),
@@ -213,7 +213,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                         ),
                                         Container(
                                             child: Text(
-                                          '${widget.order.client['Phone']}',
+                                          '${widget.order!.client!['Phone']}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.normal),
                                         )),
@@ -221,8 +221,8 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                     ),
                                   )
                                 : Container(),
-                            (widget.order.client['Address'] != null &&
-                                    widget.order.client['Address'] != '')
+                            (widget.order!.client!['Address'] != null &&
+                                    widget.order!.client!['Address'] != '')
                                 ? SizedBox(height: 20)
                                 : SizedBox(height: 0),
                             //Ticket
@@ -237,7 +237,8 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                               child: Container(
                                 child: ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: widget.order.orderDetail.length,
+                                    itemCount:
+                                        widget.order!.orderDetail!.length,
                                     itemBuilder: (context, i) {
                                       return Padding(
                                         padding:
@@ -252,21 +253,21 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                               Container(
                                                 constraints: BoxConstraints(
                                                     maxWidth: 250),
-                                                child: Text((widget.order
-                                                                .orderDetail[i]
+                                                child: Text((widget.order!
+                                                                .orderDetail![i]
                                                             ['Quantity'] ==
                                                         1)
-                                                    ? widget.order
-                                                        .orderDetail[i]['Name']
-                                                    : widget.order
-                                                                .orderDetail[i]
+                                                    ? widget.order!
+                                                        .orderDetail![i]['Name']
+                                                    : widget.order!
+                                                                .orderDetail![i]
                                                             ['Name'] +
-                                                        '(${formatCurrency.format(widget.order.orderDetail[i]['Price'])} x ${widget.order.orderDetail[i]['Quantity']})'),
+                                                        '(${formatCurrency.format(widget.order!.orderDetail![i]['Price'])} x ${widget.order!.orderDetail![i]['Quantity']})'),
                                               ),
                                               //Amount
                                               Spacer(),
                                               Text(
-                                                  '${formatCurrency.format(widget.order.orderDetail[i]['Total Price'])}'),
+                                                  '${formatCurrency.format(widget.order!.orderDetail![i]['Total Price'])}'),
                                             ]),
                                       );
                                     }),
@@ -279,8 +280,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   //Type
-                                  (widget.order.note != null &&
-                                          widget.order.note != '')
+                                  (widget.order!.note != '')
                                       ? Tooltip(
                                           richMessage: WidgetSpan(
                                               alignment:
@@ -292,7 +292,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                     const BoxConstraints(
                                                         maxWidth: 250),
                                                 child: Text(
-                                                  widget.order.note,
+                                                  widget.order!.note!,
                                                 ),
                                               )),
                                           decoration: BoxDecoration(
@@ -317,10 +317,10 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                         )),
                                   Spacer(),
                                   //Total
-                                  (widget.order.pending)
+                                  (widget.order!.pending!)
                                       ? Container(
                                           child: Text(
-                                          'Saldo por cobrar: ${formatCurrency.format(widget.order.remainingBalance)}',
+                                          'Saldo por cobrar: ${formatCurrency.format(widget.order!.remainingBalance)}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16),
@@ -337,7 +337,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                             ),
                             SizedBox(height: 20),
                             //Buttons
-                            (widget.order.pending)
+                            (widget.order!.pending!)
                                 ? Container(
                                     height: 50,
                                     width: double.infinity,
@@ -360,7 +360,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                   DatabaseService()
                                                       .deleteScheduleSale(
                                                           widget.businessID,
-                                                          widget.order.id);
+                                                          widget.order!.id);
                                                   clearControllers();
                                                   Navigator.of(context).pop();
                                                 },
@@ -424,7 +424,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                   bloc.changePaymentType(
                                                       'Efectivo');
                                                   bloc.changeOrderName(
-                                                      widget.order.orderName);
+                                                      widget.order!.orderName);
                                                   bloc.changeOrderType(
                                                       'Venta Agendada');
                                                   showDialog(
@@ -435,30 +435,32 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                             StreamProvider<
                                                                     MonthlyStats>.value(
                                                                 initialData:
-                                                                    null,
+                                                                    MonthlyStats(),
                                                                 value: DatabaseService()
                                                                     .monthlyStatsfromSnapshot(
                                                                         widget
-                                                                            .businessID)),
+                                                                            .businessID!)),
                                                           ],
                                                           child: ConfirmOrder(
                                                             total: widget
-                                                                .order.total,
-                                                            items: widget.order
+                                                                .order!.total,
+                                                            items: widget.order!
                                                                 .orderDetail,
                                                             discount: widget
-                                                                .order.discount,
+                                                                .order!
+                                                                .discount,
                                                             discountCode: '',
                                                             orderDetail: widget
-                                                                .order
+                                                                .order!
                                                                 .orderDetail,
                                                             orderName: widget
-                                                                .order
+                                                                .order!
                                                                 .orderName,
                                                             subTotal: widget
-                                                                .order.subTotal,
+                                                                .order!
+                                                                .subTotal,
                                                             tax: widget
-                                                                .order.tax,
+                                                                .order!.tax,
                                                             controller: null,
                                                             clearVariables:
                                                                 clearControllers,
@@ -472,8 +474,8 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                             tablePageController:
                                                                 null,
                                                             isSavedOrder: false,
-                                                            savedOrderID:
-                                                                widget.order.id,
+                                                            savedOrderID: widget
+                                                                .order!.id,
                                                             orderType:
                                                                 'Venta Agendada',
                                                             onTableView: false,
@@ -484,7 +486,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                 },
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 15,
                                                       vertical: 5),
                                                   child: Center(
@@ -537,8 +539,9 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                               style:
                                   TextStyle(color: Colors.black, fontSize: 40),
                               initialValue: '\$0.00',
-                              validator: (val) =>
-                                  val.isEmpty ? "Agrega un monto válido" : null,
+                              validator: (val) => val!.isEmpty
+                                  ? "Agrega un monto válido"
+                                  : null,
                               inputFormatters: <TextInputFormatter>[
                                 CurrencyTextInputFormatter(
                                   name: '\$',
@@ -564,7 +567,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                               ),
                               onChanged: (val) {
                                 setState(() => initialAmount = double.tryParse(
-                                    (val.substring(1)).replaceAll(',', '')));
+                                    (val.substring(1)).replaceAll(',', ''))!);
                               },
                             ),
                             SizedBox(
@@ -585,11 +588,11 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                 ),
                                 onPressed: () {
                                   final double remainingBalance =
-                                      widget.order.remainingBalance -
+                                      widget.order!.remainingBalance! -
                                           initialAmount;
                                   DatabaseService().updateScheduledSale(
                                       widget.businessID,
-                                      widget.order.id,
+                                      widget.order!.id,
                                       remainingBalance);
                                   Navigator.of(context).pop();
                                 },
@@ -640,11 +643,11 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                               Container(
                                   child: Text(
                                 DateFormat.MMMd()
-                                        .format(widget.order.savedDate)
+                                        .format(widget.order!.savedDate!)
                                         .toString() +
                                     " - " +
                                     DateFormat('HH:mm:ss')
-                                        .format(widget.order.savedDate)
+                                        .format(widget.order!.savedDate!)
                                         .toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
@@ -654,9 +657,9 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                               //Name
                               Container(
                                   child: Text(
-                                (widget.order.orderName == '')
+                                (widget.order!.orderName == '')
                                     ? 'Nombre sin agregar'
-                                    : widget.order.orderName,
+                                    : widget.order!.orderName!,
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                 ),
@@ -665,12 +668,12 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                           ),
                         ),
                         SizedBox(
-                            height: (widget.order.client['Address'] != '')
+                            height: (widget.order!.client!['Address'] != '')
                                 ? 10
                                 : 20),
                         //If delivery
-                        (widget.order.client['Address'] != null &&
-                                widget.order.client['Address'] != '')
+                        (widget.order!.client!['Address'] != null &&
+                                widget.order!.client!['Address'] != '')
                             ? Container(
                                 width: double.infinity,
                                 child: Row(
@@ -683,7 +686,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                     ),
                                     Container(
                                         child: Text(
-                                      '${widget.order.client['Address']}',
+                                      '${widget.order!.client!['Address']}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal),
                                     )),
@@ -695,7 +698,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                     ),
                                     Container(
                                         child: Text(
-                                      '${widget.order.client['Phone']}',
+                                      '${widget.order!.client!['Phone']}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal),
                                     )),
@@ -703,8 +706,8 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                 ),
                               )
                             : Container(),
-                        (widget.order.client['Address'] != null &&
-                                widget.order.client['Address'] != '')
+                        (widget.order!.client!['Address'] != null &&
+                                widget.order!.client!['Address'] != '')
                             ? SizedBox(height: 20)
                             : SizedBox(height: 0),
                         //Ticket
@@ -719,7 +722,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                           child: Container(
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: widget.order.orderDetail.length,
+                                itemCount: widget.order!.orderDetail!.length,
                                 itemBuilder: (context, i) {
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 5.0),
@@ -733,20 +736,20 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                           Container(
                                             constraints:
                                                 BoxConstraints(maxWidth: 250),
-                                            child: Text((widget.order
-                                                            .orderDetail[i]
+                                            child: Text((widget.order!
+                                                            .orderDetail![i]
                                                         ['Quantity'] ==
                                                     1)
-                                                ? widget.order.orderDetail[i]
+                                                ? widget.order!.orderDetail![i]
                                                     ['Name']
-                                                : widget.order.orderDetail[i]
+                                                : widget.order!.orderDetail![i]
                                                         ['Name'] +
-                                                    '(${formatCurrency.format(widget.order.orderDetail[i]['Price'])} x ${widget.order.orderDetail[i]['Quantity']})'),
+                                                    '(${formatCurrency.format(widget.order!.orderDetail![i]['Price'])} x ${widget.order!.orderDetail![i]['Quantity']})'),
                                           ),
                                           //Amount
                                           Spacer(),
                                           Text(
-                                              '${formatCurrency.format(widget.order.orderDetail[i]['Total Price'])}'),
+                                              '${formatCurrency.format(widget.order!.orderDetail![i]['Total Price'])}'),
                                         ]),
                                   );
                                 }),
@@ -759,8 +762,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               //Type
-                              (widget.order.note != null &&
-                                      widget.order.note != '')
+                              (widget.order!.note != '')
                                   ? Tooltip(
                                       richMessage: WidgetSpan(
                                           alignment:
@@ -771,7 +773,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                             constraints: const BoxConstraints(
                                                 maxWidth: 250),
                                             child: Text(
-                                              widget.order.note,
+                                              widget.order!.note!,
                                             ),
                                           )),
                                       decoration: BoxDecoration(
@@ -795,10 +797,10 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                     )),
                               Spacer(),
                               //Total
-                              (widget.order.pending)
+                              (widget.order!.pending!)
                                   ? Container(
                                       child: Text(
-                                      'Saldo por cobrar: ${formatCurrency.format(widget.order.remainingBalance)}',
+                                      'Saldo por cobrar: ${formatCurrency.format(widget.order!.remainingBalance)}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),
@@ -815,7 +817,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                         ),
                         SizedBox(height: 20),
                         //Buttons
-                        (widget.order.pending)
+                        (widget.order!.pending!)
                             ? Container(
                                 height: 50,
                                 width: double.infinity,
@@ -837,7 +839,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                               DatabaseService()
                                                   .deleteScheduleSale(
                                                       widget.businessID,
-                                                      widget.order.id);
+                                                      widget.order!.id);
                                               clearControllers();
                                               Navigator.of(context).pop();
                                             },
@@ -899,7 +901,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                               bloc.changePaymentType(
                                                   'Efectivo');
                                               bloc.changeOrderName(
-                                                  widget.order.orderName);
+                                                  widget.order!.orderName);
                                               bloc.changeOrderType(
                                                   'Venta Agendada');
                                               showDialog(
@@ -909,27 +911,28 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                       providers: [
                                                         StreamProvider<
                                                                 MonthlyStats>.value(
-                                                            initialData: null,
+                                                            initialData:
+                                                                MonthlyStats(),
                                                             value: DatabaseService()
                                                                 .monthlyStatsfromSnapshot(
                                                                     widget
-                                                                        .businessID)),
+                                                                        .businessID!)),
                                                       ],
                                                       child: ConfirmOrder(
                                                         total:
-                                                            widget.order.total,
+                                                            widget.order!.total,
                                                         items: widget
-                                                            .order.orderDetail,
+                                                            .order!.orderDetail,
                                                         discount: widget
-                                                            .order.discount,
+                                                            .order!.discount,
                                                         discountCode: '',
                                                         orderDetail: widget
-                                                            .order.orderDetail,
+                                                            .order!.orderDetail,
                                                         orderName: widget
-                                                            .order.orderName,
+                                                            .order!.orderName,
                                                         subTotal: widget
-                                                            .order.subTotal,
-                                                        tax: widget.order.tax,
+                                                            .order!.subTotal,
+                                                        tax: widget.order!.tax,
                                                         controller: null,
                                                         clearVariables:
                                                             clearControllers,
@@ -944,7 +947,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                             null,
                                                         isSavedOrder: false,
                                                         savedOrderID:
-                                                            widget.order.id,
+                                                            widget.order!.id,
                                                         orderType:
                                                             'Venta Agendada',
                                                         onTableView: false,
@@ -1011,7 +1014,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                             style: TextStyle(color: Colors.black, fontSize: 40),
                             initialValue: '\$0.00',
                             validator: (val) =>
-                                val.isEmpty ? "Agrega un monto válido" : null,
+                                val!.isEmpty ? "Agrega un monto válido" : null,
                             inputFormatters: <TextInputFormatter>[
                               CurrencyTextInputFormatter(
                                 name: '\$',
@@ -1037,7 +1040,7 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                             ),
                             onChanged: (val) {
                               setState(() => initialAmount = double.tryParse(
-                                  (val.substring(1)).replaceAll(',', '')));
+                                  (val.substring(1)).replaceAll(',', ''))!);
                             },
                           ),
                           SizedBox(
@@ -1058,11 +1061,11 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                               ),
                               onPressed: () {
                                 final double remainingBalance =
-                                    widget.order.remainingBalance -
+                                    widget.order!.remainingBalance! -
                                         initialAmount;
                                 DatabaseService().updateScheduledSale(
                                     widget.businessID,
-                                    widget.order.id,
+                                    widget.order!.id,
                                     remainingBalance);
                                 Navigator.of(context).pop();
                               },

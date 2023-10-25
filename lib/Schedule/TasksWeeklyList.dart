@@ -15,7 +15,7 @@ class TaskWeeklyList extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheduledSales = Provider.of<List<ScheduledSales>>(context);
 
-    if (scheduledSales == null || scheduledSales.length < 1) {
+    if (scheduledSales.length < 1) {
       return Container();
     }
 
@@ -27,7 +27,7 @@ class TaskWeeklyList extends StatelessWidget {
       itemBuilder: ((context, index) {
         List itemsList = [];
 
-        scheduledSales[index].orderDetail.forEach((x) {
+        scheduledSales[index].orderDetail!.forEach((x) {
           itemsList.add('${x['Quantity']}x ${x['Name']}');
         });
 
@@ -42,11 +42,11 @@ class TaskWeeklyList extends StatelessWidget {
                       return MultiProvider(
                         providers: [
                           StreamProvider<MonthlyStats>.value(
-                              initialData: null,
+                              initialData: MonthlyStats(),
                               value: DatabaseService()
                                   .monthlyStatsfromSnapshot(activeBusiness)),
                           StreamProvider<CashRegister>.value(
-                              initialData: null,
+                              initialData: CashRegister(),
                               value: DatabaseService()
                                   .cashRegisterStatus(activeBusiness)),
                         ],
@@ -63,7 +63,8 @@ class TaskWeeklyList extends StatelessWidget {
                 children: [
                   //Time
                   Text(
-                    DateFormat('HH:mm').format((scheduledSales[index].dueDate)),
+                    DateFormat('HH:mm')
+                        .format((scheduledSales[index].dueDate!)),
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -90,7 +91,7 @@ class TaskWeeklyList extends StatelessWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  scheduledSales[index].orderName,
+                                  scheduledSales[index].orderName!,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,

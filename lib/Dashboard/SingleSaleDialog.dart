@@ -26,26 +26,26 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
   final formatCurrency = new NumberFormat.simpleCurrency();
   bool editMethod = false;
   bool paymentMethodEdited = false;
-  String paymentType;
+  late String paymentType;
   List availablePaymentTypes = [];
   String suppliesCost = '';
 
   @override
   void initState() {
-    paymentType = widget.sale.paymentType;
+    paymentType = widget.sale.paymentType!;
     widget.paymentTypes.forEach((x) => availablePaymentTypes.add(x['Type']));
     availablePaymentTypes.add('Por Cobrar');
 
     suppliesCost =
         'Costo: ${formatCurrency.format(widget.sale.totalSuppliesCost)}';
-    for (var i = 0; i < widget.sale.soldItems.length; i++) {
-      if (widget.sale.soldItems[i].supplies.length > 0) {
-        for (var x = 0; x < widget.sale.soldItems[i].supplies.length; x++) {
-          double cost = (widget.sale.soldItems[i].supplies[x]['Quantity'] /
-                  widget.sale.soldItems[i].supplies[x]['Supply Quantity']) *
-              widget.sale.soldItems[i].supplies[x]['Supply Cost'];
+    for (var i = 0; i < widget.sale.soldItems!.length; i++) {
+      if (widget.sale.soldItems![i].supplies!.length > 0) {
+        for (var x = 0; x < widget.sale.soldItems![i].supplies!.length; x++) {
+          double cost = (widget.sale.soldItems![i].supplies![x]['Quantity'] /
+                  widget.sale.soldItems![i].supplies![x]['Supply Quantity']) *
+              widget.sale.soldItems![i].supplies![x]['Supply Cost'];
           suppliesCost +=
-              '\n${widget.sale.soldItems[i].supplies[x]['Ingredient']}: ${formatCurrency.format(cost)}';
+              '\n${widget.sale.soldItems![i].supplies![x]['Ingredient']}: ${formatCurrency.format(cost)}';
         }
       }
     }
@@ -77,7 +77,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                 //Go Back
                 Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                   //Delete
-                  (widget.sale.reversed)
+                  (widget.sale.reversed!)
                       ? Text('Venta anulada',
                           style: TextStyle(color: Colors.red))
                       : IconButton(
@@ -87,7 +87,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                 context: context,
                                 builder: (context) {
                                   return StreamProvider<MonthlyStats>.value(
-                                    initialData: null,
+                                    initialData: MonthlyStats(),
                                     value: DatabaseService()
                                         .monthlyStatsfromSnapshot(
                                             widget.businessID),
@@ -117,10 +117,10 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                       //Time and date
                       Container(
                           child: Text(
-                        DateFormat.MMMd().format(widget.sale.date).toString() +
+                        DateFormat.MMMd().format(widget.sale.date!).toString() +
                             " - " +
                             DateFormat('HH:mm:ss')
-                                .format(widget.sale.date)
+                                .format(widget.sale.date!)
                                 .toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
@@ -132,7 +132,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                           child: Text(
                         (widget.sale.orderName == '')
                             ? 'Nombre sin agregar'
-                            : widget.sale.orderName,
+                            : widget.sale.orderName!,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                         ),
@@ -152,7 +152,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                   child: Container(
                     child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: widget.sale.soldItems.length,
+                        itemCount: widget.sale.soldItems!.length,
                         itemBuilder: (context, i) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
@@ -163,16 +163,17 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                   //Name
                                   Container(
                                     constraints: BoxConstraints(maxWidth: 250),
-                                    child: Text((widget.sale.soldItems[i].qty ==
+                                    child: Text((widget
+                                                .sale.soldItems![i].qty ==
                                             1)
-                                        ? widget.sale.soldItems[i].product
-                                        : widget.sale.soldItems[i].product +
-                                            ' (${formatCurrency.format(widget.sale.soldItems[i].price)} x ${widget.sale.soldItems[i].qty})'),
+                                        ? widget.sale.soldItems![i].product!
+                                        : widget.sale.soldItems![i].product! +
+                                            ' (${formatCurrency.format(widget.sale.soldItems![i].price)} x ${widget.sale.soldItems![i].qty})'),
                                   ),
                                   //Amount
                                   Spacer(),
                                   Text(
-                                      '${formatCurrency.format(widget.sale.soldItems[i].total)}'),
+                                      '${formatCurrency.format(widget.sale.soldItems![i].total)}'),
                                 ]),
                           );
                         }),
@@ -250,7 +251,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                       }).toList(),
                                       onChanged: (newValue) {
                                         setState(() {
-                                          paymentType = newValue;
+                                          paymentType = newValue.toString();
                                           paymentMethodEdited = true;
                                         });
                                       },
@@ -313,19 +314,20 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                   MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.hovered))
-                                    return Colors.grey[300];
+                                    return Colors.grey[300]!;
                                   if (states.contains(MaterialState.focused) ||
                                       states.contains(MaterialState.pressed))
-                                    return Colors.grey[300];
-                                  return null; // Defer to the widget's default.
+                                    return Colors.grey[300]!;
+                                  return Colors.grey[
+                                      300]!; // Defer to the widget's default.
                                 },
                               ),
                             ),
                             onPressed: () async {
                               DatabaseService().editSalePaymentMethod(
                                   widget.businessID,
-                                  widget.sale.date.year,
-                                  widget.sale.date.month,
+                                  widget.sale.date!.year,
+                                  widget.sale.date!.month,
                                   widget.docID,
                                   paymentType);
 
@@ -336,8 +338,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                               }
 
                               ///////////////////////////Register in Daily Transactions/////
-                              if (widget.registerStatus.registerName != null &&
-                                  widget.registerStatus.registerName != '' &&
+                              if (widget.registerStatus.registerName != '' &&
                                   widget.sale.cashRegister ==
                                       widget.registerStatus.registerName) {
                                 //Substract previus payment type // Add new
@@ -346,8 +347,8 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                     .collection('ERP')
                                     .doc(widget.businessID)
                                     .collection(
-                                        widget.sale.date.year.toString())
-                                    .doc(widget.sale.date.month.toString())
+                                        widget.sale.date!.year.toString())
+                                    .doc(widget.sale.date!.month.toString())
                                     .collection('Daily')
                                     .doc(widget.sale.cashRegister);
 
@@ -360,12 +361,12 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                       dayStatsRef.update({
                                         'Ventas por Medio.${widget.sale.paymentType}':
                                             FieldValue.increment(
-                                                -widget.sale.total),
+                                                -widget.sale.total!),
                                       });
                                       dayStatsRef.update({
                                         'Ventas por Medio.$paymentType':
                                             FieldValue.increment(
-                                                widget.sale.total),
+                                                widget.sale.total!),
                                       });
                                     }
                                   }
@@ -381,8 +382,8 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                               var monthStatsRef = firestore
                                   .collection('ERP')
                                   .doc(widget.businessID)
-                                  .collection(widget.sale.date.year.toString())
-                                  .doc(widget.sale.date.month.toString())
+                                  .collection(widget.sale.date!.year.toString())
+                                  .doc(widget.sale.date!.month.toString())
                                   .collection('Stats')
                                   .doc('Monthly Stats');
 
@@ -395,12 +396,12 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                     monthStatsRef.update({
                                       'Sales by Payment Type.${widget.sale.paymentType}':
                                           FieldValue.increment(
-                                              -widget.sale.total),
+                                              -widget.sale.total!),
                                     });
                                     monthStatsRef.update({
                                       'Sales by Payment Type.$paymentType':
                                           FieldValue.increment(
-                                              widget.sale.total),
+                                              widget.sale.total!),
                                     });
                                   }
                                 }
@@ -443,7 +444,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
           //Go Back
           Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             //Delete
-            (widget.sale.reversed)
+            (widget.sale.reversed!)
                 ? Text('Venta anulada', style: TextStyle(color: Colors.red))
                 : IconButton(
                     tooltip: 'Eliminar venta',
@@ -452,7 +453,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                           context: context,
                           builder: (context) {
                             return StreamProvider<MonthlyStats>.value(
-                              initialData: null,
+                              initialData: MonthlyStats(),
                               value: DatabaseService()
                                   .monthlyStatsfromSnapshot(widget.businessID),
                               child: ConfirmDeleteOrder(
@@ -481,10 +482,10 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                 //Time and date
                 Container(
                     child: Text(
-                  DateFormat.MMMd().format(widget.sale.date).toString() +
+                  DateFormat.MMMd().format(widget.sale.date!).toString() +
                       " - " +
                       DateFormat('HH:mm:ss')
-                          .format(widget.sale.date)
+                          .format(widget.sale.date!)
                           .toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
@@ -496,7 +497,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                     child: Text(
                   (widget.sale.orderName == '')
                       ? 'Nombre sin agregar'
-                      : widget.sale.orderName,
+                      : widget.sale.orderName!,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                   ),
@@ -516,7 +517,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
             child: Container(
               child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: widget.sale.soldItems.length,
+                  itemCount: widget.sale.soldItems!.length,
                   itemBuilder: (context, i) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
@@ -527,15 +528,15 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                             //Name
                             Container(
                               constraints: BoxConstraints(maxWidth: 250),
-                              child: Text((widget.sale.soldItems[i].qty == 1)
-                                  ? widget.sale.soldItems[i].product
-                                  : widget.sale.soldItems[i].product +
-                                      ' (${formatCurrency.format(widget.sale.soldItems[i].price)} x ${widget.sale.soldItems[i].qty})'),
+                              child: Text((widget.sale.soldItems![i].qty == 1)
+                                  ? widget.sale.soldItems![i].product!
+                                  : widget.sale.soldItems![i].product! +
+                                      ' (${formatCurrency.format(widget.sale.soldItems![i].price)} x ${widget.sale.soldItems![i].qty})'),
                             ),
                             //Amount
                             Spacer(),
                             Text(
-                                '${formatCurrency.format(widget.sale.soldItems[i].total)}'),
+                                '${formatCurrency.format(widget.sale.soldItems![i].total)}'),
                           ]),
                     );
                   }),
@@ -611,7 +612,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                 }).toList(),
                                 onChanged: (newValue) {
                                   setState(() {
-                                    paymentType = newValue;
+                                    paymentType = newValue.toString();
                                     paymentMethodEdited = true;
                                   });
                                 },
@@ -672,19 +673,20 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                         overlayColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.hovered))
-                              return Colors.grey[300];
+                              return Colors.grey[300]!;
                             if (states.contains(MaterialState.focused) ||
                                 states.contains(MaterialState.pressed))
-                              return Colors.grey[300];
-                            return null; // Defer to the widget's default.
+                              return Colors.grey[300]!;
+                            return Colors
+                                .grey[300]!; // Defer to the widget's default.
                           },
                         ),
                       ),
                       onPressed: () async {
                         DatabaseService().editSalePaymentMethod(
                             widget.businessID,
-                            widget.sale.date.year,
-                            widget.sale.date.month,
+                            widget.sale.date!.year,
+                            widget.sale.date!.month,
                             widget.docID,
                             paymentType);
 
@@ -695,8 +697,7 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                         }
 
                         ///////////////////////////Register in Daily Transactions/////
-                        if (widget.registerStatus.registerName != null &&
-                            widget.registerStatus.registerName != '' &&
+                        if (widget.registerStatus.registerName != '' &&
                             widget.sale.cashRegister ==
                                 widget.registerStatus.registerName) {
                           //Substract previus payment type // Add new
@@ -704,8 +705,8 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                           var dayStatsRef = firestore
                               .collection('ERP')
                               .doc(widget.businessID)
-                              .collection(widget.sale.date.year.toString())
-                              .doc(widget.sale.date.month.toString())
+                              .collection(widget.sale.date!.year.toString())
+                              .doc(widget.sale.date!.month.toString())
                               .collection('Daily')
                               .doc(widget.sale.cashRegister);
 
@@ -717,11 +718,11 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                               } else {
                                 dayStatsRef.update({
                                   'Ventas por Medio.${widget.sale.paymentType}':
-                                      FieldValue.increment(-widget.sale.total),
+                                      FieldValue.increment(-widget.sale.total!),
                                 });
                                 dayStatsRef.update({
                                   'Ventas por Medio.$paymentType':
-                                      FieldValue.increment(widget.sale.total),
+                                      FieldValue.increment(widget.sale.total!),
                                 });
                               }
                             }
@@ -736,8 +737,8 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                         var monthStatsRef = firestore
                             .collection('ERP')
                             .doc(widget.businessID)
-                            .collection(widget.sale.date.year.toString())
-                            .doc(widget.sale.date.month.toString())
+                            .collection(widget.sale.date!.year.toString())
+                            .doc(widget.sale.date!.month.toString())
                             .collection('Stats')
                             .doc('Monthly Stats');
 
@@ -749,11 +750,11 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                             } else {
                               monthStatsRef.update({
                                 'Sales by Payment Type.${widget.sale.paymentType}':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                               });
                               monthStatsRef.update({
                                 'Sales by Payment Type.$paymentType':
-                                    FieldValue.increment(widget.sale.total),
+                                    FieldValue.increment(widget.sale.total!),
                               });
                             }
                           }

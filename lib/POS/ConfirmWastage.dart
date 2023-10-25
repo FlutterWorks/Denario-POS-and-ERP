@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmWastage extends StatefulWidget {
-  final double total;
+  final double? total;
   final orderDetail;
   final clearVariables;
   final dynamic items;
-  final String ticketConcept;
+  final String? ticketConcept;
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   ConfirmWastage(
       {this.total,
@@ -25,17 +25,17 @@ class ConfirmWastage extends StatefulWidget {
 }
 
 class _ConfirmWastageState extends State<ConfirmWastage> {
-  Map<String, dynamic> wastageCategories;
-  Future currentValuesBuilt;
-  double currentWastageAmount;
-  Map<String, dynamic> currentWastagebyItem;
-  double newWastageAmount;
+  Map<String, dynamic>? wastageCategories;
+  late Future currentValuesBuilt;
+  double? currentWastageAmount;
+  Map<String, dynamic>? currentWastagebyItem;
+  double? newWastageAmount;
 
   Future currentValue() async {
     var year = DateTime.now().year.toString();
     var month = DateTime.now().month.toString();
     var firestore = FirebaseFirestore.instance;
-    final User user = FirebaseAuth.instance.currentUser;
+    final User user = FirebaseAuth.instance.currentUser!;
     final String uid = user.uid.toString();
     String wastageDocument;
 
@@ -67,7 +67,7 @@ class _ConfirmWastageState extends State<ConfirmWastage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: currentValuesBuilt,
-        builder: (context, snap) {
+        builder: (context, AsyncSnapshot snap) {
           if (snap.connectionState == ConnectionState.done) {
             try {
               currentWastageAmount = snap.data['Total'];
@@ -132,7 +132,7 @@ class _ConfirmWastageState extends State<ConfirmWastage> {
                                               MaterialStateProperty.all<Color>(
                                                   Colors.black),
                                           overlayColor: MaterialStateProperty
-                                              .resolveWith<Color>(
+                                              .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
@@ -148,14 +148,13 @@ class _ConfirmWastageState extends State<ConfirmWastage> {
                                         ),
                                         onPressed: () {
                                           ////////////////////////Update Accounts (sales and categories)
-                                          if (currentWastageAmount == null ||
-                                              currentWastageAmount < 1) {
+                                          if (currentWastageAmount! < 1) {
                                             newWastageAmount =
-                                                widget.total.toDouble();
+                                                widget.total!.toDouble();
                                           } else {
                                             newWastageAmount =
-                                                currentWastageAmount +
-                                                    widget.total.toDouble();
+                                                currentWastageAmount! +
+                                                    widget.total!.toDouble();
                                           }
 
                                           //Set Categories Variables
@@ -169,10 +168,10 @@ class _ConfirmWastageState extends State<ConfirmWastage> {
                                               i < cartList.length;
                                               i++) {
                                             //Check if the map contains the key
-                                            if (wastageCategories.containsKey(
+                                            if (wastageCategories!.containsKey(
                                                 '${cartList[i]["Category"]}')) {
                                               //Add to existing category amount
-                                              wastageCategories.update(
+                                              wastageCategories!.update(
                                                   '${cartList[i]["Category"]}',
                                                   (value) =>
                                                       value +
@@ -181,16 +180,16 @@ class _ConfirmWastageState extends State<ConfirmWastage> {
                                                               ["Quantity"]));
                                             } else {
                                               //Add new category with amount
-                                              wastageCategories[
+                                              wastageCategories![
                                                       '${cartList[i]["Category"]}'] =
                                                   cartList[i]["Price"] *
                                                       cartList[i]["Quantity"];
                                             }
                                           }
                                           //Logic to add Sales by Categories to Firebase based on current Values from snap
-                                          wastageCategories.forEach((k, v) {
+                                          wastageCategories!.forEach((k, v) {
                                             try {
-                                              wastageCategories.update(
+                                              wastageCategories!.update(
                                                   k,
                                                   (value) =>
                                                       v = v + snap.data['$k']);
@@ -206,28 +205,28 @@ class _ConfirmWastageState extends State<ConfirmWastage> {
                                               i < cartList.length;
                                               i++) {
                                             //Check if the map contains the key
-                                            if (currentWastagebyItem
+                                            if (currentWastagebyItem!
                                                 .containsKey(
                                                     '${cartList[i]["Name"]}')) {
                                               //Add to existing category amount
-                                              currentWastagebyItem.update(
+                                              currentWastagebyItem!.update(
                                                   '${cartList[i]["Name"]}',
                                                   (value) =>
                                                       value +
                                                       cartList[i]["Quantity"]);
                                             } else {
                                               //Add new category with amount
-                                              currentWastagebyItem[
+                                              currentWastagebyItem![
                                                       '${cartList[i]["Name"]}'] =
                                                   cartList[i]["Quantity"];
                                             }
                                           }
 
-                                          wastageCategories['Products'] =
+                                          wastageCategories!['Products'] =
                                               currentWastagebyItem;
 
                                           //Add Total sales edited to map
-                                          wastageCategories['Total'] =
+                                          wastageCategories!['Total'] =
                                               newWastageAmount;
 
                                           //Save Details to FB Historic
@@ -235,13 +234,13 @@ class _ConfirmWastageState extends State<ConfirmWastage> {
                                               DateTime.now().year.toString(),
                                               DateTime.now().month.toString(),
                                               DateTime.now().toString(),
-                                              widget.total * 0.5,
+                                              widget.total! * 0.5,
                                               widget.total,
                                               widget.orderDetail);
 
                                           DatabaseService().saveWastageDetails(
-                                              widget.ticketConcept,
-                                              wastageCategories);
+                                              widget.ticketConcept!,
+                                              wastageCategories!);
 
                                           widget.clearVariables();
 

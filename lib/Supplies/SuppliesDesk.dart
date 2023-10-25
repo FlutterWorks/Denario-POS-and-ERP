@@ -10,7 +10,7 @@ class SuppliesDesk extends StatefulWidget {
   final List categories;
   final String businessField;
   const SuppliesDesk(this.currentBusiness, this.categories, this.businessField,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -18,21 +18,21 @@ class SuppliesDesk extends StatefulWidget {
 }
 
 class _SuppliesDeskState extends State<SuppliesDesk> {
-  String name;
-  String vendor;
+  late String name;
+  String? vendor;
   TextEditingController nameController = new TextEditingController(text: '');
-  FocusNode nameNode;
-  String selectedProduct;
-  List searchName;
-  String searchvendorName;
-  bool filtered;
+  FocusNode? nameNode;
+  String? selectedProduct;
+  List? searchName;
+  String? searchvendorName;
+  late bool filtered;
   List listOfCategories = [];
-  String selectedVendor;
-  bool showSearchOptions;
-  bool showVendorSearchOptions;
+  String? selectedVendor;
+  late bool showSearchOptions;
+  late bool showVendorSearchOptions;
 
-  bool searchByVendor;
-  int limitSearch;
+  late bool searchByVendor;
+  late int limitSearch;
   void loadMore() {
     setState(() {
       limitSearch = limitSearch + 10;
@@ -42,8 +42,8 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
   void selectSupply(Supply supply) {
     setState(() {
       selectedProduct = supply.supply;
-      nameController.text = supply.supply;
-      searchName = supply.searchName;
+      nameController.text = supply.supply!;
+      searchName = supply.searchName!;
       vendor = '';
       selectedVendor = null;
       showSearchOptions = false;
@@ -105,7 +105,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.grey[350],
+                                  color: Colors.grey[350]!,
                                   offset: Offset(0.0, 0.0),
                                   blurRadius: 10.0,
                                 )
@@ -136,7 +136,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                       setState(() {
                                         searchByVendor = false;
                                       });
-                                      nameNode.requestFocus();
+                                      nameNode!.requestFocus();
                                     },
                                     child: Center(
                                         child: Text('Insumo',
@@ -169,7 +169,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                       setState(() {
                                         searchByVendor = true;
                                       });
-                                      nameNode.requestFocus();
+                                      nameNode!.requestFocus();
                                     },
                                     child: Center(
                                         child: Text('Proveedor',
@@ -219,7 +219,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                         borderRadius:
                                             new BorderRadius.circular(12.0),
                                         borderSide: new BorderSide(
-                                          color: Colors.grey[350],
+                                          color: Colors.grey[350]!,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -251,13 +251,13 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all<Color>(
-                                                Colors.greenAccent[400]),
+                                                Colors.greenAccent[400]!),
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered))
-                                              return Colors.greenAccent[300];
+                                              return Colors.greenAccent[300]!;
                                             if (states.contains(
                                                     MaterialState.focused) ||
                                                 states.contains(
@@ -307,7 +307,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.grey[350],
+                                  color: Colors.grey[350]!,
                                   offset: Offset(0.0, 0.0),
                                   blurRadius: 10.0,
                                 )
@@ -340,7 +340,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                           setState(() {
                                             searchByVendor = false;
                                           });
-                                          nameNode.requestFocus();
+                                          nameNode!.requestFocus();
                                         },
                                         child: Center(
                                             child: Text('Insumo',
@@ -374,7 +374,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                           setState(() {
                                             searchByVendor = true;
                                           });
-                                          nameNode.requestFocus();
+                                          nameNode!.requestFocus();
                                         },
                                         child: Center(
                                             child: Text('Proveedor',
@@ -426,7 +426,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                             borderRadius:
                                                 new BorderRadius.circular(12.0),
                                             borderSide: new BorderSide(
-                                              color: Colors.grey[350],
+                                              color: Colors.grey[350]!,
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
@@ -466,9 +466,9 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                             backgroundColor:
                                                 MaterialStateProperty.all<
                                                         Color>(
-                                                    Colors.greenAccent[400]),
+                                                    Colors.greenAccent[400]!),
                                             overlayColor: MaterialStateProperty
-                                                .resolveWith<Color>(
+                                                .resolveWith<Color?>(
                                               (Set<MaterialState> states) {
                                                 if (states.contains(
                                                     MaterialState.hovered))
@@ -599,22 +599,22 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
             ),
           ),
           //List of Products
-          (searchByVendor && name != null && name != '')
+          (searchByVendor && name != '')
               ? StreamProvider<List<Supply>>.value(
-                  initialData: null,
+                  initialData: [],
                   value: DatabaseService()
                       .suppliesListbyVendor(widget.currentBusiness, name),
                   child: SuppliesList(
                       widget.currentBusiness, loadMore, limitSearch))
-              : (!searchByVendor && name != null && name != '')
+              : (!searchByVendor && name != '')
                   ? StreamProvider<List<Supply>>.value(
-                      initialData: null,
+                      initialData: [],
                       value: DatabaseService()
                           .suppliesListbyName(widget.currentBusiness, name),
                       child: SuppliesList(
                           widget.currentBusiness, loadMore, limitSearch))
                   : StreamProvider<List<Supply>>.value(
-                      initialData: null,
+                      initialData: [],
                       value: DatabaseService()
                           .allSuppliesList(widget.currentBusiness, limitSearch),
                       child: SuppliesList(
@@ -714,7 +714,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                 border: new OutlineInputBorder(
                                   borderRadius: new BorderRadius.circular(12.0),
                                   borderSide: new BorderSide(
-                                    color: Colors.grey[350],
+                                    color: Colors.grey[350]!,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -758,7 +758,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                 setState(() {
                                   searchByVendor = false;
                                 });
-                                nameNode.requestFocus();
+                                nameNode!.requestFocus();
                               },
                               child: Center(
                                   child: Text('Insumo',
@@ -790,7 +790,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                 setState(() {
                                   searchByVendor = true;
                                 });
-                                nameNode.requestFocus();
+                                nameNode!.requestFocus();
                               },
                               child: Center(
                                   child: Text('Proveedor',
@@ -811,22 +811,22 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
             ),
           ),
           //List of Products
-          (searchByVendor && name != null && name != '')
+          (searchByVendor && name != '')
               ? StreamProvider<List<Supply>>.value(
-                  initialData: null,
+                  initialData: [],
                   value: DatabaseService()
                       .suppliesListbyVendor(widget.currentBusiness, name),
                   child: SuppliesList(
                       widget.currentBusiness, loadMore, limitSearch))
-              : (!searchByVendor && name != null && name != '')
+              : (!searchByVendor && name != '')
                   ? StreamProvider<List<Supply>>.value(
-                      initialData: null,
+                      initialData: [],
                       value: DatabaseService()
                           .suppliesListbyName(widget.currentBusiness, name),
                       child: SuppliesList(
                           widget.currentBusiness, loadMore, limitSearch))
                   : StreamProvider<List<Supply>>.value(
-                      initialData: null,
+                      initialData: [],
                       value: DatabaseService()
                           .allSuppliesList(widget.currentBusiness, limitSearch),
                       child: SuppliesList(

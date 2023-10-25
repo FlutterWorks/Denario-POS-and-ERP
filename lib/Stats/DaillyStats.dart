@@ -33,7 +33,7 @@ class _DailyStatsState extends State<DailyStats> {
     'Canales',
     'Costos'
   ];
-  String selectedCategory;
+  late String selectedCategory;
 
   @override
   void initState() {
@@ -43,11 +43,15 @@ class _DailyStatsState extends State<DailyStats> {
 
   @override
   Widget build(BuildContext context) {
-    final dailyTransactions = Provider.of<List<DailyTransactions>>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
-    final categoriesProvider = Provider.of<CategoryList>(context);
+    final dailyTransactions = Provider.of<List<DailyTransactions>?>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
 
-    if (dailyTransactions == null || categoriesProvider == null) {
+    if (categoriesProvider == null ||
+        registerStatus == null ||
+        dailyTransactions == null ||
+        dailyTransactions == [] ||
+        categoriesProvider == CategoryList()) {
       return Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.5,
@@ -87,72 +91,72 @@ class _DailyStatsState extends State<DailyStats> {
           salesbyCategory: {},
           salesbyOrderType: {});
 
-      if (dailyTransactions.length == null || dailyTransactions.length == 0) {
-        dayStats = null;
+      if (dailyTransactions.length == 0) {
+        dayStats = DailyTransactions();
       } else if (dailyTransactions.length == 1) {
         dayStats = dailyTransactions[0];
       } else {
         for (var map in dailyTransactions) {
           //Sales
-          dayStats.sales = dayStats.sales + map.sales;
+          dayStats.sales = dayStats.sales! + map.sales!;
           //Items Sold
           dayStats.totalItemsSold =
-              dayStats.totalItemsSold + map.totalItemsSold;
+              dayStats.totalItemsSold! + map.totalItemsSold!;
           //Sales Count
           dayStats.totalSalesCount =
-              dayStats.totalSalesCount + map.totalSalesCount;
+              dayStats.totalSalesCount! + map.totalSalesCount!;
           //Sales by payment method
-          map.salesByMedium.forEach((key, value) {
-            if (dayStats.salesByMedium.containsKey(key)) {
-              dayStats.salesByMedium[key] += value;
+          map.salesByMedium!.forEach((key, value) {
+            if (dayStats.salesByMedium!.containsKey(key)) {
+              dayStats.salesByMedium![key] += value;
             } else {
-              dayStats.salesByMedium[key] = value;
+              dayStats.salesByMedium![key] = value;
             }
           });
           //Sales Amount by Category
-          map.salesAmountbyCategory.forEach((key, value) {
-            if (dayStats.salesAmountbyCategory.containsKey(key)) {
-              dayStats.salesAmountbyCategory[key] += value;
+          map.salesAmountbyCategory!.forEach((key, value) {
+            if (dayStats.salesAmountbyCategory!.containsKey(key)) {
+              dayStats.salesAmountbyCategory![key] += value;
             } else {
-              dayStats.salesAmountbyCategory[key] = value;
+              dayStats.salesAmountbyCategory![key] = value;
             }
           });
           //Sales Amount by Product
-          map.salesAmountbyProduct.forEach((key, value) {
-            if (dayStats.salesAmountbyProduct.containsKey(key)) {
-              dayStats.salesAmountbyProduct[key] += value;
+          map.salesAmountbyProduct!.forEach((key, value) {
+            if (dayStats.salesAmountbyProduct!.containsKey(key)) {
+              dayStats.salesAmountbyProduct![key] += value;
             } else {
-              dayStats.salesAmountbyProduct[key] = value;
+              dayStats.salesAmountbyProduct![key] = value;
             }
           });
           //Sales Count by Category
-          map.salesCountbyCategory.forEach((key, value) {
-            if (dayStats.salesCountbyCategory.containsKey(key)) {
-              dayStats.salesCountbyCategory[key] += value;
+          map.salesCountbyCategory!.forEach((key, value) {
+            if (dayStats.salesCountbyCategory!.containsKey(key)) {
+              dayStats.salesCountbyCategory![key] += value;
             } else {
-              dayStats.salesCountbyCategory[key] = value;
+              dayStats.salesCountbyCategory![key] = value;
             }
           });
           //Sales Count by Product
-          map.salesCountbyProduct.forEach((key, value) {
-            if (dayStats.salesCountbyProduct.containsKey(key)) {
-              dayStats.salesCountbyProduct[key] += value;
+          map.salesCountbyProduct!.forEach((key, value) {
+            if (dayStats.salesCountbyProduct!.containsKey(key)) {
+              dayStats.salesCountbyProduct![key] += value;
             } else {
-              dayStats.salesCountbyProduct[key] = value;
+              dayStats.salesCountbyProduct![key] = value;
             }
           });
           //Sales by order Type
-          map.salesbyOrderType.forEach((key, value) {
-            if (dayStats.salesbyOrderType.containsKey(key)) {
-              dayStats.salesbyOrderType[key] += value;
+          map.salesbyOrderType!.forEach((key, value) {
+            if (dayStats.salesbyOrderType!.containsKey(key)) {
+              dayStats.salesbyOrderType![key] += value;
             } else {
-              dayStats.salesbyOrderType[key] = value;
+              dayStats.salesbyOrderType![key] = value;
             }
           });
         }
       }
 
-      if (dayStats == null) {
+      if (dayStats == DailyTransactions()) {
         return Container(
           width: double.infinity,
           height: 300,
@@ -216,7 +220,7 @@ class _DailyStatsState extends State<DailyStats> {
                           borderRadius: BorderRadius.circular(25),
                           boxShadow: <BoxShadow>[
                             new BoxShadow(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                               offset: Offset(0.0, 0.0),
                               blurRadius: 10.0,
                             )
@@ -224,14 +228,14 @@ class _DailyStatsState extends State<DailyStats> {
                         ),
                         child: (widget.dateFilter == 'Today')
                             ? StreamProvider<List<Sales>>.value(
-                                initialData: null,
+                                initialData: [],
                                 value: DatabaseService()
                                     .shortsalesList(widget.userBusiness),
                                 child: ShortSalesList(
                                     widget.userBusiness, registerStatus),
                               )
                             : StreamProvider<List<Sales>>.value(
-                                initialData: null,
+                                initialData: [],
                                 value: DatabaseService().shortFilteredSalesList(
                                   widget.userBusiness,
                                   DateTime(
@@ -263,7 +267,7 @@ class _DailyStatsState extends State<DailyStats> {
                           borderRadius: BorderRadius.circular(25),
                           boxShadow: <BoxShadow>[
                             new BoxShadow(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                               offset: Offset(0.0, 0.0),
                               blurRadius: 10.0,
                             )
@@ -290,7 +294,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                     color: (_currentPageIndex ==
                                                             0)
                                                         ? Colors
-                                                            .greenAccent[700]
+                                                            .greenAccent[700]!
                                                         : Colors.transparent))),
                                         child: TextButton(
                                             onPressed: () {
@@ -305,7 +309,7 @@ class _DailyStatsState extends State<DailyStats> {
                                             style: ButtonStyle(
                                               overlayColor:
                                                   MaterialStateProperty
-                                                      .resolveWith<Color>(
+                                                      .resolveWith<Color?>(
                                                 (Set<MaterialState> states) {
                                                   if (states.contains(
                                                       MaterialState.hovered)) {
@@ -346,7 +350,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                     color: (_currentPageIndex ==
                                                             1)
                                                         ? Colors
-                                                            .greenAccent[700]
+                                                            .greenAccent[700]!
                                                         : Colors.transparent))),
                                         child: TextButton(
                                             onPressed: () {
@@ -361,7 +365,7 @@ class _DailyStatsState extends State<DailyStats> {
                                             style: ButtonStyle(
                                               overlayColor:
                                                   MaterialStateProperty
-                                                      .resolveWith<Color>(
+                                                      .resolveWith<Color?>(
                                                 (Set<MaterialState> states) {
                                                   if (states.contains(
                                                       MaterialState.hovered)) {
@@ -402,7 +406,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                     color: (_currentPageIndex ==
                                                             2)
                                                         ? Colors
-                                                            .greenAccent[700]
+                                                            .greenAccent[700]!
                                                         : Colors.transparent))),
                                         child: TextButton(
                                             onPressed: () {
@@ -417,7 +421,7 @@ class _DailyStatsState extends State<DailyStats> {
                                             style: ButtonStyle(
                                               overlayColor:
                                                   MaterialStateProperty
-                                                      .resolveWith<Color>(
+                                                      .resolveWith<Color?>(
                                                 (Set<MaterialState> states) {
                                                   if (states.contains(
                                                       MaterialState.hovered)) {
@@ -458,7 +462,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                     color: (_currentPageIndex ==
                                                             3)
                                                         ? Colors
-                                                            .greenAccent[700]
+                                                            .greenAccent[700]!
                                                         : Colors.transparent))),
                                         child: TextButton(
                                             onPressed: () {
@@ -473,7 +477,7 @@ class _DailyStatsState extends State<DailyStats> {
                                             style: ButtonStyle(
                                               overlayColor:
                                                   MaterialStateProperty
-                                                      .resolveWith<Color>(
+                                                      .resolveWith<Color?>(
                                                 (Set<MaterialState> states) {
                                                   if (states.contains(
                                                       MaterialState.hovered)) {
@@ -514,7 +518,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                     color: (_currentPageIndex ==
                                                             4)
                                                         ? Colors
-                                                            .greenAccent[700]
+                                                            .greenAccent[700]!
                                                         : Colors.transparent))),
                                         child: TextButton(
                                             onPressed: () {
@@ -529,7 +533,7 @@ class _DailyStatsState extends State<DailyStats> {
                                             style: ButtonStyle(
                                               overlayColor:
                                                   MaterialStateProperty
-                                                      .resolveWith<Color>(
+                                                      .resolveWith<Color?>(
                                                 (Set<MaterialState> states) {
                                                   if (states.contains(
                                                       MaterialState.hovered)) {
@@ -593,7 +597,7 @@ class _DailyStatsState extends State<DailyStats> {
                                     }).toList(),
                                     onChanged: (newValue) {
                                       setState(() {
-                                        selectedCategory = newValue;
+                                        selectedCategory = newValue.toString();
                                       });
                                     },
                                   ),
@@ -618,7 +622,7 @@ class _DailyStatsState extends State<DailyStats> {
                                               endIndent: 0),
                                           //List
                                           StatsByCategory(dayStats,
-                                              categoriesProvider.categoryList)
+                                              categoriesProvider.categoryList!)
                                         ]),
 
                                     //Productos
@@ -637,7 +641,7 @@ class _DailyStatsState extends State<DailyStats> {
                                               endIndent: 0),
                                           //List
                                           StatsByPaymentMethods(dayStats,
-                                              registerStatus.paymentTypes)
+                                              registerStatus.paymentTypes!)
                                         ]),
                                     //Channels
                                     Column(
@@ -652,7 +656,7 @@ class _DailyStatsState extends State<DailyStats> {
                                               endIndent: 0),
                                           //List
                                           StatsByCannels(
-                                              dayStats.salesbyOrderType)
+                                              dayStats.salesbyOrderType!)
                                         ]),
                                     //Costos de Insumos
                                     Column(
@@ -727,7 +731,7 @@ class _DailyStatsState extends State<DailyStats> {
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
@@ -735,14 +739,14 @@ class _DailyStatsState extends State<DailyStats> {
                   ),
                   child: (widget.dateFilter == 'Today')
                       ? StreamProvider<List<Sales>>.value(
-                          initialData: null,
+                          initialData: [],
                           value: DatabaseService()
                               .shortsalesList(widget.userBusiness),
                           child: ShortSalesList(
                               widget.userBusiness, registerStatus),
                         )
                       : StreamProvider<List<Sales>>.value(
-                          initialData: null,
+                          initialData: [],
                           value: DatabaseService().shortFilteredSalesList(
                             widget.userBusiness,
                             DateTime(
@@ -775,7 +779,7 @@ class _DailyStatsState extends State<DailyStats> {
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
@@ -798,7 +802,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                   ? 3
                                                   : 0,
                                               color: (_currentPageIndex == 0)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -812,7 +816,7 @@ class _DailyStatsState extends State<DailyStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -848,7 +852,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                   ? 3
                                                   : 0,
                                               color: (_currentPageIndex == 1)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -862,7 +866,7 @@ class _DailyStatsState extends State<DailyStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -898,7 +902,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                   ? 3
                                                   : 0,
                                               color: (_currentPageIndex == 2)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -912,7 +916,7 @@ class _DailyStatsState extends State<DailyStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -948,7 +952,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                   ? 3
                                                   : 0,
                                               color: (_currentPageIndex == 3)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -962,7 +966,7 @@ class _DailyStatsState extends State<DailyStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -998,7 +1002,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                   ? 4
                                                   : 0,
                                               color: (_currentPageIndex == 4)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -1012,7 +1016,7 @@ class _DailyStatsState extends State<DailyStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -1073,7 +1077,7 @@ class _DailyStatsState extends State<DailyStats> {
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
-                                  selectedCategory = newValue;
+                                  selectedCategory = newValue.toString();
                                 });
                               },
                             ),
@@ -1096,7 +1100,7 @@ class _DailyStatsState extends State<DailyStats> {
                                         endIndent: 0),
                                     //List
                                     StatsByCategory(dayStats,
-                                        categoriesProvider.categoryList)
+                                        categoriesProvider.categoryList!)
                                   ]),
 
                               //Productos
@@ -1113,7 +1117,7 @@ class _DailyStatsState extends State<DailyStats> {
                                         endIndent: 0),
                                     //List
                                     StatsByPaymentMethods(
-                                        dayStats, registerStatus.paymentTypes)
+                                        dayStats, registerStatus.paymentTypes!)
                                   ]),
                               //Channels
                               Column(
@@ -1125,7 +1129,7 @@ class _DailyStatsState extends State<DailyStats> {
                                         indent: 0,
                                         endIndent: 0),
                                     //List
-                                    StatsByCannels(dayStats.salesbyOrderType)
+                                    StatsByCannels(dayStats.salesbyOrderType!)
                                   ]),
                               //Costos de Insumos
                               Column(

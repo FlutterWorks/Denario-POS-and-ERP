@@ -1,8 +1,8 @@
 class HighLevelMapping {
-  List pnlAccountGroups;
-  List expenseGroups;
-  Map<dynamic, dynamic> pnlMapping;
-  Map<dynamic, dynamic> expenseInputMapping;
+  List? pnlAccountGroups;
+  List? expenseGroups;
+  Map<dynamic, dynamic>? pnlMapping;
+  Map<dynamic, dynamic>? expenseInputMapping;
 
   HighLevelMapping(
       {this.pnlAccountGroups,

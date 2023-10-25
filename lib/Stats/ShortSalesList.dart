@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class ShortSalesList extends StatelessWidget {
   final String userBusiness;
   final CashRegister registerStatus;
-  ShortSalesList(this.userBusiness, this.registerStatus, {Key key})
+  ShortSalesList(this.userBusiness, this.registerStatus, {Key? key})
       : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
@@ -19,7 +19,7 @@ class ShortSalesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final salesListfromSnap = Provider.of<List<Sales>>(context);
 
-    if (salesListfromSnap == null) {
+    if (salesListfromSnap == []) {
       return Container();
     }
 
@@ -73,17 +73,17 @@ class ShortSalesList extends StatelessWidget {
                             context: context,
                             builder: (context) {
                               return StreamProvider<DailyTransactions>.value(
-                                  initialData: null,
-                                  catchError: (_, err) => null,
+                                  initialData: DailyTransactions(),
+                                  catchError: (_, err) => DailyTransactions(),
                                   value: DatabaseService().dailyTransactions(
                                       userBusiness,
-                                      registerStatus.registerName),
+                                      registerStatus.registerName!),
                                   builder: (context, snapshot) {
                                     return SingleSaleDialog(
                                         salesList[i],
                                         userBusiness,
-                                        salesList[i].docID,
-                                        registerStatus.paymentTypes,
+                                        salesList[i].docID!,
+                                        registerStatus.paymentTypes!,
                                         registerStatus);
                                   });
                             });
@@ -91,16 +91,16 @@ class ShortSalesList extends StatelessWidget {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return StreamProvider<DailyTransactions>.value(
-                              initialData: null,
-                              catchError: (_, err) => null,
+                              initialData: DailyTransactions(),
+                              catchError: (_, err) => DailyTransactions(),
                               value: DatabaseService().dailyTransactions(
-                                  userBusiness, registerStatus.registerName),
+                                  userBusiness, registerStatus.registerName!),
                               builder: (context, snapshot) {
                                 return SingleSaleDialog(
                                     salesList[i],
                                     userBusiness,
-                                    salesList[i].docID,
-                                    registerStatus.paymentTypes,
+                                    salesList[i].docID!,
+                                    registerStatus.paymentTypes!,
                                     registerStatus);
                               });
                         }));
@@ -123,7 +123,7 @@ class ShortSalesList extends StatelessWidget {
                                       children: [
                                         Text(
                                           DateFormat.MMMd()
-                                              .format(salesList[i].date)
+                                              .format(salesList[i].date!)
                                               .toString(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
@@ -134,7 +134,7 @@ class ShortSalesList extends StatelessWidget {
                                         SizedBox(height: 5),
                                         Text(
                                           DateFormat('HH:mm:ss')
-                                              .format(salesList[i].date)
+                                              .format(salesList[i].date!)
                                               .toString(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
@@ -150,7 +150,7 @@ class ShortSalesList extends StatelessWidget {
                                   width: 45,
                                   child: Text(
                                     DateFormat.MMMd()
-                                        .format(salesList[i].date)
+                                        .format(salesList[i].date!)
                                         .toString(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -165,7 +165,7 @@ class ShortSalesList extends StatelessWidget {
                                   width: 70,
                                   child: Text(
                                     DateFormat('HH:mm:ss')
-                                        .format(salesList[i].date)
+                                        .format(salesList[i].date!)
                                         .toString(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(

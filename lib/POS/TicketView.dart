@@ -31,7 +31,7 @@ class TicketView extends StatefulWidget {
   final int businessIndex;
   final bool insideTable;
   final bool counterSale;
-  final PageController tableController;
+  final PageController? tableController;
   final bool onTableView;
   TicketView(this.userProfile, this.businessIndex, this.insideTable,
       this.tableController, this.counterSale, this.onTableView);
@@ -41,17 +41,17 @@ class TicketView extends StatefulWidget {
 
 class _TicketViewState extends State<TicketView> {
   final formatCurrency = new NumberFormat.simpleCurrency();
-  String orderName;
+  late String orderName;
   var _orderNamecontroller = TextEditingController();
 
   var orderDetail;
-  Map<String, dynamic> orderCategories;
-  Map currentValues;
-  double subTotal;
-  double tax;
-  double discount;
+  Map<String, dynamic>? orderCategories;
+  Map? currentValues;
+  late double subTotal;
+  late double tax;
+  late double discount;
   Color color = Colors.white;
-  String ticketConcept;
+  String? ticketConcept;
   IconData ticketIcon = Icons.assignment_outlined;
 
   @override
@@ -86,18 +86,18 @@ class _TicketViewState extends State<TicketView> {
     final registerStatus = Provider.of<CashRegister>(context);
     final tables = Provider.of<List<Tables>>(context);
 
-    if (categoriesProvider == null || tables == null) {
+    if (tables == []) {
       return Container();
     }
 
-    final User user = FirebaseAuth.instance.currentUser;
-    final String uid = user.uid.toString();
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String uid = user!.uid.toString();
 
     if (widget.insideTable) {
       return StreamBuilder(
           stream: bloc.getStream,
           initialData: bloc.ticketItems,
-          builder: (context, snapshot) {
+          builder: (context, AsyncSnapshot snapshot) {
             subTotal = snapshot.data["Subtotal"];
             tax = snapshot.data["IVA"];
             discount = snapshot.data["Discount"];
@@ -145,11 +145,11 @@ class _TicketViewState extends State<TicketView> {
                                       MaterialStateProperty.all<Color>(
                                           Colors.greenAccent),
                                   overlayColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                      MaterialStateProperty.resolveWith<Color?>(
                                     (Set<MaterialState> states) {
                                       if (states
                                           .contains(MaterialState.hovered))
-                                        return Colors.greenAccent[100];
+                                        return Colors.greenAccent[100]!;
                                       if (states.contains(
                                               MaterialState.focused) ||
                                           states
@@ -164,7 +164,7 @@ class _TicketViewState extends State<TicketView> {
                                   if (snapshot.data["Open Table"]) {
                                     if (bloc.ticketItems['Items'].length < 1) {
                                       DatabaseService().updateTable(
-                                        widget.userProfile.activeBusiness,
+                                        widget.userProfile.activeBusiness!,
                                         orderName,
                                         0,
                                         0,
@@ -187,7 +187,7 @@ class _TicketViewState extends State<TicketView> {
                                       );
                                     } else {
                                       DatabaseService().updateTable(
-                                        widget.userProfile.activeBusiness,
+                                        widget.userProfile.activeBusiness!,
                                         orderName,
                                         subTotal,
                                         discount,
@@ -239,7 +239,7 @@ class _TicketViewState extends State<TicketView> {
                                       bloc.ticketItems['Items'].length > 0) {
                                     //If table was not open, open table, save to table doc and Saved collection
                                     DatabaseService().updateTable(
-                                      widget.userProfile.activeBusiness,
+                                      widget.userProfile.activeBusiness!,
                                       orderName,
                                       subTotal,
                                       discount,
@@ -283,7 +283,7 @@ class _TicketViewState extends State<TicketView> {
                                       },
                                     );
                                   }
-                                  widget.tableController
+                                  widget.tableController!
                                       .animateToPage(0,
                                           duration: Duration(milliseconds: 250),
                                           curve: Curves.easeIn)
@@ -465,7 +465,7 @@ class _TicketViewState extends State<TicketView> {
                         children: [
                           //PopUp Menu
                           MoreTicketPopUp(
-                            widget.userProfile.activeBusiness,
+                            widget.userProfile.activeBusiness!,
                             categoriesProvider: categoriesProvider,
                             insideTable: true,
                             tables: tables,
@@ -499,22 +499,22 @@ class _TicketViewState extends State<TicketView> {
                                           providers: [
                                             StreamProvider<
                                                     DailyTransactions>.value(
-                                                initialData: null,
-                                                catchError: (_, err) => null,
+                                                initialData: DailyTransactions(),
+                                                catchError: (_, err) => DailyTransactions(),
                                                 value: DatabaseService()
                                                     .dailyTransactions(
                                                         widget.userProfile
                                                             .activeBusiness,
                                                         registerStatus
-                                                            .registerName)),
+                                                            .registerName!)),
                                             StreamProvider<MonthlyStats>.value(
-                                                initialData: null,
+                                                initialData: MonthlyStats(),
                                                 value: DatabaseService()
                                                     .monthlyStatsfromSnapshot(
                                                         widget.userProfile
-                                                            .activeBusiness)),
+                                                            .activeBusiness!)),
                                             StreamProvider<UserData>.value(
-                                                initialData: null,
+                                                initialData: UserData(),
                                                 value: DatabaseService()
                                                     .userProfile(uid)),
                                           ],
@@ -543,7 +543,7 @@ class _TicketViewState extends State<TicketView> {
                                             orderType:
                                                 snapshot.data["Order Type"],
                                             onTableView: widget.onTableView,
-                                            register: (!registerStatus.registerisOpen) ? null : registerStatus,
+                                            register: (!registerStatus.registerisOpen!) ? null : registerStatus,
                                           ),
                                         );
                                       });
@@ -565,7 +565,7 @@ class _TicketViewState extends State<TicketView> {
       return StreamBuilder(
           stream: bloc.getStream,
           initialData: bloc.ticketItems,
-          builder: (context, snapshot) {
+          builder: (context, AsyncSnapshot snapshot) {
             subTotal = snapshot.data["Subtotal"];
             tax = snapshot.data["IVA"];
             discount = snapshot.data["Discount"];
@@ -656,7 +656,6 @@ class _TicketViewState extends State<TicketView> {
                                     bloc.changeOrderType('Desperdicios');
                                     break;
 
-                                    break;
                                 }
                               },
                               itemBuilder: (context) => [
@@ -755,7 +754,7 @@ class _TicketViewState extends State<TicketView> {
                               : Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 3.0),
-                                    child: Text(ticketConcept,
+                                    child: Text(ticketConcept!,
                                         overflow: TextOverflow.fade,
                                         maxLines: 1),
                                   ),
@@ -807,7 +806,7 @@ class _TicketViewState extends State<TicketView> {
                               onPressed: () {
                                 if (snapshot.data['Order Type'] == 'Mesa') {
                                   DatabaseService().updateTable(
-                                    widget.userProfile.activeBusiness,
+                                    widget.userProfile.activeBusiness!,
                                     orderName,
                                     0,
                                     0,
@@ -835,7 +834,7 @@ class _TicketViewState extends State<TicketView> {
                                 setState(() {
                                   ticketConcept = 'Mostrador';
                                 });
-                                widget.tableController
+                                widget.tableController!
                                     .animateToPage(0,
                                         duration: Duration(milliseconds: 250),
                                         curve: Curves.easeIn)
@@ -1028,7 +1027,7 @@ class _TicketViewState extends State<TicketView> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.white70),
                                 overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                    MaterialStateProperty.resolveWith<Color?>(
                                   (Set<MaterialState> states) {
                                     if (states.contains(MaterialState.hovered))
                                       return Colors.grey.shade300;
@@ -1072,7 +1071,7 @@ class _TicketViewState extends State<TicketView> {
                                 );
 
                                 //Clear Variables
-                                widget.tableController
+                                widget.tableController!
                                     .animateToPage(0,
                                         duration: Duration(milliseconds: 250),
                                         curve: Curves.easeIn)
@@ -1088,7 +1087,7 @@ class _TicketViewState extends State<TicketView> {
                           SizedBox(width: 10),
                           //PopUp Menu
                           MoreTicketPopUp(
-                            widget.userProfile.activeBusiness,
+                            widget.userProfile.activeBusiness!,
                             categoriesProvider: categoriesProvider,
                             insideTable: false,
                             tables: null,
@@ -1127,23 +1126,23 @@ class _TicketViewState extends State<TicketView> {
                                             providers: [
                                               StreamProvider<
                                                       DailyTransactions>.value(
-                                                  initialData: null,
-                                                  catchError: (_, err) => null,
+                                                  initialData: DailyTransactions(),
+                                                  catchError: (_, err) => DailyTransactions(),
                                                   value: DatabaseService()
                                                       .dailyTransactions(
                                                           widget.userProfile
                                                               .activeBusiness,
                                                           registerStatus
-                                                              .registerName)),
+                                                              .registerName!)),
                                               StreamProvider<
                                                       MonthlyStats>.value(
-                                                  initialData: null,
+                                                  initialData: MonthlyStats(),
                                                   value: DatabaseService()
                                                       .monthlyStatsfromSnapshot(
                                                           widget.userProfile
-                                                              .activeBusiness)),
+                                                              .activeBusiness!)),
                                               StreamProvider<UserData>.value(
-                                                  initialData: null,
+                                                  initialData: UserData(),
                                                   value: DatabaseService()
                                                       .userProfile(uid)),
                                             ],
@@ -1185,7 +1184,7 @@ class _TicketViewState extends State<TicketView> {
                                               orderType:
                                                   snapshot.data["Order Type"],
                                               onTableView: widget.onTableView,
-                                              register: (!registerStatus.registerisOpen) ? null : registerStatus,
+                                              register: (!registerStatus.registerisOpen!) ? null : registerStatus,
                                             ),
                                           );
                                         });
@@ -1225,7 +1224,7 @@ class _TicketViewState extends State<TicketView> {
     return StreamBuilder(
         stream: bloc.getStream,
         initialData: bloc.ticketItems,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           orderName = snapshot.data["Order Name"];
           color = snapshot.data["Color"];
 
@@ -1261,7 +1260,7 @@ class _TicketViewState extends State<TicketView> {
                   children: [
                     //Active Orders
                     StreamProvider<List<SavedOrders>>.value(
-                        initialData: null,
+                        initialData: [],
                         value: DatabaseService()
                             .orderList(widget.userProfile.activeBusiness),
                         child: ActiveOrders(_orderNamecontroller)),
@@ -1310,7 +1309,7 @@ class _TicketViewState extends State<TicketView> {
                                       context: context,
                                       builder: (context) {
                                         return SelectTableDialog(tables, false,
-                                            widget.userProfile.activeBusiness,
+                                            widget.userProfile.activeBusiness!,
                                             orderNameController:
                                                 _orderNamecontroller);
                                       });
@@ -1322,7 +1321,7 @@ class _TicketViewState extends State<TicketView> {
                                         context: context,
                                         builder: (context) {
                                           return ScheduleSaleDialog(
-                                              widget.userProfile.activeBusiness,
+                                              widget.userProfile.activeBusiness!,
                                               bloc.totalTicketAmount,
                                               discount,
                                               tax,
@@ -1338,7 +1337,7 @@ class _TicketViewState extends State<TicketView> {
                                             builder: (context) =>
                                                 Scaffold(
                                                   body: ScheduleSaleDialog(
-                                                      widget.userProfile.activeBusiness,
+                                                      widget.userProfile.activeBusiness!,
                                                       bloc.totalTicketAmount,
                                                       discount,
                                                       tax,
@@ -1362,7 +1361,6 @@ class _TicketViewState extends State<TicketView> {
                                   //   ticketIcon = Icons.coffee_outlined;
                                   bloc.changeOrderType('Desperdicios');
                                   // });
-                                  break;
                                   break;
                                 // case 3:
                                 //   setState(() {
@@ -1507,7 +1505,7 @@ class _TicketViewState extends State<TicketView> {
                                 : Expanded(
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 3.0),
-                                      child: Text(ticketConcept,
+                                      child: Text(ticketConcept!,
                                           overflow: TextOverflow.fade,
                                           maxLines: 1),
                                     ),
@@ -1559,7 +1557,7 @@ class _TicketViewState extends State<TicketView> {
                             onPressed: () {
                               if (snapshot.data['Order Type'] == 'Mesa') {
                                 DatabaseService().updateTable(
-                                  widget.userProfile.activeBusiness,
+                                  widget.userProfile.activeBusiness!,
                                   orderName,
                                   0,
                                   0,
@@ -1786,7 +1784,7 @@ class _TicketViewState extends State<TicketView> {
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white70),
                               overlayColor:
-                                  MaterialStateProperty.resolveWith<Color>(
+                                  MaterialStateProperty.resolveWith<Color?>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.hovered))
                                     return Colors.grey.shade300;
@@ -1873,7 +1871,7 @@ class _TicketViewState extends State<TicketView> {
                                   snapshot.data["Open Table"]) {
                                 if (bloc.ticketItems['Items'].length < 1) {
                                   DatabaseService().updateTable(
-                                    widget.userProfile.activeBusiness,
+                                    widget.userProfile.activeBusiness!,
                                     orderName,
                                     0,
                                     0,
@@ -1897,7 +1895,7 @@ class _TicketViewState extends State<TicketView> {
                                   );
                                 } else {
                                   DatabaseService().updateTable(
-                                    widget.userProfile.activeBusiness,
+                                    widget.userProfile.activeBusiness!,
                                     orderName,
                                     subTotal,
                                     discount,
@@ -1945,7 +1943,7 @@ class _TicketViewState extends State<TicketView> {
                                   !snapshot.data["Open Table"] &&
                                   bloc.ticketItems['Items'].length > 0) {
                                 DatabaseService().updateTable(
-                                  widget.userProfile.activeBusiness,
+                                  widget.userProfile.activeBusiness!,
                                   orderName,
                                   subTotal,
                                   discount,
@@ -2002,7 +2000,7 @@ class _TicketViewState extends State<TicketView> {
                         SizedBox(width: 10),
                         //PopUp Menu
                         MoreTicketPopUp(
-                          widget.userProfile.activeBusiness,
+                          widget.userProfile.activeBusiness!,
                           categoriesProvider: categoriesProvider,
                           insideTable: false,
                           tables: null,
@@ -2042,22 +2040,22 @@ class _TicketViewState extends State<TicketView> {
                                           providers: [
                                             StreamProvider<
                                                     DailyTransactions>.value(
-                                                initialData: null,
-                                                catchError: (_, err) => null,
+                                                initialData: DailyTransactions(),
+                                                catchError: (_, err) =>  DailyTransactions(),
                                                 value: DatabaseService()
                                                     .dailyTransactions(
                                                         widget.userProfile
                                                             .activeBusiness,
                                                         registerStatus
-                                                            .registerName)),
+                                                            .registerName!)),
                                             StreamProvider<MonthlyStats>.value(
-                                                initialData: null,
+                                                initialData: MonthlyStats(),
                                                 value: DatabaseService()
                                                     .monthlyStatsfromSnapshot(
                                                         widget.userProfile
-                                                            .activeBusiness)),
+                                                            .activeBusiness!)),
                                             StreamProvider<UserData>.value(
-                                                initialData: null,
+                                                initialData: UserData(),
                                                 value: DatabaseService()
                                                     .userProfile(uid)),
                                           ],
@@ -2096,7 +2094,7 @@ class _TicketViewState extends State<TicketView> {
                                             orderType:
                                                 snapshot.data["Order Type"],
                                             onTableView: widget.onTableView,
-                                            register: (!registerStatus.registerisOpen) ? null : registerStatus,
+                                            register: (!registerStatus.registerisOpen!) ? null : registerStatus,
                                           ),
                                         );
                                       });

@@ -49,9 +49,9 @@ class _ExpenseInputState extends State<ExpenseInput> {
         });
 
         if (type == 'Costo de Ventas') {
-          dropdownCategories = widget.categoriesProvider.categoryList;
+          dropdownCategories = widget.categoriesProvider.categoryList!;
         } else {
-          highlevelMapping.pnlMapping[type]
+          highlevelMapping.pnlMapping![type]
               .forEach((y) => dropdownCategories.add(y));
           if (MediaQuery.of(context).size.width > 650) {
             bloc.addToExpenseList({
@@ -72,9 +72,9 @@ class _ExpenseInputState extends State<ExpenseInput> {
               context: context,
               builder: (context) {
                 return StreamProvider<UserData>.value(
-                  initialData: null,
+                  initialData: UserData(),
                   value: DatabaseService().userProfile(
-                      FirebaseAuth.instance.currentUser.uid.toString()),
+                      FirebaseAuth.instance.currentUser!.uid.toString()),
                   child: CreateExpenseDialog(
                       costType,
                       registerStatus,
@@ -89,9 +89,9 @@ class _ExpenseInputState extends State<ExpenseInput> {
               context,
               MaterialPageRoute(
                   builder: (context) => StreamProvider<UserData>.value(
-                        initialData: null,
+                        initialData: UserData(),
                         value: DatabaseService().userProfile(
-                            FirebaseAuth.instance.currentUser.uid.toString()),
+                            FirebaseAuth.instance.currentUser!.uid.toString()),
                         child: CreateExpenseDialog(
                             costType,
                             registerStatus,
@@ -114,7 +114,7 @@ class _ExpenseInputState extends State<ExpenseInput> {
               // border: Border.all(color: Colors.grey),
               boxShadow: <BoxShadow>[
                 new BoxShadow(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                   offset: Offset(0.0, 0.0),
                   blurRadius: 10.0,
                 )
@@ -173,22 +173,22 @@ class _ExpenseInputState extends State<ExpenseInput> {
     final registerStatus = Provider.of<CashRegister>(context);
     final dailyTransactions = Provider.of<DailyTransactions>(context);
 
-    if (highLevelMapping == null || registerStatus == null) {
+    if (registerStatus == CashRegister()) {
       return Container();
     }
 
-    if (categoriesProvider == null) {
+    if (categoriesProvider == CategoryList()) {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        costSelection('', Icons.circle, Colors.grey[200], highLevelMapping,
+        costSelection('', Icons.circle, Colors.grey[200]!, highLevelMapping,
             registerStatus, dailyTransactions),
         SizedBox(width: 35),
-        costSelection('', Icons.circle, Colors.grey[200], highLevelMapping,
+        costSelection('', Icons.circle, Colors.grey[200]!, highLevelMapping,
             registerStatus, dailyTransactions),
         SizedBox(width: 35),
-        costSelection('', Icons.circle, Colors.grey[200], highLevelMapping,
+        costSelection('', Icons.circle, Colors.grey[200]!, highLevelMapping,
             registerStatus, dailyTransactions),
         SizedBox(width: 35),
-        costSelection('', Icons.circle, Colors.grey[200], highLevelMapping,
+        costSelection('', Icons.circle, Colors.grey[200]!, highLevelMapping,
             registerStatus, dailyTransactions),
       ]);
     } else {
@@ -197,7 +197,7 @@ class _ExpenseInputState extends State<ExpenseInput> {
         width: double.infinity,
         child: Center(
           child: ListView.builder(
-              itemCount: highLevelMapping.expenseGroups.length,
+              itemCount: highLevelMapping.expenseGroups!.length,
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
@@ -205,18 +205,18 @@ class _ExpenseInputState extends State<ExpenseInput> {
                 IconData iconSelected;
                 Color colorSelected;
 
-                if (highLevelMapping.expenseGroups[i] == 'Costo de Ventas') {
+                if (highLevelMapping.expenseGroups![i] == 'Costo de Ventas') {
                   iconSelected = Icons.attach_money;
                   colorSelected = Colors.red;
-                } else if (highLevelMapping.expenseGroups[i] ==
+                } else if (highLevelMapping.expenseGroups![i] ==
                     'Gastos del Local') {
                   iconSelected = Icons.store;
                   colorSelected = Colors.blue;
-                } else if (highLevelMapping.expenseGroups[i] ==
+                } else if (highLevelMapping.expenseGroups![i] ==
                     'Gastos de Empleados') {
                   iconSelected = Icons.people;
                   colorSelected = Colors.green;
-                } else if (highLevelMapping.expenseGroups[i] ==
+                } else if (highLevelMapping.expenseGroups![i] ==
                     'Gastos de Empleados') {
                   iconSelected = Icons.people;
                   colorSelected = Colors.green;
@@ -229,7 +229,7 @@ class _ExpenseInputState extends State<ExpenseInput> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 5),
                     child: costSelection(
-                        highLevelMapping.expenseGroups[i],
+                        highLevelMapping.expenseGroups![i],
                         iconSelected,
                         colorSelected,
                         highLevelMapping,

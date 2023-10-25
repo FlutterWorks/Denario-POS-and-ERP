@@ -10,7 +10,7 @@ class LastSales extends StatelessWidget {
   Widget build(BuildContext context) {
     final salesList = Provider.of<List<Sales>>(context);
 
-    if (salesList == null) {
+    if (salesList == []) {
       return Container();
     }
 
@@ -32,9 +32,9 @@ class LastSales extends StatelessWidget {
                   Container(
                       width: 150,
                       child: Text(
-                        (salesList[i].soldItems.length > 1)
+                        (salesList[i].soldItems!.length > 1)
                             ? 'Varios'
-                            : salesList[i].soldItems[0].product,
+                            : salesList[i].soldItems![0].product!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )),
@@ -43,7 +43,7 @@ class LastSales extends StatelessWidget {
                   Container(
                       width: 100,
                       child: Text(
-                        salesList[i].clientName,
+                        salesList[i].clientName!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )),
@@ -64,7 +64,7 @@ class LastSales extends StatelessWidget {
                       width: 75,
                       child: Center(
                         child: Text(
-                          salesList[i].soldItems.length.toString(),
+                          salesList[i].soldItems!.length.toString(),
                           textAlign: TextAlign.end,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,

@@ -1,15 +1,15 @@
 class Supply {
-  String supply;
-  List searchName;
-  double price;
-  String unit;
-  double qty;
-  List suppliers;
-  List suppliersSearchName;
-  List recipe;
-  List priceHistory;
-  String docID;
-  List listofIngredients;
+  String? supply;
+  List? searchName;
+  double? price;
+  String? unit;
+  double? qty;
+  List? suppliers;
+  List? suppliersSearchName;
+  List? recipe;
+  List? priceHistory;
+  String? docID;
+  List? listofIngredients;
 
   Supply(
       {this.supply,

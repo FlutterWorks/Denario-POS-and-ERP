@@ -15,7 +15,7 @@ class PayablesList extends StatelessWidget {
     final payables = Provider.of<List<Payables>>(context);
     final registerStatus = Provider.of<CashRegister>(context);
 
-    if (registerStatus == null || payables == null) {
+    if (payables == []) {
       return Container();
     }
 
@@ -66,22 +66,22 @@ class PayablesList extends StatelessWidget {
           itemBuilder: (context, i) {
             String description;
 
-            if (payables[i].items.isEmpty) {
+            if (payables[i].items!.isEmpty) {
               description = 'Sin descripción';
-            } else if (payables[i].items.length > 1) {
-              if (payables[i].items.length > 2) {
+            } else if (payables[i].items!.length > 1) {
+              if (payables[i].items!.length > 2) {
                 description =
-                    '${payables[i].items[0].product}, ${payables[i].items[1].product}...';
+                    '${payables[i].items![0].product}, ${payables[i].items![1].product}...';
               } else {
                 description =
-                    '${payables[i].items[0].product}, ${payables[i].items[1].product}';
+                    '${payables[i].items![0].product}, ${payables[i].items![1].product}';
               }
             } else {
-              description = payables[i].items.first.product;
+              description = payables[i].items!.first.product!;
             }
 
             var ageing =
-                payables[i].date.difference(DateTime.now()).inDays * -1;
+                payables[i].date!.difference(DateTime.now()).inDays * -1;
             if (MediaQuery.of(context).size.width > 650) {
               return TextButton(
                 onPressed: () {
@@ -89,11 +89,11 @@ class PayablesList extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return StreamProvider<DailyTransactions>.value(
-                            initialData: null,
+                            initialData: DailyTransactions(),
                             value: DatabaseService().dailyTransactions(
-                                businessID, registerStatus.registerName),
-                            child: SinglePayableDialog(
-                                payables[i], businessID, registerStatus));
+                                businessID, registerStatus.registerName!),
+                            child:
+                                SinglePayableDialog(payables[i], businessID));
                       });
                 },
                 child: Container(
@@ -125,7 +125,7 @@ class PayablesList extends StatelessWidget {
                               Container(
                                 child: Text(
                                   DateFormat.MMMd()
-                                      .format(payables[i].date)
+                                      .format(payables[i].date!)
                                       .toString(),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -212,11 +212,11 @@ class PayablesList extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return StreamProvider<DailyTransactions>.value(
-                            initialData: null,
+                            initialData: DailyTransactions(),
                             value: DatabaseService().dailyTransactions(
-                                businessID, registerStatus.registerName),
+                                businessID, registerStatus.registerName!),
                             child: SinglePayableDialog(
-                                payables[i], businessID, registerStatus));
+                                payables[i], businessID));
                       });
                 },
                 child: Container(
@@ -249,7 +249,7 @@ class PayablesList extends StatelessWidget {
                                 Container(
                                   child: Text(
                                     DateFormat.MMMd()
-                                        .format(payables[i].date)
+                                        .format(payables[i].date!)
                                         .toString(),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,

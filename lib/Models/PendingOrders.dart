@@ -1,13 +1,13 @@
 class PendingOrders {
-  String orderName;
-  String address;
-  int phone;
-  int total;
-  String paymentType;
-  List orderDetail;
-  DateTime orderDate;
-  String docID;
-  String orderType;
+  String? orderName;
+  String? address;
+  int? phone;
+  int? total;
+  String? paymentType;
+  List? orderDetail;
+  DateTime? orderDate;
+  String? docID;
+  String? orderType;
 
   PendingOrders(
       {this.orderName,

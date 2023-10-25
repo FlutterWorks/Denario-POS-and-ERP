@@ -16,7 +16,7 @@ class TaskList extends StatelessWidget {
     final scheduledSales = Provider.of<List<ScheduledSales>>(context);
 
     if (MediaQuery.of(context).size.width > 650) {
-      if (scheduledSales == null || scheduledSales.length < 1) {
+      if (scheduledSales.length < 1) {
         return Container();
       }
       return Expanded(
@@ -25,7 +25,7 @@ class TaskList extends StatelessWidget {
         itemBuilder: ((context, index) {
           List itemsList = [];
 
-          scheduledSales[index].orderDetail.forEach((x) {
+          scheduledSales[index].orderDetail!.forEach((x) {
             itemsList.add('${x['Quantity']}x ${x['Name']}');
           });
 
@@ -38,7 +38,8 @@ class TaskList extends StatelessWidget {
                 children: [
                   //Time
                   Text(
-                    DateFormat('HH:mm').format((scheduledSales[index].dueDate)),
+                    DateFormat('HH:mm')
+                        .format((scheduledSales[index].dueDate!)),
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -60,7 +61,7 @@ class TaskList extends StatelessWidget {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
                           overlayColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                              MaterialStateProperty.resolveWith<Color?>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.hovered))
                                 return Colors.grey.shade200;
@@ -78,12 +79,12 @@ class TaskList extends StatelessWidget {
                                 return MultiProvider(
                                   providers: [
                                     StreamProvider<MonthlyStats>.value(
-                                        initialData: null,
+                                        initialData: MonthlyStats(),
                                         value: DatabaseService()
                                             .monthlyStatsfromSnapshot(
                                                 activeBusiness)),
                                     StreamProvider<CashRegister>.value(
-                                        initialData: null,
+                                        initialData: CashRegister(),
                                         value: DatabaseService()
                                             .cashRegisterStatus(
                                                 activeBusiness)),
@@ -109,14 +110,14 @@ class TaskList extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Text(
-                                        scheduledSales[index].orderName,
+                                        scheduledSales[index].orderName!,
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Spacer(),
-                                      (scheduledSales[index].pending)
+                                      (scheduledSales[index].pending!)
                                           ? Container()
                                           : Container(
                                               padding: EdgeInsets.all(2),
@@ -136,13 +137,11 @@ class TaskList extends StatelessWidget {
                                 Text(itemsList.join(', '),
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 14)),
-                                (scheduledSales[index].note != '' &&
-                                        scheduledSales[index].note != null)
+                                (scheduledSales[index].note != '')
                                     ? SizedBox(height: 8)
                                     : SizedBox(),
-                                (scheduledSales[index].note != '' &&
-                                        scheduledSales[index].note != null)
-                                    ? Text(scheduledSales[index].note,
+                                (scheduledSales[index].note != '')
+                                    ? Text(scheduledSales[index].note!,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: TextStyle(
@@ -164,7 +163,7 @@ class TaskList extends StatelessWidget {
         }),
       ));
     } else {
-      if (scheduledSales == null || scheduledSales.length < 1) {
+      if (scheduledSales.length < 1) {
         return SliverList(
             delegate: SliverChildBuilderDelegate((context, i) {
           return const SizedBox();
@@ -175,7 +174,7 @@ class TaskList extends StatelessWidget {
           (context, index) {
             List itemsList = [];
 
-            scheduledSales[index].orderDetail.forEach((x) {
+            scheduledSales[index].orderDetail!.forEach((x) {
               itemsList.add('${x['Quantity']}x ${x['Name']}');
             });
 
@@ -189,7 +188,7 @@ class TaskList extends StatelessWidget {
                     //Time
                     Text(
                       DateFormat('HH:mm')
-                          .format((scheduledSales[index].dueDate)),
+                          .format((scheduledSales[index].dueDate!)),
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -211,7 +210,7 @@ class TaskList extends StatelessWidget {
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(Colors.white),
                             overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered))
                                   return Colors.grey.shade200;
@@ -230,12 +229,12 @@ class TaskList extends StatelessWidget {
                                     return MultiProvider(
                                       providers: [
                                         StreamProvider<MonthlyStats>.value(
-                                            initialData: null,
+                                            initialData: MonthlyStats(),
                                             value: DatabaseService()
                                                 .monthlyStatsfromSnapshot(
                                                     activeBusiness)),
                                         StreamProvider<CashRegister>.value(
-                                            initialData: null,
+                                            initialData: CashRegister(),
                                             value: DatabaseService()
                                                 .cashRegisterStatus(
                                                     activeBusiness)),
@@ -252,12 +251,12 @@ class TaskList extends StatelessWidget {
                                 return MultiProvider(
                                   providers: [
                                     StreamProvider<MonthlyStats>.value(
-                                        initialData: null,
+                                        initialData: MonthlyStats(),
                                         value: DatabaseService()
                                             .monthlyStatsfromSnapshot(
                                                 activeBusiness)),
                                     StreamProvider<CashRegister>.value(
-                                        initialData: null,
+                                        initialData: CashRegister(),
                                         value: DatabaseService()
                                             .cashRegisterStatus(
                                                 activeBusiness)),
@@ -284,14 +283,14 @@ class TaskList extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         Text(
-                                          scheduledSales[index].orderName,
+                                          scheduledSales[index].orderName!,
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Spacer(),
-                                        (scheduledSales[index].pending)
+                                        (scheduledSales[index].pending!)
                                             ? Container()
                                             : Container(
                                                 padding: EdgeInsets.all(2),
@@ -311,13 +310,11 @@ class TaskList extends StatelessWidget {
                                   Text(itemsList.join(', '),
                                       style: TextStyle(
                                           color: Colors.black, fontSize: 14)),
-                                  (scheduledSales[index].note != '' &&
-                                          scheduledSales[index].note != null)
+                                  (scheduledSales[index].note != '')
                                       ? SizedBox(height: 8)
                                       : SizedBox(),
-                                  (scheduledSales[index].note != '' &&
-                                          scheduledSales[index].note != null)
-                                      ? Text(scheduledSales[index].note,
+                                  (scheduledSales[index].note != '')
+                                      ? Text(scheduledSales[index].note!,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
                                           style: TextStyle(

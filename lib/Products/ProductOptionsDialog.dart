@@ -5,15 +5,15 @@ import 'package:flutter/services.dart';
 
 class ProductOptionsDialog extends StatefulWidget {
   final setProductOptions;
-  final bool editProduct;
-  final String optionTitle;
-  final bool mandatory;
-  final bool multipleOptions;
-  final String priceStructure;
-  final List optionsList;
-  final int index;
+  final bool? editProduct;
+  final String? optionTitle;
+  final bool? mandatory;
+  final bool? multipleOptions;
+  final String? priceStructure;
+  final List? optionsList;
+  final int? index;
   const ProductOptionsDialog(this.setProductOptions, this.editProduct,
-      {Key key,
+      {Key? key,
       this.optionTitle,
       this.mandatory,
       this.multipleOptions,
@@ -29,7 +29,7 @@ class ProductOptionsDialog extends StatefulWidget {
 class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
   final _formKey = GlobalKey<FormState>();
 
-  String optionTitle;
+  String? optionTitle;
   bool mandadory = false;
   bool multipleOptions = false;
 
@@ -44,15 +44,15 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
     'Éstas opciones no afectan el precio'
   ];
   String priceStructure = 'Éstas opciones no afectan el precio';
-  String newPriceStructure;
+  String? newPriceStructure;
 
   @override
   void initState() {
-    if (widget.editProduct) {
+    if (widget.editProduct!) {
       optionTitle = widget.optionTitle;
-      mandadory = widget.mandatory;
-      multipleOptions = widget.multipleOptions;
-      priceOptions = widget.optionsList;
+      mandadory = widget.mandatory!;
+      multipleOptions = widget.multipleOptions!;
+      priceOptions = widget.optionsList!;
 
       if (widget.priceStructure == 'Aditional') {
         priceStructure = 'Monto adicional sobre el producto';
@@ -142,7 +142,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                         border: new OutlineInputBorder(
                           borderRadius: new BorderRadius.circular(12.0),
                           borderSide: new BorderSide(
-                            color: Colors.grey[350],
+                            color: Colors.grey[350]!,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -212,7 +212,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                                   }).toList(),
                                   onChanged: (newValue) {
                                     setState(() {
-                                      priceStructure = newValue;
+                                      priceStructure = newValue.toString();
                                     });
                                   },
                                 )),
@@ -348,7 +348,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                                             borderRadius:
                                                 new BorderRadius.circular(12.0),
                                             borderSide: new BorderSide(
-                                              color: Colors.grey[350],
+                                              color: Colors.grey[350]!,
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
@@ -408,7 +408,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                                             borderRadius:
                                                 new BorderRadius.circular(12.0),
                                             borderSide: new BorderSide(
-                                              color: Colors.grey[350],
+                                              color: Colors.grey[350]!,
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
@@ -493,7 +493,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all<Color>(Colors.black),
-                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                        overlayColor: MaterialStateProperty.resolveWith<Color?>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.hovered))
                               return Colors.grey;
@@ -505,7 +505,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                         ),
                       ),
                       onPressed: () {
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           if (priceStructure ==
                               'Monto adicional sobre el producto') {
                             newPriceStructure = 'Aditional';
@@ -602,7 +602,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                       border: new OutlineInputBorder(
                         borderRadius: new BorderRadius.circular(12.0),
                         borderSide: new BorderSide(
-                          color: Colors.grey[350],
+                          color: Colors.grey[350]!,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -665,7 +665,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                       }).toList(),
                       onChanged: (newValue) {
                         setState(() {
-                          priceStructure = newValue;
+                          priceStructure = newValue.toString();
                         });
                       },
                     )),
@@ -821,7 +821,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                                                   new BorderRadius.circular(
                                                       12.0),
                                               borderSide: new BorderSide(
-                                                color: Colors.grey[350],
+                                                color: Colors.grey[350]!,
                                               ),
                                             ),
                                             focusedBorder: OutlineInputBorder(
@@ -883,7 +883,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                                                   new BorderRadius.circular(
                                                       12.0),
                                               borderSide: new BorderSide(
-                                                color: Colors.grey[350],
+                                                color: Colors.grey[350]!,
                                               ),
                                             ),
                                             focusedBorder: OutlineInputBorder(
@@ -972,7 +972,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.black),
-                      overlayColor: MaterialStateProperty.resolveWith<Color>(
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.hovered))
                             return Colors.grey;
@@ -984,7 +984,7 @@ class _ProductOptionsDialogState extends State<ProductOptionsDialog> {
                       ),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         if (priceStructure ==
                             'Monto adicional sobre el producto') {
                           newPriceStructure = 'Aditional';

@@ -15,7 +15,7 @@ class ExpenseList extends StatelessWidget {
     final expenses = Provider.of<List<Expenses>>(context);
     final registerStatus = Provider.of<CashRegister>(context);
 
-    if (registerStatus == null || expenses == null) {
+    if (expenses == []) {
       return Container();
     }
 
@@ -68,18 +68,18 @@ class ExpenseList extends StatelessWidget {
           itemBuilder: (context, i) {
             String description;
 
-            if (expenseList[i].items.isEmpty) {
+            if (expenseList[i].items!.isEmpty) {
               description = 'Sin descripción';
-            } else if (expenseList[i].items.length > 1) {
-              if (expenseList[i].items.length > 2) {
+            } else if (expenseList[i].items!.length > 1) {
+              if (expenseList[i].items!.length > 2) {
                 description =
-                    '${expenseList[i].items[0].product}, ${expenseList[i].items[1].product}...';
+                    '${expenseList[i].items![0].product}, ${expenseList[i].items![1].product}...';
               } else {
                 description =
-                    '${expenseList[i].items[0].product}, ${expenseList[i].items[1].product}';
+                    '${expenseList[i].items![0].product}, ${expenseList[i].items![1].product}';
               }
             } else {
-              description = expenseList[i].items.first.product;
+              description = expenseList[i].items!.first.product!;
             }
             if (MediaQuery.of(context).size.width > 650) {
               return TextButton(
@@ -88,9 +88,9 @@ class ExpenseList extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return StreamProvider<DailyTransactions>.value(
-                            initialData: null,
+                            initialData: DailyTransactions(),
                             value: DatabaseService().dailyTransactions(
-                                businessID, registerStatus.registerName),
+                                businessID, registerStatus.registerName!),
                             child: SingleExpenseDialog(
                                 expenseList[i], businessID, registerStatus));
                       });
@@ -107,7 +107,7 @@ class ExpenseList extends StatelessWidget {
                           width: 50,
                           child: Text(
                             DateFormat.MMMd()
-                                .format(expenseList[i].date)
+                                .format(expenseList[i].date!)
                                 .toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -186,9 +186,9 @@ class ExpenseList extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return StreamProvider<DailyTransactions>.value(
-                            initialData: null,
+                            initialData: DailyTransactions(),
                             value: DatabaseService().dailyTransactions(
-                                businessID, registerStatus.registerName),
+                                businessID, registerStatus.registerName!),
                             child: SingleExpenseDialog(
                                 expenseList[i], businessID, registerStatus));
                       });
@@ -206,7 +206,7 @@ class ExpenseList extends StatelessWidget {
                         child: Container(
                             child: Text(
                           DateFormat.MMMd()
-                              .format(expenseList[i].date)
+                              .format(expenseList[i].date!)
                               .toString(),
                           textAlign: TextAlign.center,
                           style: TextStyle(

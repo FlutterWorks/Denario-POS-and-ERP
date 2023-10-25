@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 import '../Models/Tables.dart';
 
 class MoreTicketPopUp extends StatefulWidget {
-  final CategoryList categoriesProvider;
-  final bool insideTable;
-  final List<Tables> tables;
+  final CategoryList? categoriesProvider;
+  final bool? insideTable;
+  final List<Tables>? tables;
   final String activeBusiness;
 
   MoreTicketPopUp(this.activeBusiness,
@@ -29,17 +29,17 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
   String newItemdescription = '';
   String newItemCategory = '';
   double newItemPrice = 0;
-  FocusNode newItemdescriptionNode;
-  FocusNode newItemPriceNode;
+  FocusNode? newItemdescriptionNode;
+  FocusNode? newItemPriceNode;
   int categoryInt = 0;
-  String selectedCategory;
-  List categoriesList;
-  bool fixedDiscount;
+  late String selectedCategory;
+  List? categoriesList;
+  late bool fixedDiscount;
 
   @override
   void initState() {
-    categoriesList = widget.categoriesProvider.categoryList;
-    selectedCategory = categoriesList.first;
+    categoriesList = widget.categoriesProvider!.categoryList;
+    selectedCategory = categoriesList!.first;
     fixedDiscount = true;
     super.initState();
   }
@@ -265,7 +265,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -277,7 +277,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                                         ),
                                       ),
                                       onFieldSubmitted: (x) {
-                                        newItemPriceNode.nextFocus();
+                                        newItemPriceNode!.nextFocus();
                                       },
                                       onChanged: (val) {
                                         setState(() {
@@ -323,7 +323,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                                           fontSize: 14,
                                           color: Colors.grey[700]),
                                       value: selectedCategory,
-                                      items: categoriesList.map((x) {
+                                      items: categoriesList!.map((x) {
                                         return new DropdownMenuItem(
                                           value: x,
                                           child: new Text(x),
@@ -331,7 +331,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                                       }).toList(),
                                       onChanged: (x) {
                                         setState(() {
-                                          selectedCategory = x;
+                                          selectedCategory = x.toString();
                                         });
                                       },
                                     )),
@@ -394,7 +394,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                                         borderRadius:
                                             new BorderRadius.circular(12.0),
                                         borderSide: new BorderSide(
-                                          color: Colors.grey[350],
+                                          color: Colors.grey[350]!,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -469,7 +469,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                   context: context,
                   builder: (context) {
                     return SelectTableDialog(
-                        widget.tables, true, widget.activeBusiness);
+                        widget.tables!, true, widget.activeBusiness);
                   });
           }
         },
@@ -523,7 +523,7 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
           ];
 
           //Change tables
-          if (widget.insideTable)
+          if (widget.insideTable!)
             items.add(PopupMenuItem<int>(
               value: 3,
               child: Row(

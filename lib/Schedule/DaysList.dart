@@ -47,7 +47,7 @@ class DaysList extends StatelessWidget {
             ),
             SizedBox(height: 10),
             StreamProvider<List<ScheduledSales>>.value(
-                initialData: null,
+                initialData: [],
                 value: DatabaseService()
                     .scheduledList(activeBusiness, selectedDate),
                 child: TaskList(activeBusiness)),

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class StatsByProducts extends StatefulWidget {
   final DailyTransactions dayStats;
-  StatsByProducts(this.dayStats, {Key key}) : super(key: key);
+  StatsByProducts(this.dayStats, {Key? key}) : super(key: key);
 
   @override
   State<StatsByProducts> createState() => _StatsByProductsState();
@@ -13,9 +13,9 @@ class StatsByProducts extends StatefulWidget {
 class _StatsByProductsState extends State<StatsByProducts> {
   final formatCurrency = new NumberFormat.simpleCurrency();
 
-  bool sortedPrdAscending;
-  bool sortAmtAscending;
-  bool sortQtyAscending;
+  bool? sortedPrdAscending;
+  bool? sortAmtAscending;
+  bool? sortQtyAscending;
   List nProductList = [];
 
   void _sortByProduct() {
@@ -25,12 +25,12 @@ class _StatsByProductsState extends State<StatsByProducts> {
       sortQtyAscending = null;
     } else {}
     setState(() {
-      if (sortedPrdAscending) {
+      if (sortedPrdAscending!) {
         nProductList.sort((a, b) => b['Name'].compareTo(a['Name']));
       } else {
         nProductList.sort((a, b) => a['Name'].compareTo(b['Name']));
       }
-      sortedPrdAscending = !sortedPrdAscending;
+      sortedPrdAscending = !sortedPrdAscending!;
     });
   }
 
@@ -41,12 +41,12 @@ class _StatsByProductsState extends State<StatsByProducts> {
       sortQtyAscending = null;
     } else {}
     setState(() {
-      if (sortAmtAscending) {
+      if (sortAmtAscending!) {
         nProductList.sort((a, b) => b['Amount'].compareTo(a['Amount']));
       } else {
         nProductList.sort((a, b) => a['Amount'].compareTo(b['Amount']));
       }
-      sortAmtAscending = !sortAmtAscending;
+      sortAmtAscending = !sortAmtAscending!;
     });
   }
 
@@ -57,12 +57,12 @@ class _StatsByProductsState extends State<StatsByProducts> {
       sortQtyAscending = true;
     } else {}
     setState(() {
-      if (sortQtyAscending) {
+      if (sortQtyAscending!) {
         nProductList.sort((a, b) => b['Qty'].compareTo(a['Qty']));
       } else {
         nProductList.sort((a, b) => a['Qty'].compareTo(b['Qty']));
       }
-      sortQtyAscending = !sortQtyAscending;
+      sortQtyAscending = !sortQtyAscending!;
     });
   }
 
@@ -70,11 +70,11 @@ class _StatsByProductsState extends State<StatsByProducts> {
   void initState() {
     //New
     if (widget.dayStats.salesAmountbyProduct != null) {
-      widget.dayStats.salesAmountbyProduct.keys.forEach((k) {
+      widget.dayStats.salesAmountbyProduct!.keys.forEach((k) {
         nProductList.add({
           'Name': k,
-          'Qty': widget.dayStats.salesCountbyProduct[k],
-          'Amount': widget.dayStats.salesAmountbyProduct[k]
+          'Qty': widget.dayStats.salesCountbyProduct![k],
+          'Amount': widget.dayStats.salesAmountbyProduct![k]
         });
       });
     } else {
@@ -104,7 +104,7 @@ class _StatsByProductsState extends State<StatsByProducts> {
                       child: TextButton(
                     onPressed: _sortByProduct,
                     style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.resolveWith<Color>(
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.hovered)) {
                             return Colors.grey.withOpacity(
@@ -128,7 +128,7 @@ class _StatsByProductsState extends State<StatsByProducts> {
                         (sortedPrdAscending == null)
                             ? Container()
                             : Icon(
-                                (sortedPrdAscending)
+                                (sortedPrdAscending!)
                                     ? Icons.arrow_upward
                                     : Icons.arrow_downward,
                                 color: Colors.black,
@@ -148,7 +148,7 @@ class _StatsByProductsState extends State<StatsByProducts> {
                           onPressed: _sortByAmount,
                           style: ButtonStyle(
                             overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered)) {
                                   return Colors.grey.withOpacity(
@@ -173,7 +173,7 @@ class _StatsByProductsState extends State<StatsByProducts> {
                               (sortAmtAscending == null)
                                   ? Container()
                                   : Icon(
-                                      (sortAmtAscending)
+                                      (sortAmtAscending!)
                                           ? Icons.arrow_upward
                                           : Icons.arrow_downward,
                                       color: Colors.black,
@@ -192,7 +192,7 @@ class _StatsByProductsState extends State<StatsByProducts> {
                           onPressed: _sortByQty,
                           style: ButtonStyle(
                             overlayColor:
-                                MaterialStateProperty.resolveWith<Color>(
+                                MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.hovered)) {
                                   return Colors.grey.withOpacity(
@@ -217,7 +217,7 @@ class _StatsByProductsState extends State<StatsByProducts> {
                               (sortQtyAscending == null)
                                   ? Container()
                                   : Icon(
-                                      (sortQtyAscending)
+                                      (sortQtyAscending!)
                                           ? Icons.arrow_upward
                                           : Icons.arrow_downward,
                                       color: Colors.black,

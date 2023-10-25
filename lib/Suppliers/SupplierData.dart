@@ -4,7 +4,6 @@ import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/Supplier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 
 class SupplierData extends StatefulWidget {
   final String currentBusiness;
@@ -13,7 +12,7 @@ class SupplierData extends StatefulWidget {
   final HighLevelMapping highLevelMapping;
   const SupplierData(
       this.currentBusiness, this.vendor, this.categories, this.highLevelMapping,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -30,7 +29,7 @@ class _SupplierDataState extends State<SupplierData> {
   String address = '';
   String description = '';
   String category = '';
-  bool categoryEdited;
+  bool? categoryEdited;
   List costTypes = [];
   List availableCostTypes = [
     'Costo de Ventas',
@@ -53,20 +52,19 @@ class _SupplierDataState extends State<SupplierData> {
 
   @override
   void initState() {
-    if (widget.vendor.predefinedCategory == '' ||
-        widget.vendor.predefinedCategory == null) {
-      category = widget.categories.categoryList.first;
+    if (widget.vendor.predefinedCategory == '') {
+      category = widget.categories.categoryList!.first;
       categoryEdited = false;
     } else {
-      category = widget.vendor.predefinedCategory;
+      category = widget.vendor.predefinedCategory!;
       categoryEdited = false;
     }
-    costTypes = widget.vendor.costTypeAssociated;
+    costTypes = widget.vendor.costTypeAssociated!;
     if ((costTypes.contains('Costo de Ventas') && costTypes.length > 1) ||
         (!costTypes.contains('Costo de Ventas') && costTypes.length > 0)) {
       var otherCost = costTypes.firstWhere((x) => x != 'Costo de Ventas');
 
-      widget.highLevelMapping.pnlMapping[otherCost]
+      widget.highLevelMapping.pnlMapping![otherCost]
           .forEach((x) => dropdownAccounts.add(x));
       account = dropdownAccounts.first;
     }
@@ -135,7 +133,7 @@ class _SupplierDataState extends State<SupplierData> {
             style: TextStyle(color: Colors.black, fontSize: 14),
             cursorColor: Colors.grey,
             enabled: false,
-            key: Key(widget.vendor.name),
+            key: Key(widget.vendor.name!),
             initialValue: widget.vendor.name,
             decoration: InputDecoration(
               focusColor: Colors.black,
@@ -143,7 +141,7 @@ class _SupplierDataState extends State<SupplierData> {
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(12.0),
                 borderSide: new BorderSide(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
@@ -184,7 +182,7 @@ class _SupplierDataState extends State<SupplierData> {
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(12.0),
                 borderSide: new BorderSide(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
@@ -216,7 +214,7 @@ class _SupplierDataState extends State<SupplierData> {
             style: TextStyle(color: Colors.black, fontSize: 14),
             cursorColor: Colors.grey,
             enabled: (edit) ? true : false,
-            key: Key(widget.vendor.email),
+            key: Key(widget.vendor.email!),
             initialValue: widget.vendor.email,
             decoration: InputDecoration(
               focusColor: Colors.black,
@@ -224,7 +222,7 @@ class _SupplierDataState extends State<SupplierData> {
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(12.0),
                 borderSide: new BorderSide(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
@@ -274,7 +272,7 @@ class _SupplierDataState extends State<SupplierData> {
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(12.0),
                 borderSide: new BorderSide(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
@@ -307,14 +305,14 @@ class _SupplierDataState extends State<SupplierData> {
             cursorColor: Colors.grey,
             enabled: (edit) ? true : false,
             initialValue: widget.vendor.address,
-            key: Key(widget.vendor.address),
+            key: Key(widget.vendor.address!),
             decoration: InputDecoration(
               focusColor: Colors.black,
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14),
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(12.0),
                 borderSide: new BorderSide(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
@@ -352,7 +350,7 @@ class _SupplierDataState extends State<SupplierData> {
                           shrinkWrap: true,
                           physics: BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemCount: widget.vendor.costTypeAssociated.length,
+                          itemCount: widget.vendor.costTypeAssociated!.length,
                           itemBuilder: (context, i) {
                             return Padding(
                               padding: const EdgeInsets.only(right: 8.0),
@@ -364,7 +362,7 @@ class _SupplierDataState extends State<SupplierData> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Center(
                                     child: Text(
-                                      widget.vendor.costTypeAssociated[i],
+                                      widget.vendor.costTypeAssociated![i],
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 12,
@@ -379,70 +377,67 @@ class _SupplierDataState extends State<SupplierData> {
                   ),
                 ],
               )
-            : Row(
-                children: [
-                  Text(
-                    'Costos asociados',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: Colors.black45),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
+            : Row(children: [
+                Text(
+                  'Costos asociados',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      color: Colors.black45),
+                ),
+                SizedBox(width: 10),
+                Expanded(
                     child: Container(
-                      // height: 35,
-                      width: double.infinity,
-                      child: Tags(
-                          itemCount: availableCostTypes.length,
-                          itemBuilder: (int i) {
-                            return ItemTags(
-                                padding: EdgeInsets.all(12),
-                                key: Key(i.toString()),
-                                index: i,
-                                active:
-                                    (costTypes.contains(availableCostTypes[i]))
-                                        ? true
-                                        : false,
-                                title: availableCostTypes[i],
-                                textColor: Colors.black,
-                                textActiveColor: Colors.black,
-                                color: Colors.white,
-                                activeColor: Colors.greenAccent,
-                                onPressed: (item) {
-                                  if (costTypes
-                                      .contains(availableCostTypes[i])) {
-                                    setState(() {
-                                      costTypes.remove(availableCostTypes[i]);
-                                    });
-                                  } else {
-                                    setState(() {
-                                      costTypes.add(availableCostTypes[i]);
+                        width: double.infinity,
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 5,
+                          children:
+                              List.generate(availableCostTypes.length, (i) {
+                            return TextButton(
+                              onPressed: () {
+                                if (costTypes.contains(availableCostTypes[i])) {
+                                  setState(() {
+                                    costTypes.remove(availableCostTypes[i]);
+                                  });
+                                } else {
+                                  setState(() {
+                                    costTypes.add(availableCostTypes[i]);
 
-                                      dropdownAccounts = [];
-                                      if ((costTypes.contains(
-                                                  'Costo de Ventas') &&
-                                              costTypes.length > 1) ||
-                                          (!costTypes.contains(
-                                                  'Costo de Ventas') &&
-                                              costTypes.length >= 1)) {
-                                        var otherCost = costTypes.firstWhere(
-                                            (x) => x != 'Costo de Ventas');
+                                    dropdownAccounts = [];
+                                    if ((costTypes
+                                                .contains('Costo de Ventas') &&
+                                            costTypes.length > 1) ||
+                                        (!costTypes
+                                                .contains('Costo de Ventas') &&
+                                            costTypes.length >= 1)) {
+                                      var otherCost = costTypes.firstWhere(
+                                          (x) => x != 'Costo de Ventas');
 
-                                        widget.highLevelMapping
-                                            .pnlMapping[otherCost]
-                                            .forEach(
-                                                (x) => dropdownAccounts.add(x));
-                                        account = dropdownAccounts.first;
-                                      }
-                                    });
-                                  }
-                                });
+                                      widget.highLevelMapping
+                                          .pnlMapping![otherCost]
+                                          .forEach(
+                                              (x) => dropdownAccounts.add(x));
+                                      account = dropdownAccounts.first;
+                                    }
+                                  });
+                                }
+                              },
+                              child: Container(
+                                  key: Key(i.toString()),
+                                  decoration: BoxDecoration(
+                                      color: (costTypes
+                                              .contains(availableCostTypes[i])
+                                          ? Colors.greenAccent
+                                          : Colors.white)),
+                                  child: Text(
+                                    availableCostTypes[i],
+                                    style: TextStyle(color: Colors.black),
+                                  )),
+                            );
                           }),
-                    ),
-                  )
-                ],
-              ),
+                        ))),
+              ]),
         SizedBox(height: 10),
         //Predefined Category and Description
         (edit && costTypes.contains('Costo de Ventas'))
@@ -479,7 +474,7 @@ class _SupplierDataState extends State<SupplierData> {
                                 fontSize: 14,
                                 color: Colors.grey[700]),
                             value: category,
-                            items: widget.categories.categoryList.map((x) {
+                            items: widget.categories.categoryList!.map((x) {
                               return new DropdownMenuItem(
                                 value: x,
                                 child: new Text(x),
@@ -493,7 +488,7 @@ class _SupplierDataState extends State<SupplierData> {
                             }).toList(),
                             onChanged: (newValue) {
                               setState(() {
-                                category = newValue;
+                                category = newValue.toString();
                                 categoryEdited = true;
                               });
                             },
@@ -502,7 +497,7 @@ class _SupplierDataState extends State<SupplierData> {
                             style: TextStyle(color: Colors.black, fontSize: 14),
                             cursorColor: Colors.grey,
                             enabled: false,
-                            key: Key(widget.vendor.predefinedCategory),
+                            key: Key(widget.vendor.predefinedCategory!),
                             initialValue: widget.vendor.predefinedCategory,
                             decoration: InputDecoration(
                               focusColor: Colors.black,
@@ -511,7 +506,7 @@ class _SupplierDataState extends State<SupplierData> {
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(12.0),
                                 borderSide: new BorderSide(
-                                  color: Colors.grey[350],
+                                  color: Colors.grey[350]!,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -594,7 +589,7 @@ class _SupplierDataState extends State<SupplierData> {
                                     }).toList(),
                                     onChanged: (newValue) {
                                       setState(() {
-                                        account = newValue;
+                                        account = newValue.toString();
                                       });
                                     },
                                   )
@@ -603,7 +598,7 @@ class _SupplierDataState extends State<SupplierData> {
                                         color: Colors.black, fontSize: 14),
                                     cursorColor: Colors.grey,
                                     enabled: false,
-                                    key: Key(widget.vendor.predefinedAccount),
+                                    key: Key(widget.vendor.predefinedAccount!),
                                     initialValue:
                                         widget.vendor.predefinedAccount,
                                     decoration: InputDecoration(
@@ -614,7 +609,7 @@ class _SupplierDataState extends State<SupplierData> {
                                         borderRadius:
                                             new BorderRadius.circular(12.0),
                                         borderSide: new BorderSide(
-                                          color: Colors.grey[350],
+                                          color: Colors.grey[350]!,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -655,7 +650,7 @@ class _SupplierDataState extends State<SupplierData> {
                             cursorColor: Colors.grey,
                             textInputAction: TextInputAction.next,
                             enabled: (edit) ? true : false,
-                            key: Key(widget.vendor.initialExpenseDescription),
+                            key: Key(widget.vendor.initialExpenseDescription!),
                             initialValue:
                                 widget.vendor.initialExpenseDescription,
                             decoration: InputDecoration(
@@ -694,7 +689,7 @@ class _SupplierDataState extends State<SupplierData> {
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.black),
-                  overlayColor: MaterialStateProperty.resolveWith<Color>(
+                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
                     (Set<MaterialState> states) {
                       if (states.contains(MaterialState.hovered))
                         return Colors.grey;
@@ -712,18 +707,18 @@ class _SupplierDataState extends State<SupplierData> {
                       (name != '') ? name : widget.vendor.name,
                       (name != '')
                           ? setSearchParam(name.toLowerCase())
-                          : setSearchParam(widget.vendor.name.toLowerCase()),
+                          : setSearchParam(widget.vendor.name!.toLowerCase()),
                       (id != 0) ? id : widget.vendor.id,
                       (email != '') ? email : widget.vendor.email,
                       (phone != 0) ? phone : widget.vendor.phone,
                       (address != '') ? address : widget.vendor.address,
                       costTypes,
-                      (categoryEdited)
+                      (categoryEdited!)
                           ? category
-                          : widget.vendor.predefinedCategory,
+                          : widget.vendor.predefinedCategory!,
                       (description != '')
                           ? description
-                          : widget.vendor.initialExpenseDescription,
+                          : widget.vendor.initialExpenseDescription!,
                       account);
                   setState(() {
                     edit = false;

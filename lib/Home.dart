@@ -17,55 +17,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<UserBusinessData> userBusiness;
-  int businessIndex;
-  var activeBusinessField = '';
-  var activeBusinessRol;
-
   @override
   Widget build(BuildContext context) {
-    final userProfile = Provider.of<UserData>(context);
+    final userProfile = Provider.of<UserData?>(context);
 
-    if (userProfile == null || userProfile.businesses.isEmpty) {
-      return Loading();
-    }
-
-    //Logic to get business role and field for Home View
-    // userBusiness = userProfile.businesses;
-    // userBusiness.forEach((element) {
-    //   if (element.businessID == userProfile.activeBusiness) {
-    //     businessIndex = userBusiness.indexOf(element);
-    //   }
-    // });
-    // activeBusinessRol = userBusiness[businessIndex].roleInBusiness;
-
-    final businessIndexOnProfile = userProfile.businesses.indexWhere(
-        (element) => element.businessID == userProfile.activeBusiness);
-
-    if (businessIndexOnProfile == -1) {
-      return Loading();
+    if (userProfile == UserData()) {
+      return Scaffold(body: Loading());
     }
 
     return MultiProvider(
       providers: [
         StreamProvider<CashRegister>.value(
-            initialData: null,
+            initialData: CashRegister(),
             value: DatabaseService()
-                .cashRegisterStatus(userProfile.activeBusiness)),
+                .cashRegisterStatus(userProfile!.activeBusiness)),
         StreamProvider<BusinessProfile>.value(
-            initialData: null,
+            initialData: BusinessProfile(),
             value: DatabaseService()
                 .userBusinessProfile(userProfile.activeBusiness)),
         StreamProvider<HighLevelMapping>.value(
-            initialData: null,
+            initialData: HighLevelMapping(),
             value:
                 DatabaseService().highLevelMapping(userProfile.activeBusiness)),
         StreamProvider<CategoryList>.value(
-            initialData: null,
+            initialData: CategoryList(),
             value:
                 DatabaseService().categoriesList(userProfile.activeBusiness)),
         StreamProvider<List<PendingOrders>>.value(
-            initialData: null,
+            initialData: [],
             value:
                 DatabaseService().pendingOrderList(userProfile.activeBusiness)),
       ],

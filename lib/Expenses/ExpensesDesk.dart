@@ -21,8 +21,8 @@ class ExpensesDesk extends StatefulWidget {
 }
 
 class _ExpensesDeskState extends State<ExpensesDesk> {
-  DateTime selectedIvoiceDate;
-  bool searchByPayables;
+  DateTime? selectedIvoiceDate;
+  late bool searchByPayables;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
     final categoriesProvider = Provider.of<CategoryList>(context);
     final highlevelMapping = Provider.of<HighLevelMapping>(context);
 
-    if (categoriesProvider == null || highlevelMapping == null) {
+    if (highlevelMapping == HighLevelMapping()) {
       return Container();
     }
 
@@ -65,23 +65,23 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
           MultiProvider(
               providers: [
                 StreamProvider<CategoryList>.value(
-                    initialData: null,
+                    initialData: CategoryList(),
                     value: DatabaseService()
                         .categoriesList(userProfile.activeBusiness)),
                 StreamProvider<AccountsList>.value(
-                    initialData: null,
+                    initialData: AccountsList(),
                     value: DatabaseService()
                         .accountsList(userProfile.activeBusiness))
               ],
-              child: ExpenseInput(userProfile.activeBusiness,
-                  selectedIvoiceDate, categoriesProvider, highlevelMapping)),
+              child: ExpenseInput(userProfile.activeBusiness!,
+                  selectedIvoiceDate!, categoriesProvider, highlevelMapping)),
           SizedBox(height: 20),
           //Expense List
           (MediaQuery.of(context).size.width > 650)
               ? MultiProvider(
                   providers: [
                     StreamProvider<CashRegister>.value(
-                        initialData: null,
+                        initialData: CashRegister(),
                         value: DatabaseService()
                             .cashRegisterStatus(userProfile.activeBusiness)),
                   ],
@@ -106,7 +106,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                           new BorderRadius.circular(12.0),
                                       boxShadow: <BoxShadow>[
                                         new BoxShadow(
-                                          color: Colors.grey[350],
+                                          color: Colors.grey[350]!,
                                           offset: Offset(0.0, 0.0),
                                           blurRadius: 10.0,
                                         )
@@ -220,7 +220,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                             StreamProvider<
                                                                 List<
                                                                     Expenses>>.value(
-                                                              initialData: null,
+                                                              initialData: [],
                                                               value: DatabaseService().expenseList(
                                                                   userProfile
                                                                       .activeBusiness,
@@ -232,7 +232,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                                       .toString()),
                                                               child: ExpensesHistory(
                                                                   userProfile
-                                                                      .activeBusiness),
+                                                                      .activeBusiness!),
                                                             ))),
                                                 // ExpensesHistory(userProfile
                                                 //     .activeBusiness))),
@@ -248,17 +248,17 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                             child: searchByPayables
                                                 ? StreamProvider<
                                                     List<Payables>>.value(
-                                                    initialData: null,
+                                                    initialData: [],
                                                     value: DatabaseService()
                                                         .payablesList(userProfile
                                                             .activeBusiness),
                                                     child: PayablesList(
                                                         userProfile
-                                                            .activeBusiness),
+                                                            .activeBusiness!),
                                                   )
                                                 : StreamProvider<
                                                     List<Expenses>>.value(
-                                                    initialData: null,
+                                                    initialData: [],
                                                     value: DatabaseService()
                                                         .shortExpenseList(
                                                             userProfile
@@ -271,7 +271,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                                 .toString()),
                                                     child: ExpenseList(
                                                         userProfile
-                                                            .activeBusiness),
+                                                            .activeBusiness!),
                                                   ),
                                           )
                                         ]),
@@ -288,7 +288,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                           new BorderRadius.circular(12.0),
                                       boxShadow: <BoxShadow>[
                                         new BoxShadow(
-                                          color: Colors.grey[350],
+                                          color: Colors.grey[350]!,
                                           offset: Offset(0.0, 0.0),
                                           blurRadius: 10.0,
                                         )
@@ -310,7 +310,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                           SizedBox(height: 15),
                                           //Expenses List
                                           ExpenseSummary(
-                                              userProfile.activeBusiness)
+                                              userProfile.activeBusiness!)
                                         ]),
                                   ),
                                 ),
@@ -330,7 +330,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                         new BorderRadius.circular(12.0),
                                     boxShadow: <BoxShadow>[
                                       new BoxShadow(
-                                        color: Colors.grey[350],
+                                        color: Colors.grey[350]!,
                                         offset: Offset(0.0, 0.0),
                                         blurRadius: 10.0,
                                       )
@@ -440,7 +440,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                           StreamProvider<
                                                               List<
                                                                   Expenses>>.value(
-                                                            initialData: null,
+                                                            initialData: [],
                                                             value: DatabaseService().expenseList(
                                                                 userProfile
                                                                     .activeBusiness,
@@ -452,7 +452,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                                     .toString()),
                                                             child: ExpensesHistory(
                                                                 userProfile
-                                                                    .activeBusiness),
+                                                                    .activeBusiness!),
                                                           ))),
                                               // ExpensesHistory(userProfile
                                               //     .activeBusiness))),
@@ -467,19 +467,19 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                         searchByPayables
                                             ? StreamProvider<
                                                 List<Payables>>.value(
-                                                initialData: null,
+                                                initialData: [],
                                                 value: DatabaseService()
                                                     .payablesList(userProfile
                                                         .activeBusiness),
                                                 child: Expanded(
                                                   child: PayablesList(
                                                       userProfile
-                                                          .activeBusiness),
+                                                          .activeBusiness!),
                                                 ),
                                               )
                                             : StreamProvider<
                                                 List<Expenses>>.value(
-                                                initialData: null,
+                                                initialData: [],
                                                 value: DatabaseService()
                                                     .shortExpenseList(
                                                         userProfile
@@ -492,7 +492,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                             .toString()),
                                                 child: Expanded(
                                                   child: ExpenseList(userProfile
-                                                      .activeBusiness),
+                                                      .activeBusiness!),
                                                 ),
                                               ),
                                         // ExpenseList(userProfile.activeBusiness)
@@ -510,7 +510,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                         new BorderRadius.circular(12.0),
                                     boxShadow: <BoxShadow>[
                                       new BoxShadow(
-                                        color: Colors.grey[350],
+                                        color: Colors.grey[350]!,
                                         offset: Offset(0.0, 0.0),
                                         blurRadius: 10.0,
                                       )
@@ -532,7 +532,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                         SizedBox(height: 15),
                                         //Expenses List
                                         ExpenseSummary(
-                                            userProfile.activeBusiness)
+                                            userProfile.activeBusiness!)
                                       ]),
                                 ),
                               ],
@@ -541,7 +541,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
               : MultiProvider(
                   providers: [
                     StreamProvider<CashRegister>.value(
-                        initialData: null,
+                        initialData: CashRegister(),
                         value: DatabaseService()
                             .cashRegisterStatus(userProfile.activeBusiness)),
                   ],
@@ -560,7 +560,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                               borderRadius: new BorderRadius.circular(12.0),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.grey[350],
+                                  color: Colors.grey[350]!,
                                   offset: Offset(0.0, 0.0),
                                   blurRadius: 10.0,
                                 )
@@ -587,7 +587,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                     color: searchByPayables
                                                         ? Colors.white
                                                         : Colors.greenAccent[
-                                                            400]))),
+                                                            400]!))),
                                         child: TextButton(
                                             onPressed: () {
                                               setState(() {
@@ -604,7 +604,8 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                     return Colors.grey.withOpacity(
                                                         0.2); // Customize the hover color here
                                                   }
-                                                  return null; // Use default overlay color for other states
+                                                  return Colors.grey.withOpacity(
+                                                      0.2); // Use default overlay color for other states
                                                 },
                                               ),
                                             ),
@@ -634,7 +635,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                         : 0,
                                                     color: searchByPayables
                                                         ? Colors
-                                                            .greenAccent[400]
+                                                            .greenAccent[400]!
                                                         : Colors.white))),
                                         child: TextButton(
                                             onPressed: () {
@@ -652,7 +653,8 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                     return Colors.grey.withOpacity(
                                                         0.2); // Customize the hover color here
                                                   }
-                                                  return null; // Use default overlay color for other states
+                                                  return Colors.grey.withOpacity(
+                                                      0.2); // Use default overlay color for other states
                                                 },
                                               ),
                                             ),
@@ -683,7 +685,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                   builder: (context) =>
                                                       StreamProvider<
                                                           List<Expenses>>.value(
-                                                        initialData: null,
+                                                        initialData: [],
                                                         value: DatabaseService()
                                                             .expenseList(
                                                                 userProfile
@@ -696,7 +698,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                                     .toString()),
                                                         child: ExpensesHistory(
                                                             userProfile
-                                                                .activeBusiness),
+                                                                .activeBusiness!),
                                                       ))),
                                           // ExpensesHistory(userProfile
                                           //     .activeBusiness))),
@@ -711,16 +713,16 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                 //Expenses List
                                 searchByPayables
                                     ? StreamProvider<List<Payables>>.value(
-                                        initialData: null,
+                                        initialData: [],
                                         value: DatabaseService().payablesList(
                                             userProfile.activeBusiness),
                                         child: Expanded(
                                           child: PayablesList(
-                                              userProfile.activeBusiness),
+                                              userProfile.activeBusiness!),
                                         ),
                                       )
                                     : StreamProvider<List<Expenses>>.value(
-                                        initialData: null,
+                                        initialData: [],
                                         value: DatabaseService()
                                             .shortExpenseList(
                                                 userProfile.activeBusiness,
@@ -728,7 +730,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                                 DateTime.now().year.toString()),
                                         child: Expanded(
                                           child: ExpenseList(
-                                              userProfile.activeBusiness),
+                                              userProfile.activeBusiness!),
                                         ),
                                       ),
                               ],
@@ -745,7 +747,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                               borderRadius: new BorderRadius.circular(12.0),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.grey[350],
+                                  color: Colors.grey[350]!,
                                   offset: Offset(0.0, 0.0),
                                   blurRadius: 10.0,
                                 )
@@ -764,7 +766,7 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                                   ),
                                   SizedBox(height: 15),
                                   //Expenses List
-                                  ExpenseSummary(userProfile.activeBusiness)
+                                  ExpenseSummary(userProfile.activeBusiness!)
                                 ]),
                           ),
                         ],

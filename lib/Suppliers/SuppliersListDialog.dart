@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class SuppliersListDialog extends StatefulWidget {
   final selectVendor;
   final String businessID;
-  const SuppliersListDialog(this.selectVendor, this.businessID, {Key key})
+  const SuppliersListDialog(this.selectVendor, this.businessID, {Key? key})
       : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class SuppliersListDialog extends StatefulWidget {
 
 class _SuppliersListDialogState extends State<SuppliersListDialog> {
   String name = '';
-  int limitSearch;
+  late int limitSearch;
   void loadMore() {
     setState(() {
       limitSearch = limitSearch + 10;
@@ -66,7 +66,7 @@ class _SuppliersListDialogState extends State<SuppliersListDialog> {
                           border: new OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(12.0),
                             borderSide: new BorderSide(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -102,17 +102,17 @@ class _SuppliersListDialogState extends State<SuppliersListDialog> {
               ),
               SizedBox(height: 20),
               //List of  Suppliers
-              (name != '' && name != null)
+              (name != '')
                   ? StreamProvider<List<Supplier>>.value(
                       value: DatabaseService()
                           .suppliersList(widget.businessID, name.toLowerCase()),
-                      initialData: null,
+                      initialData: [],
                       child: ListofSuppliers(
                           widget.selectVendor, limitSearch, loadMore))
                   : StreamProvider<List<Supplier>>.value(
                       value: DatabaseService()
                           .allSuppliersList(widget.businessID, limitSearch),
-                      initialData: null,
+                      initialData: [],
                       child: ListofSuppliers(
                           widget.selectVendor, limitSearch, loadMore)),
             ]),
@@ -126,7 +126,7 @@ class ListofSuppliers extends StatelessWidget {
   final loadMore;
   final int limitSearch;
   ListofSuppliers(this.selectSupplier, this.limitSearch, this.loadMore,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
@@ -135,12 +135,12 @@ class ListofSuppliers extends StatelessWidget {
   Widget build(BuildContext context) {
     final supplier = Provider.of<List<Supplier>>(context);
 
-    if (supplier == null) {
+    if (supplier == []) {
       return Container();
     }
 
     return Expanded(
-        child: (supplier == null)
+        child: (supplier == [])
             ? ListView.builder(
                 shrinkWrap: true,
                 itemCount: 3,
@@ -175,7 +175,7 @@ class ListofSuppliers extends StatelessWidget {
                                     //Name
                                     Container(
                                       width: 150,
-                                      child: Text(supplier[i].name,
+                                      child: Text(supplier[i].name!,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.black,
@@ -186,9 +186,11 @@ class ListofSuppliers extends StatelessWidget {
                                     Container(
                                       width: 150,
                                       child: Text(
-                                        (supplier[i].costTypeAssociated.length >
+                                        (supplier[i]
+                                                    .costTypeAssociated!
+                                                    .length >
                                                 0)
-                                            ? supplier[i].costTypeAssociated[0]
+                                            ? supplier[i].costTypeAssociated![0]
                                             : 'Sin costo asociado',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
@@ -201,8 +203,7 @@ class ListofSuppliers extends StatelessWidget {
                                     Container(
                                       width: 150,
                                       child: Text(
-                                        (supplier[i].phone != null &&
-                                                supplier[i].phone != 0)
+                                        (supplier[i].phone != 0)
                                             ? supplier[i].phone.toString()
                                             : 'Teléfono sin agregar',
                                         textAlign: TextAlign.center,
@@ -231,7 +232,7 @@ class ListofSuppliers extends StatelessWidget {
                                     Expanded(
                                       flex: 5,
                                       child: Container(
-                                        child: Text(supplier[i].name,
+                                        child: Text(supplier[i].name!,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 color: Colors.black,
@@ -246,11 +247,11 @@ class ListofSuppliers extends StatelessWidget {
                                       child: Container(
                                         child: Text(
                                           (supplier[i]
-                                                      .costTypeAssociated
+                                                      .costTypeAssociated!
                                                       .length >
                                                   0)
                                               ? supplier[i]
-                                                  .costTypeAssociated[0]
+                                                  .costTypeAssociated![0]
                                               : 'Sin costo asociado',
                                           textAlign: TextAlign.start,
                                           style: TextStyle(

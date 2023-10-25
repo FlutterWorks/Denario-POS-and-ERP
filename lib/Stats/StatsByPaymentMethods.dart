@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class StatsByPaymentMethods extends StatelessWidget {
   final List paymentMethods;
   final DailyTransactions dayStats;
-  StatsByPaymentMethods(this.dayStats, this.paymentMethods, {Key key})
+  StatsByPaymentMethods(this.dayStats, this.paymentMethods, {Key? key})
       : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
@@ -42,10 +42,10 @@ class StatsByPaymentMethods extends StatelessWidget {
                         width: 120,
                         child: Center(
                           child: Text(
-                            (dayStats.salesByMedium[(paymentMethods[i]
+                            (dayStats.salesByMedium![(paymentMethods[i]
                                         ['Type'])] !=
                                     null)
-                                ? '${formatCurrency.format(dayStats.salesByMedium[(paymentMethods[i]['Type'])])}'
+                                ? '${formatCurrency.format(dayStats.salesByMedium![(paymentMethods[i]['Type'])])}'
                                 : '${formatCurrency.format(0)}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

@@ -11,7 +11,7 @@ class ConfirmDeleteOrder extends StatefulWidget {
   final DailyTransactions dailyTransactions;
   const ConfirmDeleteOrder(
       this.businessID, this.sale, this.registerStatus, this.dailyTransactions,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -54,11 +54,12 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                         overlayColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.hovered))
-                              return Colors.grey[300];
+                              return Colors.grey[300]!;
                             if (states.contains(MaterialState.focused) ||
                                 states.contains(MaterialState.pressed))
-                              return Colors.grey[300];
-                            return null; // Defer to the widget's default.
+                              return Colors.grey[300]!;
+                            return Colors
+                                .grey[300]!; // Defer to the widget's default.
                           },
                         ),
                       ),
@@ -74,8 +75,8 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                         var docRef = firestore
                             .collection('ERP')
                             .doc(widget.businessID)
-                            .collection(widget.sale.date.year.toString())
-                            .doc(widget.sale.date.month.toString());
+                            .collection(widget.sale.date!.year.toString())
+                            .doc(widget.sale.date!.month.toString());
 
                         final doc = await docRef.get();
 
@@ -83,7 +84,7 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                           if (doc.exists) {
                             docRef.update({
                               'Ventas': FieldValue.increment(
-                                  -widget.sale.total.toDouble())
+                                  -widget.sale.total!.toDouble())
                             });
                           }
                         } catch (error) {
@@ -92,13 +93,15 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
 
                         List<Map> items = [];
 
-                        for (var i = 0; i < widget.sale.soldItems.length; i++) {
+                        for (var i = 0;
+                            i < widget.sale.soldItems!.length;
+                            i++) {
                           items.add({
-                            'Name': widget.sale.soldItems[i].product,
-                            'Category': widget.sale.soldItems[i].category,
-                            'Price': widget.sale.soldItems[i].price,
-                            'Quantity': widget.sale.soldItems[i].qty,
-                            'Total Price': widget.sale.soldItems[i].total
+                            'Name': widget.sale.soldItems![i].product,
+                            'Category': widget.sale.soldItems![i].category,
+                            'Price': widget.sale.soldItems![i].price,
+                            'Quantity': widget.sale.soldItems![i].qty,
+                            'Total Price': widget.sale.soldItems![i].total
                           });
                         }
 
@@ -112,19 +115,19 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                             year,
                             month,
                             DateTime.now(),
-                            widget.sale.subTotal * -1,
+                            widget.sale.subTotal! * -1,
                             widget.sale.discount,
                             widget.sale.tax,
-                            widget.sale.total * -1,
+                            widget.sale.total! * -1,
                             items,
-                            'Reversa de ' + widget.sale.transactionID,
+                            'Reversa de ' + widget.sale.transactionID!,
                             widget.sale.paymentType,
-                            widget.sale.orderName,
-                            widget.sale.clientDetails,
-                            widget.sale.transactionID + '-1',
-                            widget.sale.cashRegister,
+                            widget.sale.orderName!,
+                            widget.sale.clientDetails!,
+                            widget.sale.transactionID! + '-1',
+                            widget.sale.cashRegister!,
                             true,
-                            widget.sale.splitPaymentDetails,
+                            widget.sale.splitPaymentDetails!,
                             widget.sale.orderType,
                             0);
 
@@ -181,25 +184,25 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                               monthStatsRef.update({
                                 'Total Sales Count': FieldValue.increment(-1),
                                 'Total Sales':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                                 'Total Items Sold':
                                     FieldValue.increment(-items.length),
                                 'Sales by Order Type.${widget.sale.orderType}':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                                 'Sales by Payment Type.${widget.sale.paymentType}':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                               });
                             } else {
                               monthStatsRef.update({
                                 'Total Sales Count': FieldValue.increment(-1),
                                 'Total Sales':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                                 'Total Items Sold':
                                     FieldValue.increment(-items.length),
                                 'Sales by Order Type.${widget.sale.orderType}':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                               });
-                              for (var x in widget.sale.splitPaymentDetails) {
+                              for (var x in widget.sale.splitPaymentDetails!) {
                                 monthStatsRef.update({
                                   'Sales by Payment Type.${x['Type']}':
                                       FieldValue.increment(-(x['Amount'])),
@@ -238,13 +241,13 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                             };
 
                             orderStats['Total Sales Count'] = 0;
-                            orderStats['Total Sales'] = -widget.sale.total;
+                            orderStats['Total Sales'] = -widget.sale.total!;
                             orderStats['Total Items Sold'] = -items.length;
                             orderStats['Sales by Order Type'] = {
-                              widget.sale.orderType: -widget.sale.total
+                              widget.sale.orderType: -widget.sale.total!
                             };
                             orderStats['Sales by Payment Type'] = {
-                              widget.sale.paymentType: -widget.sale.total
+                              widget.sale.paymentType: -widget.sale.total!
                             };
 
                             //Add list of payment types to the Map
@@ -314,29 +317,29 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                               dayStatsRef.update({
                                 'Total Sales Count': FieldValue.increment(-1),
                                 'Ventas':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                                 'Transacciones del Día':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                                 'Total Items Sold':
                                     FieldValue.increment(-items.length),
                                 'Sales by Order Type.${widget.sale.orderType}':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                                 'Ventas por Medio.${widget.sale.paymentType}':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                               });
                             } else {
                               dayStatsRef.update({
                                 'Total Sales Count': FieldValue.increment(-1),
                                 'Ventas':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                                 'Transacciones del Día':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                                 'Total Items Sold':
                                     FieldValue.increment(-items.length),
                                 'Sales by Order Type.${widget.sale.orderType}':
-                                    FieldValue.increment(-widget.sale.total),
+                                    FieldValue.increment(-widget.sale.total!),
                               });
-                              for (var x in widget.sale.splitPaymentDetails) {
+                              for (var x in widget.sale.splitPaymentDetails!) {
                                 monthStatsRef.update({
                                   'Ventas por Medio.${x['Type']}':
                                       FieldValue.increment(-(x['Amount'])),
@@ -390,11 +393,12 @@ class _ConfirmDeleteOrderState extends State<ConfirmDeleteOrder> {
                         overlayColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.hovered))
-                              return Colors.grey[300];
+                              return Colors.grey[300]!;
                             if (states.contains(MaterialState.focused) ||
                                 states.contains(MaterialState.pressed))
-                              return Colors.grey[300];
-                            return null; // Defer to the widget's default.
+                              return Colors.grey[300]!;
+                            return Colors
+                                .grey[300]!; // Defer to the widget's default.
                           },
                         ),
                       ),

@@ -11,31 +11,31 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmOrder extends StatefulWidget {
-  final double total;
+  final double? total;
   final dynamic items;
 
-  final double subTotal;
-  final double discount;
-  final String discountCode;
-  final double tax;
+  final double? subTotal;
+  final double? discount;
+  final String? discountCode;
+  final double? tax;
   final orderDetail;
-  final String orderName;
+  final String? orderName;
   final clearVariables;
-  final List paymentTypes;
+  final List? paymentTypes;
 
-  final TextEditingController controller;
-  final bool isTable;
-  final String tableCode;
+  final TextEditingController? controller;
+  final bool? isTable;
+  final String? tableCode;
 
-  final PageController tablePageController;
-  final String businessID;
+  final PageController? tablePageController;
+  final String? businessID;
 
-  final bool isSavedOrder;
-  final String savedOrderID;
-  final String orderType;
+  final bool? isSavedOrder;
+  final String? savedOrderID;
+  final String? orderType;
 
-  final bool onTableView;
-  final CashRegister register;
+  final bool? onTableView;
+  final CashRegister? register;
 
   ConfirmOrder(
       {this.total,
@@ -65,14 +65,14 @@ class ConfirmOrder extends StatefulWidget {
 
 class _ConfirmOrderState extends State<ConfirmOrder> {
   final formatCurrency = new NumberFormat.simpleCurrency();
-  Map<String, dynamic> orderCategories;
-  Future currentValuesBuilt;
-  double salesAmount;
-  String paymentType;
-  bool otherChanageAmount;
+  Map<String, dynamic>? orderCategories;
+  late Future currentValuesBuilt;
+  double? salesAmount;
+  String? paymentType;
+  bool? otherChanageAmount;
   double paysWith = 1000;
-  FocusNode otherChangeNode;
-  String invoiceNo;
+  FocusNode? otherChangeNode;
+  String? invoiceNo;
   String clientName = '';
 
   //Split Payment Variables
@@ -97,7 +97,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.register != null && !widget.register.registerisOpen) {
+    if (!widget.register!.registerisOpen!) {
       return Dialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
@@ -159,7 +159,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                             .contains(MaterialState.focused) ||
                                         states.contains(MaterialState.pressed))
                                       return Colors.white;
-                                    return null; // Defer to the widget's default.
+                                    return Colors
+                                        .white; // Defer to the widget's default.
                                   },
                                 ),
                               ),
@@ -195,28 +196,28 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     builder: (context) => MultiProvider(
                                           providers: [
                                             StreamProvider<CashRegister>.value(
-                                                initialData: null,
+                                                initialData: CashRegister(),
                                                 value: DatabaseService()
                                                     .cashRegisterStatus(
                                                         widget.businessID)),
                                             StreamProvider<UserData>.value(
-                                                initialData: null,
+                                                initialData: UserData(),
                                                 value: DatabaseService()
                                                     .userProfile(FirebaseAuth
                                                         .instance
-                                                        .currentUser
+                                                        .currentUser!
                                                         .uid
                                                         .toString())),
                                             StreamProvider<MonthlyStats>.value(
                                               value: DatabaseService()
                                                   .monthlyStatsfromSnapshot(
-                                                      widget.businessID),
-                                              initialData: null,
+                                                      widget.businessID!),
+                                              initialData: MonthlyStats(),
                                             )
                                           ],
                                           child: Scaffold(
                                               body: NewSaleScreen(
-                                            widget.businessID,
+                                            widget.businessID!,
                                             fromPOS: true,
                                           )),
                                         ))),
@@ -276,7 +277,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                       MaterialStateProperty.all<Color>(
                                           Colors.white70),
                                   overlayColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                      MaterialStateProperty.resolveWith<Color?>(
                                     (Set<MaterialState> states) {
                                       if (states
                                           .contains(MaterialState.hovered))
@@ -295,10 +296,10 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     paymentType = 'Efectivo';
                                   });
                                   for (var i = 0;
-                                      i < widget.paymentTypes.length;
+                                      i < widget.paymentTypes!.length;
                                       i++) {
                                     splitPaymentDetails.add({
-                                      'Type': widget.paymentTypes[i]['Type'],
+                                      'Type': widget.paymentTypes![i]['Type'],
                                       'Amount': 0
                                     });
                                   }
@@ -429,7 +430,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     ),
                                     Spacer(),
                                     //Pays with
-                                    (!otherChanageAmount)
+                                    (!otherChanageAmount!)
                                         ? Row(
                                             children: [
                                               //500
@@ -441,7 +442,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                           Colors.white70),
                                                   overlayColor:
                                                       MaterialStateProperty
-                                                          .resolveWith<Color>(
+                                                          .resolveWith<Color?>(
                                                     (Set<MaterialState>
                                                         states) {
                                                       if (states.contains(
@@ -482,7 +483,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                           Colors.white70),
                                                   overlayColor:
                                                       MaterialStateProperty
-                                                          .resolveWith<Color>(
+                                                          .resolveWith<Color?>(
                                                     (Set<MaterialState>
                                                         states) {
                                                       if (states.contains(
@@ -523,7 +524,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                           Colors.white70),
                                                   overlayColor:
                                                       MaterialStateProperty
-                                                          .resolveWith<Color>(
+                                                          .resolveWith<Color?>(
                                                     (Set<MaterialState>
                                                         states) {
                                                       if (states.contains(
@@ -569,7 +570,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                     fontSize: 18,
                                                     color: Colors.black),
                                                 validator: (val) =>
-                                                    val.contains(',')
+                                                    val!.contains(',')
                                                         ? "Usa punto"
                                                         : null,
                                                 inputFormatters: [
@@ -614,7 +615,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                 children: [
                                   //Text
                                   Text(
-                                    "Cambio:  ${formatCurrency.format(paysWith - widget.total)}",
+                                    "Cambio:  ${formatCurrency.format(paysWith - widget.total!)}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.black54,
@@ -660,7 +661,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     Expanded(
                                       child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: widget.paymentTypes.length,
+                                          itemCount:
+                                              widget.paymentTypes!.length,
                                           shrinkWrap: true,
                                           itemBuilder: (context, i) {
                                             return Padding(
@@ -676,7 +678,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                           Radius.circular(8)),
                                                   border: Border.all(
                                                       color: (paymentType ==
-                                                              widget.paymentTypes[
+                                                              widget.paymentTypes![
                                                                   i]['Type'])
                                                           ? Colors.greenAccent
                                                           : Colors.white10,
@@ -685,12 +687,12 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                 child: InkWell(
                                                   onTap: () {
                                                     setState(() {
-                                                      paymentType =
-                                                          widget.paymentTypes[i]
-                                                              ['Type'];
+                                                      paymentType = widget
+                                                              .paymentTypes![i]
+                                                          ['Type'];
                                                     });
                                                     bloc.changePaymentType(
-                                                        widget.paymentTypes[i]
+                                                        widget.paymentTypes![i]
                                                             ['Type']);
                                                   },
                                                   child: Padding(
@@ -699,7 +701,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                               5.0),
                                                       child: Image(
                                                         image: NetworkImage(
-                                                            widget.paymentTypes[
+                                                            widget.paymentTypes![
                                                                 i]['Image']),
                                                         fit: BoxFit.scaleDown,
                                                       )
@@ -723,7 +725,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                               width: double.infinity,
                               child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: widget.paymentTypes.length,
+                                  itemCount: widget.paymentTypes!.length,
                                   shrinkWrap: true,
                                   itemBuilder: (context, i) {
                                     return Padding(
@@ -737,7 +739,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                               Radius.circular(8)),
                                           border: Border.all(
                                               color: (paymentType ==
-                                                      widget.paymentTypes[i]
+                                                      widget.paymentTypes![i]
                                                           ['Type'])
                                                   ? Colors.greenAccent
                                                   : Colors.white10,
@@ -747,17 +749,17 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                           onTap: () {
                                             setState(() {
                                               paymentType = widget
-                                                  .paymentTypes[i]['Type'];
+                                                  .paymentTypes![i]['Type'];
                                             });
-                                            bloc.changePaymentType(
-                                                widget.paymentTypes[i]['Type']);
+                                            bloc.changePaymentType(widget
+                                                .paymentTypes![i]['Type']);
                                           },
                                           child: Padding(
                                               padding:
                                                   const EdgeInsets.all(5.0),
                                               child: Image(
                                                 image: NetworkImage(widget
-                                                    .paymentTypes[i]['Image']),
+                                                    .paymentTypes![i]['Image']),
                                                 fit: BoxFit.scaleDown,
                                               )),
                                         ),
@@ -806,17 +808,17 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                           });
                                           DatabaseService().saveNewOrder(
                                               documentID,
-                                              widget.businessID,
+                                              widget.businessID!,
                                               false,
                                               [],
                                               invoiceNo,
                                               (widget.register == null)
                                                   ? 'Indpendiente'
                                                   : widget
-                                                      .register.registerName,
-                                              widget.isTable,
+                                                      .register!.registerName,
+                                              widget.isTable!,
                                               widget.tableCode,
-                                              widget.isSavedOrder,
+                                              widget.isSavedOrder!,
                                               widget.savedOrderID,
                                               false,
                                               widget.orderName,
@@ -830,8 +832,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                               widget.discountCode);
                                           /////////////////Clear Variables
                                           widget.clearVariables();
-                                          if (widget.onTableView) {
-                                            widget.tablePageController
+                                          if (widget.onTableView!) {
+                                            widget.tablePageController!
                                                 .jumpTo(0);
                                           }
                                           Navigator.of(context).pop();
@@ -862,17 +864,17 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
 
                                           DatabaseService().saveNewOrder(
                                               documentID,
-                                              widget.businessID,
+                                              widget.businessID!,
                                               false,
                                               [],
                                               invoiceNo,
                                               (widget.register == null)
                                                   ? null
                                                   : widget
-                                                      .register.registerName,
-                                              widget.isTable,
+                                                      .register!.registerName,
+                                              widget.isTable!,
                                               widget.tableCode,
-                                              widget.isSavedOrder,
+                                              widget.isSavedOrder!,
                                               widget.savedOrderID,
                                               false,
                                               widget.orderName,
@@ -886,8 +888,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                               widget.discountCode);
                                           /////////////////Clear Variables
                                           widget.clearVariables();
-                                          if (widget.onTableView) {
-                                            widget.tablePageController
+                                          if (widget.onTableView!) {
+                                            widget.tablePageController!
                                                 .jumpTo(0);
                                           }
                                           if (widget.orderType ==
@@ -946,17 +948,17 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                           });
                                           DatabaseService().saveNewOrder(
                                               documentID,
-                                              widget.businessID,
+                                              widget.businessID!,
                                               false,
                                               [],
                                               invoiceNo,
                                               (widget.register == null)
                                                   ? 'Indpendiente'
                                                   : widget
-                                                      .register.registerName,
-                                              widget.isTable,
+                                                      .register!.registerName,
+                                              widget.isTable!,
                                               widget.tableCode,
-                                              widget.isSavedOrder,
+                                              widget.isSavedOrder!,
                                               widget.savedOrderID,
                                               false,
                                               widget.orderName,
@@ -970,8 +972,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                               widget.discountCode);
                                           /////////////////Clear Variables
                                           widget.clearVariables();
-                                          if (widget.onTableView) {
-                                            widget.tablePageController
+                                          if (widget.onTableView!) {
+                                            widget.tablePageController!
                                                 .jumpTo(0);
                                           }
                                           Navigator.of(context).pop();
@@ -1004,17 +1006,17 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                 DateTime.now().toString();
                                             DatabaseService().saveNewOrder(
                                                 documentID,
-                                                widget.businessID,
+                                                widget.businessID!,
                                                 false,
                                                 [],
                                                 invoiceNo,
                                                 (widget.register == null)
                                                     ? null
                                                     : widget
-                                                        .register.registerName,
-                                                widget.isTable,
+                                                        .register!.registerName,
+                                                widget.isTable!,
                                                 widget.tableCode,
-                                                widget.isSavedOrder,
+                                                widget.isSavedOrder!,
                                                 widget.savedOrderID,
                                                 false,
                                                 widget.orderName,
@@ -1028,8 +1030,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                 widget.discountCode);
                                             /////////////////Clear Variables
                                             widget.clearVariables();
-                                            if (widget.onTableView) {
-                                              widget.tablePageController
+                                            if (widget.onTableView!) {
+                                              widget.tablePageController!
                                                   .jumpTo(0);
                                             }
                                             if (widget.orderType ==
@@ -1161,7 +1163,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                     fontSize: 24,
                                                     color: Colors.black),
                                                 validator: (val) =>
-                                                    val.contains(',')
+                                                    val!.contains(',')
                                                         ? "Usa punto"
                                                         : null,
                                                 inputFormatters: [
@@ -1187,7 +1189,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                         int.parse(val);
                                                   });
 
-                                                  currentSplitAmount = 0;
+                                                  double currentSplitAmount = 0;
                                                   for (var i = 0;
                                                       i <
                                                           splitPaymentDetails
@@ -1249,7 +1251,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                 width: 70,
                                 child: Center(
                                   child: Text(
-                                    "${widget.total - currentSplitAmount}",
+                                    "${widget.total! - currentSplitAmount}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.black,
@@ -1279,7 +1281,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                             : MaterialStateProperty.all<Color>(
                                                 Colors.black),
                                     overlayColor: MaterialStateProperty
-                                        .resolveWith<Color>(
+                                        .resolveWith<Color?>(
                                       (Set<MaterialState> states) {
                                         if (states
                                             .contains(MaterialState.hovered))
@@ -1298,14 +1300,14 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                     var documentID = DateTime.now().toString();
                                     DatabaseService().saveNewOrder(
                                         documentID,
-                                        widget.businessID,
+                                        widget.businessID!,
                                         true,
                                         splitPaymentDetails,
                                         invoiceNo,
-                                        widget.register.registerName,
-                                        widget.isTable,
+                                        widget.register!.registerName,
+                                        widget.isTable!,
                                         widget.tableCode,
-                                        widget.isSavedOrder,
+                                        widget.isSavedOrder!,
                                         widget.savedOrderID,
                                         false,
                                         widget.orderName,
@@ -1320,8 +1322,8 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
 
                                     /////////////////Clear Variables
                                     widget.clearVariables();
-                                    if (widget.onTableView) {
-                                      widget.tablePageController.jumpTo(0);
+                                    if (widget.onTableView!) {
+                                      widget.tablePageController!.jumpTo(0);
                                     }
                                     Navigator.of(context).pop();
                                   },

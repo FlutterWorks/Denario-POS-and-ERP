@@ -34,7 +34,7 @@ class CreateExpenseDialog extends StatefulWidget {
 
   get currentRegister => null;
 
-  String get transactionType => null;
+  String? get transactionType => null;
 
   @override
   _CreateExpenseDialogState createState() => _CreateExpenseDialogState();
@@ -48,11 +48,11 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
   double currentCostTypeAmount = 0;
   double currentAccountAmount = 0;
   double currentCategoryAmount = 0;
-  Future currentValuesBuilt;
-  bool isChecked;
+  late Future currentValuesBuilt;
+  late bool isChecked;
   double cashRegisterAmount = 0;
-  bool useEntireAmount;
-  double total;
+  late bool useEntireAmount;
+  double? total;
 
   //Form variables
   String selectedCategory = '';
@@ -71,7 +71,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
   List dropdownVendors = [];
   int accountInt = 0;
 
-  DateTime selectedIvoiceDate;
+  DateTime? selectedIvoiceDate;
 
   var random = new Random();
   setSearchParam(String caseNumber) {
@@ -87,7 +87,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
   //Expense total variables
   ValueKey redrawObject = ValueKey('List');
   bool showList = true;
-  Map<String, dynamic> expenseCategories;
+  Map<String, dynamic>? expenseCategories;
 
   void selectPayment(payment) {
     paymentType = payment;
@@ -104,16 +104,16 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
     showVendorTags = show;
   }
 
-  String vendorName;
+  late String vendorName;
   String selectedVendor = '';
-  bool showSearchOptions;
-  bool showListofVendors;
-  String predefinedCategory;
-  String predefinedDescription;
-  Supplier selectedSupplier;
-  bool saveVendor;
-  bool saveVendorPressed;
-  bool showVendorTags;
+  late bool showSearchOptions;
+  late bool showListofVendors;
+  String? predefinedCategory;
+  String? predefinedDescription;
+  Supplier? selectedSupplier;
+  late bool saveVendor;
+  late bool saveVendorPressed;
+  late bool showVendorTags;
   String invoiceReference = '';
   void saveNewVendor() {
     saveVendor = true;
@@ -122,8 +122,8 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
 
   void selectVendor(Supplier vendor) {
     setState(() {
-      selectedVendor = vendor.name;
-      vendorName = vendor.name;
+      selectedVendor = vendor.name!;
+      vendorName = vendor.name!;
       showSearchOptions = false;
       showListofVendors = false;
       predefinedCategory = vendor.predefinedCategory;
@@ -144,14 +144,13 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
     // } else
     if (widget.costType != 'Costo de Ventas' &&
         bloc.expenseItems['Items'].length <= 1 &&
-        vendor.predefinedAccount != null &&
         vendor.predefinedAccount != '' &&
         widget.dropdownCategories.contains(vendor.predefinedAccount)) {
       //Editar cuenta y descripcion de la primera linea
       bloc.editCategory(0, vendor.predefinedAccount);
       bloc.editProduct(0, vendor.initialExpenseDescription);
     }
-    bloc.changeVendor(selectedVendor = vendor.name);
+    bloc.changeVendor(selectedVendor = vendor.name!);
   }
 
   void showVendorOptionsfromParent(bool show) {
@@ -172,8 +171,6 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
     }
 
     if (widget.costType == 'Costo de Ventas' &&
-        selectedSupplier != null &&
-        selectedSupplier.predefinedCategory != null &&
         selectedSupplier.predefinedCategory != '') {
       bloc.addToExpenseList({
         'Name': supply.supply,
@@ -184,8 +181,6 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
         'Category': (selectedSupplier.predefinedCategory),
       });
     } else if (widget.costType != 'Costo de Ventas' &&
-        selectedSupplier != null &&
-        selectedSupplier.predefinedAccount != null &&
         selectedSupplier.predefinedAccount != '') {
       bloc.addToExpenseList({
         'Name': supply.supply,
@@ -290,7 +285,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                           ? StreamProvider<List<Supplier>>.value(
                               value: DatabaseService().suppliersListbyCategory(
                                   widget.activeBusiness, widget.costType),
-                              initialData: null,
+                              initialData: [],
                               child: VendorsTags(selectVendor))
                           : SizedBox(),
                       SizedBox(height: 15),
@@ -381,9 +376,9 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                               value: DatabaseService().suppliesListbyVendor(
                                   widget.activeBusiness,
                                   bloc.expenseItems['Vendor'].toLowerCase()),
-                              initialData: null,
+                              initialData: [],
                               child: VendorProductsTags(
-                                  selectedSupplier, addProduct))
+                                  selectedSupplier!, addProduct))
                           : SizedBox(),
                       //Total
                       Padding(
@@ -447,17 +442,17 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                 bloc.totalExpenseAmount,
                                 paymentType,
                                 bloc.expenseItems["Items"],
-                                selectedIvoiceDate,
-                                selectedIvoiceDate.year.toString(),
-                                selectedIvoiceDate.month.toString(),
+                                selectedIvoiceDate!,
+                                selectedIvoiceDate!.year.toString(),
+                                selectedIvoiceDate!.month.toString(),
                                 widget.registerStatus.registerName,
                                 false,
                                 (isChecked &&
-                                        widget.registerStatus.registerisOpen)
+                                        widget.registerStatus.registerisOpen!)
                                     ? true
                                     : false,
                                 (isChecked &&
-                                        widget.registerStatus.registerisOpen)
+                                        widget.registerStatus.registerisOpen!)
                                     ? cashRegisterAmount
                                     : 0,
                                 docID,
@@ -482,7 +477,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                   bloc.totalExpenseAmount,
                                   paymentType,
                                   bloc.expenseItems["Items"],
-                                  selectedIvoiceDate,
+                                  selectedIvoiceDate!,
                                   docID,
                                   setSearchParam(
                                     (bloc.expenseItems["Vendor"] != '' &&
@@ -495,8 +490,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                             }
 
                             //Save to Vendor
-                            if (selectedVendor != '' &&
-                                selectedVendor != null) {
+                            if (selectedVendor != '') {
                               DatabaseService().associateExpensetoVendor(
                                   widget.activeBusiness,
                                   docID,
@@ -514,8 +508,8 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                             var docRef = firestore
                                 .collection('ERP')
                                 .doc(widget.activeBusiness)
-                                .collection(selectedIvoiceDate.year.toString())
-                                .doc(selectedIvoiceDate.month.toString());
+                                .collection(selectedIvoiceDate!.year.toString())
+                                .doc(selectedIvoiceDate!.month.toString());
 
                             final doc = await docRef.get();
                             //Save Expense Type new amount
@@ -541,10 +535,10 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                             for (var i = 0; i < cartList.length; i++) {
                               if (widget.costType == 'Costo de Ventas') {
                                 //Check if the map contains the key
-                                if (expenseCategories.containsKey(
+                                if (expenseCategories!.containsKey(
                                     'Costos de ${cartList[i]["Category"]}')) {
                                   //Add to existing category amount
-                                  expenseCategories.update(
+                                  expenseCategories!.update(
                                       'Costos de ${cartList[i]["Category"]}',
                                       (value) =>
                                           value +
@@ -552,17 +546,17 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                               cartList[i]["Quantity"]));
                                 } else {
                                   //Add new category with amount
-                                  expenseCategories[
+                                  expenseCategories![
                                           'Costos de ${cartList[i]["Category"]}'] =
                                       cartList[i]["Price"] *
                                           cartList[i]["Quantity"];
                                 }
                               } else {
                                 //Check if the map contains the key
-                                if (expenseCategories.containsKey(
+                                if (expenseCategories!.containsKey(
                                     '${cartList[i]["Category"]}')) {
                                   //Add to existing category amount
-                                  expenseCategories.update(
+                                  expenseCategories!.update(
                                       '${cartList[i]["Category"]}',
                                       (value) =>
                                           value +
@@ -570,7 +564,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                               cartList[i]["Quantity"]));
                                 } else {
                                   //Add new category with amount
-                                  expenseCategories[
+                                  expenseCategories![
                                           '${cartList[i]["Category"]}'] =
                                       cartList[i]["Price"] *
                                           cartList[i]["Quantity"];
@@ -579,19 +573,19 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                             }
 
                             //Logic to add Expense by Categories to Firebase
-                            expenseCategories.forEach((k, v) {
+                            expenseCategories!.forEach((k, v) {
                               docRef.update({k: FieldValue.increment(v)});
                             });
 
                             ///////////If we use money in cash register ///////////////
                             if (isChecked &&
-                                widget.registerStatus.registerisOpen) {
+                                widget.registerStatus.registerisOpen!) {
                               double totalTransactionAmount =
-                                  widget.dailyTransactions.outflows +
+                                  widget.dailyTransactions.outflows! +
                                       cashRegisterAmount;
 
                               double totalTransactions =
-                                  widget.dailyTransactions.dailyTransactions -
+                                  widget.dailyTransactions.dailyTransactions! -
                                       cashRegisterAmount;
 
                               DatabaseService().updateCashRegister(
@@ -903,17 +897,17 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                               bloc.totalExpenseAmount,
                               paymentType,
                               bloc.expenseItems["Items"],
-                              selectedIvoiceDate,
-                              selectedIvoiceDate.year.toString(),
-                              selectedIvoiceDate.month.toString(),
+                              selectedIvoiceDate!,
+                              selectedIvoiceDate!.year.toString(),
+                              selectedIvoiceDate!.month.toString(),
                               widget.registerStatus.registerName,
                               false,
                               (isChecked &&
-                                      widget.registerStatus.registerisOpen)
+                                      widget.registerStatus.registerisOpen!)
                                   ? true
                                   : false,
                               (isChecked &&
-                                      widget.registerStatus.registerisOpen)
+                                      widget.registerStatus.registerisOpen!)
                                   ? cashRegisterAmount
                                   : 0,
                               docID,
@@ -937,7 +931,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                 bloc.totalExpenseAmount,
                                 paymentType,
                                 bloc.expenseItems["Items"],
-                                selectedIvoiceDate,
+                                selectedIvoiceDate!,
                                 docID,
                                 setSearchParam(
                                   (bloc.expenseItems["Vendor"] != '' &&
@@ -950,7 +944,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                           }
 
                           //Save to Vendor
-                          if (selectedVendor != '' && selectedVendor != null) {
+                          if (selectedVendor != '') {
                             DatabaseService().associateExpensetoVendor(
                                 widget.activeBusiness,
                                 docID,
@@ -968,8 +962,8 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                           var docRef = firestore
                               .collection('ERP')
                               .doc(widget.activeBusiness)
-                              .collection(selectedIvoiceDate.year.toString())
-                              .doc(selectedIvoiceDate.month.toString());
+                              .collection(selectedIvoiceDate!.year.toString())
+                              .doc(selectedIvoiceDate!.month.toString());
 
                           final doc = await docRef.get();
                           //Save Expense Type new amount
@@ -994,10 +988,10 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                           for (var i = 0; i < cartList.length; i++) {
                             if (widget.costType == 'Costo de Ventas') {
                               //Check if the map contains the key
-                              if (expenseCategories.containsKey(
+                              if (expenseCategories!.containsKey(
                                   'Costos de ${cartList[i]["Category"]}')) {
                                 //Add to existing category amount
-                                expenseCategories.update(
+                                expenseCategories!.update(
                                     'Costos de ${cartList[i]["Category"]}',
                                     (value) =>
                                         value +
@@ -1005,17 +999,17 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                             cartList[i]["Quantity"]));
                               } else {
                                 //Add new category with amount
-                                expenseCategories[
+                                expenseCategories![
                                         'Costos de ${cartList[i]["Category"]}'] =
                                     cartList[i]["Price"] *
                                         cartList[i]["Quantity"];
                               }
                             } else {
                               //Check if the map contains the key
-                              if (expenseCategories
+                              if (expenseCategories!
                                   .containsKey('${cartList[i]["Category"]}')) {
                                 //Add to existing category amount
-                                expenseCategories.update(
+                                expenseCategories!.update(
                                     '${cartList[i]["Category"]}',
                                     (value) =>
                                         value +
@@ -1023,7 +1017,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                             cartList[i]["Quantity"]));
                               } else {
                                 //Add new category with amount
-                                expenseCategories[
+                                expenseCategories![
                                     '${cartList[i]["Category"]}'] = cartList[i]
                                         ["Price"] *
                                     cartList[i]["Quantity"];
@@ -1032,19 +1026,19 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                           }
 
                           //Logic to add Expense by Categories to Firebase
-                          expenseCategories.forEach((k, v) {
+                          expenseCategories!.forEach((k, v) {
                             docRef.update({k: FieldValue.increment(v)});
                           });
 
                           ///////////If we use money in cash register ///////////////
                           if (isChecked &&
-                              widget.registerStatus.registerisOpen) {
+                              widget.registerStatus.registerisOpen!) {
                             double totalTransactionAmount =
-                                widget.dailyTransactions.outflows +
+                                widget.dailyTransactions.outflows! +
                                     cashRegisterAmount;
 
                             double totalTransactions =
-                                widget.dailyTransactions.dailyTransactions -
+                                widget.dailyTransactions.dailyTransactions! -
                                     cashRegisterAmount;
 
                             DatabaseService().updateCashRegister(
@@ -1258,7 +1252,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
 }
 
 class TotalExpenseAmount extends StatefulWidget {
-  const TotalExpenseAmount({Key key}) : super(key: key);
+  const TotalExpenseAmount({Key? key}) : super(key: key);
 
   @override
   State<TotalExpenseAmount> createState() => _TotalExpenseAmountState();

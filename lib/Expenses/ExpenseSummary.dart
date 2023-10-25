@@ -39,12 +39,12 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
     );
   }
 
-  Future currentValuesBuilt;
+  late Future currentValuesBuilt;
 
-  double costodeVentas;
-  double gastosdeEmpleados;
-  double gastosdelLocal;
-  double otrosGastos;
+  double? costodeVentas;
+  double? gastosdeEmpleados;
+  double? gastosdelLocal;
+  double? otrosGastos;
 
   Future currentValue() async {
     var year = DateTime.now().year.toString();
@@ -75,7 +75,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
 
     return FutureBuilder(
         future: currentValuesBuilt,
-        builder: (context, snap) {
+        builder: (context, AsyncSnapshot snap) {
           if (snap.connectionState == ConnectionState.done) {
             try {
               costodeVentas = snap.data['Costo de Ventas'];
@@ -101,10 +101,10 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
               otrosGastos = 0;
             }
 
-            final double totalGastos = (costodeVentas +
-                gastosdeEmpleados +
-                gastosdelLocal +
-                otrosGastos);
+            final double totalGastos = (costodeVentas! +
+                gastosdeEmpleados! +
+                gastosdelLocal! +
+                otrosGastos!);
 
             return Expanded(
               child: Container(
@@ -120,7 +120,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               indicator(
-                                Colors.red[200],
+                                Colors.red[200]!,
                                 'Costo de ventas',
                                 touchedIndex == 0 ? 16 : 14,
                                 touchedIndex == 0 ? Colors.black : Colors.grey,
@@ -129,7 +129,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                                     : FontWeight.w400,
                               ),
                               indicator(
-                                Colors.green[200],
+                                Colors.green[200]!,
                                 'Gastos de empleados',
                                 touchedIndex == 1 ? 16 : 14,
                                 touchedIndex == 1 ? Colors.black : Colors.grey,
@@ -138,7 +138,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                                     : FontWeight.w400,
                               ),
                               indicator(
-                                Colors.blue[200],
+                                Colors.blue[200]!,
                                 'Gastos del local',
                                 touchedIndex == 2 ? 16 : 14,
                                 touchedIndex == 2 ? Colors.black : Colors.grey,
@@ -147,7 +147,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                                     : FontWeight.w400,
                               ),
                               indicator(
-                                Colors.purple[200],
+                                Colors.purple[200]!,
                                 'Otros gastos',
                                 touchedIndex == 3 ? 16 : 14,
                                 touchedIndex == 3 ? Colors.black : Colors.grey,
@@ -164,7 +164,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 indicator(
-                                  Colors.red[200],
+                                  Colors.red[200]!,
                                   'Costo de ventas',
                                   touchedIndex == 0 ? 18 : 16,
                                   touchedIndex == 0
@@ -175,7 +175,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                                       : FontWeight.w400,
                                 ),
                                 indicator(
-                                  Colors.green[200],
+                                  Colors.green[200]!,
                                   'Gastos de empleados',
                                   touchedIndex == 1 ? 18 : 16,
                                   touchedIndex == 1
@@ -194,7 +194,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 indicator(
-                                  Colors.blue[200],
+                                  Colors.blue[200]!,
                                   'Gastos del local',
                                   touchedIndex == 2 ? 18 : 16,
                                   touchedIndex == 2
@@ -205,7 +205,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                                       : FontWeight.w400,
                                 ),
                                 indicator(
-                                  Colors.purple[200],
+                                  Colors.purple[200]!,
                                   'Otros gastos',
                                   touchedIndex == 3 ? 18 : 16,
                                   touchedIndex == 3
@@ -235,7 +235,7 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                               return;
                             }
                             touchedIndex = pieTouchResponse
-                                .touchedSection.touchedSectionIndex;
+                                .touchedSection!.touchedSectionIndex;
                           });
                         }),
                         startDegreeOffset: 180,
@@ -245,10 +245,10 @@ class _ExpenseSummaryState extends State<ExpenseSummary> {
                         sectionsSpace: 5,
                         centerSpaceRadius: (screen.width > 1250) ? 75 : 60,
                         sections: showingSections(
-                            costodeVentas,
-                            gastosdeEmpleados,
-                            gastosdelLocal,
-                            otrosGastos,
+                            costodeVentas!,
+                            gastosdeEmpleados!,
+                            gastosdelLocal!,
+                            otrosGastos!,
                             totalGastos),
                       ),
                     )),

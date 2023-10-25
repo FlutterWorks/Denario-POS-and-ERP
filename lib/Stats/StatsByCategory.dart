@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class StatsByCategory extends StatelessWidget {
   final List categoryList;
   final DailyTransactions dayStats;
-  StatsByCategory(this.dayStats, this.categoryList, {Key key})
+  StatsByCategory(this.dayStats, this.categoryList, {Key? key})
       : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
@@ -42,9 +42,10 @@ class StatsByCategory extends StatelessWidget {
                         width: 120,
                         child: Center(
                           child: Text(
-                            (dayStats.salesCountbyCategory[(categoryList[i])] !=
+                            (dayStats.salesCountbyCategory![
+                                        (categoryList[i])] !=
                                     null)
-                                ? '${formatCurrency.format(dayStats.salesAmountbyCategory[(categoryList[i])])}'
+                                ? '${formatCurrency.format(dayStats.salesAmountbyCategory![(categoryList[i])])}'
                                 : '${formatCurrency.format(0)}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

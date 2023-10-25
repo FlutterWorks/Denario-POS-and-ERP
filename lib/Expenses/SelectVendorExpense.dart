@@ -35,7 +35,7 @@ class SelectVendorExpense extends StatefulWidget {
       this.saveVendor,
       this.saveNewVendor,
       this.vendorName,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -58,7 +58,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
     'diciembre'
   ];
   bool showList = true;
-  DateTime selectedIvoiceDate;
+  DateTime? selectedIvoiceDate;
 
   //Vendor
   String vendorName = '';
@@ -67,22 +67,22 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
   bool showListofVendors = false;
   TextEditingController searchController = TextEditingController(text: '');
   TextEditingController _newController = TextEditingController(text: '');
-  String predefinedCategory;
-  String predefinedDescription;
-  Supplier selectedSupplier;
-  bool saveVendor;
-  bool saveVendorPressed;
-  bool showVendorTags;
+  String? predefinedCategory;
+  String? predefinedDescription;
+  Supplier? selectedSupplier;
+  late bool saveVendor;
+  late bool saveVendorPressed;
+  late bool showVendorTags;
   String invoiceReference = '';
-  bool keepTaggedVendor;
-  String taggedVendor;
-  bool searchByCategory;
+  late bool keepTaggedVendor;
+  String? taggedVendor;
+  bool? searchByCategory;
 
   void selectVendor(Supplier vendor) {
     setState(() {
-      selectedVendor = vendor.name;
-      vendorName = vendor.name;
-      _newController.text = vendor.name;
+      selectedVendor = vendor.name!;
+      vendorName = vendor.name!;
+      _newController.text = vendor.name!;
       showSearchOptions = false;
       showListofVendors = false;
       predefinedCategory = vendor.predefinedCategory;
@@ -95,14 +95,13 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
 
     if (widget.costType != 'Costo de Ventas' &&
         bloc.expenseItems['Items'].length <= 1 &&
-        vendor.predefinedAccount != null &&
         vendor.predefinedAccount != '' &&
         widget.dropdownCategories.contains(vendor.predefinedAccount)) {
       //Editar cuenta y descripcion de la primera linea
       bloc.editCategory(0, vendor.predefinedAccount);
       bloc.editProduct(0, vendor.initialExpenseDescription);
     }
-    bloc.changeVendor(selectedVendor = vendor.name);
+    bloc.changeVendor(selectedVendor = vendor.name!);
   }
 
   @override
@@ -130,7 +129,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '${meses[selectedIvoiceDate.month - 1]}, ${selectedIvoiceDate.year}',
+                '${meses[selectedIvoiceDate!.month - 1]}, ${selectedIvoiceDate!.year}',
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
               SizedBox(width: 5),
@@ -140,7 +139,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                 child: IconButton(
                   splashRadius: 1,
                   onPressed: () async {
-                    DateTime pickedDate = await showDatePicker(
+                    DateTime? pickedDate = await showDatePicker(
                         context: context,
                         helpText: 'Fecha del gasto',
                         confirmText: 'Guardar',
@@ -164,13 +163,11 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                                   ),
                                 ),
                               ),
-                              child: child);
+                              child: child!);
                         }));
                     setState(() {
-                      if (pickedDate != null) {
-                        selectedIvoiceDate = pickedDate;
-                        widget.selectIvoiceDate(pickedDate);
-                      }
+                      selectedIvoiceDate = pickedDate;
+                      widget.selectIvoiceDate(pickedDate);
                     });
                   },
                   padding: EdgeInsets.all(0),
@@ -311,7 +308,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                                         borderRadius:
                                             new BorderRadius.circular(12.0),
                                         borderSide: new BorderSide(
-                                          color: Colors.grey[350],
+                                          color: Colors.grey[350]!,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -355,14 +352,13 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                               ),
                               SizedBox(width: 10),
                               (widget.saveVendor &&
-                                      vendorName != null &&
                                       vendorName != '' &&
                                       _newController.text.isNotEmpty)
                                   ? StreamProvider<List<Supplier>>.value(
                                       value: DatabaseService().suppliersList(
                                           widget.activeBusiness,
                                           vendorName.toLowerCase()),
-                                      initialData: null,
+                                      initialData: [],
                                       child: SaveVendorButton(
                                           vendorName, widget.saveNewVendor),
                                     )
@@ -440,7 +436,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
               ? StreamProvider<List<Supplier>>.value(
                   value: DatabaseService().suppliersList(
                       widget.activeBusiness, vendorName.toLowerCase()),
-                  initialData: null,
+                  initialData: [],
                   child: SupplierSearchBar(
                       selectVendor, widget.showVendorTagsfromParent),
                 )
@@ -493,7 +489,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
             width: double.infinity,
             child: OutlinedButton(
               onPressed: () async {
-                DateTime pickedDate = await showDatePicker(
+                DateTime? pickedDate = await showDatePicker(
                     context: context,
                     helpText: 'Fecha del gasto',
                     confirmText: 'Guardar',
@@ -516,13 +512,11 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                               ),
                             ),
                           ),
-                          child: child);
+                          child: child!);
                     }));
                 setState(() {
-                  if (pickedDate != null) {
-                    selectedIvoiceDate = pickedDate;
-                    widget.selectIvoiceDate(pickedDate);
-                  }
+                  selectedIvoiceDate = pickedDate;
+                  widget.selectIvoiceDate(pickedDate);
                 });
               },
               style: OutlinedButton.styleFrom(
@@ -538,7 +532,7 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                   ),
                   SizedBox(width: 10),
                   Text(
-                      '${selectedIvoiceDate.day} de ${meses[selectedIvoiceDate.month - 1]}, ${selectedIvoiceDate.year}',
+                      '${selectedIvoiceDate!.day} de ${meses[selectedIvoiceDate!.month - 1]}, ${selectedIvoiceDate!.year}',
                       style: TextStyle(color: Colors.black45, fontSize: 14)),
                 ],
               ),

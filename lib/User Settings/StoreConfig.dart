@@ -12,7 +12,7 @@ class StoreConfig extends StatefulWidget {
   final List businessCategories;
   const StoreConfig(this.businessID, this.storeLink, this.backgroundImage,
       this.visibleStoreCategories, this.businessCategories,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -20,24 +20,22 @@ class StoreConfig extends StatefulWidget {
 }
 
 class _StoreConfigState extends State<StoreConfig> {
-  List initialCategories;
+  late List initialCategories;
   List selectedCategories = [];
 
   Uint8List webImage = Uint8List(8);
-  String downloadUrl;
+  String? downloadUrl;
   bool changedImage = false;
 
   Future getImage() async {
-    XFile selectedImage =
+    XFile? selectedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (selectedImage != null) {
-      Uint8List uploadFile = await selectedImage.readAsBytes();
-      setState(() {
-        webImage = uploadFile;
-        changedImage = true;
-      });
-    }
+    Uint8List uploadFile = await selectedImage!.readAsBytes();
+    setState(() {
+      webImage = uploadFile;
+      changedImage = true;
+    });
   }
 
   Future uploadPic(businessID) async {
@@ -255,7 +253,7 @@ class _StoreConfigState extends State<StoreConfig> {
                       uploadPic(widget.businessID).then((value) =>
                           DatabaseService().updateBusinessStoreConfig(
                             widget.businessID,
-                            downloadUrl,
+                            downloadUrl!,
                             selectedCategories,
                           ));
                     } else {

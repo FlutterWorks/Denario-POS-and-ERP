@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class CreateNewBusiness extends StatefulWidget {
-  const CreateNewBusiness({Key key}) : super(key: key);
+  const CreateNewBusiness({Key? key}) : super(key: key);
 
   @override
   State<CreateNewBusiness> createState() => _CreateNewBusinessState();
@@ -59,7 +59,7 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
   Widget build(BuildContext context) {
     final userProfile = Provider.of<UserData>(context);
 
-    if (userProfile == null) {
+    if (userProfile == UserData()) {
       return Loading();
     }
     return Scaffold(
@@ -84,7 +84,7 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
               borderRadius: BorderRadius.circular(25),
               boxShadow: <BoxShadow>[
                 new BoxShadow(
-                  color: Colors.grey[350],
+                  color: Colors.grey[350]!,
                   offset: new Offset(0, 0),
                   blurRadius: 10.0,
                 )
@@ -113,7 +113,7 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
                     child: TextFormField(
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       validator: (val) =>
-                          val.isEmpty ? "Agrega un nombre" : null,
+                          val!.isEmpty ? "Agrega un nombre" : null,
                       cursorColor: Colors.grey,
                       focusNode: _businessNameNode,
                       textInputAction: TextInputAction.next,
@@ -192,7 +192,7 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
                       }).toList(),
                       onChanged: (x) {
                         setState(() {
-                          businessField = x;
+                          businessField = x.toString();
                         });
                       },
                     ),
@@ -203,7 +203,7 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
                     width: 350,
                     child: TextFormField(
                       style: TextStyle(color: Colors.black, fontSize: 14),
-                      validator: (val) => val.isEmpty ? "" : null,
+                      validator: (val) => val!.isEmpty ? "" : null,
                       cursorColor: Colors.grey,
                       focusNode: _businessLocationNode,
                       textInputAction: TextInputAction.next,
@@ -245,7 +245,7 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
                     child: TextFormField(
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       validator: (val) =>
-                          val.isEmpty ? "Agrega un numero válido" : null,
+                          val!.isEmpty ? "Agrega un numero válido" : null,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       cursorColor: Colors.grey,
@@ -374,7 +374,7 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
                       )),
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.black),
-                      overlayColor: MaterialStateProperty.resolveWith<Color>(
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.hovered))
                             return Colors.grey.shade800;
@@ -388,8 +388,8 @@ class _CreateNewBusinessState extends State<CreateNewBusiness> {
                     onPressed: () {
                       final businessID = generateRandomString();
 
-                      if (_formKey.currentState.validate()) {
-                        final User user = FirebaseAuth.instance.currentUser;
+                      if (_formKey.currentState!.validate()) {
+                        final User user = FirebaseAuth.instance.currentUser!;
                         final String uid = user.uid.toString();
                         //Save user data to Firestore
                         DatabaseService().updateUserBusinessProfile({

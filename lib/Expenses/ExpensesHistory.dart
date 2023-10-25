@@ -14,19 +14,19 @@ class ExpensesHistory extends StatefulWidget {
 }
 
 class _ExpensesHistoryState extends State<ExpensesHistory> {
-  DateTime initDate;
-  DateTime endDate;
-  String paymentType;
-  bool filtered;
+  late DateTime initDate;
+  DateTime? endDate;
+  late String paymentType;
+  late bool filtered;
   List paymentTypes = [];
   TextEditingController supplierController =
       new TextEditingController(text: '');
-  String supplier;
-  String account;
+  String? supplier;
+  String? account;
   List accountsList = [];
-  bool filteredAccount;
-  bool dateFiltered;
-  bool paymentFiltered;
+  late bool filteredAccount;
+  late bool dateFiltered;
+  late bool paymentFiltered;
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
   Widget build(BuildContext context) {
     final registerStatus = Provider.of<CashRegister>(context);
 
-    if (registerStatus == null) {
+    if (registerStatus == CashRegister()) {
       return Container();
     }
 
@@ -103,7 +103,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                               borderRadius: BorderRadius.circular(25),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.grey[350],
+                                  color: Colors.grey[350]!,
                                   offset: Offset(0.0, 0.0),
                                   blurRadius: 10.0,
                                 )
@@ -121,7 +121,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                     height: 45,
                                     decoration: BoxDecoration(
                                       border:
-                                          Border.all(color: Colors.grey[350]),
+                                          Border.all(color: Colors.grey[350]!),
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     padding: EdgeInsets.all(12),
@@ -141,7 +141,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                           child: IconButton(
                                             splashRadius: 1,
                                             onPressed: () async {
-                                              DateTime pickedDate =
+                                              DateTime? pickedDate =
                                                   await showDatePicker(
                                                       context: context,
                                                       initialDate: initDate,
@@ -175,17 +175,15 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            child: child);
+                                                            child: child!);
                                                       }));
                                               setState(() {
-                                                if (pickedDate != null &&
-                                                    pickedDate.month ==
-                                                        DateTime.now().month) {
+                                                if (pickedDate!.month ==
+                                                    DateTime.now().month) {
                                                   initDate = pickedDate;
                                                   filtered = true;
-                                                } else if (pickedDate != null &&
-                                                    pickedDate.month !=
-                                                        DateTime.now().month) {
+                                                } else if (pickedDate.month !=
+                                                    DateTime.now().month) {
                                                   initDate = pickedDate;
                                                   endDate = DateTime(
                                                       pickedDate.year,
@@ -210,8 +208,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       width: 150,
                                       height: 45,
                                       decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.grey[350]),
+                                        border: Border.all(
+                                            color: Colors.grey[350]!),
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                       ),
@@ -222,7 +220,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                             (endDate == null)
                                                 ? 'Hasta fecha'
                                                 : DateFormat('dd/MM/yyyy')
-                                                    .format(endDate),
+                                                    .format(endDate!),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 16),
@@ -234,7 +232,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                             child: IconButton(
                                               splashRadius: 1,
                                               onPressed: () async {
-                                                DateTime pickedDate =
+                                                DateTime? pickedDate =
                                                     await showDatePicker(
                                                         context: context,
                                                         initialDate: (initDate
@@ -278,16 +276,14 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              child: child);
+                                                              child: child!);
                                                         }));
                                                 setState(() {
-                                                  if (pickedDate != null) {
-                                                    endDate = pickedDate.add(
-                                                        Duration(
-                                                            hours: 23,
-                                                            minutes: 59));
-                                                    filtered = true;
-                                                  }
+                                                  endDate = pickedDate!.add(
+                                                      Duration(
+                                                          hours: 23,
+                                                          minutes: 59));
+                                                  filtered = true;
                                                 });
                                               },
                                               padding: EdgeInsets.all(0),
@@ -332,7 +328,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                           borderRadius:
                                               new BorderRadius.circular(12.0),
                                           borderSide: new BorderSide(
-                                            color: Colors.grey[350],
+                                            color: Colors.grey[350]!,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -358,7 +354,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                     height: 45,
                                     decoration: BoxDecoration(
                                       border:
-                                          Border.all(color: Colors.grey[350]),
+                                          Border.all(color: Colors.grey[350]!),
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     padding:
@@ -386,7 +382,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       }).toList(),
                                       onChanged: (x) {
                                         setState(() {
-                                          paymentType = x;
+                                          paymentType = x.toString();
                                           filtered = true;
                                         });
                                       },
@@ -399,7 +395,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                     height: 45,
                                     decoration: BoxDecoration(
                                       border:
-                                          Border.all(color: Colors.grey[350]),
+                                          Border.all(color: Colors.grey[350]!),
                                       borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     padding:
@@ -428,12 +424,12 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       onChanged: (x) {
                                         if (x == 'Todas') {
                                           setState(() {
-                                            account = x;
+                                            account = x.toString();
                                             filteredAccount = false;
                                           });
                                         } else {
                                           setState(() {
-                                            account = x;
+                                            account = x.toString();
                                             filteredAccount = true;
                                           });
                                         }
@@ -468,7 +464,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                   states.contains(
                                                       MaterialState.pressed))
                                                 return Colors.white;
-                                              return null; // Defer to the widget's default.
+                                              return Colors
+                                                  .white; // Defer to the widget's default.
                                             },
                                           ),
                                         ),
@@ -518,7 +515,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                               borderRadius: BorderRadius.circular(25),
                               boxShadow: <BoxShadow>[
                                 new BoxShadow(
-                                  color: Colors.grey[350],
+                                  color: Colors.grey[350]!,
                                   offset: Offset(0.0, 0.0),
                                   blurRadius: 10.0,
                                 )
@@ -536,8 +533,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       width: 150,
                                       height: 45,
                                       decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.grey[350]),
+                                        border: Border.all(
+                                            color: Colors.grey[350]!),
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                       ),
@@ -558,7 +555,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                             child: IconButton(
                                               splashRadius: 1,
                                               onPressed: () async {
-                                                DateTime pickedDate =
+                                                DateTime? pickedDate =
                                                     await showDatePicker(
                                                         context: context,
                                                         initialDate: initDate,
@@ -594,20 +591,15 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              child: child);
+                                                              child: child!);
                                                         }));
                                                 setState(() {
-                                                  if (pickedDate != null &&
-                                                      pickedDate.month ==
-                                                          DateTime.now()
-                                                              .month) {
+                                                  if (pickedDate!.month ==
+                                                      DateTime.now().month) {
                                                     initDate = pickedDate;
                                                     filtered = true;
-                                                  } else if (pickedDate !=
-                                                          null &&
-                                                      pickedDate.month !=
-                                                          DateTime.now()
-                                                              .month) {
+                                                  } else if (pickedDate.month !=
+                                                      DateTime.now().month) {
                                                     initDate = pickedDate;
                                                     endDate = DateTime(
                                                         pickedDate.year,
@@ -633,7 +625,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                         height: 45,
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.grey[350]),
+                                              color: Colors.grey[350]!),
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                         ),
@@ -644,7 +636,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                               (endDate == null)
                                                   ? 'Hasta fecha'
                                                   : DateFormat('dd/MM/yyyy')
-                                                      .format(endDate),
+                                                      .format(endDate!),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 16),
@@ -656,7 +648,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                               child: IconButton(
                                                 splashRadius: 1,
                                                 onPressed: () async {
-                                                  DateTime pickedDate =
+                                                  DateTime? pickedDate =
                                                       await showDatePicker(
                                                           context: context,
                                                           initialDate: (initDate
@@ -703,16 +695,14 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                child: child);
+                                                                child: child!);
                                                           }));
                                                   setState(() {
-                                                    if (pickedDate != null) {
-                                                      endDate = pickedDate.add(
-                                                          Duration(
-                                                              hours: 23,
-                                                              minutes: 59));
-                                                      filtered = true;
-                                                    }
+                                                    endDate = pickedDate!.add(
+                                                        Duration(
+                                                            hours: 23,
+                                                            minutes: 59));
+                                                    filtered = true;
                                                   });
                                                 },
                                                 padding: EdgeInsets.all(0),
@@ -758,7 +748,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                             borderRadius:
                                                 new BorderRadius.circular(12.0),
                                             borderSide: new BorderSide(
-                                              color: Colors.grey[350],
+                                              color: Colors.grey[350]!,
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
@@ -788,8 +778,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       width: 200,
                                       height: 45,
                                       decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.grey[350]),
+                                        border: Border.all(
+                                            color: Colors.grey[350]!),
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                       ),
@@ -818,7 +808,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                         }).toList(),
                                         onChanged: (x) {
                                           setState(() {
-                                            paymentType = x;
+                                            paymentType = x.toString();
                                             filtered = true;
                                           });
                                         },
@@ -830,8 +820,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       width: 200,
                                       height: 45,
                                       decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.grey[350]),
+                                        border: Border.all(
+                                            color: Colors.grey[350]!),
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                       ),
@@ -861,12 +851,12 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                         onChanged: (x) {
                                           if (x == 'Todas') {
                                             setState(() {
-                                              account = x;
+                                              account = x.toString();
                                               filteredAccount = false;
                                             });
                                           } else {
                                             setState(() {
-                                              account = x;
+                                              account = x.toString();
                                               filteredAccount = true;
                                             });
                                           }
@@ -902,7 +892,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                     states.contains(
                                                         MaterialState.pressed))
                                                   return Colors.white;
-                                                return null; // Defer to the widget's default.
+                                                return Colors
+                                                    .white; // Defer to the widget's default.
                                               },
                                             ),
                                           ),
@@ -1057,23 +1048,21 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
               ? StreamProvider<List<Expenses>>.value(
                   value: DatabaseService().filteredExpenseList(
                       widget.activeBusiness,
-                      endDate.month.toString(),
-                      endDate.year.toString(),
+                      endDate!.month.toString(),
+                      endDate!.year.toString(),
                       initDate,
                       endDate,
                       paymentType,
-                      (supplier != null && supplier != '')
-                          ? supplier.toLowerCase()
-                          : null),
-                  initialData: null,
+                      (supplier != '') ? supplier!.toLowerCase() : null),
+                  initialData: [],
                   child: FilteredExpenseList(widget.activeBusiness,
-                      registerStatus, filteredAccount, account))
+                      registerStatus, filteredAccount, account!))
               : StreamProvider<List<Expenses>>.value(
                   value: DatabaseService().expenseList(widget.activeBusiness,
-                      endDate.month.toString(), endDate.year.toString()),
-                  initialData: null,
+                      endDate!.month.toString(), endDate!.year.toString()),
+                  initialData: [],
                   child: FilteredExpenseList(widget.activeBusiness,
-                      registerStatus, filteredAccount, account),
+                      registerStatus, filteredAccount, account!),
                 ),
         ],
       ));
@@ -1155,7 +1144,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                     borderRadius:
                                         new BorderRadius.circular(12.0),
                                     borderSide: new BorderSide(
-                                      color: Colors.grey[350],
+                                      color: Colors.grey[350]!,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
@@ -1189,7 +1178,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors.greenAccent.withOpacity(
+                                        0.2); // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -1197,7 +1187,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                         Colors.grey.shade300.withOpacity(0.2)),
                               ),
                               onPressed: () async {
-                                DateTime pickedDate = await showDatePicker(
+                                DateTime? pickedDate = await showDatePicker(
                                     context: context,
                                     initialDate: initDate,
                                     firstDate: DateTime.now()
@@ -1222,17 +1212,15 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                               ),
                                             ),
                                           ),
-                                          child: child);
+                                          child: child!);
                                     }));
                                 setState(() {
-                                  if (pickedDate != null &&
-                                      pickedDate.month ==
-                                          DateTime.now().month) {
+                                  if (pickedDate!.month ==
+                                      DateTime.now().month) {
                                     initDate = pickedDate;
                                     filtered = true;
-                                  } else if (pickedDate != null &&
-                                      pickedDate.month !=
-                                          DateTime.now().month) {
+                                  } else if (pickedDate.month !=
+                                      DateTime.now().month) {
                                     initDate = pickedDate;
                                     endDate = DateTime(pickedDate.year,
                                         pickedDate.month + 1, 0);
@@ -1277,7 +1265,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors.greenAccent.withOpacity(
+                                        0.2); // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -1285,7 +1274,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                         Colors.grey.shade300.withOpacity(0.2)),
                               ),
                               onPressed: () async {
-                                DateTime pickedDate = await showDatePicker(
+                                DateTime? pickedDate = await showDatePicker(
                                     context: context,
                                     initialDate:
                                         (initDate.month == DateTime.now().month)
@@ -1314,15 +1303,13 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                               ),
                                             ),
                                           ),
-                                          child: child);
+                                          child: child!);
                                     }));
                                 setState(() {
-                                  if (pickedDate != null) {
-                                    endDate = pickedDate
-                                        .add(Duration(hours: 23, minutes: 59));
-                                    filtered = true;
-                                    dateFiltered = true;
-                                  }
+                                  endDate = pickedDate!
+                                      .add(Duration(hours: 23, minutes: 59));
+                                  filtered = true;
+                                  dateFiltered = true;
                                 });
                               },
                               child: Row(
@@ -1336,7 +1323,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                   Text(
                                     dateFiltered
                                         ? DateFormat('dd/MM/yyyy')
-                                            .format(endDate)
+                                            .format(endDate!)
                                         : 'Hasta',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -1361,7 +1348,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors.greenAccent.withOpacity(
+                                        0.2); // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -1433,7 +1421,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                         return Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   bottom: 10.0),
                                                           child: Container(
                                                             decoration: BoxDecoration(
@@ -1463,7 +1451,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                               child: Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .all(
+                                                                        .all(
                                                                         12.0),
                                                                 child: Row(
                                                                   mainAxisAlignment:
@@ -1531,7 +1519,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors.greenAccent.withOpacity(
+                                        0.2); // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -1603,7 +1592,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                         return Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   bottom: 10.0),
                                                           child: Container(
                                                             decoration: BoxDecoration(
@@ -1643,7 +1632,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                                               child: Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .all(
+                                                                        .all(
                                                                         12.0),
                                                                 child: Row(
                                                                   mainAxisAlignment:
@@ -1685,7 +1674,9 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                   ),
                                   SizedBox(width: 10),
                                   Text(
-                                    filteredAccount ? account : 'Tipo de gasto',
+                                    filteredAccount
+                                        ? account!
+                                        : 'Tipo de gasto',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14,
@@ -1709,7 +1700,8 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                       return Colors.greenAccent.withOpacity(
                                           0.2); // Customize the hover color here
                                     }
-                                    return null; // Use default overlay color for other states
+                                    return Colors.greenAccent.withOpacity(
+                                        0.2); // Use default overlay color for other states
                                   },
                                 ),
                                 backgroundColor:
@@ -1760,23 +1752,21 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
               ? StreamProvider<List<Expenses>>.value(
                   value: DatabaseService().filteredExpenseList(
                       widget.activeBusiness,
-                      endDate.month.toString(),
-                      endDate.year.toString(),
+                      endDate!.month.toString(),
+                      endDate!.year.toString(),
                       initDate,
                       endDate,
                       paymentType,
-                      (supplier != null && supplier != '')
-                          ? supplier.toLowerCase()
-                          : null),
-                  initialData: null,
+                      (supplier != '') ? supplier!.toLowerCase() : null),
+                  initialData: [],
                   child: FilteredExpenseList(widget.activeBusiness,
-                      registerStatus, filteredAccount, account))
+                      registerStatus, filteredAccount, account!))
               : StreamProvider<List<Expenses>>.value(
                   value: DatabaseService().expenseList(widget.activeBusiness,
-                      endDate.month.toString(), endDate.year.toString()),
-                  initialData: null,
+                      endDate!.month.toString(), endDate!.year.toString()),
+                  initialData: [],
                   child: FilteredExpenseList(widget.activeBusiness,
-                      registerStatus, filteredAccount, account),
+                      registerStatus, filteredAccount, account!),
                 ),
         ],
       ));

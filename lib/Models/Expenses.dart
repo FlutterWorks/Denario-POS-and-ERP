@@ -1,18 +1,18 @@
 class Expenses {
-  DateTime date;
-  DateTime creationDate;
-  String costType;
-  String vendor;
-  double total;
-  String paymentType;
-  List<ExpenseItems> items;
-  String cashRegister;
-  bool reversed;
-  bool usedCashfromRegister;
-  double amountFromRegister;
-  String expenseID;
-  List vendorSearchName;
-  String referenceNo;
+  DateTime? date;
+  DateTime? creationDate;
+  String? costType;
+  String? vendor;
+  double? total;
+  String? paymentType;
+  List<ExpenseItems>? items;
+  String? cashRegister;
+  bool? reversed;
+  bool? usedCashfromRegister;
+  double? amountFromRegister;
+  String? expenseID;
+  List? vendorSearchName;
+  String? referenceNo;
 
   Expenses(
       {this.date,
@@ -32,11 +32,11 @@ class Expenses {
 }
 
 class ExpenseItems {
-  String product;
-  String category;
-  double price;
-  double qty;
-  double total;
+  String? product;
+  String? category;
+  double? price;
+  double? qty;
+  double? total;
 
   ExpenseItems({this.product, this.category, this.price, this.qty, this.total});
 }

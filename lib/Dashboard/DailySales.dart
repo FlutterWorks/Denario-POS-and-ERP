@@ -12,11 +12,14 @@ class DailySales extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final registerStatus = Provider.of<CashRegister>(context);
-    final dailyTransactions = Provider.of<DailyTransactions>(context);
-    final userProfile = Provider.of<UserData>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
+    final dailyTransactions = Provider.of<DailyTransactions?>(context);
+    final userProfile = Provider.of<UserData?>(context);
 
-    if (userProfile == null || registerStatus == null) {
+    if (registerStatus == null ||
+        dailyTransactions == null ||
+        userProfile == null ||
+        registerStatus == CashRegister()) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.42,
         height: 400,
@@ -26,7 +29,7 @@ class DailySales extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           boxShadow: <BoxShadow>[
             new BoxShadow(
-              color: Colors.grey[200],
+              color: Colors.grey[200]!,
               offset: new Offset(15.0, 15.0),
               blurRadius: 10.0,
             )
@@ -50,7 +53,7 @@ class DailySales extends StatelessWidget {
                     borderRadius: new BorderRadius.circular(12.0),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
@@ -81,7 +84,7 @@ class DailySales extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               SalesDetailsFilters(
-                                                  userProfile.activeBusiness,
+                                                  userProfile.activeBusiness!,
                                                   registerStatus))),
                                   icon: Icon(
                                     Icons.search,
@@ -92,9 +95,7 @@ class DailySales extends StatelessWidget {
                       ),
                       SizedBox(height: 15),
                       //Amount
-                      (registerStatus != null &&
-                              registerStatus.registerisOpen &&
-                              dailyTransactions != null)
+                      (registerStatus.registerisOpen!)
                           ? Text(
                               '${formatCurrency.format(dailyTransactions.sales)}',
                               style: TextStyle(
@@ -121,7 +122,7 @@ class DailySales extends StatelessWidget {
                   borderRadius: new BorderRadius.circular(12.0),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )
@@ -155,7 +156,7 @@ class DailySales extends StatelessWidget {
                           childAspectRatio: 1.25,
                         ),
                         scrollDirection: Axis.vertical,
-                        itemCount: registerStatus.paymentTypes.length,
+                        itemCount: registerStatus.paymentTypes!.length,
                         itemBuilder: (context, i) {
                           return Container(
                             padding: EdgeInsets.all(5.0),
@@ -169,28 +170,32 @@ class DailySales extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(15.0),
                                       ),
-                                      child: CachedNetworkImage(
-                                          imageUrl: registerStatus
-                                              .paymentTypes[i]['Image'],
-                                          fit: BoxFit.cover)),
+                                      child: (registerStatus.registerName == '')
+                                          ? CachedNetworkImage(
+                                              imageUrl: registerStatus
+                                                  .paymentTypes![i]['Image'],
+                                              fit: BoxFit.cover)
+                                          : SizedBox()),
                                 ),
                                 SizedBox(height: 10),
 
                                 ///Text
                                 Text(
-                                  (dailyTransactions == null)
+                                  (registerStatus.registerName == '' ||
+                                          dailyTransactions ==
+                                              DailyTransactions())
                                       ? '${formatCurrency.format(0)}'
-                                      : (dailyTransactions.salesByMedium[
+                                      : (dailyTransactions.salesByMedium![
                                                       registerStatus
-                                                              .paymentTypes[i]
+                                                              .paymentTypes![i]
                                                           ['Type']] !=
                                                   null &&
-                                              dailyTransactions.salesByMedium[
+                                              dailyTransactions.salesByMedium![
                                                       registerStatus
-                                                              .paymentTypes[i]
+                                                              .paymentTypes![i]
                                                           ['Type']] >
                                                   0)
-                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium[registerStatus.paymentTypes[i]['Type']])}'
+                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium![registerStatus.paymentTypes![i]['Type']])}'
                                           : '${formatCurrency.format(0)}',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -227,7 +232,7 @@ class DailySales extends StatelessWidget {
                     borderRadius: new BorderRadius.circular(12.0),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
@@ -259,7 +264,7 @@ class DailySales extends StatelessWidget {
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 SalesDetailsFilters(
-                                                    userProfile.activeBusiness,
+                                                    userProfile.activeBusiness!,
                                                     registerStatus)));
                                   },
                                   icon: Icon(
@@ -271,7 +276,7 @@ class DailySales extends StatelessWidget {
                       ),
                       SizedBox(height: 15),
                       //Amount
-                      (registerStatus != null && registerStatus.registerisOpen)
+                      (registerStatus.registerisOpen!)
                           ? Text(
                               '${formatCurrency.format(dailyTransactions.sales)}',
                               style: TextStyle(
@@ -298,7 +303,7 @@ class DailySales extends StatelessWidget {
                   borderRadius: new BorderRadius.circular(12.0),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )
@@ -332,7 +337,7 @@ class DailySales extends StatelessWidget {
                           childAspectRatio: 1,
                         ),
                         scrollDirection: Axis.vertical,
-                        itemCount: registerStatus.paymentTypes.length,
+                        itemCount: registerStatus.paymentTypes!.length,
                         itemBuilder: (context, i) {
                           return Container(
                             padding: EdgeInsets.all(5.0),
@@ -348,26 +353,26 @@ class DailySales extends StatelessWidget {
                                       ),
                                       child: CachedNetworkImage(
                                           imageUrl: registerStatus
-                                              .paymentTypes[i]['Image'],
+                                              .paymentTypes![i]['Image'],
                                           fit: BoxFit.cover)),
                                 ),
                                 SizedBox(height: 10),
 
                                 ///Text
                                 Text(
-                                  (dailyTransactions == null)
+                                  (dailyTransactions == DailyTransactions())
                                       ? '${formatCurrency.format(0)}'
-                                      : (dailyTransactions.salesByMedium[
+                                      : (dailyTransactions.salesByMedium![
                                                       registerStatus
-                                                              .paymentTypes[i]
+                                                              .paymentTypes![i]
                                                           ['Type']] !=
                                                   null &&
-                                              dailyTransactions.salesByMedium[
+                                              dailyTransactions.salesByMedium![
                                                       registerStatus
-                                                              .paymentTypes[i]
+                                                              .paymentTypes![i]
                                                           ['Type']] >
                                                   0)
-                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium[registerStatus.paymentTypes[i]['Type']])}'
+                                          ? '${formatCurrency.format(dailyTransactions.salesByMedium![registerStatus.paymentTypes![i]['Type']])}'
                                           : '${formatCurrency.format(0)}',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -404,7 +409,7 @@ class DailySales extends StatelessWidget {
                   borderRadius: new BorderRadius.circular(12.0),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )
@@ -435,7 +440,7 @@ class DailySales extends StatelessWidget {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             SalesDetailsFilters(
-                                                userProfile.activeBusiness,
+                                                userProfile.activeBusiness!,
                                                 registerStatus))),
                                 icon: Icon(
                                   Icons.search,
@@ -446,9 +451,7 @@ class DailySales extends StatelessWidget {
                     ),
                     SizedBox(height: 15),
                     //Amount
-                    (registerStatus != null &&
-                            registerStatus.registerisOpen &&
-                            dailyTransactions != null)
+                    (registerStatus.registerisOpen!)
                         ? Text(
                             '${formatCurrency.format(dailyTransactions.sales)}',
                             style: TextStyle(
@@ -474,7 +477,7 @@ class DailySales extends StatelessWidget {
                 borderRadius: new BorderRadius.circular(12.0),
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: Offset(0.0, 0.0),
                     blurRadius: 10.0,
                   )
@@ -505,7 +508,7 @@ class DailySales extends StatelessWidget {
                         childAspectRatio: 1.25,
                       ),
                       scrollDirection: Axis.vertical,
-                      itemCount: registerStatus.paymentTypes.length,
+                      itemCount: registerStatus.paymentTypes!.length,
                       itemBuilder: (context, i) {
                         return Container(
                           padding: EdgeInsets.all(5.0),
@@ -518,28 +521,32 @@ class DailySales extends StatelessWidget {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15.0),
                                     ),
-                                    child: CachedNetworkImage(
-                                        imageUrl: registerStatus.paymentTypes[i]
-                                            ['Image'],
-                                        fit: BoxFit.cover)),
+                                    child: (registerStatus.registerName == '')
+                                        ? CachedNetworkImage(
+                                            imageUrl: registerStatus
+                                                .paymentTypes![i]['Image'],
+                                            fit: BoxFit.cover)
+                                        : SizedBox()),
                               ),
                               SizedBox(height: 10),
 
                               ///Text
                               Text(
-                                (dailyTransactions == null)
+                                (registerStatus.registerName == '' ||
+                                        dailyTransactions ==
+                                            DailyTransactions())
                                     ? '${formatCurrency.format(0)}'
-                                    : (dailyTransactions.salesByMedium[
+                                    : (dailyTransactions.salesByMedium![
                                                     registerStatus
-                                                            .paymentTypes[i]
+                                                            .paymentTypes![i]
                                                         ['Type']] !=
                                                 null &&
-                                            dailyTransactions.salesByMedium[
+                                            dailyTransactions.salesByMedium![
                                                     registerStatus
-                                                            .paymentTypes[i]
+                                                            .paymentTypes![i]
                                                         ['Type']] >
                                                 0)
-                                        ? '${formatCurrency.format(dailyTransactions.salesByMedium[registerStatus.paymentTypes[i]['Type']])}'
+                                        ? '${formatCurrency.format(dailyTransactions.salesByMedium![registerStatus.paymentTypes![i]['Type']])}'
                                         : '${formatCurrency.format(0)}',
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,

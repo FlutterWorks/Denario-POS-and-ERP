@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class StatsByCannels extends StatefulWidget {
   final Map channels;
-  StatsByCannels(this.channels, {Key key}) : super(key: key);
+  StatsByCannels(this.channels, {Key? key}) : super(key: key);
 
   @override
   State<StatsByCannels> createState() => _StatsByCannelsState();

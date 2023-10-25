@@ -31,18 +31,15 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
       }
     }
     selectedBusiness =
-        widget.userBusinesses[selectedBusinessIndex].businessName;
+        widget.userBusinesses[selectedBusinessIndex].businessName!;
     selectedBusinessID =
-        widget.userBusinesses[selectedBusinessIndex].businessID;
+        widget.userBusinesses[selectedBusinessIndex].businessID!;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final User user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return Container();
-    }
+    final User user = FirebaseAuth.instance.currentUser!;
 
     if (MediaQuery.of(context).size.width > 900) {
       return Row(
@@ -64,16 +61,16 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                 return MultiProvider(
                   providers: [
                     StreamProvider<BusinessProfile>.value(
-                        initialData: null,
+                        initialData: BusinessProfile(),
                         value: DatabaseService()
                             .userBusinessProfile(selectedBusinessID)),
                     StreamProvider<CategoryList>.value(
-                        initialData: null,
+                        initialData: CategoryList(),
                         value: DatabaseService()
                             .categoriesList(selectedBusinessID)),
                   ],
                   child: UserBusinessSettingsForm(widget
-                      .userBusinesses[selectedBusinessIndex].roleInBusiness),
+                      .userBusinesses[selectedBusinessIndex].roleInBusiness!),
                 );
               },
             ),
@@ -106,17 +103,17 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                             setState(() {
                               controller.jumpToPage(i);
                               selectedBusiness =
-                                  widget.userBusinesses[i].businessName;
+                                  widget.userBusinesses[i].businessName!;
                               selectedBusinessIndex = i;
                               selectedBusinessID =
-                                  widget.userBusinesses[i].businessID;
+                                  widget.userBusinesses[i].businessID!;
                             });
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 5.0, horizontal: 8),
                             child: Text(
-                              widget.userBusinesses[i].businessName,
+                              widget.userBusinesses[i].businessName!,
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                   color: (selectedBusiness ==
@@ -140,7 +137,7 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                             MaterialPageRoute(
                                 builder: (context) =>
                                     StreamProvider<UserData>.value(
-                                        initialData: null,
+                                        initialData: UserData(),
                                         value: DatabaseService()
                                             .userProfile(user.uid.toString()),
                                         child: CreateNewBusiness())));
@@ -204,17 +201,17 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                           setState(() {
                             controller.jumpToPage(i);
                             selectedBusiness =
-                                widget.userBusinesses[i].businessName;
+                                widget.userBusinesses[i].businessName!;
                             selectedBusinessIndex = i;
                             selectedBusinessID =
-                                widget.userBusinesses[i].businessID;
+                                widget.userBusinesses[i].businessID!;
                           });
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 5.0, horizontal: 8),
                           child: Text(
-                            widget.userBusinesses[i].businessName,
+                            widget.userBusinesses[i].businessName!,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 color: (selectedBusiness ==
@@ -238,7 +235,7 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                           MaterialPageRoute(
                               builder: (context) =>
                                   StreamProvider<UserData>.value(
-                                      initialData: null,
+                                      initialData: UserData(),
                                       value: DatabaseService()
                                           .userProfile(user.uid.toString()),
                                       child: CreateNewBusiness())));
@@ -280,16 +277,16 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                 return MultiProvider(
                   providers: [
                     StreamProvider<BusinessProfile>.value(
-                        initialData: null,
+                        initialData: BusinessProfile(),
                         value: DatabaseService()
                             .userBusinessProfile(selectedBusinessID)),
                     StreamProvider<CategoryList>.value(
-                        initialData: null,
+                        initialData: CategoryList(),
                         value: DatabaseService()
                             .categoriesList(selectedBusinessID)),
                   ],
                   child: UserBusinessSettingsForm(widget
-                      .userBusinesses[selectedBusinessIndex].roleInBusiness),
+                      .userBusinesses[selectedBusinessIndex].roleInBusiness!),
                 );
               },
             ),

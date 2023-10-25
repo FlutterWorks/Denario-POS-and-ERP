@@ -142,14 +142,15 @@ class _PaymentMethodDialogState extends State<PaymentMethodDialog> {
                                           color: Colors.white,
                                           image: DecorationImage(
                                             image: NetworkImage(
-                                                paymentMethodsList[i]['Image']),
+                                                paymentMethodsList[i]
+                                                    ['Image']!),
                                             fit: BoxFit.cover,
                                           )),
                                     ),
                                     SizedBox(width: 10),
                                     //Name
                                     Text(
-                                      paymentMethodsList[i]['Type'],
+                                      paymentMethodsList[i]['Type']!,
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.normal),
@@ -184,7 +185,7 @@ class _PaymentMethodDialogState extends State<PaymentMethodDialog> {
                               ? MaterialStateProperty.all<Color>(Colors.grey)
                               : MaterialStateProperty.all<Color>(Colors.black),
                           overlayColor:
-                              MaterialStateProperty.resolveWith<Color>(
+                              MaterialStateProperty.resolveWith<Color?>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.hovered))
                                 return Colors.grey.shade500;

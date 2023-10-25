@@ -36,7 +36,7 @@ class _MonthStatsState extends State<MonthStats> {
     'Canales',
     'Costos'
   ];
-  String selectedCategory;
+  late String selectedCategory;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _MonthStatsState extends State<MonthStats> {
     final categoriesProvider = Provider.of<CategoryList>(context);
     final registerStatus = Provider.of<CashRegister>(context);
 
-    if (monthlyStats == null || categoriesProvider == null) {
+    if (categoriesProvider == CategoryList()) {
       return Container();
     } else {
       DailyTransactions dayStats = DailyTransactions(
@@ -64,7 +64,7 @@ class _MonthStatsState extends State<MonthStats> {
           salesCountbyProduct: monthlyStats.salesCountbyProduct,
           salesbyOrderType: monthlyStats.salesbyOrderType);
 
-      if (dayStats == null) {
+      if (dayStats == DailyTransactions()) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,14 +123,14 @@ class _MonthStatsState extends State<MonthStats> {
                             borderRadius: BorderRadius.circular(25),
                             boxShadow: <BoxShadow>[
                               new BoxShadow(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                                 offset: Offset(0.0, 0.0),
                                 blurRadius: 10.0,
                               )
                             ],
                           ),
                           child: StreamProvider<List<Sales>>.value(
-                            initialData: null,
+                            initialData: [],
                             value: DatabaseService().shortFilteredSalesList(
                               widget.userBusiness,
                               widget.selectedDate,
@@ -151,7 +151,7 @@ class _MonthStatsState extends State<MonthStats> {
                             borderRadius: BorderRadius.circular(25),
                             boxShadow: <BoxShadow>[
                               new BoxShadow(
-                                color: Colors.grey[350],
+                                color: Colors.grey[350]!,
                                 offset: Offset(0.0, 0.0),
                                 blurRadius: 10.0,
                               )
@@ -180,7 +180,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                       color: (_currentPageIndex ==
                                                               0)
                                                           ? Colors
-                                                              .greenAccent[700]
+                                                              .greenAccent[700]!
                                                           : Colors
                                                               .transparent))),
                                           child: TextButton(
@@ -196,7 +196,7 @@ class _MonthStatsState extends State<MonthStats> {
                                               style: ButtonStyle(
                                                 overlayColor:
                                                     MaterialStateProperty
-                                                        .resolveWith<Color>(
+                                                        .resolveWith<Color?>(
                                                   (Set<MaterialState> states) {
                                                     if (states.contains(
                                                         MaterialState
@@ -242,7 +242,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                       color: (_currentPageIndex ==
                                                               1)
                                                           ? Colors
-                                                              .greenAccent[700]
+                                                              .greenAccent[700]!
                                                           : Colors
                                                               .transparent))),
                                           child: TextButton(
@@ -258,7 +258,7 @@ class _MonthStatsState extends State<MonthStats> {
                                               style: ButtonStyle(
                                                 overlayColor:
                                                     MaterialStateProperty
-                                                        .resolveWith<Color>(
+                                                        .resolveWith<Color?>(
                                                   (Set<MaterialState> states) {
                                                     if (states.contains(
                                                         MaterialState
@@ -304,7 +304,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                       color: (_currentPageIndex ==
                                                               2)
                                                           ? Colors
-                                                              .greenAccent[700]
+                                                              .greenAccent[700]!
                                                           : Colors
                                                               .transparent))),
                                           child: TextButton(
@@ -320,7 +320,7 @@ class _MonthStatsState extends State<MonthStats> {
                                               style: ButtonStyle(
                                                 overlayColor:
                                                     MaterialStateProperty
-                                                        .resolveWith<Color>(
+                                                        .resolveWith<Color?>(
                                                   (Set<MaterialState> states) {
                                                     if (states.contains(
                                                         MaterialState
@@ -365,7 +365,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                       color: (_currentPageIndex ==
                                                               3)
                                                           ? Colors
-                                                              .greenAccent[700]
+                                                              .greenAccent[700]!
                                                           : Colors
                                                               .transparent))),
                                           child: TextButton(
@@ -381,7 +381,7 @@ class _MonthStatsState extends State<MonthStats> {
                                               style: ButtonStyle(
                                                 overlayColor:
                                                     MaterialStateProperty
-                                                        .resolveWith<Color>(
+                                                        .resolveWith<Color?>(
                                                   (Set<MaterialState> states) {
                                                     if (states.contains(
                                                         MaterialState
@@ -427,7 +427,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                       color: (_currentPageIndex ==
                                                               4)
                                                           ? Colors
-                                                              .greenAccent[700]
+                                                              .greenAccent[700]!
                                                           : Colors
                                                               .transparent))),
                                           child: TextButton(
@@ -443,7 +443,7 @@ class _MonthStatsState extends State<MonthStats> {
                                               style: ButtonStyle(
                                                 overlayColor:
                                                     MaterialStateProperty
-                                                        .resolveWith<Color>(
+                                                        .resolveWith<Color?>(
                                                   (Set<MaterialState> states) {
                                                     if (states.contains(
                                                         MaterialState
@@ -512,7 +512,8 @@ class _MonthStatsState extends State<MonthStats> {
                                       }).toList(),
                                       onChanged: (newValue) {
                                         setState(() {
-                                          selectedCategory = newValue;
+                                          selectedCategory =
+                                              newValue.toString();
                                         });
                                       },
                                     ),
@@ -535,8 +536,10 @@ class _MonthStatsState extends State<MonthStats> {
                                                 indent: 0,
                                                 endIndent: 0),
                                             //List
-                                            StatsByCategory(dayStats,
-                                                categoriesProvider.categoryList)
+                                            StatsByCategory(
+                                                dayStats,
+                                                categoriesProvider
+                                                    .categoryList!)
                                           ]),
 
                                       //Productos
@@ -555,7 +558,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                 endIndent: 0),
                                             //List
                                             StatsByPaymentMethods(dayStats,
-                                                registerStatus.paymentTypes)
+                                                registerStatus.paymentTypes!)
                                           ]),
                                       //Channels
                                       Column(
@@ -570,7 +573,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                 endIndent: 0),
                                             //List
                                             StatsByCannels(
-                                                monthlyStats.salesbyOrderType)
+                                                monthlyStats.salesbyOrderType!)
                                           ]),
                                       //Costos de Insumos
                                       Column(
@@ -647,14 +650,14 @@ class _MonthStatsState extends State<MonthStats> {
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
                     ],
                   ),
                   child: StreamProvider<List<Sales>>.value(
-                    initialData: null,
+                    initialData: [],
                     value: DatabaseService().shortFilteredSalesList(
                       widget.userBusiness,
                       widget.selectedDate,
@@ -675,7 +678,7 @@ class _MonthStatsState extends State<MonthStats> {
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: <BoxShadow>[
                       new BoxShadow(
-                        color: Colors.grey[350],
+                        color: Colors.grey[350]!,
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                       )
@@ -698,7 +701,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                   ? 3
                                                   : 0,
                                               color: (_currentPageIndex == 0)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -712,7 +715,7 @@ class _MonthStatsState extends State<MonthStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -748,7 +751,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                   ? 3
                                                   : 0,
                                               color: (_currentPageIndex == 1)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -762,7 +765,7 @@ class _MonthStatsState extends State<MonthStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -798,7 +801,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                   ? 3
                                                   : 0,
                                               color: (_currentPageIndex == 2)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -812,7 +815,7 @@ class _MonthStatsState extends State<MonthStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -848,7 +851,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                   ? 3
                                                   : 0,
                                               color: (_currentPageIndex == 3)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -862,7 +865,7 @@ class _MonthStatsState extends State<MonthStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -898,7 +901,7 @@ class _MonthStatsState extends State<MonthStats> {
                                                   ? 4
                                                   : 0,
                                               color: (_currentPageIndex == 4)
-                                                  ? Colors.greenAccent[700]
+                                                  ? Colors.greenAccent[700]!
                                                   : Colors.transparent))),
                                   child: TextButton(
                                       onPressed: () {
@@ -912,7 +915,7 @@ class _MonthStatsState extends State<MonthStats> {
                                       },
                                       style: ButtonStyle(
                                         overlayColor: MaterialStateProperty
-                                            .resolveWith<Color>(
+                                            .resolveWith<Color?>(
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered)) {
@@ -973,7 +976,7 @@ class _MonthStatsState extends State<MonthStats> {
                               }).toList(),
                               onChanged: (newValue) {
                                 setState(() {
-                                  selectedCategory = newValue;
+                                  selectedCategory = newValue.toString();
                                 });
                               },
                             ),
@@ -995,7 +998,7 @@ class _MonthStatsState extends State<MonthStats> {
                                         endIndent: 0),
                                     //List
                                     StatsByCategory(dayStats,
-                                        categoriesProvider.categoryList)
+                                        categoriesProvider.categoryList!)
                                   ]),
 
                               //Productos
@@ -1012,7 +1015,7 @@ class _MonthStatsState extends State<MonthStats> {
                                         endIndent: 0),
                                     //List
                                     StatsByPaymentMethods(
-                                        dayStats, registerStatus.paymentTypes)
+                                        dayStats, registerStatus.paymentTypes!)
                                   ]),
                               //Channels
                               Column(
@@ -1025,7 +1028,7 @@ class _MonthStatsState extends State<MonthStats> {
                                         endIndent: 0),
                                     //List
                                     StatsByCannels(
-                                        monthlyStats.salesbyOrderType)
+                                        monthlyStats.salesbyOrderType!)
                                   ]),
                               //Costos de Insumos
                               Column(

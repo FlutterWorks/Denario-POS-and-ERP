@@ -17,7 +17,7 @@ class SupplierDetails extends StatefulWidget {
   final HighLevelMapping highLevelMapping;
   const SupplierDetails(this.selectedVendor, this.currentBusiness,
       this.categoriesProvider, this.highLevelMapping,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -27,13 +27,13 @@ class SupplierDetails extends StatefulWidget {
 class _SupplierDetailsState extends State<SupplierDetails> {
   @override
   Widget build(BuildContext context) {
-    if (widget.selectedVendor == '' || widget.selectedVendor == null) {
+    if (widget.selectedVendor == '') {
       return Container();
     }
 
     final vendor = Provider.of<Supplier>(context);
 
-    if (vendor == null) {
+    if (vendor == Supplier()) {
       return Container();
     }
 
@@ -56,7 +56,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                       borderRadius: new BorderRadius.circular(12.0),
                       boxShadow: <BoxShadow>[
                         new BoxShadow(
-                          color: Colors.grey[350],
+                          color: Colors.grey[350]!,
                           offset: Offset(0.0, 0.0),
                           blurRadius: 10.0,
                         )
@@ -83,7 +83,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                           borderRadius: new BorderRadius.circular(12.0),
                           boxShadow: <BoxShadow>[
                             new BoxShadow(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                               offset: Offset(0.0, 0.0),
                               blurRadius: 10.0,
                             )
@@ -103,7 +103,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                               height: 20,
                             ),
                             StreamProvider<List<Payables>>.value(
-                                initialData: null,
+                                initialData: [],
                                 value: DatabaseService().payablesListbyVendor(
                                     widget.currentBusiness, vendor.name),
                                 child: SupplierPendingInvoices(
@@ -121,7 +121,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                           borderRadius: new BorderRadius.circular(12.0),
                           boxShadow: <BoxShadow>[
                             new BoxShadow(
-                              color: Colors.grey[350],
+                              color: Colors.grey[350]!,
                               offset: Offset(0.0, 0.0),
                               blurRadius: 10.0,
                             )
@@ -141,10 +141,10 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                               height: 20,
                             ),
                             StreamProvider<List<Supply>>.value(
-                                initialData: null,
+                                initialData: [],
                                 value: DatabaseService().suppliesListbyVendor(
                                     widget.currentBusiness,
-                                    vendor.name.toLowerCase()),
+                                    vendor.name!.toLowerCase()),
                                 child: SupplierProducts(widget.currentBusiness))
                           ],
                         ),
@@ -172,7 +172,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                   borderRadius: new BorderRadius.circular(12.0),
                   boxShadow: <BoxShadow>[
                     new BoxShadow(
-                      color: Colors.grey[350],
+                      color: Colors.grey[350]!,
                       offset: Offset(0.0, 0.0),
                       blurRadius: 10.0,
                     )
@@ -190,7 +190,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                 borderRadius: new BorderRadius.circular(12.0),
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: Offset(0.0, 0.0),
                     blurRadius: 10.0,
                   )
@@ -209,7 +209,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                     height: 20,
                   ),
                   StreamProvider<List<Payables>>.value(
-                      initialData: null,
+                      initialData: [],
                       value: DatabaseService().payablesListbyVendor(
                           widget.currentBusiness, vendor.name),
                       child: SupplierPendingInvoices(widget.currentBusiness))
@@ -226,7 +226,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                 borderRadius: new BorderRadius.circular(12.0),
                 boxShadow: <BoxShadow>[
                   new BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[350]!,
                     offset: Offset(0.0, 0.0),
                     blurRadius: 10.0,
                   )
@@ -245,9 +245,9 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                     height: 20,
                   ),
                   StreamProvider<List<Supply>>.value(
-                      initialData: null,
+                      initialData: [],
                       value: DatabaseService().suppliesListbyVendor(
-                          widget.currentBusiness, vendor.name.toLowerCase()),
+                          widget.currentBusiness, vendor.name!.toLowerCase()),
                       child: SupplierProducts(widget.currentBusiness))
                 ],
               ),
