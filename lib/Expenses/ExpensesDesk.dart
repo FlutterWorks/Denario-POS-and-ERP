@@ -21,23 +21,18 @@ class ExpensesDesk extends StatefulWidget {
 }
 
 class _ExpensesDeskState extends State<ExpensesDesk> {
-  DateTime? selectedIvoiceDate;
-  late bool searchByPayables;
-
-  @override
-  void initState() {
-    searchByPayables = false;
-    selectedIvoiceDate = DateTime.now();
-    super.initState();
-  }
+  DateTime selectedIvoiceDate = DateTime.now();
+  bool searchByPayables = false;
 
   @override
   Widget build(BuildContext context) {
-    final userProfile = Provider.of<UserData>(context);
-    final categoriesProvider = Provider.of<CategoryList>(context);
-    final highlevelMapping = Provider.of<HighLevelMapping>(context);
+    final userProfile = Provider.of<UserData?>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
+    final highlevelMapping = Provider.of<HighLevelMapping?>(context);
 
-    if (highlevelMapping == HighLevelMapping()) {
+    if (highlevelMapping == null ||
+        userProfile == null ||
+        categoriesProvider == null) {
       return Container();
     }
 
@@ -64,24 +59,24 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
           //Expense Input
           MultiProvider(
               providers: [
-                StreamProvider<CategoryList>.value(
-                    initialData: CategoryList(),
+                StreamProvider<CategoryList?>.value(
+                    initialData: null,
                     value: DatabaseService()
                         .categoriesList(userProfile.activeBusiness)),
-                StreamProvider<AccountsList>.value(
-                    initialData: AccountsList(),
+                StreamProvider<AccountsList?>.value(
+                    initialData: null,
                     value: DatabaseService()
                         .accountsList(userProfile.activeBusiness))
               ],
               child: ExpenseInput(userProfile.activeBusiness!,
-                  selectedIvoiceDate!, categoriesProvider, highlevelMapping)),
+                  selectedIvoiceDate, categoriesProvider, highlevelMapping)),
           SizedBox(height: 20),
           //Expense List
           (MediaQuery.of(context).size.width > 650)
               ? MultiProvider(
                   providers: [
-                    StreamProvider<CashRegister>.value(
-                        initialData: CashRegister(),
+                    StreamProvider<CashRegister?>.value(
+                        initialData: null,
                         value: DatabaseService()
                             .cashRegisterStatus(userProfile.activeBusiness)),
                   ],
@@ -540,8 +535,8 @@ class _ExpensesDeskState extends State<ExpensesDesk> {
                 )
               : MultiProvider(
                   providers: [
-                    StreamProvider<CashRegister>.value(
-                        initialData: CashRegister(),
+                    StreamProvider<CashRegister?>.value(
+                        initialData: null,
                         value: DatabaseService()
                             .cashRegisterStatus(userProfile.activeBusiness)),
                   ],

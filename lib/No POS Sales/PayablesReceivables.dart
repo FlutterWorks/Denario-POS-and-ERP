@@ -270,8 +270,8 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return StreamProvider<DailyTransactions>.value(
-                                    initialData: DailyTransactions(),
+                                return StreamProvider<DailyTransactions?>.value(
+                                    initialData: null,
                                     value: DatabaseService().dailyTransactions(
                                         widget.businessID,
                                         registerStatus.registerName!),
@@ -409,9 +409,9 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return StreamProvider<DailyTransactions>.value(
-                                    initialData: DailyTransactions(),
-                                    catchError: (_, err) => DailyTransactions(),
+                                return StreamProvider<DailyTransactions?>.value(
+                                    initialData: null,
+                                    catchError: (_, err) => null,
                                     value: DatabaseService().dailyTransactions(
                                         widget.businessID,
                                         registerStatus.registerName!),

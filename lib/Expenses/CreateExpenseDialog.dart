@@ -18,8 +18,8 @@ import '../Backend/Expense.dart';
 
 class CreateExpenseDialog extends StatefulWidget {
   final String costType;
-  final CashRegister registerStatus;
-  final DailyTransactions dailyTransactions;
+  final CashRegister? registerStatus;
+  final DailyTransactions? dailyTransactions;
   final clearVariables;
   final String activeBusiness;
   final List dropdownCategories;
@@ -104,7 +104,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
     showVendorTags = show;
   }
 
-  late String vendorName;
+  late String vendorName = '';
   String selectedVendor = '';
   late bool showSearchOptions;
   late bool showListofVendors;
@@ -371,7 +371,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                               widget.activeBusiness)
                           : Container(),
                       //Tags de productos
-                      (widget.costType == 'Costo de Ventas')
+                      (widget.costType == 'Costo de Ventas' && selectedSupplier != null )
                           ? StreamProvider<List<Supply>>.value(
                               value: DatabaseService().suppliesListbyVendor(
                                   widget.activeBusiness,
@@ -445,14 +445,18 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                                 selectedIvoiceDate!,
                                 selectedIvoiceDate!.year.toString(),
                                 selectedIvoiceDate!.month.toString(),
-                                widget.registerStatus.registerName,
+                                (widget.registerStatus != null)
+                                    ? widget.registerStatus!.registerName
+                                    : '',
                                 false,
-                                (isChecked &&
-                                        widget.registerStatus.registerisOpen!)
+                                (widget.registerStatus != null &&
+                                        isChecked &&
+                                        widget.registerStatus!.registerisOpen!)
                                     ? true
                                     : false,
-                                (isChecked &&
-                                        widget.registerStatus.registerisOpen!)
+                                (widget.registerStatus != null &&
+                                        isChecked &&
+                                        widget.registerStatus!.registerisOpen!)
                                     ? cashRegisterAmount
                                     : 0,
                                 docID,
@@ -579,30 +583,31 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
 
                             ///////////If we use money in cash register ///////////////
                             if (isChecked &&
-                                widget.registerStatus.registerisOpen!) {
-                              double totalTransactionAmount =
-                                  widget.dailyTransactions.outflows! +
-                                      cashRegisterAmount;
+                                  widget.registerStatus!.registerisOpen!) {
+                                double totalTransactionAmount =
+                                    widget.dailyTransactions!.outflows! +
+                                        cashRegisterAmount;
 
-                              double totalTransactions =
-                                  widget.dailyTransactions.dailyTransactions! -
-                                      cashRegisterAmount;
+                                double totalTransactions = widget
+                                        .dailyTransactions!.dailyTransactions! -
+                                    cashRegisterAmount;
 
-                              DatabaseService().updateCashRegister(
-                                  widget.activeBusiness,
-                                  widget.registerStatus.registerName,
-                                  'Egresos',
-                                  totalTransactionAmount,
-                                  totalTransactions, {
-                                'Amount': cashRegisterAmount,
-                                'Type': widget.costType,
-                                'Motive': (bloc.expenseItems["Items"].length >
-                                        1)
-                                    ? '${bloc.expenseItems["Items"][0]['Name']}...'
-                                    : bloc.expenseItems["Items"][0]['Name'],
-                                'Time': DateTime.now()
-                              });
-                            }
+                                DatabaseService().updateCashRegister(
+                                    widget.activeBusiness,
+                                    widget.registerStatus!.registerName,
+                                    'Egresos',
+                                    totalTransactionAmount,
+                                    totalTransactions, {
+                                  'Amount': cashRegisterAmount,
+                                  'Type': widget.costType,
+                                  'Motive': (bloc.expenseItems["Items"].length >
+                                          1)
+                                      ? '${bloc.expenseItems["Items"][0]['Name']}...'
+                                      : bloc.expenseItems["Items"][0]['Name'],
+                                  'Time': DateTime.now()
+                                });
+                              }
+                            
 
                             //Save vendor
                             if (saveVendor && saveVendorPressed) {
@@ -900,14 +905,17 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                               selectedIvoiceDate!,
                               selectedIvoiceDate!.year.toString(),
                               selectedIvoiceDate!.month.toString(),
-                              widget.registerStatus.registerName,
+                              (widget.registerStatus != null)
+                                ? widget.registerStatus!.registerName : '',
                               false,
-                              (isChecked &&
-                                      widget.registerStatus.registerisOpen!)
+                              (widget.registerStatus != null &&
+                                      isChecked &&
+                                      widget.registerStatus!.registerisOpen!)
                                   ? true
                                   : false,
-                              (isChecked &&
-                                      widget.registerStatus.registerisOpen!)
+                              (widget.registerStatus != null &&
+                                      isChecked &&
+                                      widget.registerStatus!.registerisOpen!)
                                   ? cashRegisterAmount
                                   : 0,
                               docID,
@@ -1031,29 +1039,33 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
                           });
 
                           ///////////If we use money in cash register ///////////////
-                          if (isChecked &&
-                              widget.registerStatus.registerisOpen!) {
-                            double totalTransactionAmount =
-                                widget.dailyTransactions.outflows! +
-                                    cashRegisterAmount;
+                          
+                            if (isChecked &&
+                                widget.registerStatus!.registerisOpen!) {
+                              double totalTransactionAmount =
+                                  widget.dailyTransactions!.outflows! +
+                                      cashRegisterAmount;
 
-                            double totalTransactions =
-                                widget.dailyTransactions.dailyTransactions! -
-                                    cashRegisterAmount;
+                              double totalTransactions =
+                                  widget.dailyTransactions!.dailyTransactions! -
+                                      cashRegisterAmount;
 
-                            DatabaseService().updateCashRegister(
-                                widget.activeBusiness,
-                                widget.registerStatus.registerName,
-                                'Egresos',
-                                totalTransactionAmount,
-                                totalTransactions, {
-                              'Amount': cashRegisterAmount,
-                              'Type': widget.costType,
-                              'Motive': (bloc.expenseItems["Items"].length > 1)
-                                  ? '${bloc.expenseItems["Items"][0]['Name']}...'
-                                  : bloc.expenseItems["Items"][0]['Name'],
-                              'Time': DateTime.now()
-                            });
+                              DatabaseService().updateCashRegister(
+                                  widget.activeBusiness,
+                                  (widget.registerStatus != null)
+                                ? widget.registerStatus!.registerName : '',
+                                  'Egresos',
+                                  totalTransactionAmount,
+                                  totalTransactions, {
+                                'Amount': cashRegisterAmount,
+                                'Type': widget.costType,
+                                'Motive': (bloc.expenseItems["Items"].length >
+                                        1)
+                                    ? '${bloc.expenseItems["Items"][0]['Name']}...'
+                                    : bloc.expenseItems["Items"][0]['Name'],
+                                'Time': DateTime.now()
+                              });
+                            
                           }
 
                           //Save vendor

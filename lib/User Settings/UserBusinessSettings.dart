@@ -60,12 +60,12 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
               itemBuilder: (context, index) {
                 return MultiProvider(
                   providers: [
-                    StreamProvider<BusinessProfile>.value(
-                        initialData: BusinessProfile(),
+                    StreamProvider<BusinessProfile?>.value(
+                        initialData: null,
                         value: DatabaseService()
                             .userBusinessProfile(selectedBusinessID)),
-                    StreamProvider<CategoryList>.value(
-                        initialData: CategoryList(),
+                    StreamProvider<CategoryList?>.value(
+                        initialData: null,
                         value: DatabaseService()
                             .categoriesList(selectedBusinessID)),
                   ],
@@ -136,8 +136,8 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    StreamProvider<UserData>.value(
-                                        initialData: UserData(),
+                                    StreamProvider<UserData?>.value(
+                                        initialData: null,
                                         value: DatabaseService()
                                             .userProfile(user.uid.toString()),
                                         child: CreateNewBusiness())));
@@ -234,8 +234,8 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  StreamProvider<UserData>.value(
-                                      initialData: UserData(),
+                                  StreamProvider<UserData?>.value(
+                                      initialData: null,
                                       value: DatabaseService()
                                           .userProfile(user.uid.toString()),
                                       child: CreateNewBusiness())));
@@ -276,12 +276,12 @@ class _UserBusinessSettingsState extends State<UserBusinessSettings> {
               itemBuilder: (context, index) {
                 return MultiProvider(
                   providers: [
-                    StreamProvider<BusinessProfile>.value(
-                        initialData: BusinessProfile(),
+                    StreamProvider<BusinessProfile?>.value(
+                        initialData: null,
                         value: DatabaseService()
                             .userBusinessProfile(selectedBusinessID)),
-                    StreamProvider<CategoryList>.value(
-                        initialData: CategoryList(),
+                    StreamProvider<CategoryList?>.value(
+                        initialData: null,
                         value: DatabaseService()
                             .categoriesList(selectedBusinessID)),
                   ],

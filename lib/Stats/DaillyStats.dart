@@ -50,8 +50,7 @@ class _DailyStatsState extends State<DailyStats> {
     if (categoriesProvider == null ||
         registerStatus == null ||
         dailyTransactions == null ||
-        dailyTransactions == [] ||
-        categoriesProvider == CategoryList()) {
+        dailyTransactions == []) {
       return Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.5,
@@ -79,20 +78,20 @@ class _DailyStatsState extends State<DailyStats> {
         ),
       );
     } else {
-      DailyTransactions dayStats = DailyTransactions(
-          sales: 0,
-          totalItemsSold: 0,
-          totalSalesCount: 0,
-          salesByMedium: {},
-          salesAmountbyCategory: {},
-          salesAmountbyProduct: {},
-          salesCountbyCategory: {},
-          salesCountbyProduct: {},
-          salesbyCategory: {},
-          salesbyOrderType: {});
+      DailyTransactions dayStats = DailyTransactions();
 
       if (dailyTransactions.length == 0) {
-        dayStats = DailyTransactions();
+        dayStats = DailyTransactions(
+            sales: 0,
+            totalItemsSold: 0,
+            totalSalesCount: 0,
+            salesByMedium: {},
+            salesAmountbyCategory: {},
+            salesAmountbyProduct: {},
+            salesCountbyCategory: {},
+            salesCountbyProduct: {},
+            salesbyCategory: {},
+            salesbyOrderType: {});
       } else if (dailyTransactions.length == 1) {
         dayStats = dailyTransactions[0];
       } else {
@@ -156,47 +155,46 @@ class _DailyStatsState extends State<DailyStats> {
         }
       }
 
-      if (dayStats == DailyTransactions()) {
-        return Container(
-          width: double.infinity,
-          height: 300,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 30),
-              //Image
-              Container(
-                height: 150,
-                width: 150,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    color: Colors.white,
-                    image: DecorationImage(
-                      image: AssetImage('images/Sales_Empty State.png'),
-                      fit: BoxFit.cover,
-                    )),
-              ),
-              SizedBox(height: 20),
-              //Title
-              Text(
-                'Nada por acá',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              //Subtitle
-              Text(
-                'La información sobre tus ventas se verá en esta sección',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400),
-              )
-            ],
-          ),
-        );
-      }
-
+      // if (dayStats.sales == 0) {
+      //   return Container(
+      //     width: double.infinity,
+      //     height: 300,
+      //     child: Column(
+      //       mainAxisAlignment: MainAxisAlignment.start,
+      //       crossAxisAlignment: CrossAxisAlignment.center,
+      //       children: [
+      //         SizedBox(height: 30),
+      //         //Image
+      //         Container(
+      //           height: 150,
+      //           width: 150,
+      //           decoration: BoxDecoration(
+      //               borderRadius: BorderRadius.all(Radius.circular(8)),
+      //               color: Colors.white,
+      //               image: DecorationImage(
+      //                 image: AssetImage('images/Sales_Empty State.png'),
+      //                 fit: BoxFit.cover,
+      //               )),
+      //         ),
+      //         SizedBox(height: 20),
+      //         //Title
+      //         Text(
+      //           'Nada por acá',
+      //           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      //         ),
+      //         SizedBox(height: 20),
+      //         //Subtitle
+      //         Text(
+      //           'La información sobre tus ventas se verá en esta sección',
+      //           style: TextStyle(
+      //               color: Colors.grey,
+      //               fontSize: 12,
+      //               fontWeight: FontWeight.w400),
+      //         )
+      //       ],
+      //     ),
+      //   );
+      // }
       if (MediaQuery.of(context).size.width > 950) {
         return Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -257,6 +255,7 @@ class _DailyStatsState extends State<DailyStats> {
                                     widget.userBusiness, registerStatus),
                               ),
                       )),
+
                       SizedBox(width: 20),
                       //Stats por categoria/producto
                       Expanded(
@@ -621,8 +620,10 @@ class _DailyStatsState extends State<DailyStats> {
                                               indent: 0,
                                               endIndent: 0),
                                           //List
-                                          StatsByCategory(dayStats,
-                                              categoriesProvider.categoryList!)
+                                          StatsByCategory(
+                                              dayStats,
+                                              categoriesProvider.categoryList ??
+                                                  [])
                                         ]),
 
                                     //Productos
@@ -641,8 +642,9 @@ class _DailyStatsState extends State<DailyStats> {
                                               endIndent: 0),
                                           //List
                                           StatsByPaymentMethods(dayStats,
-                                              registerStatus.paymentTypes!)
+                                              registerStatus.paymentTypes ?? [])
                                         ]),
+
                                     //Channels
                                     Column(
                                         mainAxisAlignment:
@@ -656,8 +658,9 @@ class _DailyStatsState extends State<DailyStats> {
                                               endIndent: 0),
                                           //List
                                           StatsByCannels(
-                                              dayStats.salesbyOrderType!)
+                                              dayStats.salesbyOrderType ?? {})
                                         ]),
+
                                     //Costos de Insumos
                                     Column(
                                         mainAxisAlignment:
@@ -695,7 +698,7 @@ class _DailyStatsState extends State<DailyStats> {
                                                     width: 120,
                                                     child: Center(
                                                       child: Text(
-                                                        '${formatCurrency.format(dayStats.totalSuppliesCost)}',
+                                                        '${formatCurrency.format(dayStats.totalSuppliesCost ?? 0)}',
                                                         maxLines: 1,
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -1100,7 +1103,7 @@ class _DailyStatsState extends State<DailyStats> {
                                         endIndent: 0),
                                     //List
                                     StatsByCategory(dayStats,
-                                        categoriesProvider.categoryList!)
+                                        categoriesProvider.categoryList ?? [])
                                   ]),
 
                               //Productos
@@ -1116,8 +1119,8 @@ class _DailyStatsState extends State<DailyStats> {
                                         indent: 0,
                                         endIndent: 0),
                                     //List
-                                    StatsByPaymentMethods(
-                                        dayStats, registerStatus.paymentTypes!)
+                                    StatsByPaymentMethods(dayStats,
+                                        registerStatus.paymentTypes ?? [])
                                   ]),
                               //Channels
                               Column(
@@ -1129,7 +1132,8 @@ class _DailyStatsState extends State<DailyStats> {
                                         indent: 0,
                                         endIndent: 0),
                                     //List
-                                    StatsByCannels(dayStats.salesbyOrderType!)
+                                    StatsByCannels(
+                                        dayStats.salesbyOrderType ?? {})
                                   ]),
                               //Costos de Insumos
                               Column(
@@ -1164,7 +1168,7 @@ class _DailyStatsState extends State<DailyStats> {
                                               width: 120,
                                               child: Center(
                                                 child: Text(
-                                                  '${formatCurrency.format(dayStats.totalSuppliesCost)}',
+                                                  '${formatCurrency.format(dayStats.totalSuppliesCost ?? 0)}',
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,

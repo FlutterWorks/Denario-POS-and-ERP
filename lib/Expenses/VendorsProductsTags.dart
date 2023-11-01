@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class VendorProductsTags extends StatefulWidget {
-  final Supplier selectedVendor;
+  final Supplier? selectedVendor;
   final selectProduct;
   const VendorProductsTags(this.selectedVendor, this.selectProduct, {Key? key})
       : super(key: key);
@@ -18,6 +18,9 @@ class _VendorProductsTagsState extends State<VendorProductsTags> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.selectedVendor == null) {
+      return Container();
+    }
     final supplies = Provider.of<List<Supply>>(context);
 
     if (supplies.length < 0) {

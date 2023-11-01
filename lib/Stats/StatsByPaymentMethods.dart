@@ -14,47 +14,49 @@ class StatsByPaymentMethods extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        child: ListView.builder(
-            itemCount: paymentMethods.length,
-            shrinkWrap: true,
-            reverse: false,
-            physics: BouncingScrollPhysics(),
-            itemBuilder: (context, i) {
-              return Container(
-                height: 35,
-                width: double.infinity,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    //Payment Type
-                    Container(
-                        width: 150,
-                        child: Text(
-                          '${paymentMethods[i]['Type']}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )),
-                    Spacer(),
-                    //Monto vendidos
-                    Container(
-                        width: 120,
-                        child: Center(
-                          child: Text(
-                            (dayStats.salesByMedium![(paymentMethods[i]
-                                        ['Type'])] !=
-                                    null)
-                                ? '${formatCurrency.format(dayStats.salesByMedium![(paymentMethods[i]['Type'])])}'
-                                : '${formatCurrency.format(0)}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )),
-                  ],
-                ),
-              );
-            }),
+        child: (paymentMethods.length > 0)
+            ? ListView.builder(
+                itemCount: paymentMethods.length,
+                shrinkWrap: true,
+                reverse: false,
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, i) {
+                  return Container(
+                    height: 35,
+                    width: double.infinity,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        //Payment Type
+                        Container(
+                            width: 150,
+                            child: Text(
+                              '${paymentMethods[i]['Type'] ?? ''}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                        Spacer(),
+                        //Monto vendidos
+                        Container(
+                            width: 120,
+                            child: Center(
+                              child: Text(
+                                (dayStats.salesByMedium![(paymentMethods[i]
+                                            ['Type'])] !=
+                                        null)
+                                    ? '${formatCurrency.format(dayStats.salesByMedium![(paymentMethods[i]['Type'])] ?? 0)}'
+                                    : '${formatCurrency.format(0)}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )),
+                      ],
+                    ),
+                  );
+                })
+            : SizedBox(),
       ),
     );
   }

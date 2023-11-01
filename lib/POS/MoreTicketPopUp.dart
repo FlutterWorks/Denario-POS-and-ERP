@@ -436,7 +436,8 @@ class _MoreTicketPopUpState extends State<MoreTicketPopUp> {
                                         'Price': newItemPrice,
                                         'Quantity': 1,
                                         'Total Price': newItemPrice,
-                                        'Options': []
+                                        'Options': [],
+                                        'Supplies': []
                                       });
 
                                       setState(() {

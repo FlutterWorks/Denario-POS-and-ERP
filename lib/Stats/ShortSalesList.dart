@@ -72,9 +72,9 @@ class ShortSalesList extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (context) {
-                              return StreamProvider<DailyTransactions>.value(
-                                  initialData: DailyTransactions(),
-                                  catchError: (_, err) => DailyTransactions(),
+                              return StreamProvider<DailyTransactions?>.value(
+                                  initialData: null,
+                                  catchError: (_, err) => null,
                                   value: DatabaseService().dailyTransactions(
                                       userBusiness,
                                       registerStatus.registerName!),
@@ -90,9 +90,9 @@ class ShortSalesList extends StatelessWidget {
                       } else {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return StreamProvider<DailyTransactions>.value(
-                              initialData: DailyTransactions(),
-                              catchError: (_, err) => DailyTransactions(),
+                          return StreamProvider<DailyTransactions?>.value(
+                              initialData: null,
+                              catchError: (_, err) => null,
                               value: DatabaseService().dailyTransactions(
                                   userBusiness, registerStatus.registerName!),
                               builder: (context, snapshot) {

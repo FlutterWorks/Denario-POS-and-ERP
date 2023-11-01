@@ -16,21 +16,18 @@ class DailySales extends StatelessWidget {
     final dailyTransactions = Provider.of<DailyTransactions?>(context);
     final userProfile = Provider.of<UserData?>(context);
 
-    if (registerStatus == null ||
-        dailyTransactions == null ||
-        userProfile == null ||
-        registerStatus == CashRegister()) {
+    if (registerStatus == null || userProfile == null) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.42,
         height: 400,
         padding: EdgeInsets.all(30),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: new BorderRadius.circular(12.0),
           boxShadow: <BoxShadow>[
             new BoxShadow(
-              color: Colors.grey[200]!,
-              offset: new Offset(15.0, 15.0),
+              color: Colors.grey[350]!,
+              offset: Offset(0.0, 0.0),
               blurRadius: 10.0,
             )
           ],
@@ -95,7 +92,8 @@ class DailySales extends StatelessWidget {
                       ),
                       SizedBox(height: 15),
                       //Amount
-                      (registerStatus.registerisOpen!)
+                      (registerStatus.registerisOpen! &&
+                              dailyTransactions != null)
                           ? Text(
                               '${formatCurrency.format(dailyTransactions.sales)}',
                               style: TextStyle(
@@ -182,8 +180,7 @@ class DailySales extends StatelessWidget {
                                 ///Text
                                 Text(
                                   (registerStatus.registerName == '' ||
-                                          dailyTransactions ==
-                                              DailyTransactions())
+                                          dailyTransactions == null)
                                       ? '${formatCurrency.format(0)}'
                                       : (dailyTransactions.salesByMedium![
                                                       registerStatus
@@ -276,7 +273,8 @@ class DailySales extends StatelessWidget {
                       ),
                       SizedBox(height: 15),
                       //Amount
-                      (registerStatus.registerisOpen!)
+                      (registerStatus.registerisOpen! &&
+                              dailyTransactions != null)
                           ? Text(
                               '${formatCurrency.format(dailyTransactions.sales)}',
                               style: TextStyle(
@@ -360,7 +358,7 @@ class DailySales extends StatelessWidget {
 
                                 ///Text
                                 Text(
-                                  (dailyTransactions == DailyTransactions())
+                                  (dailyTransactions == null)
                                       ? '${formatCurrency.format(0)}'
                                       : (dailyTransactions.salesByMedium![
                                                       registerStatus
@@ -451,7 +449,8 @@ class DailySales extends StatelessWidget {
                     ),
                     SizedBox(height: 15),
                     //Amount
-                    (registerStatus.registerisOpen!)
+                    (registerStatus.registerisOpen! &&
+                            dailyTransactions != null)
                         ? Text(
                             '${formatCurrency.format(dailyTransactions.sales)}',
                             style: TextStyle(
@@ -533,8 +532,7 @@ class DailySales extends StatelessWidget {
                               ///Text
                               Text(
                                 (registerStatus.registerName == '' ||
-                                        dailyTransactions ==
-                                            DailyTransactions())
+                                        dailyTransactions == null)
                                     ? '${formatCurrency.format(0)}'
                                     : (dailyTransactions.salesByMedium![
                                                     registerStatus

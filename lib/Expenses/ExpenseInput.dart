@@ -28,13 +28,38 @@ class _ExpenseInputState extends State<ExpenseInput> {
   double price = 0;
   String costType = '';
 
+  Widget nullCostSelection() {
+    return Column(children: [
+      //Circle
+      AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          width: 75,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            // border: Border.all(color: Colors.grey),
+            boxShadow: <BoxShadow>[
+              new BoxShadow(
+                color: Colors.grey[350]!,
+                offset: Offset(0.0, 0.0),
+                blurRadius: 10.0,
+              )
+            ],
+          ),
+          child:
+              Center(child: Icon(Icons.circle, color: Colors.white, size: 35))),
+      SizedBox(height: 15),
+    ]);
+  }
+
   Widget costSelection(
       String type,
       IconData icon,
       Color color,
       HighLevelMapping highlevelMapping,
       CashRegister registerStatus,
-      DailyTransactions dailyTransactions) {
+      DailyTransactions? dailyTransactions) {
     return InkWell(
       hoverColor: Colors.transparent,
       focusColor: Colors.transparent,
@@ -71,8 +96,8 @@ class _ExpenseInputState extends State<ExpenseInput> {
           showDialog(
               context: context,
               builder: (context) {
-                return StreamProvider<UserData>.value(
-                  initialData: UserData(),
+                return StreamProvider<UserData?>.value(
+                  initialData: null,
                   value: DatabaseService().userProfile(
                       FirebaseAuth.instance.currentUser!.uid.toString()),
                   child: CreateExpenseDialog(
@@ -88,8 +113,8 @@ class _ExpenseInputState extends State<ExpenseInput> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => StreamProvider<UserData>.value(
-                        initialData: UserData(),
+                  builder: (context) => StreamProvider<UserData?>.value(
+                        initialData: null,
                         value: DatabaseService().userProfile(
                             FirebaseAuth.instance.currentUser!.uid.toString()),
                         child: CreateExpenseDialog(
@@ -168,28 +193,22 @@ class _ExpenseInputState extends State<ExpenseInput> {
 
   @override
   Widget build(BuildContext context) {
-    final highLevelMapping = Provider.of<HighLevelMapping>(context);
-    final categoriesProvider = Provider.of<CategoryList>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
-    final dailyTransactions = Provider.of<DailyTransactions>(context);
+    final highLevelMapping = Provider.of<HighLevelMapping?>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
+    final dailyTransactions = Provider.of<DailyTransactions?>(context);
 
-    if (registerStatus == CashRegister()) {
-      return Container();
-    }
-
-    if (categoriesProvider == CategoryList()) {
+    if (highLevelMapping == null ||
+        registerStatus == null ||
+        categoriesProvider == null) {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        costSelection('', Icons.circle, Colors.grey[200]!, highLevelMapping,
-            registerStatus, dailyTransactions),
+        nullCostSelection(),
         SizedBox(width: 35),
-        costSelection('', Icons.circle, Colors.grey[200]!, highLevelMapping,
-            registerStatus, dailyTransactions),
+        nullCostSelection(),
         SizedBox(width: 35),
-        costSelection('', Icons.circle, Colors.grey[200]!, highLevelMapping,
-            registerStatus, dailyTransactions),
+        nullCostSelection(),
         SizedBox(width: 35),
-        costSelection('', Icons.circle, Colors.grey[200]!, highLevelMapping,
-            registerStatus, dailyTransactions),
+        nullCostSelection(),
       ]);
     } else {
       return Container(
@@ -234,7 +253,7 @@ class _ExpenseInputState extends State<ExpenseInput> {
                         colorSelected,
                         highLevelMapping,
                         registerStatus,
-                        dailyTransactions));
+                        dailyTransactions ?? null));
               }),
         ),
       );

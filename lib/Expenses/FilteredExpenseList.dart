@@ -57,8 +57,8 @@ class FilteredExpenseList extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return StreamProvider<DailyTransactions>.value(
-                      initialData: DailyTransactions(),
+                  return StreamProvider<DailyTransactions?>.value(
+                      initialData: null,
                       value: DatabaseService().dailyTransactions(
                           businessID, registerStatus.registerName!),
                       child: SingleExpenseDialog(
@@ -230,8 +230,8 @@ class FilteredExpenseList extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return StreamProvider<DailyTransactions>.value(
-                      initialData: DailyTransactions(),
+                  return StreamProvider<DailyTransactions?>.value(
+                      initialData: null,
                       value: DatabaseService().dailyTransactions(
                           businessID, registerStatus.registerName!),
                       child: SingleExpenseDialog(

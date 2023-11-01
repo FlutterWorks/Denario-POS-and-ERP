@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../Models/Categories.dart';
 
@@ -25,6 +26,23 @@ class GrossMarginGraphState extends State<GrossMarginGraph> {
   List<BarChartGroupData> listOfBarGroups = [];
   AsyncSnapshot? snapshot;
   List? categoryList;
+  final formatCurrency = new NumberFormat.simpleCurrency(decimalDigits: 0);
+
+  String abbreviateCurrency(double? amount) {
+    if (amount == null) {
+      return formatCurrency.format(0);
+    } else if (amount >= 1.0e9) {
+      return '\$${(amount / 1.0e9).toStringAsFixed(0)}B';
+    } else if (amount >= 1.0e6) {
+      return '\$${(amount / 1.0e6).toStringAsFixed(0)}M';
+    } else if (amount >= 1.0e5) {
+      return '\$${(amount / 1.0e3).toStringAsFixed(0)}K';
+    } else if (amount >= 1.0e3) {
+      return '\$${(amount / 1.0e3).toStringAsFixed(0)}K';
+    } else {
+      return formatCurrency.format(amount);
+    }
+  }
 
   @override
   void initState() {
@@ -92,7 +110,7 @@ class GrossMarginGraphState extends State<GrossMarginGraph> {
             children: <Widget>[
               //Title
               Text(
-                'Gross Margin by Category',
+                'Margen por Categoría',
                 style: TextStyle(color: Colors.black, fontSize: 18),
               ),
               const SizedBox(
@@ -123,6 +141,32 @@ class GrossMarginGraphState extends State<GrossMarginGraph> {
 
                           return SideTitleWidget(
                             axisSide: meta.axisSide,
+                            space: 8, //margin top
+                            child: text,
+                            angle: (MediaQuery.of(context).size.width > 900)
+                                ? 0.0
+                                : -0.65,
+                          );
+                        },
+                      )),
+                      leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (double value, meta) {
+                          Widget text = Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              abbreviateCurrency(value),
+                              style: const TextStyle(
+                                color: Color(0xff7589a2),
+                                fontWeight: FontWeight.normal,
+                                fontSize: 11,
+                              ),
+                            ),
+                          );
+
+                          return SideTitleWidget(
+                            axisSide: AxisSide.top,
                             space: 8, //margin top
                             child: text,
                           );

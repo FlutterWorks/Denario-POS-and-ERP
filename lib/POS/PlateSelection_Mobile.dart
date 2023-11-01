@@ -103,13 +103,7 @@ class _PlateSelectionMobileState extends State<PlateSelectionMobile> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return POSItemDialog(
-                                widget.businessID,
-                                product![i].product!,
-                                product![i].productOptions!,
-                                product![i].available!,
-                                product![i].price!.toDouble(),
-                                product![i].category!,
+                            return POSItemDialog(widget.businessID, product![i],
                                 product![i].productID!);
                           });
                     },

@@ -1,4 +1,5 @@
 import 'package:denario/Backend/DatabaseService.dart';
+import 'package:denario/Loading.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/Supplier.dart';
@@ -33,9 +34,15 @@ class _SuppliersDeskState extends State<SuppliersDesk> {
 
   @override
   Widget build(BuildContext context) {
-    final userProfile = Provider.of<UserData>(context);
-    final categoriesProvider = Provider.of<CategoryList>(context);
-    final highLevelMapping = Provider.of<HighLevelMapping>(context);
+    final userProfile = Provider.of<UserData?>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
+    final highLevelMapping = Provider.of<HighLevelMapping?>(context);
+
+    if (userProfile == null ||
+        categoriesProvider == null ||
+        highLevelMapping == null) {
+      return Loading();
+    }
 
     if (MediaQuery.of(context).size.width > 850) {
       return Container(

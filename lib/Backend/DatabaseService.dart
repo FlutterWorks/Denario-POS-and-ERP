@@ -122,7 +122,7 @@ class DatabaseService {
   }
 
   //Get User Profile
-  UserData _userProfileFromSnapshot(DocumentSnapshot snapshot) {
+  UserData? _userProfileFromSnapshot(DocumentSnapshot snapshot) {
     try {
       return UserData(
           name: snapshot['Name'],
@@ -145,12 +145,12 @@ class DatabaseService {
           usage: snapshot['App Intended Usage']);
     } catch (e) {
       print(e);
-      return UserData();
+      return null;
     }
   }
 
   //User Stream
-  Stream<UserData> userProfile(String uid) async* {
+  Stream<UserData?> userProfile(String uid) async* {
     yield* FirebaseFirestore.instance
         .collection('Users')
         .doc(uid)
@@ -159,7 +159,7 @@ class DatabaseService {
   }
 
   //Get User Business Profile
-  BusinessProfile _userBusinessProfileFromSnapshot(DocumentSnapshot snapshot) {
+  BusinessProfile? _userBusinessProfileFromSnapshot(DocumentSnapshot snapshot) {
     try {
       return BusinessProfile(
           businessID: snapshot.data().toString().contains('Business ID')
@@ -228,12 +228,12 @@ class DatabaseService {
               : true);
     } catch (e) {
       print(e);
-      return BusinessProfile();
+      return null;
     }
   }
 
   //User Business Stream
-  Stream<BusinessProfile> userBusinessProfile(businessID) async* {
+  Stream<BusinessProfile?> userBusinessProfile(businessID) async* {
     yield* FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -921,7 +921,7 @@ class DatabaseService {
     double totalCostOfIngredients = 0;
     for (var i = 0; i < cartList.length; i++) {
       double totalCost = 0;
-      List ingredients = cartList[i]['Supplies'];
+      List ingredients = cartList[i]['Supplies'] ?? [];
       if (ingredients.length > 0) {
         //Loop through supplies
         for (int x = 0; x < ingredients.length; x++) {
@@ -1902,21 +1902,32 @@ class DatabaseService {
   ///////////////////////// ACCOUNTS/CATEGORIES //////////////////////////
 
   //Get High Level Mapping
-  HighLevelMapping _highLevelMappingFromSnapshot(DocumentSnapshot snapshot) {
+  HighLevelMapping? _highLevelMappingFromSnapshot(DocumentSnapshot snapshot) {
     try {
       return HighLevelMapping(
-          expenseInputMapping: snapshot['Expense Input Mapping'],
-          pnlAccountGroups: snapshot['PnL Account Group Mapping'],
-          pnlMapping: snapshot['PnL Mapping'],
-          expenseGroups: snapshot['Expense Group Mapping']);
+          expenseInputMapping:
+              snapshot.data().toString().contains('Expense Input Mapping')
+                  ? snapshot['Expense Input Mapping']
+                  : {},
+          pnlAccountGroups:
+              snapshot.data().toString().contains('PnL Account Group Mapping')
+                  ? snapshot['PnL Account Group Mapping']
+                  : [],
+          pnlMapping: snapshot.data().toString().contains('PnL Mapping')
+              ? snapshot['PnL Mapping']
+              : {},
+          expenseGroups:
+              snapshot.data().toString().contains('Expense Group Mapping')
+                  ? snapshot['Expense Group Mapping']
+                  : []);
     } catch (e) {
       print(e);
-      return HighLevelMapping();
+      return null;
     }
   }
 
   //High Level Mapping Stream
-  Stream<HighLevelMapping> highLevelMapping(businessID) async* {
+  Stream<HighLevelMapping?> highLevelMapping(businessID) async* {
     yield* FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -1937,17 +1948,20 @@ class DatabaseService {
   }
 
   //Get Categories (Costo de Ventas)
-  CategoryList _categoriesFromSnapshot(DocumentSnapshot snapshot) {
+  CategoryList? _categoriesFromSnapshot(DocumentSnapshot snapshot) {
     try {
-      return CategoryList(categoryList: snapshot['Category List']);
+      return CategoryList(
+          categoryList: snapshot.data().toString().contains('Category List')
+              ? snapshot['Category List']
+              : []);
     } catch (e) {
       print(e);
-      return CategoryList();
+      return null;
     }
   }
 
   //Categories Stream (Costo de Ventas)
-  Stream<CategoryList> categoriesList(businessID) async* {
+  Stream<CategoryList?> categoriesList(businessID) async* {
     yield* FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -1958,17 +1972,21 @@ class DatabaseService {
   }
 
   //Get Account Groups with Categories
-  AccountsList _accountsFromSnapshot(DocumentSnapshot snapshot) {
+  AccountsList? _accountsFromSnapshot(DocumentSnapshot snapshot) {
     try {
-      return AccountsList(accountsMapping: snapshot['Account Mapping']);
+      return AccountsList(
+          accountsMapping:
+              snapshot.data().toString().contains('Account Mapping')
+                  ? snapshot['Account Mapping']
+                  : {});
     } catch (e) {
       print(e);
-      return AccountsList();
+      return null;
     }
   }
 
   //Accounts Stream
-  Stream<AccountsList> accountsList(businessID) async* {
+  Stream<AccountsList?> accountsList(businessID) async* {
     yield* FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -2652,7 +2670,7 @@ class DatabaseService {
 
   //Read Cash Register Status
   //Get First Level Cash Register Data
-  CashRegister _cashRegisterFromSnapshot(DocumentSnapshot snapshot) {
+  CashRegister? _cashRegisterFromSnapshot(DocumentSnapshot snapshot) {
     try {
       return CashRegister(
           registerName: snapshot.data().toString().contains('Caja Actual')
@@ -2665,13 +2683,12 @@ class DatabaseService {
               ? snapshot['Payment Types']
               : []);
     } catch (e) {
-      print(e);
-      return CashRegister();
+      return null;
     }
   }
 
   //Categories Stream (Costo de Ventas)
-  Stream<CashRegister> cashRegisterStatus(businessID) async* {
+  Stream<CashRegister?> cashRegisterStatus(businessID) async* {
     yield* FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
@@ -2680,7 +2697,7 @@ class DatabaseService {
   }
 
   //Get Daily Transactions
-  DailyTransactions _dailyTransactionsFromSnapshot(DocumentSnapshot snapshot) {
+  DailyTransactions? _dailyTransactionsFromSnapshot(DocumentSnapshot snapshot) {
     try {
       return DailyTransactions(
         openDate: snapshot.data().toString().contains('Fecha Apertura')
@@ -2757,7 +2774,7 @@ class DatabaseService {
       );
     } catch (e) {
       print(e);
-      return DailyTransactions();
+      return null;
     }
   }
 
@@ -2839,37 +2856,45 @@ class DatabaseService {
   }
 
   //Daily  Stream (Costo de Ventas)
-  Stream<DailyTransactions> dailyTransactions(
+  Stream<DailyTransactions?> dailyTransactions(
       businessID, String openRegister) async* {
     var year = DateTime.now().year.toString();
     var month = DateTime.now().month.toString();
-    yield* FirebaseFirestore.instance
-        .collection('ERP')
-        .doc(businessID)
-        .collection(year)
-        .doc(month)
-        .collection('Daily')
-        .doc(openRegister)
-        .snapshots()
-        .map(_dailyTransactionsFromSnapshot);
+    try {
+      yield* FirebaseFirestore.instance
+          .collection('ERP')
+          .doc(businessID)
+          .collection(year)
+          .doc(month)
+          .collection('Daily')
+          .doc(openRegister)
+          .snapshots()
+          .map(_dailyTransactionsFromSnapshot);
+    } catch (e) {
+      yield null;
+    }
   }
 
   Stream<List<DailyTransactions>> specificDailyTransactions(
       businessID, String year, String month, DateTime selectedDate) async* {
-    yield* FirebaseFirestore.instance
-        .collection('ERP')
-        .doc(businessID)
-        .collection(year)
-        .doc(month)
-        .collection('Daily')
-        .where('Fecha Apertura',
-            isGreaterThanOrEqualTo: DateTime(selectedDate.year,
-                selectedDate.month, selectedDate.day, 00, 00))
-        .where('Fecha Apertura',
-            isLessThanOrEqualTo: DateTime(selectedDate.year, selectedDate.month,
-                selectedDate.day, 23, 59, 59))
-        .snapshots()
-        .map(_specificDayTransactionsFromSnapshot);
+    try {
+      yield* FirebaseFirestore.instance
+          .collection('ERP')
+          .doc(businessID)
+          .collection(year)
+          .doc(month)
+          .collection('Daily')
+          .where('Fecha Apertura',
+              isGreaterThanOrEqualTo: DateTime(selectedDate.year,
+                  selectedDate.month, selectedDate.day, 00, 00))
+          .where('Fecha Apertura',
+              isLessThanOrEqualTo: DateTime(selectedDate.year,
+                  selectedDate.month, selectedDate.day, 23, 59, 59))
+          .snapshots()
+          .map(_specificDayTransactionsFromSnapshot);
+    } catch (e) {
+      yield [];
+    }
   }
 
   // Daily Transactions List from snapshot
@@ -2955,16 +2980,20 @@ class DatabaseService {
     var year = DateTime.now().year.toString();
     var month = DateTime.now().month.toString();
 
-    yield* FirebaseFirestore.instance
-        .collection('ERP')
-        .doc(businessID)
-        .collection(year)
-        .doc(month)
-        .collection('Daily')
-        .orderBy('Fecha Apertura', descending: true)
-        .limit(7)
-        .snapshots()
-        .map(_dailyTransactionsListFromSnapshot);
+    try {
+      yield* FirebaseFirestore.instance
+          .collection('ERP')
+          .doc(businessID)
+          .collection(year)
+          .doc(month)
+          .collection('Daily')
+          .orderBy('Fecha Apertura', descending: true)
+          .limit(7)
+          .snapshots()
+          .map(_dailyTransactionsListFromSnapshot);
+    } catch (e) {
+      yield [];
+    }
   }
 
   //Save Stats Details
@@ -3238,7 +3267,7 @@ class DatabaseService {
   }
 
   //Stats from Snap
-  Stream<MonthlyStats> monthlyStatsfromSnapshot(String businessID) async* {
+  Stream<MonthlyStats?> monthlyStatsfromSnapshot(String businessID) async* {
     var year = DateTime.now().year.toString();
     var month = DateTime.now().month.toString();
 
@@ -3254,7 +3283,7 @@ class DatabaseService {
   }
 
   //Get Daily Transactions
-  MonthlyStats _monthlyStats(DocumentSnapshot snapshot) {
+  MonthlyStats? _monthlyStats(DocumentSnapshot snapshot) {
     try {
       return MonthlyStats(
         totalSales: snapshot.data().toString().contains('Total Sales')
@@ -3298,7 +3327,7 @@ class DatabaseService {
       );
     } catch (e) {
       print(e);
-      return MonthlyStats();
+      return null;
     }
   }
 

@@ -8,9 +8,7 @@ class ConfirmDeleteOrder extends StatefulWidget {
   final String businessID;
   final Sales sale;
   final CashRegister registerStatus;
-  final DailyTransactions dailyTransactions;
-  const ConfirmDeleteOrder(
-      this.businessID, this.sale, this.registerStatus, this.dailyTransactions,
+  const ConfirmDeleteOrder(this.businessID, this.sale, this.registerStatus,
       {Key? key})
       : super(key: key);
 

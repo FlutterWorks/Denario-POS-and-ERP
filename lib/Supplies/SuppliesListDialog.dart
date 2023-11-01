@@ -132,14 +132,14 @@ class ListofSupplies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final supplies = Provider.of<List<Supply>>(context);
+    final supplies = Provider.of<List<Supply>?>(context);
 
     if (supplies == []) {
       return Container();
     }
 
     return Expanded(
-        child: (supplies == [])
+        child: (supplies == [] || supplies == null)
             ? ListView.builder(
                 shrinkWrap: true,
                 itemCount: 3,

@@ -46,11 +46,13 @@ class _MonthStatsState extends State<MonthStats> {
 
   @override
   Widget build(BuildContext context) {
-    final monthlyStats = Provider.of<MonthlyStats>(context);
-    final categoriesProvider = Provider.of<CategoryList>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
+    final monthlyStats = Provider.of<MonthlyStats?>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
 
-    if (categoriesProvider == CategoryList()) {
+    if (categoriesProvider == null ||
+        monthlyStats == null ||
+        registerStatus == null) {
       return Container();
     } else {
       DailyTransactions dayStats = DailyTransactions(

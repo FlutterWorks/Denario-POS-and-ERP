@@ -88,8 +88,8 @@ class PayablesList extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return StreamProvider<DailyTransactions>.value(
-                            initialData: DailyTransactions(),
+                        return StreamProvider<DailyTransactions?>.value(
+                            initialData: null,
                             value: DatabaseService().dailyTransactions(
                                 businessID, registerStatus.registerName!),
                             child:
@@ -211,12 +211,12 @@ class PayablesList extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return StreamProvider<DailyTransactions>.value(
-                            initialData: DailyTransactions(),
+                        return StreamProvider<DailyTransactions?>.value(
+                            initialData: null,
                             value: DatabaseService().dailyTransactions(
                                 businessID, registerStatus.registerName!),
-                            child: SinglePayableDialog(
-                                payables[i], businessID));
+                            child:
+                                SinglePayableDialog(payables[i], businessID));
                       });
                 },
                 child: Container(

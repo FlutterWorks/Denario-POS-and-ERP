@@ -163,20 +163,20 @@ class _NewProductState extends State<NewProduct> {
   void initState() {
     if (widget.product != null) {
       newProduct = false;
-      category = widget.product!.category!;
-      isAvailable = widget.product!.available!;
-      show = widget.product!.available!;
-      vegan = widget.product!.vegan!;
+      category = widget.product!.category ?? '';
+      isAvailable = widget.product!.available ?? false;
+      show = widget.product!.showOnMenu ?? false;
+      vegan = widget.product!.vegan ?? false;
       name = widget.product!.product!;
       price = widget.product!.price!;
-      code = widget.product!.code!;
-      description = widget.product!.description!;
-      image = widget.product!.image!;
-      ingredients = widget.product!.ingredients!;
-      historicPrices = widget.product!.historicPrices!;
-      featured = widget.product!.featured!;
-      expectedMargin = widget.product!.expectedMargin!;
-      lowMarginAlert = widget.product!.lowMarginAlert!;
+      code = widget.product!.code ?? '';
+      description = widget.product!.description ?? '';
+      image = widget.product!.image ?? '';
+      ingredients = widget.product!.ingredients ?? [];
+      historicPrices = widget.product!.historicPrices ?? [];
+      featured = widget.product!.featured ?? false;
+      expectedMargin = widget.product!.expectedMargin ?? 0;
+      lowMarginAlert = widget.product!.lowMarginAlert ?? 0;
       if (widget.product!.productOptions!.length > 0) {
         for (var x = 0; x < widget.product!.productOptions!.length; x++) {
           productOptions.add({

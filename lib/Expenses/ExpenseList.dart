@@ -13,9 +13,9 @@ class ExpenseList extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatCurrency = new NumberFormat.simpleCurrency();
     final expenses = Provider.of<List<Expenses>>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
 
-    if (expenses == []) {
+    if (expenses == [] || registerStatus == null) {
       return Container();
     }
 
@@ -87,8 +87,8 @@ class ExpenseList extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return StreamProvider<DailyTransactions>.value(
-                            initialData: DailyTransactions(),
+                        return StreamProvider<DailyTransactions?>.value(
+                            initialData: null,
                             value: DatabaseService().dailyTransactions(
                                 businessID, registerStatus.registerName!),
                             child: SingleExpenseDialog(
@@ -185,8 +185,8 @@ class ExpenseList extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return StreamProvider<DailyTransactions>.value(
-                            initialData: DailyTransactions(),
+                        return StreamProvider<DailyTransactions?>.value(
+                            initialData: null,
                             value: DatabaseService().dailyTransactions(
                                 businessID, registerStatus.registerName!),
                             child: SingleExpenseDialog(

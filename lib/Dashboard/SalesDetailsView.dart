@@ -109,9 +109,9 @@ class SalesDetailsView extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (context) {
-                          return StreamProvider<DailyTransactions>.value(
-                              initialData: DailyTransactions(),
-                              catchError: (_, err) => DailyTransactions(),
+                          return StreamProvider<DailyTransactions?>.value(
+                              initialData: null,
+                              catchError: (_, err) => null,
                               value: DatabaseService().dailyTransactions(
                                   businessID, registerStatus.registerName!),
                               builder: (context, snapshot) {
@@ -136,9 +136,9 @@ class SalesDetailsView extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return StreamProvider<DailyTransactions>.value(
-                  initialData: DailyTransactions(),
-                  catchError: (_, err) => DailyTransactions(),
+              return StreamProvider<DailyTransactions?>.value(
+                  initialData: null,
+                  catchError: (_, err) => null,
                   value: DatabaseService().dailyTransactions(
                       businessID, registerStatus.registerName!),
                   builder: (context, snapshot) {

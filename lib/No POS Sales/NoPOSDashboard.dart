@@ -153,9 +153,8 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) => StreamProvider<
-                                                                  CashRegister>.value(
-                                                              initialData:
-                                                                  CashRegister(),
+                                                                  CashRegister?>.value(
+                                                              initialData: null,
                                                               value: DatabaseService()
                                                                   .cashRegisterStatus(
                                                                       widget
@@ -355,11 +354,11 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => StreamProvider<
-                                                  MonthlyStats>.value(
+                                                  MonthlyStats?>.value(
                                                 value: DatabaseService()
                                                     .monthlyStatsfromSnapshot(
                                                         widget.currentBusiness),
-                                                initialData: MonthlyStats(),
+                                                initialData: null,
                                                 child: NewSaleScreen(
                                                   widget.currentBusiness,
                                                   fromPOS: false,
@@ -514,15 +513,17 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => StreamProvider<
-                                                      CashRegister>.value(
-                                                  initialData: CashRegister(),
-                                                  value: DatabaseService()
-                                                      .cashRegisterStatus(widget
-                                                          .currentBusiness),
-                                                  child: SalesDetailsFilters(
-                                                      widget.currentBusiness,
-                                                      register))));
+                                              builder: (context) =>
+                                                  StreamProvider<
+                                                          CashRegister?>.value(
+                                                      initialData: null,
+                                                      value: DatabaseService()
+                                                          .cashRegisterStatus(widget
+                                                              .currentBusiness),
+                                                      child: SalesDetailsFilters(
+                                                          widget
+                                                              .currentBusiness,
+                                                          register))));
                                       // MultiProvider(
                                       //     providers: [
                                       //       StreamProvider<
@@ -691,12 +692,12 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 StreamProvider<
-                                                    MonthlyStats>.value(
+                                                    MonthlyStats?>.value(
                                                   value: DatabaseService()
                                                       .monthlyStatsfromSnapshot(
                                                           widget
                                                               .currentBusiness),
-                                                  initialData: MonthlyStats(),
+                                                  initialData: null,
                                                   child: NewSaleScreen(
                                                     widget.currentBusiness,
                                                     fromPOS: false,

@@ -41,12 +41,12 @@ class TaskWeeklyList extends StatelessWidget {
                     builder: (context) {
                       return MultiProvider(
                         providers: [
-                          StreamProvider<MonthlyStats>.value(
-                              initialData: MonthlyStats(),
+                          StreamProvider<MonthlyStats?>.value(
+                              initialData: null,
                               value: DatabaseService()
                                   .monthlyStatsfromSnapshot(activeBusiness)),
-                          StreamProvider<CashRegister>.value(
-                              initialData: CashRegister(),
+                          StreamProvider<CashRegister?>.value(
+                              initialData: null,
                               value: DatabaseService()
                                   .cashRegisterStatus(activeBusiness)),
                         ],

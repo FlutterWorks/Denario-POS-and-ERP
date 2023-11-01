@@ -54,8 +54,6 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final dailyTransactions = Provider.of<DailyTransactions>(context);
-
     if (MediaQuery.of(context).size.width > 650) {
       return SingleChildScrollView(
         child: Dialog(
@@ -86,16 +84,13 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return StreamProvider<MonthlyStats>.value(
-                                    initialData: MonthlyStats(),
+                                  return StreamProvider<MonthlyStats?>.value(
+                                    initialData: null,
                                     value: DatabaseService()
                                         .monthlyStatsfromSnapshot(
                                             widget.businessID),
-                                    child: ConfirmDeleteOrder(
-                                        widget.businessID,
-                                        widget.sale,
-                                        widget.registerStatus,
-                                        dailyTransactions),
+                                    child: ConfirmDeleteOrder(widget.businessID,
+                                        widget.sale, widget.registerStatus),
                                   );
                                 });
                           },
@@ -452,15 +447,12 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return StreamProvider<MonthlyStats>.value(
-                              initialData: MonthlyStats(),
+                            return StreamProvider<MonthlyStats?>.value(
+                              initialData: null,
                               value: DatabaseService()
                                   .monthlyStatsfromSnapshot(widget.businessID),
-                              child: ConfirmDeleteOrder(
-                                  widget.businessID,
-                                  widget.sale,
-                                  widget.registerStatus,
-                                  dailyTransactions),
+                              child: ConfirmDeleteOrder(widget.businessID,
+                                  widget.sale, widget.registerStatus),
                             );
                           });
                     },

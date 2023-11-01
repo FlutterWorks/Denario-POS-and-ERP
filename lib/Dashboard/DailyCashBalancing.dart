@@ -55,13 +55,97 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
     final DailyTransactions? dailyTransactions =
         Provider.of<DailyTransactions?>(context);
 
-    if (registerStatus == null || dailyTransactions == null) {
-      //Si no encuentra el status
-      return Container();
-    }
-
     final User? user = FirebaseAuth.instance.currentUser;
     final String? uid = user?.uid.toString();
+
+    if (registerStatus == null || dailyTransactions == null) {
+      //Si no encuentra el status
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //Open/Close Register
+          Container(
+              height: 200,
+              padding: EdgeInsets.fromLTRB(30, 30, 30, 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //Title
+                  Container(
+                    width: double.infinity,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          //Title
+                          Text(
+                            'Arqueo de caja',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                            textAlign: TextAlign.start,
+                          ),
+                          Spacer(),
+                          //Historic Cash Balancing
+                          IconButton(
+                              tooltip: 'Historial de arqueos',
+                              onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DailyHistory())),
+                              icon: Icon(
+                                Icons.history,
+                                color: Colors.black,
+                                size: 24,
+                              ))
+                        ]),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    width: 50,
+                    child: Divider(
+                      thickness: 1,
+                      endIndent: 10,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  //Open / Current
+                  Container(
+                    height: 40,
+                    width: 300,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.greenAccent,
+                        // minimumSize: Size(300, 50),
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return StreamProvider<UserData?>.value(
+                                  value: DatabaseService().userProfile(uid!),
+                                  initialData: null,
+                                  child: OpenCashRegisterDialog());
+                            });
+                      },
+                      child: Center(
+                          child: Text('Abrir caja',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400))),
+                    ),
+                  )
+                ],
+              )),
+        ],
+      );
+    }
 
     if (registerStatus.registerisOpen!) {
       if (dailyTransactions.salesByMedium != null &&
@@ -179,10 +263,11 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
-                                          return StreamProvider<UserData>.value(
+                                          return StreamProvider<
+                                              UserData?>.value(
                                             value: DatabaseService()
                                                 .userProfile(uid!),
-                                            initialData: UserData(),
+                                            initialData: null,
                                             child: CloseCashRegisterDialog(
                                                 currentRegister: registerStatus
                                                     .registerName!),
@@ -351,10 +436,10 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return StreamProvider<UserData>.value(
+                                        return StreamProvider<UserData?>.value(
                                           value: DatabaseService()
                                               .userProfile(uid!),
-                                          initialData: UserData(),
+                                          initialData: null,
                                           child: UpdateCashRegisterDialog(
                                             currentRegister:
                                                 registerStatus.registerName!,
@@ -391,10 +476,10 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return StreamProvider<UserData>.value(
+                                        return StreamProvider<UserData?>.value(
                                           value: DatabaseService()
                                               .userProfile(uid!),
-                                          initialData: UserData(),
+                                          initialData: null,
                                           child: UpdateCashRegisterDialog(
                                             currentRegister:
                                                 registerStatus.registerName!,
@@ -497,9 +582,9 @@ class _DailyCashBalancingState extends State<DailyCashBalancing> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return StreamProvider<UserData>.value(
+                            return StreamProvider<UserData?>.value(
                                 value: DatabaseService().userProfile(uid!),
-                                initialData: UserData(),
+                                initialData: null,
                                 child: OpenCashRegisterDialog());
                           });
                     },

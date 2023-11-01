@@ -22,11 +22,12 @@ class _PnlDeskState extends State<PnlDesk> {
 
   @override
   Widget build(BuildContext context) {
-    final highLevelMapping = Provider.of<HighLevelMapping>(context);
-    final userProfile = Provider.of<UserData>(context);
+    final highLevelMapping = Provider.of<HighLevelMapping?>(context);
+    final userProfile = Provider.of<UserData?>(context);
 
-    if (highLevelMapping == HighLevelMapping()) {
-      return Center();
+    if (highLevelMapping == null || userProfile == null) {
+      return Container(
+          width: double.infinity, height: double.infinity, child: Center());
     }
 
     final List pnlAccountGroups = highLevelMapping.pnlAccountGroups!;

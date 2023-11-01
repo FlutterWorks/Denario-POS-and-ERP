@@ -17,6 +17,7 @@ class _StatsByCannelsState extends State<StatsByCannels> {
   @override
   void initState() {
     keys = widget.channels.keys.toList();
+
     super.initState();
   }
 
@@ -25,7 +26,7 @@ class _StatsByCannelsState extends State<StatsByCannels> {
     return Expanded(
       child: Container(
         child: ListView.builder(
-            itemCount: widget.channels.length,
+            itemCount: keys.length,
             shrinkWrap: true,
             reverse: false,
             physics: BouncingScrollPhysics(),
@@ -41,7 +42,7 @@ class _StatsByCannelsState extends State<StatsByCannels> {
                     Container(
                         width: 150,
                         child: Text(
-                          (keys[i] != "null") ? '${keys[i]}' : 'Sin definir',
+                          (keys[i] != null) ? '${keys[i]}' : 'Sin definir',
                           style: TextStyle(fontWeight: FontWeight.bold),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -52,7 +53,7 @@ class _StatsByCannelsState extends State<StatsByCannels> {
                         width: 120,
                         child: Center(
                           child: Text(
-                            '${formatCurrency.format(widget.channels[keys[i]])}',
+                            '${formatCurrency.format(widget.channels[keys[i]] ?? 0)}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

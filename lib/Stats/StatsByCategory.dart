@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class StatsByCategory extends StatelessWidget {
   final List categoryList;
-  final DailyTransactions dayStats;
+  final DailyTransactions? dayStats;
   StatsByCategory(this.dayStats, this.categoryList, {Key? key})
       : super(key: key);
 
@@ -12,6 +12,10 @@ class StatsByCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (categoryList.length < 1) {
+      return Container();
+    }
+
     return Expanded(
       child: Container(
         child: ListView.builder(
@@ -31,7 +35,7 @@ class StatsByCategory extends StatelessWidget {
                     Container(
                         width: 150,
                         child: Text(
-                          '${categoryList[i]}',
+                          '${categoryList[i] ?? ''}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -42,10 +46,8 @@ class StatsByCategory extends StatelessWidget {
                         width: 120,
                         child: Center(
                           child: Text(
-                            (dayStats.salesCountbyCategory![
-                                        (categoryList[i])] !=
-                                    null)
-                                ? '${formatCurrency.format(dayStats.salesAmountbyCategory![(categoryList[i])])}'
+                            (dayStats != null)
+                                ? '${formatCurrency.format(dayStats!.salesAmountbyCategory![(categoryList[i])] ?? 0)}'
                                 : '${formatCurrency.format(0)}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

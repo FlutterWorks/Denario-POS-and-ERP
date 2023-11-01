@@ -21,7 +21,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
   late String name;
   String? vendor;
   TextEditingController nameController = new TextEditingController(text: '');
-  FocusNode? nameNode;
+  FocusNode nameNode = FocusNode();
   String? selectedProduct;
   List? searchName;
   String? searchvendorName;
@@ -136,7 +136,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                       setState(() {
                                         searchByVendor = false;
                                       });
-                                      nameNode!.requestFocus();
+                                      nameNode.requestFocus();
                                     },
                                     child: Center(
                                         child: Text('Insumo',
@@ -169,7 +169,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                       setState(() {
                                         searchByVendor = true;
                                       });
-                                      nameNode!.requestFocus();
+                                      nameNode.requestFocus();
                                     },
                                     child: Center(
                                         child: Text('Proveedor',
@@ -257,12 +257,12 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                           (Set<MaterialState> states) {
                                             if (states.contains(
                                                 MaterialState.hovered))
-                                              return Colors.greenAccent[300]!;
+                                              return Colors.greenAccent[300];
                                             if (states.contains(
                                                     MaterialState.focused) ||
                                                 states.contains(
                                                     MaterialState.pressed))
-                                              return Colors.lightGreenAccent;
+                                              return Colors.grey;
                                             return null; // Defer to the widget's default.
                                           },
                                         ),
@@ -340,7 +340,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                           setState(() {
                                             searchByVendor = false;
                                           });
-                                          nameNode!.requestFocus();
+                                          nameNode.requestFocus();
                                         },
                                         child: Center(
                                             child: Text('Insumo',
@@ -374,7 +374,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                           setState(() {
                                             searchByVendor = true;
                                           });
-                                          nameNode!.requestFocus();
+                                          nameNode.requestFocus();
                                         },
                                         child: Center(
                                             child: Text('Proveedor',
@@ -465,8 +465,8 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                           style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all<
-                                                        Color>(
-                                                    Colors.greenAccent[400]!),
+                                                        Color?>(
+                                                    Colors.greenAccent[400]),
                                             overlayColor: MaterialStateProperty
                                                 .resolveWith<Color?>(
                                               (Set<MaterialState> states) {
@@ -479,8 +479,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                                             .focused) ||
                                                     states.contains(
                                                         MaterialState.pressed))
-                                                  return Colors
-                                                      .lightGreenAccent;
+                                                  return Colors.grey;
                                                 return null; // Defer to the widget's default.
                                               },
                                             ),
@@ -758,7 +757,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                 setState(() {
                                   searchByVendor = false;
                                 });
-                                nameNode!.requestFocus();
+                                nameNode.requestFocus();
                               },
                               child: Center(
                                   child: Text('Insumo',
@@ -790,7 +789,7 @@ class _SuppliesDeskState extends State<SuppliesDesk> {
                                 setState(() {
                                   searchByVendor = true;
                                 });
-                                nameNode!.requestFocus();
+                                nameNode.requestFocus();
                               },
                               child: Center(
                                   child: Text('Proveedor',

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:denario/Loading.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/PnL/GrossMarginGraph.dart';
 import 'package:denario/PnL/PnLCard.dart';
@@ -6,7 +7,7 @@ import 'package:denario/PnL/PnlMargins.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PnL extends StatefulWidget {
+class PnL extends StatelessWidget {
   final List? pnlAccountGroups;
   final Map<dynamic, dynamic>? pnlMapping;
   final int? pnlMonth;
@@ -20,40 +21,24 @@ class PnL extends StatefulWidget {
       this.pnlYear,
       this.activeBusiness});
 
-  @override
-  State<PnL> createState() => _PnLState();
-}
-
-class _PnLState extends State<PnL> {
-//   @override
   Future currentValue() async {
     var firestore = FirebaseFirestore.instance;
 
     var docRef = firestore
         .collection('ERP')
-        .doc(widget.activeBusiness)
-        .collection((widget.pnlYear).toString())
-        .doc((widget.pnlMonth).toString())
+        .doc(activeBusiness)
+        .collection((pnlYear).toString())
+        .doc((pnlMonth).toString())
         .get();
     return docRef;
-  }
-
-  late Future currentValuesBuilt;
-
-  List categoriesList = [];
-
-  @override
-  void initState() {
-    currentValuesBuilt = currentValue();
-    super.initState();
   }
 
   // @override
   @override
   Widget build(BuildContext context) {
-    final categoriesProvider = Provider.of<CategoryList>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
 
-    if (categoriesProvider == CategoryList()) {
+    if (categoriesProvider == null) {
       return Container(
         height: MediaQuery.of(context).size.height * 0.6,
         width: double.infinity,
@@ -61,7 +46,7 @@ class _PnLState extends State<PnL> {
     }
 
     return FutureBuilder(
-        future: currentValuesBuilt,
+        future: currentValue(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             double totalVentas;
@@ -146,8 +131,8 @@ class _PnLState extends State<PnL> {
                                   snapshot: snapshot,
                                 ),
                                 SizedBox(height: 15),
-                                GrossMarginGraph(widget.activeBusiness!,
-                                    snapshot, categoriesProvider)
+                                GrossMarginGraph(activeBusiness!, snapshot,
+                                    categoriesProvider)
                               ],
                             ),
                           ),
@@ -155,8 +140,8 @@ class _PnLState extends State<PnL> {
                           //PnL Card
                           Container(
                             width: MediaQuery.of(context).size.width * 0.3,
-                            child: PnLCard(widget.pnlAccountGroups!,
-                                widget.pnlMapping!, snapshot),
+                            child: PnLCard(
+                                pnlAccountGroups!, pnlMapping!, snapshot),
                           ),
                         ])
                   : Column(
@@ -175,16 +160,15 @@ class _PnLState extends State<PnL> {
                           ),
                           SizedBox(height: 20),
                           //PnL Card
-                          PnLCard(widget.pnlAccountGroups!, widget.pnlMapping!,
-                              snapshot),
+                          PnLCard(pnlAccountGroups!, pnlMapping!, snapshot),
                           SizedBox(height: 20),
                           //Graph
-                          GrossMarginGraph(widget.activeBusiness!, snapshot,
-                              categoriesProvider)
+                          GrossMarginGraph(
+                              activeBusiness!, snapshot, categoriesProvider)
                         ]),
             );
           } else {
-            return Center();
+            return Loading();
           }
         });
   }

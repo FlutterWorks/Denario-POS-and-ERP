@@ -71,10 +71,10 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final monthlyStats = Provider.of<MonthlyStats>(context);
+    final monthlyStats = Provider.of<MonthlyStats?>(context);
     final registerStatus = Provider.of<CashRegister>(context);
 
-    if (monthlyStats == MonthlyStats() || widget.order == null) {
+    if (monthlyStats == null || widget.order == null) {
       currentSalesCount = 0;
       currentTicketItemsCount = 0;
       currentItemsCount = {};
@@ -433,9 +433,9 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                         return MultiProvider(
                                                           providers: [
                                                             StreamProvider<
-                                                                    MonthlyStats>.value(
+                                                                    MonthlyStats?>.value(
                                                                 initialData:
-                                                                    MonthlyStats(),
+                                                                    null,
                                                                 value: DatabaseService()
                                                                     .monthlyStatsfromSnapshot(
                                                                         widget
@@ -910,9 +910,8 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                     return MultiProvider(
                                                       providers: [
                                                         StreamProvider<
-                                                                MonthlyStats>.value(
-                                                            initialData:
-                                                                MonthlyStats(),
+                                                                MonthlyStats?>.value(
+                                                            initialData: null,
                                                             value: DatabaseService()
                                                                 .monthlyStatsfromSnapshot(
                                                                     widget

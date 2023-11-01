@@ -21,26 +21,26 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final userProfile = Provider.of<UserData?>(context);
 
-    if (userProfile == UserData()) {
+    if (userProfile == null) {
       return Scaffold(body: Loading());
     }
 
     return MultiProvider(
       providers: [
-        StreamProvider<CashRegister>.value(
-            initialData: CashRegister(),
+        StreamProvider<CashRegister?>.value(
+            initialData: null,
             value: DatabaseService()
-                .cashRegisterStatus(userProfile!.activeBusiness)),
-        StreamProvider<BusinessProfile>.value(
-            initialData: BusinessProfile(),
+                .cashRegisterStatus(userProfile.activeBusiness)),
+        StreamProvider<BusinessProfile?>.value(
+            initialData: null,
             value: DatabaseService()
                 .userBusinessProfile(userProfile.activeBusiness)),
-        StreamProvider<HighLevelMapping>.value(
-            initialData: HighLevelMapping(),
+        StreamProvider<HighLevelMapping?>.value(
+            initialData: null,
             value:
                 DatabaseService().highLevelMapping(userProfile.activeBusiness)),
-        StreamProvider<CategoryList>.value(
-            initialData: CategoryList(),
+        StreamProvider<CategoryList?>.value(
+            initialData: null,
             value:
                 DatabaseService().categoriesList(userProfile.activeBusiness)),
         StreamProvider<List<PendingOrders>>.value(

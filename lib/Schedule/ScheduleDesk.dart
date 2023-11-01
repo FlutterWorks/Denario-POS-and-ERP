@@ -217,18 +217,18 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                           builder: (context) => MultiProvider(
                                                 providers: [
                                                   StreamProvider<
-                                                          UserData>.value(
-                                                      initialData: UserData(),
+                                                          UserData?>.value(
+                                                      initialData: null,
                                                       value: DatabaseService()
                                                           .userProfile(user.uid
                                                               .toString())),
                                                   StreamProvider<
-                                                      MonthlyStats>.value(
+                                                      MonthlyStats?>.value(
                                                     value: DatabaseService()
                                                         .monthlyStatsfromSnapshot(
                                                             userProfile
                                                                 .activeBusiness!),
-                                                    initialData: MonthlyStats(),
+                                                    initialData: null,
                                                   )
                                                 ],
                                                 child: Scaffold(
@@ -536,18 +536,18 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                   MaterialPageRoute(
                                       builder: (context) => MultiProvider(
                                             providers: [
-                                              StreamProvider<UserData>.value(
-                                                  initialData: UserData(),
+                                              StreamProvider<UserData?>.value(
+                                                  initialData: null,
                                                   value: DatabaseService()
                                                       .userProfile(
                                                           user.uid.toString())),
                                               StreamProvider<
-                                                  MonthlyStats>.value(
+                                                  MonthlyStats?>.value(
                                                 value: DatabaseService()
                                                     .monthlyStatsfromSnapshot(
                                                         userProfile
                                                             .activeBusiness!),
-                                                initialData: MonthlyStats(),
+                                                initialData: null,
                                               )
                                             ],
                                             child: Scaffold(

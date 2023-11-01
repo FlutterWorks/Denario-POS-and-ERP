@@ -111,21 +111,19 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                       MultiProvider(
                                                         providers: [
                                                           StreamProvider<
-                                                                  UserData>.value(
-                                                              initialData:
-                                                                  UserData(),
+                                                                  UserData?>.value(
+                                                              initialData: null,
                                                               value: DatabaseService()
                                                                   .userProfile(user!
                                                                       .uid
                                                                       .toString())),
                                                           StreamProvider<
-                                                              MonthlyStats>.value(
+                                                              MonthlyStats?>.value(
                                                             value: DatabaseService()
                                                                 .monthlyStatsfromSnapshot(
                                                                     widget
                                                                         .currentBusiness),
-                                                            initialData:
-                                                                MonthlyStats(),
+                                                            initialData: null,
                                                           )
                                                         ],
                                                         child: Scaffold(

@@ -6,15 +6,15 @@ import 'package:intl/intl.dart';
 
 class POSItemDialog extends StatefulWidget {
   final String businessID;
-  final String product;
-  final List<ProductOptions> productOptions;
-  final bool availableOnMenu;
-  final double price;
-  final String category;
+  final Products product;
+  // final String product;
+  // final List<ProductOptions> productOptions;
+  // final bool availableOnMenu;
+  // final double price;
+  // final String category;
   final String documentID;
 
-  POSItemDialog(this.businessID, this.product, this.productOptions,
-      this.availableOnMenu, this.price, this.category, this.documentID);
+  POSItemDialog(this.businessID, this.product, this.documentID);
   @override
   _POSItemDialogState createState() => _POSItemDialogState();
 }
@@ -37,7 +37,7 @@ class _POSItemDialogState extends State<POSItemDialog> {
     double additionalAmount = 0;
 
     //Serch for base price
-    widget.productOptions.forEach((x) {
+    widget.product.productOptions!.forEach((x) {
       if (x.priceStructure == 'Aditional') {
         for (var i = 0; i < x.priceOptions.length; i++) {
           if (selectedTags.contains(x.priceOptions[i]['Option'])) {
@@ -59,11 +59,11 @@ class _POSItemDialogState extends State<POSItemDialog> {
 
   @override
   void initState() {
-    isAvailable = widget.availableOnMenu;
+    isAvailable = widget.product.available!;
     changedAvailability = false;
     quantity = 1;
-    selectedPrice = widget.price;
-    basePrice = widget.price;
+    selectedPrice = widget.product.price!;
+    basePrice = widget.product.price!;
     super.initState();
   }
 
@@ -95,7 +95,7 @@ class _POSItemDialogState extends State<POSItemDialog> {
                   Container(
                     width: double.infinity,
                     child: Text(
-                      widget.product,
+                      widget.product.product!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
@@ -153,12 +153,12 @@ class _POSItemDialogState extends State<POSItemDialog> {
                   ),
                   SizedBox(height: 20),
                   //Price Options
-                  (widget.productOptions.length == 0)
+                  (widget.product.productOptions!.length == 0)
                       ? Container()
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: widget.productOptions.length,
+                          itemCount: widget.product.productOptions!.length,
                           itemBuilder: (context, i) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 15.0),
@@ -168,7 +168,7 @@ class _POSItemDialogState extends State<POSItemDialog> {
                                 children: [
                                   //Title
                                   Text(
-                                    widget.productOptions[i].title,
+                                    widget.product.productOptions![i].title,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
@@ -182,7 +182,7 @@ class _POSItemDialogState extends State<POSItemDialog> {
                                         alignment: WrapAlignment.center,
                                         spacing: 5,
                                         children: List.generate(
-                                            widget.productOptions[i]
+                                            widget.product.productOptions![i]
                                                 .priceOptions.length, (x) {
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -190,20 +190,28 @@ class _POSItemDialogState extends State<POSItemDialog> {
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor: (selectedTags
                                                           .contains(widget
-                                                                  .productOptions[i]
+                                                                  .product
+                                                                  .productOptions![
+                                                                      i]
                                                                   .priceOptions[
                                                               x]['Option'])
                                                       ? Colors.greenAccent
                                                       : Colors.white)),
                                               onPressed: () {
                                                 if (!selectedTags.contains(
-                                                    widget.productOptions[i]
+                                                    widget
+                                                            .product
+                                                            .productOptions![i]
                                                             .priceOptions[x]
                                                         ['Option'])) {
                                                   //IF SINGLE CHOICE, REMOVE OTHERS
-                                                  if (!widget.productOptions[i]
+                                                  if (!widget
+                                                      .product
+                                                      .productOptions![i]
                                                       .multipleOptions) {
-                                                    widget.productOptions[i]
+                                                    widget
+                                                        .product
+                                                        .productOptions![i]
                                                         .priceOptions
                                                         .forEach((x) {
                                                       if (selectedTags.contains(
@@ -218,39 +226,49 @@ class _POSItemDialogState extends State<POSItemDialog> {
                                                   //Add new
                                                   setState(() {
                                                     selectedTags.add(widget
-                                                            .productOptions[i]
+                                                            .product
+                                                            .productOptions![i]
                                                             .priceOptions[x]
                                                         ['Option']);
                                                   });
                                                 }
 
-                                                if (widget.productOptions[i]
+                                                if (widget
+                                                            .product
+                                                            .productOptions![i]
                                                             .priceStructure ==
                                                         'Aditional' &&
-                                                    !selectedTags.contains(
-                                                        widget.productOptions[i]
-                                                                .priceOptions[x]
-                                                            ['Option'])) {
+                                                    !selectedTags.contains(widget
+                                                            .product
+                                                            .productOptions![i]
+                                                            .priceOptions[x]
+                                                        ['Option'])) {
                                                   setState(() {
                                                     selectedPrice = selectedPrice +
-                                                        widget.productOptions[i]
+                                                        widget
+                                                                .product
+                                                                .productOptions![i]
                                                                 .priceOptions[x]
                                                             ['Price'];
                                                   });
                                                 } else if (widget
-                                                        .productOptions[i]
+                                                        .product
+                                                        .productOptions![i]
                                                         .priceStructure ==
                                                     'Complete') {
                                                   setState(() {
                                                     basePrice = widget
-                                                            .productOptions[i]
+                                                            .product
+                                                            .productOptions![i]
                                                             .priceOptions[x]
                                                         ['Price'];
                                                   });
                                                 }
                                               },
                                               child: Text(
-                                                widget.productOptions[i]
+                                                widget
+                                                    .product
+                                                    .productOptions![i]
                                                     .priceOptions[x]['Option'],
                                                 style: TextStyle(
                                                     color: Colors.black),
@@ -265,7 +283,9 @@ class _POSItemDialogState extends State<POSItemDialog> {
                           }),
 
                   SizedBox(
-                      height: (widget.productOptions.length == 0) ? 0 : 30),
+                      height: (widget.product.productOptions!.length == 0)
+                          ? 0
+                          : 30),
                   //Quantity
                   Container(
                     width: double.infinity,
@@ -376,14 +396,15 @@ class _POSItemDialogState extends State<POSItemDialog> {
                           // Update Cart
                           if (quantity > 0) {
                             bloc.addToCart({
-                              'Name': widget.product,
-                              'Category': widget.category,
+                              'Name': widget.product.product,
+                              'Category': widget.product.category,
                               'Price': totalAmount(basePrice, selectedTags),
                               'Quantity': quantity,
                               'Total Price':
                                   totalAmount(basePrice, selectedTags) *
                                       quantity,
-                              'Options': selectedTags
+                              'Options': selectedTags,
+                              'Supplies': widget.product.ingredients
                             });
                           }
                           // Change Availability

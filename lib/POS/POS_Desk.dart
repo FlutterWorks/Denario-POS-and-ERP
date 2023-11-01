@@ -45,13 +45,11 @@ class _POSDeskState extends State<POSDesk> {
 
   @override
   Widget build(BuildContext context) {
-    final CategoryList? categoriesProvider = Provider.of<CategoryList>(context);
-    final UserData? userProfile = Provider.of<UserData>(context);
+    final CategoryList? categoriesProvider =
+        Provider.of<CategoryList?>(context);
+    final UserData? userProfile = Provider.of<UserData?>(context);
 
-    if (userProfile == null ||
-        categoriesProvider == null ||
-        userProfile == UserData() ||
-        categoriesProvider == CategoryList()) {
+    if (userProfile == null || categoriesProvider == null) {
       return Container(
         height: double.infinity,
         width: double.infinity,

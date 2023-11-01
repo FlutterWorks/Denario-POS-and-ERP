@@ -12,8 +12,8 @@ class POSProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Products> productList = Provider.of<List<Products>>(context);
-    if (productList == []) {
+    final List<Products>? productList = Provider.of<List<Products>?>(context);
+    if (productList == null || productList == []) {
       return Container();
     }
 
@@ -23,7 +23,7 @@ class POSProducts extends StatelessWidget {
         firstCategory: firstCategory,
       );
     } else {
-      return POSMobile(firstCategory, productList, scaffoldKeyMobile!);
+      return POSMobile(firstCategory, productList, scaffoldKeyMobile);
     }
   }
 }

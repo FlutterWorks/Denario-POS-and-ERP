@@ -1,5 +1,6 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Expenses/ConfirmDeleteExpense.dart';
+import 'package:denario/Loading.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Expenses.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,11 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final dailyTransactions = Provider.of<DailyTransactions>(context);
+    final dailyTransactions = Provider.of<DailyTransactions?>(context);
 
+    if (dailyTransactions == null) {
+      return Loading();
+    }
     return SingleChildScrollView(
       child: Dialog(
         shape:

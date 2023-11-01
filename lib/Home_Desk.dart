@@ -209,19 +209,27 @@ class _HomeDeskState extends State<HomeDesk> {
 
   @override
   Widget build(BuildContext context) {
-    final registerStatus = Provider.of<CashRegister>(context);
-    final categoriesProvider = Provider.of<CategoryList>(context);
-    final userProfile = Provider.of<UserData>(context);
-    final userBusiness = Provider.of<BusinessProfile>(context);
-    final pendingOrders = Provider.of<List<PendingOrders>>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
+    final userProfile = Provider.of<UserData?>(context);
+    final userBusiness = Provider.of<BusinessProfile?>(context);
+    final pendingOrders = Provider.of<List<PendingOrders>?>(context);
 
-    if (categoriesProvider == CategoryList() || userProfile == UserData()) {
+    if (categoriesProvider == null ||
+        userProfile == null ||
+        registerStatus == null ||
+        pendingOrders == null ||
+        userBusiness == null) {
       return Loading();
     }
 
     try {
       final businessIndexOnProfile = userProfile.businesses!.indexWhere(
           (element) => element.businessID == userProfile.activeBusiness);
+
+      if (userBusiness.businessField == '') {
+        return Loading();
+      }
 
       if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
           'Dueñ@') {
@@ -496,21 +504,21 @@ class _HomeDeskState extends State<HomeDesk> {
               initialData: [],
               value: DatabaseService()
                   .fullProductList(userProfile.activeBusiness!)),
-          StreamProvider<CategoryList>.value(
-              initialData: CategoryList(),
+          StreamProvider<CategoryList?>.value(
+              initialData: null,
               value:
                   DatabaseService().categoriesList(userProfile.activeBusiness)),
-          StreamProvider<HighLevelMapping>.value(
-              initialData: HighLevelMapping(),
+          StreamProvider<HighLevelMapping?>.value(
+              initialData: null,
               value: DatabaseService()
                   .highLevelMapping(userProfile.activeBusiness)),
-          StreamProvider<DailyTransactions>.value(
-              initialData: DailyTransactions(),
-              catchError: (_, err) => DailyTransactions(),
+          StreamProvider<DailyTransactions?>.value(
+              initialData: null,
+              catchError: (_, err) => null,
               value: DatabaseService().dailyTransactions(
                   userProfile.activeBusiness, registerStatus.registerName!)),
-          StreamProvider<MonthlyStats>.value(
-              initialData: MonthlyStats(),
+          StreamProvider<MonthlyStats?>.value(
+              initialData: null,
               value: DatabaseService()
                   .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
           StreamProvider<List<DailyTransactions>>.value(
@@ -521,8 +529,8 @@ class _HomeDeskState extends State<HomeDesk> {
               initialData: [],
               value: DatabaseService()
                   .pendingOrderList(userProfile.activeBusiness)),
-          StreamProvider<AccountsList>.value(
-              initialData: AccountsList(),
+          StreamProvider<AccountsList?>.value(
+              initialData: null,
               value: DatabaseService().accountsList(userProfile.activeBusiness))
         ],
         child: Scaffold(

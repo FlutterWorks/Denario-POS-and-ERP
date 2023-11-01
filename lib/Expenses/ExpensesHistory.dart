@@ -50,9 +50,9 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
 
   @override
   Widget build(BuildContext context) {
-    final registerStatus = Provider.of<CashRegister>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
 
-    if (registerStatus == CashRegister()) {
+    if (registerStatus == null) {
       return Container();
     }
 

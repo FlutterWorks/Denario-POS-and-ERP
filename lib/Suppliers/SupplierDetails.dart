@@ -1,4 +1,5 @@
 import 'package:denario/Backend/DatabaseService.dart';
+import 'package:denario/Loading.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/Payables.dart';
@@ -31,10 +32,10 @@ class _SupplierDetailsState extends State<SupplierDetails> {
       return Container();
     }
 
-    final vendor = Provider.of<Supplier>(context);
+    final vendor = Provider.of<Supplier?>(context);
 
-    if (vendor == Supplier()) {
-      return Container();
+    if (vendor == null || vendor.name == null) {
+      return Loading();
     }
 
     if (MediaQuery.of(context).size.width > 850) {

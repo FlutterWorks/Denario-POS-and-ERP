@@ -9,8 +9,8 @@ class CreateExpenseUseCashierMoney extends StatefulWidget {
   final moneyFromCashier;
   final checkCashierMoneyBox;
   final selectPayment;
-  final CashRegister registerStatus;
-  final DailyTransactions dailyTransactions;
+  final CashRegister? registerStatus;
+  final DailyTransactions? dailyTransactions;
   const CreateExpenseUseCashierMoney(
       this.expenseTotal,
       this.moneyFromCashier,
@@ -151,7 +151,7 @@ class _CreateExpenseUseCashierMoneyState
           height: 5,
         ),
         // Use cashier money text
-        (paymentType == 'Efectivo')
+        (paymentType == 'Efectivo' && widget.dailyTransactions != null)
             ? Text(
                 "¿Usar dinero de la caja?",
                 textAlign: TextAlign.center,
@@ -166,7 +166,7 @@ class _CreateExpenseUseCashierMoneyState
           height: 12,
         ),
         // Use money in petty cash?
-        (paymentType == 'Efectivo')
+        (paymentType == 'Efectivo' && widget.dailyTransactions != null)
             //Money from cashier
             ? Container(
                 width: double.infinity,

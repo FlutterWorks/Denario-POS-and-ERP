@@ -65,9 +65,9 @@ class _ProductDeskState extends State<ProductDesk> {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesProvider = Provider.of<CategoryList>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
 
-    if (categoriesProvider == CategoryList()) {
+    if (categoriesProvider == null) {
       return Container();
     }
 
@@ -381,7 +381,7 @@ class _ProductDeskState extends State<ProductDesk> {
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.hovered))
-                                            return Colors.greenAccent[300]!;
+                                            return Colors.greenAccent[300];
                                           if (states.contains(
                                                   MaterialState.focused) ||
                                               states.contains(

@@ -1100,8 +1100,8 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
                       child: ListView.builder(
                           itemCount: userBusiness.businessUsers!.length,
                           itemBuilder: (context, i) {
-                            return StreamProvider<UserData>.value(
-                                initialData: UserData(),
+                            return StreamProvider<UserData?>.value(
+                                initialData: null,
                                 value: DatabaseService().userProfile(
                                     userBusiness.businessUsers![i]),
                                 child: UserCard(userBusiness.businessID!));

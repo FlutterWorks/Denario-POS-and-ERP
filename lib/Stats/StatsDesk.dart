@@ -272,11 +272,11 @@ class _StatsDeskState extends State<StatsDesk>
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            StreamProvider<MonthlyStats>.value(
+                                            StreamProvider<MonthlyStats?>.value(
                                               value: DatabaseService()
                                                   .monthlyStatsfromSnapshot(
                                                       widget.businessID),
-                                              initialData: MonthlyStats(),
+                                              initialData: null,
                                               child: NewSaleScreen(
                                                 widget.businessID,
                                                 fromPOS: false,

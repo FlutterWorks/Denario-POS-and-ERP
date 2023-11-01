@@ -1,14 +1,9 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/DailyCash.dart';
-import 'package:denario/Models/Stats.dart';
-import 'package:denario/Models/User.dart';
-import 'package:denario/No%20POS%20Sales/NewSaleScreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class ConfirmOrder extends StatefulWidget {
   final double? total;
@@ -97,145 +92,6 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.register!.registerisOpen!) {
-      return Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-          child: Container(
-            height: 400,
-            width: MediaQuery.of(context).size.width * 0.35,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    alignment: Alignment(1.0, 0.0),
-                    child: IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Icon(Icons.close),
-                        iconSize: 20.0),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Ups!...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Debes abrir caja para poder realizar un cobro por el punto de venta. Tambien puedes registrar una venta independiente si así lo deseas",
-                    maxLines: 3,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      //Cerrar
-                      Container(
-                          height: 50,
-                          child: OutlinedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white70),
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.hovered))
-                                      return Colors.grey.shade300;
-                                    if (states
-                                            .contains(MaterialState.focused) ||
-                                        states.contains(MaterialState.pressed))
-                                      return Colors.white;
-                                    return Colors
-                                        .white; // Defer to the widget's default.
-                                  },
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 5),
-                                child: Center(
-                                  child: Text(
-                                    'Cerrar',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                              ))),
-                      SizedBox(width: 20),
-                      //Abrir ventas independientes
-                      Container(
-                        height: 50,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                              ),
-                            ),
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MultiProvider(
-                                          providers: [
-                                            StreamProvider<CashRegister>.value(
-                                                initialData: CashRegister(),
-                                                value: DatabaseService()
-                                                    .cashRegisterStatus(
-                                                        widget.businessID)),
-                                            StreamProvider<UserData>.value(
-                                                initialData: UserData(),
-                                                value: DatabaseService()
-                                                    .userProfile(FirebaseAuth
-                                                        .instance
-                                                        .currentUser!
-                                                        .uid
-                                                        .toString())),
-                                            StreamProvider<MonthlyStats>.value(
-                                              value: DatabaseService()
-                                                  .monthlyStatsfromSnapshot(
-                                                      widget.businessID!),
-                                              initialData: MonthlyStats(),
-                                            )
-                                          ],
-                                          child: Scaffold(
-                                              body: NewSaleScreen(
-                                            widget.businessID!,
-                                            fromPOS: true,
-                                          )),
-                                        ))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              child: Center(
-                                child: Text('Abirir Venta Independiente'),
-                              ),
-                            )),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ));
-    }
     return SingleChildScrollView(
       child: Dialog(
           shape:

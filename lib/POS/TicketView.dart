@@ -82,11 +82,11 @@ class _TicketViewState extends State<TicketView> {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesProvider = Provider.of<CategoryList>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
     final tables = Provider.of<List<Tables>>(context);
 
-    if (tables == []) {
+    if (tables == [] || registerStatus == null || categoriesProvider == null) {
       return Container();
     }
 
@@ -498,23 +498,23 @@ class _TicketViewState extends State<TicketView> {
                                         return MultiProvider(
                                           providers: [
                                             StreamProvider<
-                                                    DailyTransactions>.value(
-                                                initialData: DailyTransactions(),
-                                                catchError: (_, err) => DailyTransactions(),
+                                                    DailyTransactions?>.value(
+                                                initialData: null,
+                                                catchError: (_, err) => null,
                                                 value: DatabaseService()
                                                     .dailyTransactions(
                                                         widget.userProfile
                                                             .activeBusiness,
                                                         registerStatus
                                                             .registerName!)),
-                                            StreamProvider<MonthlyStats>.value(
-                                                initialData: MonthlyStats(),
+                                            StreamProvider<MonthlyStats?>.value(
+                                                initialData: null,
                                                 value: DatabaseService()
                                                     .monthlyStatsfromSnapshot(
                                                         widget.userProfile
                                                             .activeBusiness!)),
-                                            StreamProvider<UserData>.value(
-                                                initialData: UserData(),
+                                            StreamProvider<UserData?>.value(
+                                                initialData: null,
                                                 value: DatabaseService()
                                                     .userProfile(uid)),
                                           ],
@@ -1125,9 +1125,9 @@ class _TicketViewState extends State<TicketView> {
                                           return MultiProvider(
                                             providers: [
                                               StreamProvider<
-                                                      DailyTransactions>.value(
-                                                  initialData: DailyTransactions(),
-                                                  catchError: (_, err) => DailyTransactions(),
+                                                      DailyTransactions?>.value(
+                                                  initialData: null,
+                                                  catchError: (_, err) => null,
                                                   value: DatabaseService()
                                                       .dailyTransactions(
                                                           widget.userProfile
@@ -1135,14 +1135,14 @@ class _TicketViewState extends State<TicketView> {
                                                           registerStatus
                                                               .registerName!)),
                                               StreamProvider<
-                                                      MonthlyStats>.value(
-                                                  initialData: MonthlyStats(),
+                                                      MonthlyStats?>.value(
+                                                  initialData: null,
                                                   value: DatabaseService()
                                                       .monthlyStatsfromSnapshot(
                                                           widget.userProfile
                                                               .activeBusiness!)),
-                                              StreamProvider<UserData>.value(
-                                                  initialData: UserData(),
+                                              StreamProvider<UserData?>.value(
+                                                  initialData: null,
                                                   value: DatabaseService()
                                                       .userProfile(uid)),
                                             ],
@@ -2039,23 +2039,23 @@ class _TicketViewState extends State<TicketView> {
                                         return MultiProvider(
                                           providers: [
                                             StreamProvider<
-                                                    DailyTransactions>.value(
-                                                initialData: DailyTransactions(),
-                                                catchError: (_, err) =>  DailyTransactions(),
+                                                    DailyTransactions?>.value(
+                                                initialData: null,
+                                                catchError: (_, err) =>  null,
                                                 value: DatabaseService()
                                                     .dailyTransactions(
                                                         widget.userProfile
                                                             .activeBusiness,
                                                         registerStatus
                                                             .registerName!)),
-                                            StreamProvider<MonthlyStats>.value(
-                                                initialData: MonthlyStats(),
+                                            StreamProvider<MonthlyStats?>.value(
+                                                initialData: null,
                                                 value: DatabaseService()
                                                     .monthlyStatsfromSnapshot(
                                                         widget.userProfile
                                                             .activeBusiness!)),
-                                            StreamProvider<UserData>.value(
-                                                initialData: UserData(),
+                                            StreamProvider<UserData?>.value(
+                                                initialData: null,
                                                 value: DatabaseService()
                                                     .userProfile(uid)),
                                           ],

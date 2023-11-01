@@ -42,8 +42,8 @@ class _WrapperState extends State<Wrapper> {
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: _auth!.userChanges(), // Listen to the authentication status
-      builder: (context, AsyncSnapshot snapshot) {
-        if (loading) {
+      builder: (context, AsyncSnapshot? snapshot) {
+        if (loading || snapshot == null) {
           return Loading(); // Show loading widget
         }
 
@@ -53,14 +53,14 @@ class _WrapperState extends State<Wrapper> {
         }
 
         if (currentUser.displayName == null || currentUser.displayName == '') {
-          return StreamProvider<UserData>.value(
-            initialData: UserData(),
+          return StreamProvider<UserData?>.value(
+            initialData: null,
             value: DatabaseService().userProfile(currentUser.uid),
             child: Onboarding(),
           );
         } else {
-          return StreamProvider<UserData>.value(
-            initialData: UserData(),
+          return StreamProvider<UserData?>.value(
+            initialData: null,
             value: DatabaseService().userProfile(currentUser.uid),
             child: Home(),
           );

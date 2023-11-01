@@ -9,8 +9,10 @@ class TotalsSummary extends StatelessWidget {
   TotalsSummary({this.dayStats, this.monthlyStats, Key? key}) : super(key: key);
 
   final formatCurrency = new NumberFormat.simpleCurrency();
-  String abbreviateCurrency(double amount) {
-    if (amount >= 1.0e9) {
+  String abbreviateCurrency(double? amount) {
+    if (amount == null) {
+      return formatCurrency.format(0);
+    } else if (amount >= 1.0e9) {
       return '\$${(amount / 1.0e9).toStringAsFixed(1)}B';
     } else if (amount >= 1.0e6) {
       return '\$${(amount / 1.0e6).toStringAsFixed(1)}M';
@@ -25,6 +27,10 @@ class TotalsSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     var stats;
     stats = dayStats ?? monthlyStats ?? {};
+
+    if (stats == null) {
+      return Container();
+    }
 
     if (MediaQuery.of(context).size.width > 950) {
       return Container(
@@ -94,7 +100,7 @@ class TotalsSummary extends StatelessWidget {
                     children: [
                       //Amount
                       Text(
-                        '${stats.totalSalesCount}',
+                        '${stats.totalSalesCount ?? 0}',
                         style: TextStyle(
                             fontWeight: FontWeight.w900, fontSize: 21),
                       ),
@@ -131,7 +137,7 @@ class TotalsSummary extends StatelessWidget {
                     children: [
                       //Amount
                       Text(
-                        '${stats.totalItemsSold}',
+                        '${stats.totalItemsSold ?? 0}',
                         style: TextStyle(
                             fontWeight: FontWeight.w900, fontSize: 21),
                       ),
@@ -169,12 +175,16 @@ class TotalsSummary extends StatelessWidget {
                       //Amount
                       Text(
                         (dayStats != null)
-                            ? abbreviateCurrency((stats.totalSalesCount != 0)
-                                ? (stats.sales / stats.totalSalesCount)
-                                : 0)
-                            : abbreviateCurrency((stats.totalSalesCount != 0)
-                                ? (stats.totalSales / stats.totalSalesCount)
-                                : 0),
+                            ? abbreviateCurrency(
+                                (stats.totalSalesCount != null &&
+                                        stats.totalSalesCount != 0)
+                                    ? (stats.sales / stats.totalSalesCount)
+                                    : 0)
+                            : abbreviateCurrency(
+                                (stats.totalSalesCount != null &&
+                                        stats.totalSalesCount != 0)
+                                    ? (stats.totalSales / stats.totalSalesCount)
+                                    : 0),
                         style: TextStyle(
                             fontWeight: FontWeight.w900, fontSize: 21),
                       ),

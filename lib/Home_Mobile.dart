@@ -2,6 +2,7 @@ import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/auth.dart';
 import 'package:denario/Dashboard/DailyDesk.dart';
 import 'package:denario/Expenses/ExpensesDesk.dart';
+import 'package:denario/Loading.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Mapping.dart';
@@ -195,13 +196,16 @@ class _HomeMobileState extends State<HomeMobile> {
 
   @override
   Widget build(BuildContext context) {
-    final registerStatus = Provider.of<CashRegister>(context);
-    final categoriesProvider = Provider.of<CategoryList>(context);
-    final userProfile = Provider.of<UserData>(context);
-    final userBusiness = Provider.of<BusinessProfile>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
+    final userProfile = Provider.of<UserData?>(context);
+    final userBusiness = Provider.of<BusinessProfile?>(context);
 
-    if (userProfile == UserData()) {
-      return Container();
+    if (userProfile == null ||
+        registerStatus == null ||
+        categoriesProvider == null ||
+        userBusiness == null) {
+      return Loading();
     }
 
     // pageNavigators = [
@@ -251,7 +255,10 @@ class _HomeMobileState extends State<HomeMobile> {
             if (userBusiness.businessField == 'Gastronómico' ||
                 userBusiness.businessField == 'Venta Minorista' ||
                 userBusiness.businessField == 'Belleza/Spa') {
-              return POSProducts(categoriesProvider.categoryList![0]);
+              return POSProducts(
+                categoriesProvider.categoryList![0] ?? '',
+                scaffoldKeyMobile: _scaffoldKey,
+              );
             } else {
               return NoPOSDashboard(userProfile.activeBusiness!);
             }
@@ -286,8 +293,10 @@ class _HomeMobileState extends State<HomeMobile> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => SuppliesDesk(userProfile.activeBusiness!,
-                  categoriesProvider.categoryList!, userBusiness.businessField!));
+              builder: (context) => SuppliesDesk(
+                  userProfile.activeBusiness!,
+                  categoriesProvider.categoryList!,
+                  userBusiness.businessField!));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) => PnlDesk());
@@ -360,8 +369,10 @@ class _HomeMobileState extends State<HomeMobile> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => SuppliesDesk(userProfile.activeBusiness!,
-                  categoriesProvider.categoryList!, userBusiness.businessField!));
+              builder: (context) => SuppliesDesk(
+                  userProfile.activeBusiness!,
+                  categoriesProvider.categoryList!,
+                  userBusiness.businessField!));
         }),
       ];
     } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
@@ -462,21 +473,21 @@ class _HomeMobileState extends State<HomeMobile> {
             initialData: [],
             value:
                 DatabaseService().fullProductList(userProfile.activeBusiness!)),
-        StreamProvider<CategoryList>.value(
-            initialData: CategoryList(),
+        StreamProvider<CategoryList?>.value(
+            initialData: null,
             value:
                 DatabaseService().categoriesList(userProfile.activeBusiness)),
-        StreamProvider<HighLevelMapping>.value(
-            initialData: HighLevelMapping(),
+        StreamProvider<HighLevelMapping?>.value(
+            initialData: null,
             value:
                 DatabaseService().highLevelMapping(userProfile.activeBusiness)),
-        StreamProvider<DailyTransactions>.value(
-            initialData: DailyTransactions(),
-            catchError: (_, err) => DailyTransactions(),
+        StreamProvider<DailyTransactions?>.value(
+            initialData: null,
+            catchError: (_, err) => null,
             value: DatabaseService().dailyTransactions(
                 userProfile.activeBusiness, registerStatus.registerName!)),
-        StreamProvider<MonthlyStats>.value(
-            initialData: MonthlyStats(),
+        StreamProvider<MonthlyStats?>.value(
+            initialData: null,
             value: DatabaseService()
                 .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
         StreamProvider<List<DailyTransactions>>.value(
@@ -487,8 +498,8 @@ class _HomeMobileState extends State<HomeMobile> {
             initialData: [],
             value:
                 DatabaseService().pendingOrderList(userProfile.activeBusiness)),
-        StreamProvider<AccountsList>.value(
-            initialData: AccountsList(),
+        StreamProvider<AccountsList?>.value(
+            initialData: null,
             value: DatabaseService().accountsList(userProfile.activeBusiness)),
         StreamProvider<List<Tables>>.value(
           initialData: [],

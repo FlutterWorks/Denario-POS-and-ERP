@@ -108,10 +108,10 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProfile = Provider.of<UserData>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
+    final userProfile = Provider.of<UserData?>(context);
+    final registerStatus = Provider.of<CashRegister?>(context);
 
-    if (registerStatus == CashRegister()) {
+    if (registerStatus == null || userProfile == null) {
       return Container();
     }
 
@@ -676,8 +676,9 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return StreamProvider<CategoryList>.value(
-                                          initialData: CategoryList(),
+                                      return StreamProvider<
+                                              CategoryList?>.value(
+                                          initialData: null,
                                           value: DatabaseService()
                                               .categoriesList(
                                                   userProfile.activeBusiness),
@@ -862,14 +863,14 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                             return MultiProvider(
                                               providers: [
                                                 StreamProvider<
-                                                        MonthlyStats>.value(
-                                                    initialData: MonthlyStats(),
+                                                        MonthlyStats?>.value(
+                                                    initialData: null,
                                                     value: DatabaseService()
                                                         .monthlyStatsfromSnapshot(
                                                             userProfile
                                                                 .activeBusiness!)),
-                                                StreamProvider<UserData>.value(
-                                                    initialData: UserData(),
+                                                StreamProvider<UserData?>.value(
+                                                    initialData: null,
                                                     value: DatabaseService()
                                                         .userProfile(
                                                             userProfile.uid!)),
@@ -1437,8 +1438,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                               showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return StreamProvider<CategoryList>.value(
-                                        initialData: CategoryList(),
+                                    return StreamProvider<CategoryList?>.value(
+                                        initialData: null,
                                         value: DatabaseService().categoriesList(
                                             userProfile.activeBusiness),
                                         child: SelectItemDialog(userProfile));
@@ -1453,8 +1454,8 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                   isScrollControlled: true,
                                   context: context,
                                   builder: (context) {
-                                    return StreamProvider<CategoryList>.value(
-                                        initialData: CategoryList(),
+                                    return StreamProvider<CategoryList?>.value(
+                                        initialData: null,
                                         value: DatabaseService().categoriesList(
                                             userProfile.activeBusiness),
                                         child: SelectItemDialog(userProfile));
@@ -1637,14 +1638,14 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                             return MultiProvider(
                                               providers: [
                                                 StreamProvider<
-                                                        MonthlyStats>.value(
-                                                    initialData: MonthlyStats(),
+                                                        MonthlyStats?>.value(
+                                                    initialData: null,
                                                     value: DatabaseService()
                                                         .monthlyStatsfromSnapshot(
                                                             userProfile
                                                                 .activeBusiness!)),
-                                                StreamProvider<UserData>.value(
-                                                    initialData: UserData(),
+                                                StreamProvider<UserData?>.value(
+                                                    initialData: null,
                                                     value: DatabaseService()
                                                         .userProfile(
                                                             userProfile.uid!)),
