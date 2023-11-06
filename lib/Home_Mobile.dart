@@ -21,6 +21,7 @@ import 'package:denario/Schedule/ScheduleDesk.dart';
 import 'package:denario/Stats/StatsDesk.dart';
 import 'package:denario/Suppliers/SuppliersDesk.dart';
 import 'package:denario/Supplies/SuppliesDesk.dart';
+import 'package:denario/User%20Settings/UserSettings.dart';
 import 'package:denario/Wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -530,7 +531,16 @@ class _HomeMobileState extends State<HomeMobile> {
                           children: [
                             //User
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return StreamProvider<UserData?>.value(
+                                      initialData: null,
+                                      value: DatabaseService()
+                                          .userProfile(userProfile.uid!),
+                                      child: Scaffold(body: UserSettings()));
+                                }));
+                              },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white24),
                               child: Padding(
@@ -715,12 +725,17 @@ class _HomeMobileState extends State<HomeMobile> {
               onPressed: openDrawer,
               icon: Icon(Icons.menu, color: Colors.black, size: 25)),
         ),
-        body: Stack(
-          children: [
-            Container(
-                child:
-                    IndexedStack(index: pageIndex, children: pageNavigators!)),
-          ],
+        body: WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: Stack(
+            children: [
+              Container(
+                  child: IndexedStack(
+                      index: pageIndex, children: pageNavigators!)),
+            ],
+          ),
         ),
       ),
     );

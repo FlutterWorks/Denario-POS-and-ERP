@@ -28,9 +28,9 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final userProfile = Provider.of<UserData>(context);
+    final userProfile = Provider.of<UserData?>(context);
 
-    if (userProfile == UserData()) {
+    if (userProfile == null) {
       return Container();
     }
 

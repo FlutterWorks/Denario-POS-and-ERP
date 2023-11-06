@@ -140,7 +140,6 @@ class _OnboardingState extends State<Onboarding> {
                             style: TextStyle(color: Colors.black, fontSize: 14),
                             validator: (val) =>
                                 val!.isEmpty ? "Agrega un nombre" : null,
-                            autofocus: true,
                             cursorColor: Colors.grey,
                             focusNode: _nameNode,
                             textInputAction: TextInputAction.next,

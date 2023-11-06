@@ -452,7 +452,9 @@ class _AddExpenseItemState extends State<AddExpenseItem> {
                                         child: TextFormField(
                                           focusNode: _priceNode,
                                           textAlign: TextAlign.center,
-                                          initialValue: price.toString(),
+                                          initialValue: price == 0
+                                              ? null
+                                              : price.toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 14,

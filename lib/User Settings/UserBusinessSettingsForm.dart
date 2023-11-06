@@ -145,10 +145,10 @@ class _UserBusinessSettingsFormState extends State<UserBusinessSettingsForm> {
 
   @override
   Widget build(BuildContext context) {
-    final userBusiness = Provider.of<BusinessProfile>(context);
-    final businessCategories = Provider.of<CategoryList>(context);
+    final userBusiness = Provider.of<BusinessProfile?>(context);
+    final businessCategories = Provider.of<CategoryList?>(context);
 
-    if (businessCategories == CategoryList()) {
+    if (businessCategories == null || userBusiness == null) {
       return Container();
     }
 

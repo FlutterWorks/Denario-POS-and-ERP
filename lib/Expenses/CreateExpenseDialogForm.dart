@@ -34,8 +34,6 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
   String selectedCategory = '';
   int categoryInt = 0;
   String selectedAccount = '';
-  List<String> categoryList = [];
-  List<String> categoriesVendors = [];
   String expenseDescription = '';
   String expenseHintDescription = '';
   TextEditingController descriptionController =
@@ -538,8 +536,18 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                             _controllers.add(new TextEditingController());
                           }
 
-                          if (widget.costType == 'Costo de Ventas' &&
-                              selectedSupplier!.predefinedCategory != '') {
+                          if (selectedSupplier == null) {
+                            bloc.addToExpenseList({
+                              'Name': '',
+                              'Price': 0,
+                              'Quantity': 1,
+                              'Total Price': 0,
+                              'Category': (snapshot.data["Items"].length > 0)
+                                  ? snapshot.data["Items"][0]['Category']
+                                  : widget.dropdownCategories[0]
+                            });
+                          } else if (widget.costType == 'Costo de Ventas' &&
+                              selectedSupplier!.predefinedCategory != null) {
                             bloc.addToExpenseList({
                               'Name': '',
                               'Price': 0,
@@ -549,7 +557,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                   (selectedSupplier!.predefinedCategory),
                             });
                           } else if (widget.costType != 'Costo de Ventas' &&
-                              selectedSupplier!.predefinedAccount != '') {
+                              selectedSupplier!.predefinedAccount != null) {
                             bloc.addToExpenseList({
                               'Name':
                                   selectedSupplier!.initialExpenseDescription,
@@ -567,9 +575,9 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                               'Price': 0,
                               'Quantity': 1,
                               'Total Price': 0,
-                              'Category': widget.dropdownCategories[0]
-                              // widget.snapshot.data["Items"][0]
-                              //     ['Category' ],
+                              'Category': (snapshot.data["Items"].length > 0)
+                                  ? snapshot.data["Items"][0]['Category']
+                                  : widget.dropdownCategories[0]
                             });
                           }
                         },
@@ -674,7 +682,7 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                         widget.dropdownCategories,
                                         true,
                                         false,
-                                        selectedSupplier!,
+                                        selectedSupplier ?? Supplier(name: ''),
                                         product: snapshot.data["Items"][i]
                                             ['Name'],
                                         price: snapshot.data["Items"][i]
@@ -917,7 +925,10 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                         widget.dropdownCategories,
                                         false,
                                         true,
-                                        selectedSupplier!),
+                                        selectedSupplier ??
+                                            Supplier(
+                                                name: '',
+                                                predefinedCategory: null)),
                                   ),
                                 );
                               });

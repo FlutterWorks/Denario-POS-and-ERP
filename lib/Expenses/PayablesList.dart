@@ -161,7 +161,7 @@ class PayablesList extends StatelessWidget {
                               //Vendor + Cat
                               Container(
                                   child: Text(
-                                '${payables[i].vendor}',
+                                '${payables[i].vendor != '' ? payables[i].vendor : 'Sin identificar'}',
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
@@ -286,7 +286,7 @@ class PayablesList extends StatelessWidget {
                                 //Vendor + Cat
                                 Container(
                                     child: Text(
-                                  '${payables[i].vendor}',
+                                  '${payables[i].vendor != '' ? payables[i].vendor : 'Sin identificar'}',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,

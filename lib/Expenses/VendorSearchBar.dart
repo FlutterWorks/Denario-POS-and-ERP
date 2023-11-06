@@ -3,7 +3,6 @@ import 'package:denario/Expenses/VendorsSelection.dart';
 import 'package:denario/Models/Supplier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Backend/Expense.dart';
 
 class VendorSearchBar extends StatefulWidget {
   final String activeBusiness;
@@ -67,9 +66,8 @@ class _VendorSearchBarState extends State<VendorSearchBar> {
                   });
                 },
                 onFieldSubmitted: (value) {
-                  setState(() {
-                    bloc.changeVendor(_mobileSearchController.text);
-                  });
+                  widget.selectVendor(
+                      Supplier(name: vendorName, predefinedCategory: ''));
                   Navigator.of(context).pop();
                 },
               ),
