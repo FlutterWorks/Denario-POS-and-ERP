@@ -5,10 +5,7 @@ import 'package:denario/Expenses/ExpensesDesk.dart';
 import 'package:denario/Loading.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
-import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/PendingOrders.dart';
-import 'package:denario/Models/Products.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/NoPOSDashboard.dart';
 import 'package:denario/POS/OrderAlert.dart';
@@ -209,15 +206,16 @@ class _HomeDeskState extends State<HomeDesk> {
 
   @override
   Widget build(BuildContext context) {
-    final registerStatus = Provider.of<CashRegister?>(context);
+    // final registerStatus = Provider.of<CashRegister?>(context);
     final categoriesProvider = Provider.of<CategoryList?>(context);
     final userProfile = Provider.of<UserData?>(context);
     final userBusiness = Provider.of<BusinessProfile?>(context);
     final pendingOrders = Provider.of<List<PendingOrders>?>(context);
+    final Registradora? register = Provider.of<Registradora?>(context);
 
     if (categoriesProvider == null ||
         userProfile == null ||
-        registerStatus == null ||
+        register == null ||
         pendingOrders == null ||
         userBusiness == null) {
       return Loading();
@@ -288,11 +286,12 @@ class _HomeDeskState extends State<HomeDesk> {
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
                 builder: (context) =>
-                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+                    StatsDesk(userProfile.activeBusiness!, register));
           }),
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
-                builder: (context) => ExpensesDesk('Dueñ@'));
+                builder: (context) =>
+                    ExpensesDesk('Dueñ@', userProfile.activeBusiness!));
           }),
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
@@ -371,11 +370,12 @@ class _HomeDeskState extends State<HomeDesk> {
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
                 builder: (context) =>
-                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+                    StatsDesk(userProfile.activeBusiness!, register));
           }),
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
-                builder: (context) => ExpensesDesk('Encargad@'));
+                builder: (context) =>
+                    ExpensesDesk('Encargad@', userProfile.activeBusiness!));
           }),
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
@@ -443,7 +443,8 @@ class _HomeDeskState extends State<HomeDesk> {
           }),
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
-                builder: (context) => ExpensesDesk('Cajer@'));
+                builder: (context) =>
+                    ExpensesDesk('Cajer@', userProfile.activeBusiness!));
           }),
         ];
       } else if (userProfile
@@ -460,11 +461,12 @@ class _HomeDeskState extends State<HomeDesk> {
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
                 builder: (context) =>
-                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+                    StatsDesk(userProfile.activeBusiness!, register));
           }),
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(
-                builder: (context) => ExpensesDesk('Encargad@'));
+                builder: (context) =>
+                    ExpensesDesk('Encargad@', userProfile.activeBusiness!));
           }),
           Navigator(onGenerateRoute: (routeSettings) {
             return MaterialPageRoute(builder: (context) => PnlDesk());
@@ -500,38 +502,38 @@ class _HomeDeskState extends State<HomeDesk> {
 
       return MultiProvider(
         providers: [
-          StreamProvider<List<Products>>.value(
-              initialData: [],
-              value: DatabaseService()
-                  .fullProductList(userProfile.activeBusiness!)),
-          StreamProvider<CategoryList?>.value(
-              initialData: null,
-              value:
-                  DatabaseService().categoriesList(userProfile.activeBusiness)),
-          StreamProvider<HighLevelMapping?>.value(
-              initialData: null,
-              value: DatabaseService()
-                  .highLevelMapping(userProfile.activeBusiness)),
+          // StreamProvider<List<Products>>.value(
+          //     initialData: [],
+          //     value: DatabaseService()
+          //         .fullProductList(userProfile.activeBusiness!)),
+          // StreamProvider<CategoryList?>.value(
+          //     initialData: null,
+          //     value:
+          //         DatabaseService().categoriesList(userProfile.activeBusiness)),
+          // StreamProvider<HighLevelMapping?>.value(
+          //     initialData: null,
+          //     value: DatabaseService()
+          //         .highLevelMapping(userProfile.activeBusiness)),
           StreamProvider<DailyTransactions?>.value(
               initialData: null,
               catchError: (_, err) => null,
               value: DatabaseService().dailyTransactions(
-                  userProfile.activeBusiness, registerStatus.registerName!)),
-          StreamProvider<MonthlyStats?>.value(
-              initialData: null,
-              value: DatabaseService()
-                  .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
-          StreamProvider<List<DailyTransactions>>.value(
-              initialData: [],
-              value: DatabaseService()
-                  .dailyTransactionsList(userProfile.activeBusiness)),
-          StreamProvider<List<PendingOrders>>.value(
-              initialData: [],
-              value: DatabaseService()
-                  .pendingOrderList(userProfile.activeBusiness)),
-          StreamProvider<AccountsList?>.value(
-              initialData: null,
-              value: DatabaseService().accountsList(userProfile.activeBusiness))
+                  userProfile.activeBusiness, register.registerID!)),
+          // StreamProvider<MonthlyStats?>.value(
+          //     initialData: null,
+          //     value: DatabaseService()
+          //         .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
+          // StreamProvider<List<DailyTransactions>>.value(
+          //     initialData: [],
+          //     value: DatabaseService()
+          //         .dailyTransactionsList(userProfile.activeBusiness)),
+          // StreamProvider<List<PendingOrders>>.value(
+          //     initialData: [],
+          //     value: DatabaseService()
+          //         .pendingOrderList(userProfile.activeBusiness)),
+          // // StreamProvider<AccountsList?>.value(
+          //     initialData: null,
+          //     value: DatabaseService().accountsList(userProfile.activeBusiness))
         ],
         child: Scaffold(
             appBar: AppBar(

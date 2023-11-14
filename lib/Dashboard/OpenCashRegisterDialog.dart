@@ -119,15 +119,16 @@ class _OpenCashRegisterDialogState extends State<OpenCashRegisterDialog> {
                       onPressed: () {
                         var date = DateTime.now();
 
-                        DatabaseService().openCashRegister(
-                            userProfile.activeBusiness,
-                            userProfile.name,
-                            initialAmount,
-                            date);
-                        DatabaseService().recordOpenedRegister(
-                            userProfile.activeBusiness, true, date.toString());
-
-                        Navigator.of(context).pop();
+                        DatabaseService()
+                            .recordRegister(userProfile.activeBusiness, true,
+                                date.toString(), userProfile.uid!)
+                            .then((value) {
+                          DatabaseService().openCashRegister(
+                              userProfile.activeBusiness,
+                              userProfile.name,
+                              initialAmount,
+                              date);
+                        }).then((value) => Navigator.of(context).pop());
                       },
                       child: Text(
                         "ABRIR CAJA",

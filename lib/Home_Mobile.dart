@@ -5,12 +5,6 @@ import 'package:denario/Expenses/ExpensesDesk.dart';
 import 'package:denario/Loading.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
-import 'package:denario/Models/Mapping.dart';
-import 'package:denario/Models/PendingOrders.dart';
-import 'package:denario/Models/Products.dart';
-import 'package:denario/Models/SavedOrders.dart';
-import 'package:denario/Models/Stats.dart';
-import 'package:denario/Models/Tables.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/NoPOSDashboard.dart';
 import 'package:denario/POS/POS_Products.dart';
@@ -197,7 +191,7 @@ class _HomeMobileState extends State<HomeMobile> {
 
   @override
   Widget build(BuildContext context) {
-    final registerStatus = Provider.of<CashRegister?>(context);
+    final registerStatus = Provider.of<Registradora?>(context);
     final categoriesProvider = Provider.of<CategoryList?>(context);
     final userProfile = Provider.of<UserData?>(context);
     final userBusiness = Provider.of<BusinessProfile?>(context);
@@ -279,7 +273,9 @@ class _HomeMobileState extends State<HomeMobile> {
                   StatsDesk(userProfile.activeBusiness!, registerStatus));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ExpensesDesk('Dueñ@'));
+          return MaterialPageRoute(
+              builder: (context) =>
+                  ExpensesDesk('Dueñ@', userProfile.activeBusiness!));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
@@ -355,7 +351,8 @@ class _HomeMobileState extends State<HomeMobile> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => ExpensesDesk('Encargad@'));
+              builder: (context) =>
+                  ExpensesDesk('Encargad@', userProfile.activeBusiness!));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
@@ -419,7 +416,8 @@ class _HomeMobileState extends State<HomeMobile> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => ExpensesDesk('Cajer@'));
+              builder: (context) =>
+                  ExpensesDesk('Cajer@', userProfile.activeBusiness!));
         }),
       ];
     } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
@@ -437,7 +435,8 @@ class _HomeMobileState extends State<HomeMobile> {
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(
-              builder: (context) => ExpensesDesk('Encargad@'));
+              builder: (context) =>
+                  ExpensesDesk('Encargad@', userProfile.activeBusiness!));
         }),
         Navigator(onGenerateRoute: (routeSettings) {
           return MaterialPageRoute(builder: (context) => PnlDesk());
@@ -470,46 +469,46 @@ class _HomeMobileState extends State<HomeMobile> {
     }
     return MultiProvider(
       providers: [
-        StreamProvider<List<Products>>.value(
-            initialData: [],
-            value:
-                DatabaseService().fullProductList(userProfile.activeBusiness!)),
-        StreamProvider<CategoryList?>.value(
-            initialData: null,
-            value:
-                DatabaseService().categoriesList(userProfile.activeBusiness)),
-        StreamProvider<HighLevelMapping?>.value(
-            initialData: null,
-            value:
-                DatabaseService().highLevelMapping(userProfile.activeBusiness)),
+        // StreamProvider<List<Products>>.value(
+        //     initialData: [],
+        //     value:
+        //         DatabaseService().fullProductList(userProfile.activeBusiness!)),
+        // StreamProvider<CategoryList?>.value(
+        //     initialData: null,
+        //     value:
+        //         DatabaseService().categoriesList(userProfile.activeBusiness)),
+        // StreamProvider<HighLevelMapping?>.value(
+        //     initialData: null,
+        //     value:
+        //         DatabaseService().highLevelMapping(userProfile.activeBusiness)),
         StreamProvider<DailyTransactions?>.value(
             initialData: null,
             catchError: (_, err) => null,
             value: DatabaseService().dailyTransactions(
-                userProfile.activeBusiness, registerStatus.registerName!)),
-        StreamProvider<MonthlyStats?>.value(
-            initialData: null,
-            value: DatabaseService()
-                .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
-        StreamProvider<List<DailyTransactions>>.value(
-            initialData: [],
-            value: DatabaseService()
-                .dailyTransactionsList(userProfile.activeBusiness)),
-        StreamProvider<List<PendingOrders>>.value(
-            initialData: [],
-            value:
-                DatabaseService().pendingOrderList(userProfile.activeBusiness)),
-        StreamProvider<AccountsList?>.value(
-            initialData: null,
-            value: DatabaseService().accountsList(userProfile.activeBusiness)),
-        StreamProvider<List<Tables>>.value(
-          initialData: [],
-          value: DatabaseService().tableList(userProfile.activeBusiness!),
-        ),
-        StreamProvider<List<SavedOrders>>.value(
-            initialData: [],
-            value: DatabaseService()
-                .savedCounterOrders(userProfile.activeBusiness)),
+                userProfile.activeBusiness, registerStatus.registerID!)),
+        // StreamProvider<MonthlyStats?>.value(
+        //     initialData: null,
+        //     value: DatabaseService()
+        //         .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
+        // StreamProvider<List<DailyTransactions>>.value(
+        //     initialData: [],
+        //     value: DatabaseService()
+        //         .dailyTransactionsList(userProfile.activeBusiness)),
+        // StreamProvider<List<PendingOrders>>.value(
+        //     initialData: [],
+        //     value:
+        //         DatabaseService().pendingOrderList(userProfile.activeBusiness)),
+        // StreamProvider<AccountsList?>.value(
+        //     initialData: null,
+        //     value: DatabaseService().accountsList(userProfile.activeBusiness)),
+        // StreamProvider<List<Tables>>.value(
+        //   initialData: [],
+        //   value: DatabaseService().tableList(userProfile.activeBusiness!),
+        // ),
+        // StreamProvider<List<SavedOrders>>.value(
+        //     initialData: [],
+        //     value: DatabaseService()
+        //         .savedCounterOrders(userProfile.activeBusiness)),
       ],
       child: Scaffold(
         key: _scaffoldKey,

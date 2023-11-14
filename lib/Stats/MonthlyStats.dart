@@ -1,9 +1,7 @@
-import 'package:denario/Backend/DatabaseService.dart';
+import 'package:denario/Dashboard/DailySalesGraph.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
-import 'package:denario/Models/Sales.dart';
 import 'package:denario/Models/Stats.dart';
-import 'package:denario/Stats/ShortSalesList.dart';
 import 'package:denario/Stats/StatsByCategory.dart';
 import 'package:denario/Stats/StatsByChannel.dart';
 import 'package:denario/Stats/StatsByPaymentMethods.dart';
@@ -48,7 +46,7 @@ class _MonthStatsState extends State<MonthStats> {
   Widget build(BuildContext context) {
     final monthlyStats = Provider.of<MonthlyStats?>(context);
     final categoriesProvider = Provider.of<CategoryList?>(context);
-    final registerStatus = Provider.of<CashRegister?>(context);
+    final registerStatus = Provider.of<Registradora?>(context);
 
     if (categoriesProvider == null ||
         monthlyStats == null ||
@@ -112,7 +110,7 @@ class _MonthStatsState extends State<MonthStats> {
                 SizedBox(height: 30),
                 //Lists by Products/Category
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,29 +118,38 @@ class _MonthStatsState extends State<MonthStats> {
                         //List of sales
                         Expanded(
                             child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: <BoxShadow>[
-                              new BoxShadow(
-                                color: Colors.grey[350]!,
-                                offset: Offset(0.0, 0.0),
-                                blurRadius: 10.0,
-                              )
-                            ],
-                          ),
-                          child: StreamProvider<List<Sales>>.value(
-                            initialData: [],
-                            value: DatabaseService().shortFilteredSalesList(
-                              widget.userBusiness,
-                              widget.selectedDate,
-                              DateTime(widget.selectedDate.year,
-                                  widget.selectedDate.month + 1),
-                            ),
-                            child: ShortSalesList(
-                                widget.userBusiness, registerStatus),
-                          ),
-                        )),
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(25),
+                                  boxShadow: <BoxShadow>[
+                                    new BoxShadow(
+                                      color: Colors.grey[350]!,
+                                      offset: Offset(0.0, 0.0),
+                                      blurRadius: 10.0,
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Ventas por día',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                    SizedBox(width: 30),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: DailySalesGraph(),
+                                      ),
+                                    ),
+                                  ],
+                                ))),
                         SizedBox(width: 20),
                         //Stats por categoria/producto
                         Expanded(
@@ -645,30 +652,38 @@ class _MonthStatsState extends State<MonthStats> {
                 SizedBox(height: 30),
                 //List of sales
                 Container(
-                  constraints: BoxConstraints(minHeight: 300, maxHeight: 400),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: <BoxShadow>[
-                      new BoxShadow(
-                        color: Colors.grey[350]!,
-                        offset: Offset(0.0, 0.0),
-                        blurRadius: 10.0,
-                      )
-                    ],
-                  ),
-                  child: StreamProvider<List<Sales>>.value(
-                    initialData: [],
-                    value: DatabaseService().shortFilteredSalesList(
-                      widget.userBusiness,
-                      widget.selectedDate,
-                      DateTime(widget.selectedDate.year,
-                          widget.selectedDate.month + 1),
+                    constraints: BoxConstraints(minHeight: 300, maxHeight: 400),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: <BoxShadow>[
+                        new BoxShadow(
+                          color: Colors.grey[350]!,
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 10.0,
+                        )
+                      ],
                     ),
-                    child: ShortSalesList(widget.userBusiness, registerStatus),
-                  ),
-                ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Ventas por día',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                          textAlign: TextAlign.start,
+                        ),
+                        SizedBox(width: 30),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: DailySalesGraph(),
+                          ),
+                        ),
+                      ],
+                    )),
                 SizedBox(height: 20),
                 //Lists by Products/Category
                 Container(

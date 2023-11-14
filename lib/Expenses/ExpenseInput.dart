@@ -58,7 +58,7 @@ class _ExpenseInputState extends State<ExpenseInput> {
       IconData icon,
       Color color,
       HighLevelMapping highlevelMapping,
-      CashRegister registerStatus,
+      Registradora registerStatus,
       DailyTransactions? dailyTransactions) {
     return InkWell(
       hoverColor: Colors.transparent,
@@ -92,40 +92,40 @@ class _ExpenseInputState extends State<ExpenseInput> {
         bloc.changeCostType(costType);
         // bloc.changeVendor(dropdownVendors.first);
 
-        if (MediaQuery.of(context).size.width > 650) {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return StreamProvider<UserData?>.value(
-                  initialData: null,
-                  value: DatabaseService().userProfile(
-                      FirebaseAuth.instance.currentUser!.uid.toString()),
-                  child: CreateExpenseDialog(
-                      costType,
-                      registerStatus,
-                      dailyTransactions,
-                      clearVariables,
-                      widget.activeBusiness,
-                      dropdownCategories),
-                );
-              });
-        } else {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => StreamProvider<UserData?>.value(
-                        initialData: null,
-                        value: DatabaseService().userProfile(
-                            FirebaseAuth.instance.currentUser!.uid.toString()),
-                        child: CreateExpenseDialog(
-                            costType,
-                            registerStatus,
-                            dailyTransactions,
-                            clearVariables,
-                            widget.activeBusiness,
-                            dropdownCategories),
-                      )));
-        }
+        // if (MediaQuery.of(context).size.width > 650) {
+        //   showDialog(
+        //       context: context,
+        //       builder: (context) {
+        //         return StreamProvider<UserData?>.value(
+        //           initialData: null,
+        //           value: DatabaseService().userProfile(
+        //               FirebaseAuth.instance.currentUser!.uid.toString()),
+        //           child: CreateExpenseDialog(
+        //               costType,
+        //               registerStatus,
+        //               dailyTransactions,
+        //               clearVariables,
+        //               widget.activeBusiness,
+        //               dropdownCategories),
+        //         );
+        //       });
+        // } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => StreamProvider<UserData?>.value(
+                      initialData: null,
+                      value: DatabaseService().userProfile(
+                          FirebaseAuth.instance.currentUser!.uid.toString()),
+                      child: CreateExpenseDialog(
+                          costType,
+                          registerStatus,
+                          dailyTransactions,
+                          clearVariables,
+                          widget.activeBusiness,
+                          dropdownCategories),
+                    )));
+        // }
       },
       child: Column(children: [
         //Circle
@@ -195,7 +195,7 @@ class _ExpenseInputState extends State<ExpenseInput> {
   Widget build(BuildContext context) {
     final highLevelMapping = Provider.of<HighLevelMapping?>(context);
     final categoriesProvider = Provider.of<CategoryList?>(context);
-    final registerStatus = Provider.of<CashRegister?>(context);
+    final registerStatus = Provider.of<Registradora?>(context);
     final dailyTransactions = Provider.of<DailyTransactions?>(context);
 
     if (highLevelMapping == null ||

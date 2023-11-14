@@ -57,7 +57,7 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
 
   @override
   Widget build(BuildContext context) {
-    final register = Provider.of<CashRegister>(context);
+    final register = Provider.of<Registradora>(context);
     final userProfile = Provider.of<UserData>(context);
 
     if (userProfile == UserData()) {
@@ -152,17 +152,11 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) => StreamProvider<
-                                                                  CashRegister?>.value(
-                                                              initialData: null,
-                                                              value: DatabaseService()
-                                                                  .cashRegisterStatus(
-                                                                      widget
-                                                                          .currentBusiness),
-                                                              child: SalesDetailsFilters(
+                                                          builder: (context) =>
+                                                              SalesDetailsFilters(
                                                                   widget
                                                                       .currentBusiness,
-                                                                  register))));
+                                                                  register)));
                                                   // MultiProvider(
                                                   //     providers: [
                                                   //       StreamProvider<
@@ -514,16 +508,9 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  StreamProvider<
-                                                          CashRegister?>.value(
-                                                      initialData: null,
-                                                      value: DatabaseService()
-                                                          .cashRegisterStatus(widget
-                                                              .currentBusiness),
-                                                      child: SalesDetailsFilters(
-                                                          widget
-                                                              .currentBusiness,
-                                                          register))));
+                                                  SalesDetailsFilters(
+                                                      widget.currentBusiness,
+                                                      register)));
                                       // MultiProvider(
                                       //     providers: [
                                       //       StreamProvider<

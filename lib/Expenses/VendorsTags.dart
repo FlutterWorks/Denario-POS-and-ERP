@@ -21,19 +21,22 @@ class _VendorsTagsState extends State<VendorsTags> {
     }
 
     return Container(
-        width: 500,
+        width: double.infinity,
         child: Wrap(
           alignment: WrapAlignment.center,
           spacing: 5,
           children: List.generate(suppliers.length, (i) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        (selectedVendors.contains(suppliers[i].name)
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                    side: BorderSide(
+                        color: (selectedVendors.contains(suppliers[i].name))
                             ? Colors.greenAccent
-                            : Colors.white)),
+                            : Colors.grey.shade300,
+                        width: 1)),
                 onPressed: () {
                   if (!selectedVendors.contains(suppliers[i].name)) {
                     setState(() {

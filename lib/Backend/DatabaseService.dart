@@ -666,6 +666,11 @@ class DatabaseService {
                   ? doc['Low Margin Alert']
                   : 0
               : 0,
+          iva: doc.data().toString().contains('IVA')
+              ? (doc['IVA'] != null)
+                  ? doc['IVA']
+                  : 0
+              : 0,
         );
       }).toList();
     } catch (e) {
@@ -691,7 +696,8 @@ class DatabaseService {
       show,
       featured,
       double? expectedMargin,
-      double? lowMarginAlert) async {
+      double? lowMarginAlert,
+      double? iva) async {
     return await FirebaseFirestore.instance
         .collection('Products')
         .doc(businessID)
@@ -716,7 +722,8 @@ class DatabaseService {
       'Show': show,
       'Featured': featured,
       'Expected Margin': (expectedMargin == null) ? 0 : expectedMargin,
-      'Low Margin Alert': (lowMarginAlert == null) ? 0 : lowMarginAlert
+      'Low Margin Alert': (lowMarginAlert == null) ? 0 : lowMarginAlert,
+      'IVA': iva
     });
   }
 
@@ -740,7 +747,8 @@ class DatabaseService {
       historicPrices,
       featured,
       double expectedMargin,
-      double lowMarginAlert) async {
+      double lowMarginAlert,
+      double iva) async {
     return await FirebaseFirestore.instance
         .collection('Products')
         .doc(businessID)
@@ -763,7 +771,8 @@ class DatabaseService {
       'Show': show,
       'Featured': featured,
       'Expected Margin': expectedMargin,
-      'Low Margin Alert': lowMarginAlert
+      'Low Margin Alert': lowMarginAlert,
+      'IVA': iva
     });
   }
 
@@ -2541,6 +2550,7 @@ class DatabaseService {
       'Ingresos': 0,
       'Egresos': 0,
       'Monto al Cierre': 0,
+      'Monto Esperado al Cierre': 0,
       'Ventas por Medio': {},
       'Detalle de Ingresos y Egresos': [
         {
@@ -2559,16 +2569,46 @@ class DatabaseService {
     });
   }
 
-  Future recordOpenedRegister(
-      businessID, bool openRegister, String registerID) async {
+  /////TEST New Cashier Mode//////
+  Future recordRegister(
+      businessID, bool openRegister, String registerID, String userID) async {
     return await FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)
         .update({
-      'Caja Abierta': openRegister,
-      'Caja Actual': registerID,
+      'Caja.$userID': {'Open': openRegister, 'ID': registerID},
     });
   }
+
+  Registradora? _registerFromSnapshot(DocumentSnapshot snapshot) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String? uid = user?.uid.toString();
+
+    try {
+      return Registradora(
+          registerID: snapshot['Caja'].toString().contains('$uid')
+              ? snapshot['Caja']['$uid']['ID']
+              : '',
+          registerisOpen: snapshot['Caja'].toString().contains('$uid')
+              ? snapshot['Caja']['$uid']['Open']
+              : false,
+          paymentTypes: snapshot.data().toString().contains('Payment Types')
+              ? snapshot['Payment Types']
+              : []);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Stream<Registradora?> registerStatus(businessID) async* {
+    yield* FirebaseFirestore.instance
+        .collection('ERP')
+        .doc(businessID)
+        .snapshots()
+        .map(_registerFromSnapshot);
+  }
+
+  ////////////////////////////////
 
   //Update Cash Register (Inflows/Outflows)
   Future updateCashRegister(
@@ -2640,7 +2680,8 @@ class DatabaseService {
   }
 
   //Close Cash Register
-  Future closeCashRegister(businessID, closeAmount, registerDate) async {
+  Future closeCashRegister(
+      businessID, closeAmount, registerDate, expectedInRegister) async {
     DateTime date = DateTime.parse(registerDate);
 
     var year = date.year.toString();
@@ -2657,6 +2698,7 @@ class DatabaseService {
       'Fecha Cierre': DateTime.now(),
       'Abierto': false,
       'Monto al Cierre': closeAmount,
+      'Monto Esperado al Cierre': expectedInRegister,
       'Detalle de Ingresos y Egresos': FieldValue.arrayUnion([
         {
           'Type': 'Cierre',
@@ -2666,34 +2708,6 @@ class DatabaseService {
         }
       ])
     });
-  }
-
-  //Read Cash Register Status
-  //Get First Level Cash Register Data
-  CashRegister? _cashRegisterFromSnapshot(DocumentSnapshot snapshot) {
-    try {
-      return CashRegister(
-          registerName: snapshot.data().toString().contains('Caja Actual')
-              ? snapshot['Caja Actual']
-              : '',
-          registerisOpen: snapshot.data().toString().contains('Caja Abierta')
-              ? snapshot['Caja Abierta']
-              : false,
-          paymentTypes: snapshot.data().toString().contains('Payment Types')
-              ? snapshot['Payment Types']
-              : []);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  //Categories Stream (Costo de Ventas)
-  Stream<CashRegister?> cashRegisterStatus(businessID) async* {
-    yield* FirebaseFirestore.instance
-        .collection('ERP')
-        .doc(businessID)
-        .snapshots()
-        .map(_cashRegisterFromSnapshot);
   }
 
   //Get Daily Transactions
@@ -2771,6 +2785,10 @@ class DatabaseService {
             snapshot.data().toString().contains('Cost of Used Supplies')
                 ? snapshot['Cost of Used Supplies']
                 : 0,
+        expectedInRegister:
+            snapshot.data().toString().contains('Monto Esperado al Cierre')
+                ? snapshot['Monto Esperado al Cierre']
+                : 0,
       );
     } catch (e) {
       print(e);
@@ -2846,6 +2864,10 @@ class DatabaseService {
           totalSuppliesCost:
               doc.data().toString().contains('Cost of Used Supplies')
                   ? doc['Cost of Used Supplies']
+                  : 0,
+          expectedInRegister:
+              doc.data().toString().contains('Monto Esperado al Cierre')
+                  ? doc['Monto Esperado al Cierre']
                   : 0,
         );
       }).toList();
@@ -2966,6 +2988,10 @@ class DatabaseService {
           totalSuppliesCost:
               doc.data().toString().contains('Cost of Used Supplies')
                   ? doc['Cost of Used Supplies']
+                  : 0,
+          expectedInRegister:
+              doc.data().toString().contains('Monto Esperado al Cierre')
+                  ? doc['Monto Esperado al Cierre']
                   : 0,
         );
       }).toList();
@@ -3191,7 +3217,7 @@ class DatabaseService {
         .doc(month)
         .collection('Sales')
         .orderBy("Date", descending: true)
-        .limit(10)
+        .limit(7)
         .snapshots()
         .map(_salesFromSnapshot);
   }
@@ -3208,6 +3234,7 @@ class DatabaseService {
           .where('Date', isGreaterThanOrEqualTo: dateFrom)
           .where('Date', isLessThan: DateTime.now())
           .orderBy("Date", descending: true)
+          .limit(10)
           .snapshots()
           .map(_salesFromSnapshot);
     } else {
@@ -3220,7 +3247,7 @@ class DatabaseService {
           .where('Date', isGreaterThanOrEqualTo: dateFrom)
           .where('Date', isLessThanOrEqualTo: dateTo)
           .orderBy("Date", descending: true)
-          // .where('Order Name', isEqualTo: '1')
+          .limit(10)
           .snapshots()
           .map(_salesFromSnapshot);
     }

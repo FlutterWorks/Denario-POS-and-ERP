@@ -10,7 +10,7 @@ class SingleReceivableDialog extends StatefulWidget {
   final String businessID;
   final String docID;
   final List paymentTypes;
-  final CashRegister registerStatus;
+  final Registradora registerStatus;
 
   SingleReceivableDialog(this.sale, this.businessID, this.docID,
       this.paymentTypes, this.registerStatus);
@@ -278,9 +278,9 @@ class _SingleReceivableDialogState extends State<SingleReceivableDialog> {
                                 widget.businessID, widget.docID);
 
                             ///////////////////////////Register in Daily Transactions/////
-                            if (widget.registerStatus.registerName != '' &&
+                            if (widget.registerStatus.registerID != '' &&
                                 widget.sale.cashRegister ==
-                                    widget.registerStatus.registerName) {
+                                    widget.registerStatus.registerID) {
                               //Substract previus payment type // Add new
                               var firestore = FirebaseFirestore.instance;
                               var dayStatsRef = firestore

@@ -401,13 +401,13 @@ class _CreateExpenseDialogFormState extends State<CreateExpenseDialogForm> {
                                 //Detele
                                 IconButton(
                                     onPressed: () {
-                                      bloc.removeFromExpenseList(
-                                          snapshot.data["Items"][i]);
                                       if (updateSuppliesFromList.containsKey(
                                           snapshot.data["Items"][i]['Name'])) {
                                         updateSuppliesFromList.remove(
                                             snapshot.data["Items"][i]['Name']);
                                       }
+                                      bloc.removeFromExpenseList(
+                                          snapshot.data["Items"][i]);
 
                                       final random = Random();
                                       const availableChars =

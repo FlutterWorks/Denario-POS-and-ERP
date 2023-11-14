@@ -73,7 +73,7 @@ class DailyDesk extends StatelessWidget {
             SizedBox(height: 15),
             //Daily Sales
             Container(
-                height: (MediaQuery.of(context).size.width > 600) ? 300 : 600,
+                height: (MediaQuery.of(context).size.width > 850) ? 300 : 700,
                 child: DailySales()),
           ],
         ),

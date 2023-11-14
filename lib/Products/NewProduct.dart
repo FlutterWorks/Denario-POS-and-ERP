@@ -40,6 +40,15 @@ class _NewProductState extends State<NewProduct> {
   late List historicPrices;
   List listOfIngredients = [];
   bool featured = false;
+  double iva = 0;
+  Map<String, double> alicuotas = {
+    'Exento': 0,
+    '2.5%': 2.5,
+    '5%': 5,
+    '10.5%': 10.5,
+    '21%': 21,
+    '27%': 27
+  };
 
   void setProductOptions(
       bool editProduct,
@@ -177,6 +186,7 @@ class _NewProductState extends State<NewProduct> {
       featured = widget.product!.featured ?? false;
       expectedMargin = widget.product!.expectedMargin ?? 0;
       lowMarginAlert = widget.product!.lowMarginAlert ?? 0;
+      iva = widget.product!.iva ?? 0;
       if (widget.product!.productOptions!.length > 0) {
         for (var x = 0; x < widget.product!.productOptions!.length; x++) {
           productOptions.add({
@@ -686,6 +696,59 @@ class _NewProductState extends State<NewProduct> {
                                     ),
                                   ],
                                 ),
+                                SizedBox(height: 20),
+                                //IVA
+                                Text(
+                                  'IVA Alicuota',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.black45),
+                                ),
+                                SizedBox(height: 5),
+                                Container(
+                                    width: double.infinity,
+                                    child: Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 5,
+                                      children: List.generate(
+                                          alicuotas.keys.length, (i) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                12))),
+                                                side: BorderSide(
+                                                    color: (iva ==
+                                                            alicuotas[alicuotas
+                                                                .keys
+                                                                .elementAt(i)])
+                                                        ? Colors.greenAccent
+                                                        : Colors.grey.shade300,
+                                                    width: 1)),
+                                            onPressed: () {
+                                              if (iva !=
+                                                  alicuotas[alicuotas.keys
+                                                      .elementAt(i)]) {
+                                                setState(() {
+                                                  iva = alicuotas[alicuotas.keys
+                                                      .elementAt(i)]!;
+                                                });
+                                              }
+                                            },
+                                            child: Text(
+                                              alicuotas.keys.elementAt(i),
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    )),
                                 SizedBox(height: 20),
                                 //Dropdown categories
                                 Row(
@@ -1819,7 +1882,8 @@ class _NewProductState extends State<NewProduct> {
                                                             show,
                                                             featured,
                                                             expectedMargin,
-                                                            lowMarginAlert));
+                                                            lowMarginAlert,
+                                                            iva));
                                               } else {
                                                 DatabaseService().createProduct(
                                                     widget.activeBusiness,
@@ -1841,7 +1905,8 @@ class _NewProductState extends State<NewProduct> {
                                                     show,
                                                     featured,
                                                     expectedMargin,
-                                                    lowMarginAlert);
+                                                    lowMarginAlert,
+                                                    iva);
                                               }
 
                                               Navigator.of(context).pop();
@@ -1911,7 +1976,8 @@ class _NewProductState extends State<NewProduct> {
                                                             historicPrices,
                                                             featured,
                                                             expectedMargin!,
-                                                            lowMarginAlert!));
+                                                            lowMarginAlert!,
+                                                            iva));
                                               } else {
                                                 if (widget.product!.price !=
                                                     price) {
@@ -1961,7 +2027,8 @@ class _NewProductState extends State<NewProduct> {
                                                     historicPrices,
                                                     featured,
                                                     expectedMargin!,
-                                                    lowMarginAlert!);
+                                                    lowMarginAlert!,
+                                                    iva);
                                               }
                                               Navigator.of(context).pop();
                                             }
@@ -2052,7 +2119,8 @@ class _NewProductState extends State<NewProduct> {
                                                               show,
                                                               featured,
                                                               expectedMargin,
-                                                              lowMarginAlert));
+                                                              lowMarginAlert,
+                                                              iva));
                                                         } else {
                                                           DatabaseService().createProduct(
                                                               widget
@@ -2075,7 +2143,8 @@ class _NewProductState extends State<NewProduct> {
                                                               show,
                                                               featured,
                                                               expectedMargin,
-                                                              lowMarginAlert);
+                                                              lowMarginAlert,
+                                                              iva);
                                                         }
 
                                                         Navigator.of(context)
@@ -2156,7 +2225,8 @@ class _NewProductState extends State<NewProduct> {
                                                               historicPrices,
                                                               featured,
                                                               expectedMargin!,
-                                                              lowMarginAlert!));
+                                                              lowMarginAlert!,
+                                                              iva));
                                                         } else {
                                                           if (widget.product!
                                                                   .price !=
@@ -2216,7 +2286,8 @@ class _NewProductState extends State<NewProduct> {
                                                               historicPrices,
                                                               featured,
                                                               expectedMargin!,
-                                                              lowMarginAlert!);
+                                                              lowMarginAlert!,
+                                                              iva);
                                                         }
                                                         Navigator.of(context)
                                                             .pop();
@@ -2753,6 +2824,55 @@ class _NewProductState extends State<NewProduct> {
                                   ],
                                 ),
                                 SizedBox(height: 20),
+                                
+                      //IVA
+                      Text(
+                        'IVA Alicuota',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.black45),
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                          width: double.infinity,
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 5,
+                            children: List.generate(alicuotas.keys.length, (i) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12))),
+                                      side: BorderSide(
+                                          color: (iva ==
+                                                  alicuotas[alicuotas.keys
+                                                      .elementAt(i)])
+                                              ? Colors.greenAccent
+                                              : Colors.grey.shade300,
+                                          width: 1)),
+                                  onPressed: () {
+                                    if (iva !=
+                                        alicuotas[
+                                            alicuotas.keys.elementAt(i)]) {
+                                      setState(() {
+                                        iva = alicuotas[
+                                            alicuotas.keys.elementAt(i)]!;
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    alicuotas.keys.elementAt(i),
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              );
+                            }),
+                          )),
+                      SizedBox(height: 20),
                                 //Dropdown categories
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -3885,7 +4005,8 @@ class _NewProductState extends State<NewProduct> {
                                                             show,
                                                             featured,
                                                             expectedMargin,
-                                                            lowMarginAlert));
+                                                            lowMarginAlert,
+                                                            iva));
                                               } else {
                                                 DatabaseService().createProduct(
                                                     widget.activeBusiness,
@@ -3907,7 +4028,8 @@ class _NewProductState extends State<NewProduct> {
                                                     show,
                                                     featured,
                                                     expectedMargin,
-                                                    lowMarginAlert);
+                                                    lowMarginAlert,
+                                                    iva);
                                               }
 
                                               Navigator.of(context).pop();
@@ -3977,7 +4099,8 @@ class _NewProductState extends State<NewProduct> {
                                                             historicPrices,
                                                             featured,
                                                             expectedMargin!,
-                                                            lowMarginAlert!));
+                                                            lowMarginAlert!,
+                                                            iva));
                                               } else {
                                                 if (widget.product!.price !=
                                                     price) {
@@ -4027,7 +4150,8 @@ class _NewProductState extends State<NewProduct> {
                                                     historicPrices,
                                                     featured,
                                                     expectedMargin!,
-                                                    lowMarginAlert!);
+                                                    lowMarginAlert!,
+                                                    iva);
                                               }
                                               Navigator.of(context).pop();
                                             }
@@ -4118,7 +4242,8 @@ class _NewProductState extends State<NewProduct> {
                                                               show,
                                                               featured,
                                                               expectedMargin,
-                                                              lowMarginAlert));
+                                                              lowMarginAlert,
+                                                              iva));
                                                         } else {
                                                           DatabaseService().createProduct(
                                                               widget
@@ -4141,7 +4266,8 @@ class _NewProductState extends State<NewProduct> {
                                                               show,
                                                               featured,
                                                               expectedMargin,
-                                                              lowMarginAlert);
+                                                              lowMarginAlert,
+                                                              iva);
                                                         }
 
                                                         Navigator.of(context)
@@ -4222,7 +4348,8 @@ class _NewProductState extends State<NewProduct> {
                                                               historicPrices,
                                                               featured,
                                                               expectedMargin!,
-                                                              lowMarginAlert!));
+                                                              lowMarginAlert!,
+                                                              iva));
                                                         } else {
                                                           if (widget.product!
                                                                   .price !=
@@ -4282,7 +4409,8 @@ class _NewProductState extends State<NewProduct> {
                                                               historicPrices,
                                                               featured,
                                                               expectedMargin!,
-                                                              lowMarginAlert!);
+                                                              lowMarginAlert!,
+                                                              iva);
                                                         }
                                                         Navigator.of(context)
                                                             .pop();
@@ -4409,7 +4537,9 @@ class _NewProductState extends State<NewProduct> {
                 //Image
                 (changedImage)
                     ? Container(
-                        width: double.infinity,
+                        width: (MediaQuery.of(context).size.width < 600)
+                            ? double.infinity
+                            : 250,
                         height: 200,
                         decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
@@ -4424,7 +4554,9 @@ class _NewProductState extends State<NewProduct> {
                                 fit: BoxFit.cover)))
                     : (!newProduct && image != '')
                         ? Container(
-                            width: double.infinity,
+                            width: (MediaQuery.of(context).size.width < 600)
+                                ? double.infinity
+                                : 250,
                             height: 200,
                             decoration: BoxDecoration(
                                 shape: BoxShape.rectangle,
@@ -4437,7 +4569,9 @@ class _NewProductState extends State<NewProduct> {
                                     fit: BoxFit.cover)),
                           )
                         : Container(
-                            width: double.infinity,
+                            width: (MediaQuery.of(context).size.width < 600)
+                                ? double.infinity
+                                : 250,
                             height: 150,
                             decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
@@ -4652,6 +4786,54 @@ class _NewProductState extends State<NewProduct> {
                           },
                         ),
                       ),
+                      SizedBox(height: 15),
+                      //IVA
+                      Text(
+                        'IVA Alicuota',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.black45),
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                          width: double.infinity,
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 5,
+                            children: List.generate(alicuotas.keys.length, (i) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12))),
+                                      side: BorderSide(
+                                          color: (iva ==
+                                                  alicuotas[alicuotas.keys
+                                                      .elementAt(i)])
+                                              ? Colors.greenAccent
+                                              : Colors.grey.shade300,
+                                          width: 1)),
+                                  onPressed: () {
+                                    if (iva !=
+                                        alicuotas[
+                                            alicuotas.keys.elementAt(i)]) {
+                                      setState(() {
+                                        iva = alicuotas[
+                                            alicuotas.keys.elementAt(i)]!;
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    alicuotas.keys.elementAt(i),
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              );
+                            }),
+                          )),
                       SizedBox(height: 15),
                       //Available//Show
                       Container(
@@ -5661,7 +5843,8 @@ class _NewProductState extends State<NewProduct> {
                                                   show,
                                                   featured,
                                                   expectedMargin,
-                                                  lowMarginAlert));
+                                                  lowMarginAlert,
+                                                  iva));
                                     } else {
                                       DatabaseService().createProduct(
                                           widget.activeBusiness,
@@ -5682,7 +5865,8 @@ class _NewProductState extends State<NewProduct> {
                                           show,
                                           featured,
                                           expectedMargin,
-                                          lowMarginAlert);
+                                          lowMarginAlert,
+                                          iva);
                                     }
 
                                     Navigator.of(context).pop();
@@ -5744,7 +5928,8 @@ class _NewProductState extends State<NewProduct> {
                                                   historicPrices,
                                                   featured,
                                                   expectedMargin!,
-                                                  lowMarginAlert!));
+                                                  lowMarginAlert!,
+                                                  iva));
                                     } else {
                                       if (widget.product!.price != price) {
                                         try {
@@ -5789,7 +5974,8 @@ class _NewProductState extends State<NewProduct> {
                                           historicPrices,
                                           featured,
                                           expectedMargin!,
-                                          lowMarginAlert!);
+                                          lowMarginAlert!,
+                                          iva);
                                     }
                                     Navigator.of(context).pop();
                                   }
@@ -5869,7 +6055,8 @@ class _NewProductState extends State<NewProduct> {
                                                             show,
                                                             featured,
                                                             expectedMargin,
-                                                            lowMarginAlert));
+                                                            lowMarginAlert,
+                                                            iva));
                                               } else {
                                                 DatabaseService().createProduct(
                                                     widget.activeBusiness,
@@ -5891,7 +6078,8 @@ class _NewProductState extends State<NewProduct> {
                                                     show,
                                                     featured,
                                                     expectedMargin,
-                                                    lowMarginAlert);
+                                                    lowMarginAlert,
+                                                    iva);
                                               }
 
                                               Navigator.of(context).pop();
@@ -5961,7 +6149,8 @@ class _NewProductState extends State<NewProduct> {
                                                             historicPrices,
                                                             featured,
                                                             expectedMargin!,
-                                                            lowMarginAlert!));
+                                                            lowMarginAlert!,
+                                                            iva));
                                               } else {
                                                 if (widget.product!.price !=
                                                     price) {
@@ -6011,7 +6200,8 @@ class _NewProductState extends State<NewProduct> {
                                                     historicPrices,
                                                     featured,
                                                     expectedMargin!,
-                                                    lowMarginAlert!);
+                                                    lowMarginAlert!,
+                                                    iva);
                                               }
                                               Navigator.of(context).pop();
                                             }

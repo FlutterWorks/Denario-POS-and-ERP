@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class ShortSalesList extends StatelessWidget {
   final String userBusiness;
-  final CashRegister registerStatus;
+  final Registradora registerStatus;
   ShortSalesList(this.userBusiness, this.registerStatus, {Key? key})
       : super(key: key);
 
@@ -76,8 +76,7 @@ class ShortSalesList extends StatelessWidget {
                                   initialData: null,
                                   catchError: (_, err) => null,
                                   value: DatabaseService().dailyTransactions(
-                                      userBusiness,
-                                      registerStatus.registerName!),
+                                      userBusiness, registerStatus.registerID!),
                                   builder: (context, snapshot) {
                                     return SingleSaleDialog(
                                         salesList[i],
@@ -94,7 +93,7 @@ class ShortSalesList extends StatelessWidget {
                               initialData: null,
                               catchError: (_, err) => null,
                               value: DatabaseService().dailyTransactions(
-                                  userBusiness, registerStatus.registerName!),
+                                  userBusiness, registerStatus.registerID!),
                               builder: (context, snapshot) {
                                 return SingleSaleDialog(
                                     salesList[i],

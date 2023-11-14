@@ -24,9 +24,9 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesProvider = Provider.of<CategoryList>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
 
-    if (categoriesProvider == CategoryList()) {
+    if (categoriesProvider == null) {
       return Dialog();
     }
 

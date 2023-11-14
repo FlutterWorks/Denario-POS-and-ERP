@@ -30,7 +30,7 @@ class ConfirmOrder extends StatefulWidget {
   final String? orderType;
 
   final bool? onTableView;
-  final CashRegister? register;
+  final Registradora? register;
 
   ConfirmOrder(
       {this.total,
@@ -670,8 +670,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                               invoiceNo,
                                               (widget.register == null)
                                                   ? 'Indpendiente'
-                                                  : widget
-                                                      .register!.registerName,
+                                                  : widget.register!.registerID,
                                               widget.isTable!,
                                               widget.tableCode,
                                               widget.isSavedOrder!,
@@ -726,8 +725,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                               invoiceNo,
                                               (widget.register == null)
                                                   ? null
-                                                  : widget
-                                                      .register!.registerName,
+                                                  : widget.register!.registerID,
                                               widget.isTable!,
                                               widget.tableCode,
                                               widget.isSavedOrder!,
@@ -810,8 +808,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                               invoiceNo,
                                               (widget.register == null)
                                                   ? 'Indpendiente'
-                                                  : widget
-                                                      .register!.registerName,
+                                                  : widget.register!.registerID,
                                               widget.isTable!,
                                               widget.tableCode,
                                               widget.isSavedOrder!,
@@ -869,7 +866,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                 (widget.register == null)
                                                     ? null
                                                     : widget
-                                                        .register!.registerName,
+                                                        .register!.registerID,
                                                 widget.isTable!,
                                                 widget.tableCode,
                                                 widget.isSavedOrder!,
@@ -1160,7 +1157,7 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                         true,
                                         splitPaymentDetails,
                                         invoiceNo,
-                                        widget.register!.registerName,
+                                        widget.register!.registerID,
                                         widget.isTable!,
                                         widget.tableCode,
                                         widget.isSavedOrder!,

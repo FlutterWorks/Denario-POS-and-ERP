@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class FilteredExpenseList extends StatelessWidget {
   final String businessID;
-  final CashRegister registerStatus;
+  final Registradora registerStatus;
   final bool filteredAccount;
   final String accountFiltered;
   FilteredExpenseList(this.businessID, this.registerStatus,
@@ -60,7 +60,7 @@ class FilteredExpenseList extends StatelessWidget {
                   return StreamProvider<DailyTransactions?>.value(
                       initialData: null,
                       value: DatabaseService().dailyTransactions(
-                          businessID, registerStatus.registerName!),
+                          businessID, registerStatus.registerID!),
                       child: SingleExpenseDialog(
                           expensesList[i], businessID, registerStatus));
                 });
@@ -233,7 +233,7 @@ class FilteredExpenseList extends StatelessWidget {
                   return StreamProvider<DailyTransactions?>.value(
                       initialData: null,
                       value: DatabaseService().dailyTransactions(
-                          businessID, registerStatus.registerName!),
+                          businessID, registerStatus.registerID!),
                       child: SingleExpenseDialog(
                           expensesList[i], businessID, registerStatus));
                 });

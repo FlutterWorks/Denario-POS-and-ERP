@@ -109,7 +109,7 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
   @override
   Widget build(BuildContext context) {
     final userProfile = Provider.of<UserData?>(context);
-    final registerStatus = Provider.of<CashRegister?>(context);
+    final registerStatus = Provider.of<Registradora?>(context);
 
     if (registerStatus == null || userProfile == null) {
       return Container();

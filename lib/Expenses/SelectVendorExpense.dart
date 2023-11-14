@@ -128,6 +128,33 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              //Go back
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      showList = false;
+                    });
+                    bloc.removeAllFromExpense();
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back),
+                  iconSize: 20.0),
+              Spacer(),
+              //Title
+              Container(
+                width: 150,
+                child: Text(
+                  "Registrar gasto",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Spacer(),
+              //Date
               Text(
                 '${meses[selectedIvoiceDate!.month - 1]}, ${selectedIvoiceDate!.year}',
                 style: TextStyle(fontSize: 12, color: Colors.grey),
@@ -175,36 +202,6 @@ class _SelectVendorExpenseState extends State<SelectVendorExpense> {
                   iconSize: 18,
                   icon: Icon(Icons.calendar_month),
                 ),
-              ),
-              Spacer(),
-              //Title
-              Container(
-                width: 150,
-                child: Text(
-                  "Registrar gasto",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              Spacer(),
-              //Go back
-              Container(
-                width: 150,
-                alignment: Alignment(1.0, 0.0),
-                child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showList = false;
-                      });
-                      bloc.removeAllFromExpense();
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.close),
-                    iconSize: 20.0),
               ),
             ],
           ),

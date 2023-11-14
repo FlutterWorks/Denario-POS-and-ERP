@@ -25,7 +25,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
     final formatCurrency = new NumberFormat.simpleCurrency();
     final payables = Provider.of<List<Payables>>(context);
     final receivables = Provider.of<List<Receivables>>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
+    final registerStatus = Provider.of<Registradora>(context);
 
     if (payables == []) {
       return Container(
@@ -274,7 +274,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                                     initialData: null,
                                     value: DatabaseService().dailyTransactions(
                                         widget.businessID,
-                                        registerStatus.registerName!),
+                                        registerStatus.registerID!),
                                     child: SinglePayableDialog(
                                         payables[i], widget.businessID));
                               });
@@ -414,7 +414,7 @@ class _PayablesReceivablesState extends State<PayablesReceivables> {
                                     catchError: (_, err) => null,
                                     value: DatabaseService().dailyTransactions(
                                         widget.businessID,
-                                        registerStatus.registerName!),
+                                        registerStatus.registerID!),
                                     builder: (context, snapshot) {
                                       return SingleReceivableDialog(
                                           receivables[i],

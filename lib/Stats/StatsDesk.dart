@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 class StatsDesk extends StatefulWidget {
   final String businessID;
-  final CashRegister registerStatus;
+  final Registradora registerStatus;
   StatsDesk(this.businessID, this.registerStatus);
   @override
   _StatsDeskState createState() => _StatsDeskState();

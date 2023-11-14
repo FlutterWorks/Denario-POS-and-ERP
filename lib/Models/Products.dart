@@ -17,6 +17,7 @@ class Products {
   bool? featured;
   double? expectedMargin;
   double? lowMarginAlert;
+  double? iva;
 
   Products(
       {this.product,
@@ -36,7 +37,8 @@ class Products {
       this.showOnMenu,
       this.featured,
       this.expectedMargin,
-      this.lowMarginAlert});
+      this.lowMarginAlert,
+      this.iva});
 }
 
 class ProductOptions {

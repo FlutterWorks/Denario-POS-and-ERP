@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class SalesDetailsFilters extends StatefulWidget {
   final String currentBusiness;
-  final CashRegister registerStatus;
+  final Registradora registerStatus;
   SalesDetailsFilters(this.currentBusiness, this.registerStatus);
 
   @override

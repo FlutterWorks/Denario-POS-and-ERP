@@ -14,8 +14,9 @@ import 'package:provider/provider.dart';
 class SingleScheduledDialog extends StatefulWidget {
   final ScheduledSales? order;
   final String? businessID;
+  final Registradora? register;
 
-  SingleScheduledDialog({this.order, this.businessID});
+  SingleScheduledDialog(this.register, {this.order, this.businessID});
 
   @override
   _SingleScheduledDialogState createState() => _SingleScheduledDialogState();
@@ -72,7 +73,6 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
   @override
   Widget build(BuildContext context) {
     final monthlyStats = Provider.of<MonthlyStats?>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
 
     if (monthlyStats == null || widget.order == null) {
       currentSalesCount = 0;
@@ -81,39 +81,37 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
       currentItemsAmount = {};
       salesCountbyCategory = {};
       currentSalesbyOrderType = {};
-
-      return Container();
-    }
-
-    try {
-      currentSalesCount = monthlyStats.totalSalesCount;
-    } catch (e) {
-      //
-    }
-    try {
-      currentItemsCount = monthlyStats.salesCountbyProduct!;
-    } catch (e) {
-      currentItemsCount = {};
-    }
-    try {
-      currentItemsAmount = monthlyStats.salesAmountbyProduct!;
-    } catch (e) {
-      currentItemsAmount = {};
-    }
-    try {
-      currentTicketItemsCount = monthlyStats.totalItemsSold;
-    } catch (e) {
-      currentTicketItemsCount = 0;
-    }
-    try {
-      salesCountbyCategory = monthlyStats.salesCountbyCategory!;
-    } catch (e) {
-      salesCountbyCategory = {};
-    }
-    try {
-      currentSalesbyOrderType = monthlyStats.salesbyOrderType!;
-    } catch (e) {
-      currentSalesbyOrderType = {};
+    } else {
+      try {
+        currentSalesCount = monthlyStats.totalSalesCount;
+      } catch (e) {
+        //
+      }
+      try {
+        currentItemsCount = monthlyStats.salesCountbyProduct!;
+      } catch (e) {
+        currentItemsCount = {};
+      }
+      try {
+        currentItemsAmount = monthlyStats.salesAmountbyProduct!;
+      } catch (e) {
+        currentItemsAmount = {};
+      }
+      try {
+        currentTicketItemsCount = monthlyStats.totalItemsSold;
+      } catch (e) {
+        currentTicketItemsCount = 0;
+      }
+      try {
+        salesCountbyCategory = monthlyStats.salesCountbyCategory!;
+      } catch (e) {
+        salesCountbyCategory = {};
+      }
+      try {
+        currentSalesbyOrderType = monthlyStats.salesbyOrderType!;
+      } catch (e) {
+        currentSalesbyOrderType = {};
+      }
     }
 
     return FutureBuilder(
@@ -464,9 +462,9 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                             controller: null,
                                                             clearVariables:
                                                                 clearControllers,
-                                                            paymentTypes:
-                                                                registerStatus
-                                                                    .paymentTypes,
+                                                            paymentTypes: widget
+                                                                .register!
+                                                                .paymentTypes,
                                                             isTable: false,
                                                             tableCode: null,
                                                             businessID: widget
@@ -935,9 +933,9 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                         controller: null,
                                                         clearVariables:
                                                             clearControllers,
-                                                        paymentTypes:
-                                                            registerStatus
-                                                                .paymentTypes,
+                                                        paymentTypes: widget
+                                                            .register!
+                                                            .paymentTypes,
                                                         isTable: false,
                                                         tableCode: null,
                                                         businessID:

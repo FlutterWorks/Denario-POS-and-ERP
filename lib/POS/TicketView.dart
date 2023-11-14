@@ -83,7 +83,7 @@ class _TicketViewState extends State<TicketView> {
   @override
   Widget build(BuildContext context) {
     final categoriesProvider = Provider.of<CategoryList?>(context);
-    final registerStatus = Provider.of<CashRegister?>(context);
+    final registerStatus = Provider.of<Registradora?>(context);
     final tables = Provider.of<List<Tables>>(context);
 
     if (tables == [] || registerStatus == null || categoriesProvider == null) {
@@ -506,7 +506,7 @@ class _TicketViewState extends State<TicketView> {
                                                         widget.userProfile
                                                             .activeBusiness,
                                                         registerStatus
-                                                            .registerName!)),
+                                                            .registerID!)),
                                             StreamProvider<MonthlyStats?>.value(
                                                 initialData: null,
                                                 value: DatabaseService()
@@ -1133,7 +1133,7 @@ class _TicketViewState extends State<TicketView> {
                                                           widget.userProfile
                                                               .activeBusiness,
                                                           registerStatus
-                                                              .registerName!)),
+                                                              .registerID!)),
                                               StreamProvider<
                                                       MonthlyStats?>.value(
                                                   initialData: null,
@@ -2047,7 +2047,7 @@ class _TicketViewState extends State<TicketView> {
                                                         widget.userProfile
                                                             .activeBusiness,
                                                         registerStatus
-                                                            .registerName!)),
+                                                            .registerID!)),
                                             StreamProvider<MonthlyStats?>.value(
                                                 initialData: null,
                                                 value: DatabaseService()

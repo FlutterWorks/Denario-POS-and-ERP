@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 class ConfirmDeleteExpense extends StatefulWidget {
   final String businessID;
   final Expenses expense;
-  final CashRegister registerStatus;
-  final DailyTransactions dailyTransactions;
+  final Registradora registerStatus;
+  final DailyTransactions? dailyTransactions;
   const ConfirmDeleteExpense(this.businessID, this.expense, this.registerStatus,
       this.dailyTransactions,
       {Key? key})
@@ -322,20 +322,21 @@ class _ConfirmDeleteExpenseState extends State<ConfirmDeleteExpense> {
                                 if (widget.expense.paymentType == 'Efectivo' &&
                                     widget.expense.usedCashfromRegister ==
                                         true &&
+                                    widget.dailyTransactions != null &&
                                     widget.expense.cashRegister ==
-                                        widget.registerStatus.registerName) {
+                                        widget.registerStatus.registerID) {
                                   double totalTransactionAmount =
-                                      widget.dailyTransactions.outflows! -
+                                      widget.dailyTransactions!.outflows! -
                                           widget.expense.amountFromRegister!;
 
                                   double totalTransactions = widget
-                                          .dailyTransactions
+                                          .dailyTransactions!
                                           .dailyTransactions! +
                                       widget.expense.amountFromRegister!;
 
                                   DatabaseService().updateCashRegister(
                                       widget.businessID,
-                                      widget.registerStatus.registerName,
+                                      widget.registerStatus.registerID,
                                       'Ingresos',
                                       totalTransactionAmount,
                                       totalTransactions, {

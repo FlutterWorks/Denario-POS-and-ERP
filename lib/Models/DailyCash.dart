@@ -1,8 +1,8 @@
-class CashRegister {
+class Registradora {
   bool? registerisOpen;
-  String? registerName;
+  String? registerID;
   List? paymentTypes;
-  CashRegister({this.registerName, this.registerisOpen, this.paymentTypes});
+  Registradora({this.registerID, this.registerisOpen, this.paymentTypes});
 }
 
 class DailyTransactions {
@@ -27,6 +27,7 @@ class DailyTransactions {
   Map? salesbyOrderType;
   Map? salesAmountbyCategory;
   double? totalSuppliesCost;
+  double? expectedInRegister;
 
   DailyTransactions(
       {this.openDate,
@@ -49,5 +50,6 @@ class DailyTransactions {
       this.salesbyCategory,
       this.salesbyOrderType,
       this.salesAmountbyCategory,
-      this.totalSuppliesCost});
+      this.totalSuppliesCost,
+      this.expectedInRegister});
 }

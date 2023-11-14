@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:denario/Backend/DatabaseService.dart';
-import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Sales.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmDeleteOrder extends StatefulWidget {
   final String businessID;
   final Sales sale;
-  final CashRegister registerStatus;
-  const ConfirmDeleteOrder(this.businessID, this.sale, this.registerStatus,
-      {Key? key})
+  const ConfirmDeleteOrder(this.businessID, this.sale, {Key? key})
       : super(key: key);
 
   @override

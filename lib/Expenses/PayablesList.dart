@@ -13,7 +13,7 @@ class PayablesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatCurrency = new NumberFormat.simpleCurrency();
     final payables = Provider.of<List<Payables>>(context);
-    final registerStatus = Provider.of<CashRegister>(context);
+    final registerStatus = Provider.of<Registradora>(context);
 
     if (payables == []) {
       return Container();
@@ -91,7 +91,7 @@ class PayablesList extends StatelessWidget {
                         return StreamProvider<DailyTransactions?>.value(
                             initialData: null,
                             value: DatabaseService().dailyTransactions(
-                                businessID, registerStatus.registerName!),
+                                businessID, registerStatus.registerID!),
                             child:
                                 SinglePayableDialog(payables[i], businessID));
                       });
@@ -214,7 +214,7 @@ class PayablesList extends StatelessWidget {
                         return StreamProvider<DailyTransactions?>.value(
                             initialData: null,
                             value: DatabaseService().dailyTransactions(
-                                businessID, registerStatus.registerName!),
+                                businessID, registerStatus.registerID!),
                             child:
                                 SinglePayableDialog(payables[i], businessID));
                       });

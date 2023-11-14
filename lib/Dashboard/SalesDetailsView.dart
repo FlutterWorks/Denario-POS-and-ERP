@@ -8,15 +8,15 @@ import 'package:provider/provider.dart';
 
 class SalesDetailsView extends StatelessWidget {
   final String businessID;
-  final CashRegister registerStatus;
+  final Registradora registerStatus;
   SalesDetailsView(this.businessID, this.registerStatus);
   final formatCurrency = new NumberFormat.simpleCurrency();
 
   @override
   Widget build(BuildContext context) {
-    final salesListfromSnap = Provider.of<List<Sales>>(context);
+    final salesListfromSnap = Provider.of<List<Sales>?>(context);
 
-    if (registerStatus == CashRegister()) {
+    if (salesListfromSnap == null) {
       return SliverList(
           delegate: SliverChildBuilderDelegate((context, i) {
         return const SizedBox();
@@ -113,7 +113,7 @@ class SalesDetailsView extends StatelessWidget {
                               initialData: null,
                               catchError: (_, err) => null,
                               value: DatabaseService().dailyTransactions(
-                                  businessID, registerStatus.registerName!),
+                                  businessID, registerStatus.registerID!),
                               builder: (context, snapshot) {
                                 return SingleSaleDialog(
                                     salesList[i],
@@ -140,7 +140,7 @@ class SalesDetailsView extends StatelessWidget {
                   initialData: null,
                   catchError: (_, err) => null,
                   value: DatabaseService().dailyTransactions(
-                      businessID, registerStatus.registerName!),
+                      businessID, registerStatus.registerID!),
                   builder: (context, snapshot) {
                     return SingleSaleDialog(
                         salesList[i],

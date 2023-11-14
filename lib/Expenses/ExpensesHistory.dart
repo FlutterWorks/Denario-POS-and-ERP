@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ExpensesHistory extends StatefulWidget {
-  final String activeBusiness;
+  final String? activeBusiness;
   ExpensesHistory(this.activeBusiness);
   @override
   _ExpensesHistoryState createState() => _ExpensesHistoryState();
@@ -22,7 +22,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
   TextEditingController supplierController =
       new TextEditingController(text: '');
   String? supplier;
-  String? account;
+  String account = 'Todas';
   List accountsList = [];
   late bool filteredAccount;
   late bool dateFiltered;
@@ -37,6 +37,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
     paymentFiltered = false;
     filtered = false;
     paymentTypes = ['Todos', 'Efectivo', 'MercadoPago', 'Tarjeta', 'Por pagar'];
+    paymentType = 'Todos';
     accountsList = [
       'Todas',
       'Costo de Ventas',
@@ -50,7 +51,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
 
   @override
   Widget build(BuildContext context) {
-    final registerStatus = Provider.of<CashRegister?>(context);
+    final registerStatus = Provider.of<Registradora?>(context);
 
     if (registerStatus == null) {
       return Container();
@@ -1055,14 +1056,14 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                       paymentType,
                       (supplier != '') ? supplier!.toLowerCase() : null),
                   initialData: [],
-                  child: FilteredExpenseList(widget.activeBusiness,
-                      registerStatus, filteredAccount, account!))
+                  child: FilteredExpenseList(widget.activeBusiness!,
+                      registerStatus, filteredAccount, account))
               : StreamProvider<List<Expenses>>.value(
                   value: DatabaseService().expenseList(widget.activeBusiness,
                       endDate!.month.toString(), endDate!.year.toString()),
                   initialData: [],
-                  child: FilteredExpenseList(widget.activeBusiness,
-                      registerStatus, filteredAccount, account!),
+                  child: FilteredExpenseList(widget.activeBusiness!,
+                      registerStatus, filteredAccount, account),
                 ),
         ],
       ));
@@ -1674,9 +1675,7 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                                   ),
                                   SizedBox(width: 10),
                                   Text(
-                                    filteredAccount
-                                        ? account!
-                                        : 'Tipo de gasto',
+                                    filteredAccount ? account : 'Tipo de gasto',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14,
@@ -1759,14 +1758,14 @@ class _ExpensesHistoryState extends State<ExpensesHistory> {
                       paymentType,
                       (supplier != '') ? supplier!.toLowerCase() : null),
                   initialData: [],
-                  child: FilteredExpenseList(widget.activeBusiness,
-                      registerStatus, filteredAccount, account!))
+                  child: FilteredExpenseList(widget.activeBusiness!,
+                      registerStatus, filteredAccount, account))
               : StreamProvider<List<Expenses>>.value(
                   value: DatabaseService().expenseList(widget.activeBusiness,
                       endDate!.month.toString(), endDate!.year.toString()),
                   initialData: [],
-                  child: FilteredExpenseList(widget.activeBusiness,
-                      registerStatus, filteredAccount, account!),
+                  child: FilteredExpenseList(widget.activeBusiness!,
+                      registerStatus, filteredAccount, account),
                 ),
         ],
       ));

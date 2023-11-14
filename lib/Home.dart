@@ -5,6 +5,8 @@ import 'package:denario/Loading.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/PendingOrders.dart';
+import 'package:denario/Models/Products.dart';
+import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +29,10 @@ class _HomeState extends State<Home> {
 
     return MultiProvider(
       providers: [
-        StreamProvider<CashRegister?>.value(
+        StreamProvider<Registradora?>.value(
             initialData: null,
-            value: DatabaseService()
-                .cashRegisterStatus(userProfile.activeBusiness)),
+            value:
+                DatabaseService().registerStatus(userProfile.activeBusiness)),
         StreamProvider<BusinessProfile?>.value(
             initialData: null,
             value: DatabaseService()
@@ -47,6 +49,21 @@ class _HomeState extends State<Home> {
             initialData: [],
             value:
                 DatabaseService().pendingOrderList(userProfile.activeBusiness)),
+        StreamProvider<AccountsList?>.value(
+            initialData: null,
+            value: DatabaseService().accountsList(userProfile.activeBusiness)),
+        StreamProvider<List<DailyTransactions>>.value(
+            initialData: [],
+            value: DatabaseService()
+                .dailyTransactionsList(userProfile.activeBusiness)),
+        StreamProvider<MonthlyStats?>.value(
+            initialData: null,
+            value: DatabaseService()
+                .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
+        StreamProvider<List<Products>>.value(
+            initialData: [],
+            value:
+                DatabaseService().fullProductList(userProfile.activeBusiness!)),
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {

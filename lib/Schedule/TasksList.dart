@@ -1,11 +1,10 @@
-import 'package:denario/Backend/DatabaseService.dart';
-import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/ScheduledSales.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:denario/Schedule/SingleScheduledDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../Models/DailyCash.dart';
 
 class TaskList extends StatelessWidget {
   final String activeBusiness;
@@ -14,6 +13,11 @@ class TaskList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheduledSales = Provider.of<List<ScheduledSales>>(context);
+    final registerStatus = Provider.of<Registradora?>(context);
+
+    if (registerStatus == null) {
+      return Container();
+    }
 
     if (MediaQuery.of(context).size.width > 650) {
       if (scheduledSales.length < 1) {
@@ -76,23 +80,10 @@ class TaskList extends StatelessWidget {
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return MultiProvider(
-                                  providers: [
-                                    StreamProvider<MonthlyStats?>.value(
-                                        initialData: null,
-                                        value: DatabaseService()
-                                            .monthlyStatsfromSnapshot(
-                                                activeBusiness)),
-                                    StreamProvider<CashRegister?>.value(
-                                        initialData: null,
-                                        value: DatabaseService()
-                                            .cashRegisterStatus(
-                                                activeBusiness)),
-                                  ],
-                                  child: SingleScheduledDialog(
-                                    order: scheduledSales[index],
-                                    businessID: activeBusiness,
-                                  ),
+                                return SingleScheduledDialog(
+                                  registerStatus,
+                                  order: scheduledSales[index],
+                                  businessID: activeBusiness,
                                 );
                               });
                         },
@@ -116,6 +107,23 @@ class TaskList extends StatelessWidget {
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold),
                                       ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      (scheduledSales[index].client!['Phone'] !=
+                                                  null &&
+                                              scheduledSales[index]
+                                                      .client!['Phone'] !=
+                                                  0)
+                                          ? Text(
+                                              '- ${scheduledSales[index].client!['Phone']}',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            )
+                                          : SizedBox(),
                                       Spacer(),
                                       (scheduledSales[index].pending!)
                                           ? Container()
@@ -226,45 +234,19 @@ class TaskList extends StatelessWidget {
                               showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return MultiProvider(
-                                      providers: [
-                                        StreamProvider<MonthlyStats?>.value(
-                                            initialData: null,
-                                            value: DatabaseService()
-                                                .monthlyStatsfromSnapshot(
-                                                    activeBusiness)),
-                                        StreamProvider<CashRegister?>.value(
-                                            initialData: null,
-                                            value: DatabaseService()
-                                                .cashRegisterStatus(
-                                                    activeBusiness)),
-                                      ],
-                                      child: SingleScheduledDialog(
-                                        order: scheduledSales[index],
-                                        businessID: activeBusiness,
-                                      ),
+                                    return SingleScheduledDialog(
+                                      registerStatus,
+                                      order: scheduledSales[index],
+                                      businessID: activeBusiness,
                                     );
                                   });
                             } else {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return MultiProvider(
-                                  providers: [
-                                    StreamProvider<MonthlyStats?>.value(
-                                        initialData: null,
-                                        value: DatabaseService()
-                                            .monthlyStatsfromSnapshot(
-                                                activeBusiness)),
-                                    StreamProvider<CashRegister?>.value(
-                                        initialData: null,
-                                        value: DatabaseService()
-                                            .cashRegisterStatus(
-                                                activeBusiness)),
-                                  ],
-                                  child: SingleScheduledDialog(
-                                    order: scheduledSales[index],
-                                    businessID: activeBusiness,
-                                  ),
+                                return SingleScheduledDialog(
+                                  registerStatus,
+                                  order: scheduledSales[index],
+                                  businessID: activeBusiness,
                                 );
                               }));
                             }
@@ -289,6 +271,24 @@ class TaskList extends StatelessWidget {
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold),
                                         ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        (scheduledSales[index]
+                                                        .client!['Phone'] !=
+                                                    null &&
+                                                scheduledSales[index]
+                                                        .client!['Phone'] !=
+                                                    0)
+                                            ? Text(
+                                                '- ${scheduledSales[index].client!['Phone']}',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            : SizedBox(),
                                         Spacer(),
                                         (scheduledSales[index].pending!)
                                             ? Container()

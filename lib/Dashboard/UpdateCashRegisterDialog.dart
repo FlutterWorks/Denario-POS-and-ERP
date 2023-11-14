@@ -34,7 +34,10 @@ class _UpdateCashRegisterDialogState extends State<UpdateCashRegisterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final userProfile = Provider.of<UserData>(context);
+    final userProfile = Provider.of<UserData?>(context);
+    if (userProfile == null) {
+      return Container();
+    }
     return SingleChildScrollView(
       child: Dialog(
         shape:

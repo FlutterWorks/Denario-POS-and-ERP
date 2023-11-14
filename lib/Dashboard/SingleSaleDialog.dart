@@ -13,7 +13,7 @@ class SingleSaleDialog extends StatefulWidget {
   final String businessID;
   final String docID;
   final List paymentTypes;
-  final CashRegister registerStatus;
+  final Registradora registerStatus;
 
   SingleSaleDialog(this.sale, this.businessID, this.docID, this.paymentTypes,
       this.registerStatus);
@@ -89,8 +89,8 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                                     value: DatabaseService()
                                         .monthlyStatsfromSnapshot(
                                             widget.businessID),
-                                    child: ConfirmDeleteOrder(widget.businessID,
-                                        widget.sale, widget.registerStatus),
+                                    child: ConfirmDeleteOrder(
+                                        widget.businessID, widget.sale),
                                   );
                                 });
                           },
@@ -333,9 +333,9 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                               }
 
                               ///////////////////////////Register in Daily Transactions/////
-                              if (widget.registerStatus.registerName != '' &&
+                              if (widget.registerStatus.registerID != '' &&
                                   widget.sale.cashRegister ==
-                                      widget.registerStatus.registerName) {
+                                      widget.registerStatus.registerID) {
                                 //Substract previus payment type // Add new
                                 var firestore = FirebaseFirestore.instance;
                                 var dayStatsRef = firestore
@@ -451,8 +451,8 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                               initialData: null,
                               value: DatabaseService()
                                   .monthlyStatsfromSnapshot(widget.businessID),
-                              child: ConfirmDeleteOrder(widget.businessID,
-                                  widget.sale, widget.registerStatus),
+                              child: ConfirmDeleteOrder(
+                                  widget.businessID, widget.sale),
                             );
                           });
                     },
@@ -689,9 +689,9 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                         }
 
                         ///////////////////////////Register in Daily Transactions/////
-                        if (widget.registerStatus.registerName != '' &&
+                        if (widget.registerStatus.registerID != '' &&
                             widget.sale.cashRegister ==
-                                widget.registerStatus.registerName) {
+                                widget.registerStatus.registerID) {
                           //Substract previus payment type // Add new
                           var firestore = FirebaseFirestore.instance;
                           var dayStatsRef = firestore

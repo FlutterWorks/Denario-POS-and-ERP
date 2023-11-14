@@ -7,13 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class ExpenseList extends StatelessWidget {
-  final String businessID;
+  final String? businessID;
   ExpenseList(this.businessID);
   @override
   Widget build(BuildContext context) {
     final formatCurrency = new NumberFormat.simpleCurrency();
     final expenses = Provider.of<List<Expenses>>(context);
-    final registerStatus = Provider.of<CashRegister?>(context);
+    final registerStatus = Provider.of<Registradora?>(context);
 
     if (expenses == [] || registerStatus == null) {
       return Container();
@@ -90,9 +90,9 @@ class ExpenseList extends StatelessWidget {
                         return StreamProvider<DailyTransactions?>.value(
                             initialData: null,
                             value: DatabaseService().dailyTransactions(
-                                businessID, registerStatus.registerName!),
+                                businessID, registerStatus.registerID!),
                             child: SingleExpenseDialog(
-                                expenseList[i], businessID, registerStatus));
+                                expenseList[i], businessID!, registerStatus));
                       });
                 },
                 child: Container(
@@ -188,9 +188,9 @@ class ExpenseList extends StatelessWidget {
                         return StreamProvider<DailyTransactions?>.value(
                             initialData: null,
                             value: DatabaseService().dailyTransactions(
-                                businessID, registerStatus.registerName!),
+                                businessID, registerStatus.registerID!),
                             child: SingleExpenseDialog(
-                                expenseList[i], businessID, registerStatus));
+                                expenseList[i], businessID!, registerStatus));
                       });
                 },
                 child: Container(

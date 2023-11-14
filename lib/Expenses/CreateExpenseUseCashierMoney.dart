@@ -9,7 +9,7 @@ class CreateExpenseUseCashierMoney extends StatefulWidget {
   final moneyFromCashier;
   final checkCashierMoneyBox;
   final selectPayment;
-  final CashRegister? registerStatus;
+  final Registradora? registerStatus;
   final DailyTransactions? dailyTransactions;
   const CreateExpenseUseCashierMoney(
       this.expenseTotal,

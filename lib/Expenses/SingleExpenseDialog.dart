@@ -1,6 +1,5 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Expenses/ConfirmDeleteExpense.dart';
-import 'package:denario/Loading.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Expenses.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import 'package:provider/provider.dart';
 class SingleExpenseDialog extends StatefulWidget {
   final String businessID;
   final Expenses expense;
-  final CashRegister registerStatus;
+  final Registradora registerStatus;
   SingleExpenseDialog(this.expense, this.businessID, this.registerStatus);
 
   @override
@@ -39,9 +38,6 @@ class _SingleExpenseDialogState extends State<SingleExpenseDialog> {
   Widget build(BuildContext context) {
     final dailyTransactions = Provider.of<DailyTransactions?>(context);
 
-    if (dailyTransactions == null) {
-      return Loading();
-    }
     return SingleChildScrollView(
       child: Dialog(
         shape:

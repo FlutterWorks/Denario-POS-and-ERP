@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 
 class CloseCashRegisterDialog extends StatefulWidget {
   final String currentRegister;
-  CloseCashRegisterDialog({required this.currentRegister});
+  final double expectedInRegister;
+  CloseCashRegisterDialog(
+      {required this.currentRegister, required this.expectedInRegister});
 
   @override
   _CloseCashRegisterDialogState createState() =>
@@ -121,14 +123,16 @@ class _CloseCashRegisterDialogState extends State<CloseCashRegisterDialog> {
                         ),
                       ),
                       onPressed: () {
-                        DatabaseService().closeCashRegister(
-                            userProfile.activeBusiness,
-                            closeAmount,
-                            widget.currentRegister);
-                        DatabaseService().recordOpenedRegister(
-                            userProfile.activeBusiness, false, '');
-
-                        Navigator.of(context).pop();
+                        DatabaseService()
+                            .recordRegister(userProfile.activeBusiness, false,
+                                '', userProfile.uid!)
+                            .then((value) {
+                          DatabaseService().closeCashRegister(
+                              userProfile.activeBusiness,
+                              closeAmount,
+                              widget.currentRegister,
+                              widget.expectedInRegister);
+                        }).then((value) => Navigator.of(context).pop());
                       },
                       child: Text(
                         "CERRAR CAJA",
