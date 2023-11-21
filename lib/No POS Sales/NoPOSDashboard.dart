@@ -4,7 +4,6 @@ import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Payables.dart';
 import 'package:denario/Models/Receivables.dart';
 import 'package:denario/Models/Sales.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/LastSales.dart';
 import 'package:denario/No%20POS%20Sales/NewSaleScreen.dart';
@@ -347,17 +346,21 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                   onPressed: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => StreamProvider<
-                                                  MonthlyStats?>.value(
-                                                value: DatabaseService()
-                                                    .monthlyStatsfromSnapshot(
-                                                        widget.currentBusiness),
-                                                initialData: null,
-                                                child: NewSaleScreen(
-                                                  widget.currentBusiness,
-                                                  fromPOS: false,
-                                                ),
+                                          builder: (context) => NewSaleScreen(
+                                                widget.currentBusiness,
+                                                fromPOS: false,
                                               ))),
+                                  // StreamProvider<
+                                  //     MonthlyStats?>.value(
+                                  //   value: DatabaseService()
+                                  //       .monthlyStatsfromSnapshot(
+                                  //           widget.currentBusiness),
+                                  //   initialData: null,
+                                  //   child: NewSaleScreen(
+                                  //     widget.currentBusiness,
+                                  //     fromPOS: false,
+                                  //   ),
+                                  // ))),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 5),
@@ -677,19 +680,22 @@ class _NoPOSDashboardState extends State<NoPOSDashboard>
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                StreamProvider<
-                                                    MonthlyStats?>.value(
-                                                  value: DatabaseService()
-                                                      .monthlyStatsfromSnapshot(
-                                                          widget
-                                                              .currentBusiness),
-                                                  initialData: null,
-                                                  child: NewSaleScreen(
-                                                    widget.currentBusiness,
-                                                    fromPOS: false,
-                                                  ),
+                                            builder: (context) => NewSaleScreen(
+                                                  widget.currentBusiness,
+                                                  fromPOS: false,
                                                 )));
+                                    // StreamProvider<
+                                    //       MonthlyStats?>.value(
+                                    //     value: DatabaseService()
+                                    //         .monthlyStatsfromSnapshot(
+                                    //             widget
+                                    //                 .currentBusiness),
+                                    //     initialData: null,
+                                    //     child: NewSaleScreen(
+                                    //       widget.currentBusiness,
+                                    //       fromPOS: false,
+                                    //     ),
+                                    //   )));
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(

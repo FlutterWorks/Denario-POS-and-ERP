@@ -213,7 +213,12 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           IconButton(
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () {
+                                setState(() {
+                                  selectedCategory = '';
+                                  categoryisSelected = true;
+                                });
+                              },
                               icon: Icon(Icons.arrow_back),
                               splashRadius: 5,
                               iconSize: 20.0),
@@ -278,7 +283,8 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                                   'Category': selectedCategory,
                                   'Price': 0,
                                   'Quantity': 1,
-                                  'Total Price': 0
+                                  'Total Price': 0,
+                                  'Product ID': ''
                                 });
                                 Navigator.of(context).pop();
                               },
@@ -455,7 +461,8 @@ class _SelectItemDialogState extends State<SelectItemDialog> {
                             'Category': selectedCategory,
                             'Price': 0,
                             'Quantity': 1,
-                            'Total Price': 0
+                            'Total Price': 0,
+                            'Product ID': ''
                           });
                           Navigator.of(context).pop();
                         },

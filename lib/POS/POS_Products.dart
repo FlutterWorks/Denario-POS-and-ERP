@@ -17,7 +17,7 @@ class POSProducts extends StatelessWidget {
       return Container();
     }
 
-    if (MediaQuery.of(context).size.width > 650) {
+    if (MediaQuery.of(context).size.width > 950) {
       return POSDesk(
         productList: productList,
         firstCategory: firstCategory,

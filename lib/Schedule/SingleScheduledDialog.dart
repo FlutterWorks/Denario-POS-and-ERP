@@ -430,14 +430,14 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                       builder: (context) {
                                                         return MultiProvider(
                                                           providers: [
-                                                            StreamProvider<
-                                                                    MonthlyStats?>.value(
-                                                                initialData:
-                                                                    null,
-                                                                value: DatabaseService()
-                                                                    .monthlyStatsfromSnapshot(
-                                                                        widget
-                                                                            .businessID!)),
+                                                            // StreamProvider<
+                                                            //         MonthlyStats?>.value(
+                                                            //     initialData:
+                                                            //         null,
+                                                            //     value: DatabaseService()
+                                                            //         .monthlyStatsfromSnapshot(
+                                                            //             widget
+                                                            //                 .businessID!)),
                                                           ],
                                                           child: ConfirmOrder(
                                                             total: widget
@@ -481,6 +481,62 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                                           ),
                                                         );
                                                       });
+                                                  // showDialog(
+                                                  //     context: context,
+                                                  //     builder: (context) {
+                                                  //       return MultiProvider(
+                                                  //         providers: [
+                                                  //           StreamProvider<
+                                                  //                   MonthlyStats?>.value(
+                                                  //               initialData:
+                                                  //                   null,
+                                                  //               value: DatabaseService()
+                                                  //                   .monthlyStatsfromSnapshot(
+                                                  //                       widget
+                                                  //                           .businessID!)),
+                                                  //         ],
+                                                  //         child: ConfirmOrder(
+                                                  //           total: widget
+                                                  //               .order!.total,
+                                                  //           items: widget.order!
+                                                  //               .orderDetail,
+                                                  //           discount: widget
+                                                  //               .order!
+                                                  //               .discount,
+                                                  //           discountCode: '',
+                                                  //           orderDetail: widget
+                                                  //               .order!
+                                                  //               .orderDetail,
+                                                  //           orderName: widget
+                                                  //               .order!
+                                                  //               .orderName,
+                                                  //           subTotal: widget
+                                                  //               .order!
+                                                  //               .subTotal,
+                                                  //           tax: widget
+                                                  //               .order!.tax,
+                                                  //           controller: null,
+                                                  //           clearVariables:
+                                                  //               clearControllers,
+                                                  //           paymentTypes: widget
+                                                  //               .register!
+                                                  //               .paymentTypes,
+                                                  //           isTable: false,
+                                                  //           tableCode: null,
+                                                  //           businessID: widget
+                                                  //               .businessID,
+                                                  //           tablePageController:
+                                                  //               null,
+                                                  //           isSavedOrder: false,
+                                                  //           savedOrderID: widget
+                                                  //               .order!.id,
+                                                  //           orderType:
+                                                  //               'Venta Agendada',
+                                                  //           onTableView: false,
+                                                  //           register: null,
+                                                  //         ),
+                                                  //       );
+                                                  //     });
                                                 },
                                                 child: Padding(
                                                   padding: const EdgeInsets
@@ -905,51 +961,39 @@ class _SingleScheduledDialogState extends State<SingleScheduledDialog> {
                                               showDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return MultiProvider(
-                                                      providers: [
-                                                        StreamProvider<
-                                                                MonthlyStats?>.value(
-                                                            initialData: null,
-                                                            value: DatabaseService()
-                                                                .monthlyStatsfromSnapshot(
-                                                                    widget
-                                                                        .businessID!)),
-                                                      ],
-                                                      child: ConfirmOrder(
-                                                        total:
-                                                            widget.order!.total,
-                                                        items: widget
-                                                            .order!.orderDetail,
-                                                        discount: widget
-                                                            .order!.discount,
-                                                        discountCode: '',
-                                                        orderDetail: widget
-                                                            .order!.orderDetail,
-                                                        orderName: widget
-                                                            .order!.orderName,
-                                                        subTotal: widget
-                                                            .order!.subTotal,
-                                                        tax: widget.order!.tax,
-                                                        controller: null,
-                                                        clearVariables:
-                                                            clearControllers,
-                                                        paymentTypes: widget
-                                                            .register!
-                                                            .paymentTypes,
-                                                        isTable: false,
-                                                        tableCode: null,
-                                                        businessID:
-                                                            widget.businessID,
-                                                        tablePageController:
-                                                            null,
-                                                        isSavedOrder: false,
-                                                        savedOrderID:
-                                                            widget.order!.id,
-                                                        orderType:
-                                                            'Venta Agendada',
-                                                        onTableView: false,
-                                                        register: null,
-                                                      ),
+                                                    return ConfirmOrder(
+                                                      total:
+                                                          widget.order!.total,
+                                                      items: widget
+                                                          .order!.orderDetail,
+                                                      discount: widget
+                                                          .order!.discount,
+                                                      discountCode: '',
+                                                      orderDetail: widget
+                                                          .order!.orderDetail,
+                                                      orderName: widget
+                                                          .order!.orderName,
+                                                      subTotal: widget
+                                                          .order!.subTotal,
+                                                      tax: widget.order!.tax,
+                                                      controller: null,
+                                                      clearVariables:
+                                                          clearControllers,
+                                                      paymentTypes: widget
+                                                          .register!
+                                                          .paymentTypes,
+                                                      isTable: false,
+                                                      tableCode: null,
+                                                      businessID:
+                                                          widget.businessID,
+                                                      tablePageController: null,
+                                                      isSavedOrder: false,
+                                                      savedOrderID:
+                                                          widget.order!.id,
+                                                      orderType:
+                                                          'Venta Agendada',
+                                                      onTableView: false,
+                                                      register: null,
                                                     );
                                                   });
                                             },

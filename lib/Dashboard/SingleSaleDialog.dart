@@ -3,10 +3,8 @@ import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Dashboard/ConfirmDeleteOrder.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Sales.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class SingleSaleDialog extends StatefulWidget {
   final Sales sale;
@@ -84,14 +82,16 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return StreamProvider<MonthlyStats?>.value(
-                                    initialData: null,
-                                    value: DatabaseService()
-                                        .monthlyStatsfromSnapshot(
-                                            widget.businessID),
-                                    child: ConfirmDeleteOrder(
-                                        widget.businessID, widget.sale),
-                                  );
+                                  return ConfirmDeleteOrder(
+                                      widget.businessID, widget.sale);
+                                  // return StreamProvider<MonthlyStats?>.value(
+                                  //   initialData: null,
+                                  //   value: DatabaseService()
+                                  //       .monthlyStatsfromSnapshot(
+                                  //           widget.businessID),
+                                  //   child: ConfirmDeleteOrder(
+                                  //       widget.businessID, widget.sale),
+                                  // );
                                 });
                           },
                           icon: Icon(Icons.delete),
@@ -447,13 +447,8 @@ class _SingleSaleDialogState extends State<SingleSaleDialog> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return StreamProvider<MonthlyStats?>.value(
-                              initialData: null,
-                              value: DatabaseService()
-                                  .monthlyStatsfromSnapshot(widget.businessID),
-                              child: ConfirmDeleteOrder(
-                                  widget.businessID, widget.sale),
-                            );
+                            return ConfirmDeleteOrder(
+                                widget.businessID, widget.sale);
                           });
                     },
                     icon: Icon(Icons.delete),

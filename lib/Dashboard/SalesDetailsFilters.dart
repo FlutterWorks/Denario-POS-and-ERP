@@ -2,7 +2,6 @@ import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Dashboard/SalesDetailsView.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/Sales.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/NewSaleScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -117,14 +116,6 @@ class _SalesDetailsFiltersState extends State<SalesDetailsFilters> {
                                                                   .userProfile(user!
                                                                       .uid
                                                                       .toString())),
-                                                          StreamProvider<
-                                                              MonthlyStats?>.value(
-                                                            value: DatabaseService()
-                                                                .monthlyStatsfromSnapshot(
-                                                                    widget
-                                                                        .currentBusiness),
-                                                            initialData: null,
-                                                          )
                                                         ],
                                                         child: Scaffold(
                                                             body: NewSaleScreen(

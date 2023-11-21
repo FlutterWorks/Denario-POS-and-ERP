@@ -45,7 +45,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
     if (highLevelMapping == HighLevelMapping()) {
       return Container();
     }
-    if (MediaQuery.of(context).size.width > 800) {
+    if (MediaQuery.of(context).size.width > 1100) {
       return Scaffold(
         body: Container(
           width: double.infinity,
@@ -464,16 +464,16 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                             (categoriesList != [])
-                                ? Colors.greenAccent[400]!
+                                ? Colors.greenAccent
                                 : Colors.grey),
                         overlayColor: (categoriesList != [])
                             ? MaterialStateProperty.resolveWith<Color?>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.hovered))
-                                    return Colors.greenAccent[300]!;
+                                    return Colors.white70;
                                   if (states.contains(MaterialState.focused) ||
                                       states.contains(MaterialState.pressed))
-                                    return Colors.lightGreenAccent;
+                                    return Colors.greenAccent[100];
                                   return null; // Defer to the widget's default.
                                 },
                               )
@@ -557,10 +557,10 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                     child: ElevatedButton(
                                                         style: ButtonStyle(
                                                             backgroundColor:
-                                                                MaterialStateProperty.all<
-                                                                    Color>(Colors
-                                                                        .greenAccent[
-                                                                    400]!),
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .greenAccent),
                                                             overlayColor:
                                                                 MaterialStateProperty
                                                                     .resolveWith<
@@ -571,8 +571,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                                     MaterialState
                                                                         .hovered))
                                                                   return Colors
-                                                                          .greenAccent[
-                                                                      300]!;
+                                                                      .white70;
                                                                 if (states.contains(
                                                                         MaterialState
                                                                             .focused) ||
@@ -580,7 +579,8 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                                         MaterialState
                                                                             .pressed))
                                                                   return Colors
-                                                                      .lightGreenAccent;
+                                                                          .greenAccent[
+                                                                      100];
                                                                 return null; // Defer to the widget's default.
                                                               },
                                                             )),
@@ -655,7 +655,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                                                             'Confirmar',
                                                             style: TextStyle(
                                                                 color: Colors
-                                                                    .white),
+                                                                    .black),
                                                           ),
                                                         )),
                                                   ),
@@ -727,7 +727,7 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
             children: [
               //Title
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   //Back
@@ -776,7 +776,6 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                             if (newIndex > oldIndex) {
                               newIndex = newIndex - 1;
                             }
-                            print('viejo: $oldIndex, nuevo: $newIndex');
 
                             setState(() {
                               categoriesList.insert(
@@ -841,263 +840,428 @@ class _CategoriesDeskState extends State<CategoriesDesk> {
                     ),
               SizedBox(height: 20),
               //Agregar Categoria
-              Container(
-                height: 45,
-                child: Tooltip(
-                  message: (categoriesList != [])
-                      ? ''
-                      : 'Debes tener al menos una categoría para poder vender',
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            (categoriesList != [])
-                                ? Colors.greenAccent[400]!
-                                : Colors.grey),
-                        overlayColor: (categoriesList != [])
-                            ? MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.hovered))
-                                    return Colors.greenAccent[300]!;
-                                  if (states.contains(MaterialState.focused) ||
-                                      states.contains(MaterialState.pressed))
-                                    return Colors.lightGreenAccent;
-                                  return null; // Defer to the widget's default.
-                                },
-                              )
-                            : MaterialStateProperty.all<Color>(Colors.grey),
-                      ),
-                      onPressed: () {
-                        List newCategoryList = [];
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //Save
+                  Container(
+                    height: 45,
+                    child: Tooltip(
+                      message: (categoriesList != [])
+                          ? ''
+                          : 'Debes tener al menos una categoría para poder vender',
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                (categoriesList != [])
+                                    ? Colors.greenAccent
+                                    : Colors.grey),
+                            overlayColor: (categoriesList != [])
+                                ? MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                      if (states
+                                          .contains(MaterialState.hovered))
+                                        return Colors.white70;
+                                      if (states.contains(
+                                              MaterialState.focused) ||
+                                          states
+                                              .contains(MaterialState.pressed))
+                                        return Colors.greenAccent[100];
+                                      return null; // Defer to the widget's default.
+                                    },
+                                  )
+                                : MaterialStateProperty.all<Color>(Colors.grey),
+                          ),
+                          onPressed: () {
+                            List newCategoryList = [];
 
-                        if (categoriesList != []) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Center(
-                                  child: SingleChildScrollView(
-                                    child: Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15.0)),
-                                      child: Container(
-                                        width: 450,
-                                        height: 300,
-                                        padding: EdgeInsets.fromLTRB(
-                                            30.0, 20.0, 30.0, 20),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            //Go back
-                                            Container(
-                                              alignment: Alignment(1.0, 0.0),
-                                              child: IconButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  icon: Icon(Icons.close),
-                                                  iconSize: 20.0),
-                                            ),
-                                            //Title
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                "Confirmar cambio de categorías",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20.0,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Container(
-                                              width: double.infinity,
-                                              child: Text(
-                                                'Recargaremos la app para actualizar las categorías en todas las secciones',
-                                                maxLines: 4,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    color: Colors.grey),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 25,
-                                            ),
-                                            Row(
+                            if (categoriesList != []) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Center(
+                                      child: SingleChildScrollView(
+                                        child: Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0)),
+                                          child: Container(
+                                            width: 450,
+                                            height: 300,
+                                            padding: EdgeInsets.fromLTRB(
+                                                30.0, 20.0, 30.0, 20),
+                                            child: Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
-                                                //Yes
-                                                Expanded(
-                                                  child: Container(
-                                                    height: 45,
-                                                    child: ElevatedButton(
-                                                        style: ButtonStyle(
-                                                            backgroundColor:
-                                                                MaterialStateProperty.all<
-                                                                    Color>(Colors
-                                                                        .greenAccent[
-                                                                    400]!),
-                                                            overlayColor:
-                                                                MaterialStateProperty
-                                                                    .resolveWith<
-                                                                        Color?>(
-                                                              (Set<MaterialState>
-                                                                  states) {
-                                                                if (states.contains(
-                                                                    MaterialState
-                                                                        .hovered))
-                                                                  return Colors
-                                                                          .greenAccent[
-                                                                      300]!;
-                                                                if (states.contains(
-                                                                        MaterialState
-                                                                            .focused) ||
-                                                                    states.contains(
-                                                                        MaterialState
-                                                                            .pressed))
-                                                                  return Colors
-                                                                      .lightGreenAccent;
-                                                                return null; // Defer to the widget's default.
-                                                              },
-                                                            )),
-                                                        onPressed: () {
-                                                          //Edit list of categories
-                                                          for (var i = 0;
-                                                              i <
-                                                                  categoriesList
-                                                                      .length;
-                                                              i++) {
-                                                            newCategoryList.add(
-                                                                categoriesList[
-                                                                        i][
-                                                                    'Category']);
-                                                          }
-                                                          DatabaseService()
-                                                              .editBusinessCategories(
-                                                                  widget
-                                                                      .activeBusiness,
-                                                                  newCategoryList);
-
-                                                          //Edit High Level Mapping
-                                                          var newCategoriesMapping =
-                                                              highLevelMapping
-                                                                  .pnlMapping;
-                                                          List salesCategories =
-                                                              [];
-                                                          List costCategories =
-                                                              [];
-
-                                                          for (var i = 0;
-                                                              i <
-                                                                  categoriesList
-                                                                      .length;
-                                                              i++) {
-                                                            salesCategories.add(
-                                                                'Ventas de ' +
-                                                                    categoriesList[
-                                                                            i][
-                                                                        'Category']);
-                                                            costCategories.add(
-                                                                'Costos de ' +
-                                                                    categoriesList[
-                                                                            i][
-                                                                        'Category']);
-                                                          }
-
-                                                          newCategoriesMapping![
-                                                                  'Ventas'] =
-                                                              salesCategories;
-                                                          newCategoriesMapping[
-                                                                  'Costo de Ventas'] =
-                                                              costCategories;
-
-                                                          DatabaseService()
-                                                              .editCategoriesonPnlMapping(
-                                                                  widget
-                                                                      .activeBusiness,
-                                                                  newCategoriesMapping);
-
-                                                          //Go Back
-                                                          widget.reloadApp();
-                                                        },
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      15,
-                                                                  vertical: 5),
-                                                          child: Text(
-                                                            'Confirmar',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        )),
+                                                //Go back
+                                                Container(
+                                                  alignment:
+                                                      Alignment(1.0, 0.0),
+                                                  child: IconButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                      icon: Icon(Icons.close),
+                                                      iconSize: 20.0),
+                                                ),
+                                                //Title
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    "Confirmar cambio de categorías",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 20.0,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
                                                   ),
                                                 ),
                                                 SizedBox(
-                                                  width: 20,
+                                                  height: 10,
                                                 ),
-                                                //No
-                                                Expanded(
-                                                  child: Container(
-                                                    height: 45,
-                                                    child: OutlinedButton(
-                                                        style: OutlinedButton
-                                                            .styleFrom(
-                                                          foregroundColor:
-                                                              Colors.black,
-                                                        ),
-                                                        onPressed: () {},
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      15,
-                                                                  vertical: 5),
-                                                          child: Text(
-                                                            'Cancelar',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        )),
+                                                Container(
+                                                  width: double.infinity,
+                                                  child: Text(
+                                                    'Recargaremos la app para actualizar las categorías en todas las secciones',
+                                                    maxLines: 4,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        color: Colors.grey),
                                                   ),
                                                 ),
+                                                SizedBox(
+                                                  height: 25,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    //Yes
+                                                    Expanded(
+                                                      child: Container(
+                                                        height: 45,
+                                                        child: ElevatedButton(
+                                                            style: ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty.all<
+                                                                            Color>(
+                                                                        Colors
+                                                                            .greenAccent),
+                                                                overlayColor:
+                                                                    MaterialStateProperty
+                                                                        .resolveWith<
+                                                                            Color?>(
+                                                                  (Set<MaterialState>
+                                                                      states) {
+                                                                    if (states.contains(
+                                                                        MaterialState
+                                                                            .hovered))
+                                                                      return Colors
+                                                                          .white70;
+                                                                    if (states.contains(MaterialState
+                                                                            .focused) ||
+                                                                        states.contains(
+                                                                            MaterialState.pressed))
+                                                                      return Colors
+                                                                              .greenAccent[
+                                                                          100];
+                                                                    return null; // Defer to the widget's default.
+                                                                  },
+                                                                )),
+                                                            onPressed: () {
+                                                              //Edit list of categories
+                                                              for (var i = 0;
+                                                                  i <
+                                                                      categoriesList
+                                                                          .length;
+                                                                  i++) {
+                                                                newCategoryList.add(
+                                                                    categoriesList[
+                                                                            i][
+                                                                        'Category']);
+                                                              }
+                                                              DatabaseService()
+                                                                  .editBusinessCategories(
+                                                                      widget
+                                                                          .activeBusiness,
+                                                                      newCategoryList);
+
+                                                              //Edit High Level Mapping
+                                                              var newCategoriesMapping =
+                                                                  highLevelMapping
+                                                                      .pnlMapping;
+                                                              List
+                                                                  salesCategories =
+                                                                  [];
+                                                              List
+                                                                  costCategories =
+                                                                  [];
+
+                                                              for (var i = 0;
+                                                                  i <
+                                                                      categoriesList
+                                                                          .length;
+                                                                  i++) {
+                                                                salesCategories.add(
+                                                                    'Ventas de ' +
+                                                                        categoriesList[i]
+                                                                            [
+                                                                            'Category']);
+                                                                costCategories.add(
+                                                                    'Costos de ' +
+                                                                        categoriesList[i]
+                                                                            [
+                                                                            'Category']);
+                                                              }
+
+                                                              newCategoriesMapping![
+                                                                      'Ventas'] =
+                                                                  salesCategories;
+                                                              newCategoriesMapping[
+                                                                      'Costo de Ventas'] =
+                                                                  costCategories;
+
+                                                              DatabaseService()
+                                                                  .editCategoriesonPnlMapping(
+                                                                      widget
+                                                                          .activeBusiness,
+                                                                      newCategoriesMapping);
+
+                                                              //Go Back
+                                                              widget
+                                                                  .reloadApp();
+                                                            },
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          15,
+                                                                      vertical:
+                                                                          5),
+                                                              child: Text(
+                                                                'Confirmar',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            )),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    //No
+                                                    Expanded(
+                                                      child: Container(
+                                                        height: 45,
+                                                        child: OutlinedButton(
+                                                            style:
+                                                                OutlinedButton
+                                                                    .styleFrom(
+                                                              foregroundColor:
+                                                                  Colors.black,
+                                                            ),
+                                                            onPressed: () {},
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          15,
+                                                                      vertical:
+                                                                          5),
+                                                              child: Text(
+                                                                'Cancelar',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            )),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 25),
                                               ],
                                             ),
-                                            SizedBox(height: 25),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              });
-                        }
+                                    );
+                                  });
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            child: Text(
+                              'Guardar cambios',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          )),
+                    ),
+                  ),
+                  Spacer(),
+                  //Add
+                  Container(
+                    height: 40,
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.greenAccent,
+                      foregroundColor: Colors.black,
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              var newCategory = '';
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0)),
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.4,
+                                  width: (MediaQuery.of(context).size.width >
+                                          650)
+                                      ? MediaQuery.of(context).size.width * 0.35
+                                      : MediaQuery.of(context).size.width * 0.9,
+                                  constraints: BoxConstraints(
+                                      minHeight: 350, minWidth: 200),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        //Close
+                                        Container(
+                                          alignment: Alignment(1.0, 0.0),
+                                          child: IconButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              icon: Icon(Icons.close),
+                                              iconSize: 20.0),
+                                        ),
+                                        //Title
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Agregar categoría",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 25,
+                                        ),
+                                        //TextField
+                                        TextFormField(
+                                          autofocus: true,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14),
+                                          validator: (val) => val!.isEmpty
+                                              ? "Agrega un monto válido"
+                                              : null,
+                                          cursorColor: Colors.grey,
+                                          decoration: InputDecoration(
+                                            border: new OutlineInputBorder(
+                                              borderRadius:
+                                                  new BorderRadius.circular(
+                                                      12.0),
+                                              borderSide: new BorderSide(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  new BorderRadius.circular(
+                                                      12.0),
+                                              borderSide: new BorderSide(
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ),
+                                          onChanged: (val) {
+                                            setState(() => newCategory = val);
+                                          },
+                                          onFieldSubmitted: (value) {
+                                            setState(() {
+                                              categoriesList.add({
+                                                'Category': value,
+                                                'Edit': true
+                                              });
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        SizedBox(
+                                          height: 35,
+                                        ),
+                                        //Confirm Button
+                                        Container(
+                                          height: 35.0,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.black,
+                                              minimumSize: Size(300, 50),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 15),
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8)),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                categoriesList.add({
+                                                  'Category': newCategory,
+                                                  'Edit': true
+                                                });
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              "Guardar",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 25),
+                                      ]),
+                                ),
+                              );
+                            });
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 5),
-                        child: Text(
-                          'Guardar cambios',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )),
-                ),
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

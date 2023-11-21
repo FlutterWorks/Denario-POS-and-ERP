@@ -4,7 +4,6 @@ import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/ScheduleSaleDialog.dart';
 import 'package:denario/No%20POS%20Sales/SelectItemDialog.dart';
@@ -862,13 +861,13 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                           builder: (context) {
                                             return MultiProvider(
                                               providers: [
-                                                StreamProvider<
-                                                        MonthlyStats?>.value(
-                                                    initialData: null,
-                                                    value: DatabaseService()
-                                                        .monthlyStatsfromSnapshot(
-                                                            userProfile
-                                                                .activeBusiness!)),
+                                                // StreamProvider<
+                                                //         MonthlyStats?>.value(
+                                                //     initialData: null,
+                                                //     value: DatabaseService()
+                                                //         .monthlyStatsfromSnapshot(
+                                                //             userProfile
+                                                //                 .activeBusiness!)),
                                                 StreamProvider<UserData?>.value(
                                                     initialData: null,
                                                     value: DatabaseService()
@@ -1637,13 +1636,6 @@ class _NewSaleScreenState extends State<NewSaleScreen> {
                                           builder: (context) {
                                             return MultiProvider(
                                               providers: [
-                                                StreamProvider<
-                                                        MonthlyStats?>.value(
-                                                    initialData: null,
-                                                    value: DatabaseService()
-                                                        .monthlyStatsfromSnapshot(
-                                                            userProfile
-                                                                .activeBusiness!)),
                                                 StreamProvider<UserData?>.value(
                                                     initialData: null,
                                                     value: DatabaseService()

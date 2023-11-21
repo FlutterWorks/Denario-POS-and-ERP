@@ -34,6 +34,10 @@ class _POSDeskState extends State<POSDesk> {
   List tableViewTags = ['Mesas', 'Mostrador'];
   late String selectedTag;
 
+  //Search
+  bool search = false;
+  String searchName = '';
+
   final tableController = PageController();
 
   @override
@@ -45,8 +49,7 @@ class _POSDeskState extends State<POSDesk> {
 
   @override
   Widget build(BuildContext context) {
-    final CategoryList? categoriesProvider =
-        Provider.of<CategoryList?>(context);
+    final categoriesProvider = Provider.of<CategoryList?>(context);
     final UserData? userProfile = Provider.of<UserData?>(context);
 
     if (userProfile == null || categoriesProvider == null) {
@@ -246,23 +249,14 @@ class _POSDeskState extends State<POSDesk> {
                           //Change to product view
                           Container(
                             height: 35,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.black,
-                              ),
-                              onPressed: () {
-                                DatabaseService().deleteUserBusiness({
-                                  'Business ID': userProfile
-                                      .businesses![businessIndex!].businessID,
-                                  'Business Name': userProfile
-                                      .businesses![businessIndex!].businessName,
-                                  'Business Rol': userProfile
-                                      .businesses![businessIndex!]
-                                      .roleInBusiness,
-                                  'Table View': userProfile
-                                      .businesses![businessIndex!].tableView
-                                }, userProfile.uid).then((value) {
-                                  DatabaseService().updateUserBusinessProfile({
+                            child: Tooltip(
+                              message: 'Vista de productos',
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                ),
+                                onPressed: () {
+                                  DatabaseService().deleteUserBusiness({
                                     'Business ID': userProfile
                                         .businesses![businessIndex!].businessID,
                                     'Business Name': userProfile
@@ -271,21 +265,25 @@ class _POSDeskState extends State<POSDesk> {
                                     'Business Rol': userProfile
                                         .businesses![businessIndex!]
                                         .roleInBusiness,
-                                    'Table View': false
-                                  }, userProfile.uid);
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.visibility, size: 16),
-                                      SizedBox(width: 10),
-                                      Text('Productos')
-                                    ]),
+                                    'Table View': userProfile
+                                        .businesses![businessIndex!].tableView
+                                  }, userProfile.uid).then((value) {
+                                    DatabaseService()
+                                        .updateUserBusinessProfile({
+                                      'Business ID': userProfile
+                                          .businesses![businessIndex!]
+                                          .businessID,
+                                      'Business Name': userProfile
+                                          .businesses![businessIndex!]
+                                          .businessName,
+                                      'Business Rol': userProfile
+                                          .businesses![businessIndex!]
+                                          .roleInBusiness,
+                                      'Table View': false
+                                    }, userProfile.uid);
+                                  });
+                                },
+                                child: Icon(Icons.list, size: 16),
                               ),
                             ),
                           )
@@ -589,82 +587,219 @@ class _POSDeskState extends State<POSDesk> {
                                             },
                                             icon: Icon(Icons.arrow_back,
                                                 color: Colors.black)),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: Container(
-                                            height: 35,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.7,
-                                            child: ListView.builder(
-                                                shrinkWrap: true,
-                                                physics:
-                                                    BouncingScrollPhysics(),
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount: categories!.length,
-                                                itemBuilder: (context, i) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 8.0),
-                                                    child: TextButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        foregroundColor:
-                                                            Colors.black,
-                                                        backgroundColor:
-                                                            (category ==
-                                                                    categories![
-                                                                        i])
-                                                                ? Colors.black
-                                                                : Colors
-                                                                    .transparent,
-                                                        minimumSize:
-                                                            Size(50, 35),
+                                        //categories
+                                        search
+                                            ? Container(
+                                                width: (MediaQuery.of(context)
+                                                            .size
+                                                            .width >
+                                                        1100)
+                                                    ? 500
+                                                    : 350,
+                                                height: 50,
+                                                child: TextFormField(
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14),
+                                                  validator: (val) =>
+                                                      val!.isEmpty
+                                                          ? "Agrega un nombre"
+                                                          : null,
+                                                  autofocus: true,
+                                                  cursorColor: Colors.grey,
+                                                  cursorHeight: 14,
+                                                  initialValue: searchName,
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: Icon(
+                                                      Icons.search,
+                                                      color: Colors.grey,
+                                                      size: 16,
+                                                    ),
+                                                    suffixIcon: IconButton(
+                                                        tooltip: 'Cerrar',
+                                                        splashRadius: 25,
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            search = false;
+                                                          });
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.close,
+                                                          size: 16,
+                                                          color: Colors.grey,
+                                                        )),
+                                                    errorStyle: TextStyle(
+                                                        color: Colors
+                                                            .redAccent[700],
+                                                        fontSize: 12),
+                                                    border:
+                                                        new OutlineInputBorder(
+                                                      borderRadius:
+                                                          new BorderRadius
+                                                              .circular(12.0),
+                                                      borderSide:
+                                                          new BorderSide(
+                                                        color: Colors.grey,
                                                       ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          category =
-                                                              categories![i];
-                                                          // productList = widget
-                                                          //     .productList
-                                                          //     .where((menuItem) =>
-                                                          //         menuItem
-                                                          //             .category ==
-                                                          //         category)
-                                                          //     .toList();
-                                                        });
-                                                      },
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                vertical: 5.0),
-                                                        child: Center(
-                                                          child: Text(
-                                                            categories![i],
-                                                            style: TextStyle(
-                                                                color: (category ==
+                                                    ),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          new BorderRadius
+                                                              .circular(12.0),
+                                                      borderSide:
+                                                          new BorderSide(
+                                                        color: Colors.green,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onChanged: (val) {
+                                                    setState(
+                                                        () => searchName = val);
+                                                  },
+                                                ),
+                                              )
+                                            : Expanded(
+                                                child: Container(
+                                                  child: Wrap(
+                                                    alignment:
+                                                        WrapAlignment.start,
+                                                    spacing: 8,
+                                                    runSpacing: 8.0,
+                                                    children: List.generate(
+                                                        categories!.length,
+                                                        (i) {
+                                                      return TextButton(
+                                                        style: TextButton.styleFrom(
+                                                            foregroundColor:
+                                                                Colors.black,
+                                                            backgroundColor:
+                                                                (category ==
                                                                         categories![
                                                                             i])
                                                                     ? Colors
-                                                                        .white
+                                                                        .black
                                                                     : Colors
-                                                                        .black,
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
-                                                          ),
+                                                                        .transparent,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    8)),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            category =
+                                                                categories![i];
+                                                          });
+                                                        },
+                                                        child: Text(
+                                                          categories![i],
+                                                          style: TextStyle(
+                                                              color: (category ==
+                                                                      categories![
+                                                                          i])
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                }),
-                                          ),
-                                        ),
+                                                      );
+                                                    }),
+                                                  ),
+                                                ),
+                                              ),
+                                        //Loolkup
+                                        search ? Spacer() : SizedBox(width: 10),
+                                        IconButton(
+                                            tooltip: 'Buscar',
+                                            splashRadius: 25,
+                                            onPressed: () {
+                                              setState(() {
+                                                search = true;
+                                              });
+                                            },
+                                            icon: Icon(Icons.search, size: 16)),
+                                        SizedBox(width: 10),
+
+                                        // SizedBox(width: 10),
+                                        // Expanded(
+                                        //   child: Container(
+                                        //     height: 35,
+                                        //     width: MediaQuery.of(context)
+                                        //             .size
+                                        //             .width *
+                                        //         0.7,
+                                        //     child: ListView.builder(
+                                        //         shrinkWrap: true,
+                                        //         physics:
+                                        //             BouncingScrollPhysics(),
+                                        //         scrollDirection:
+                                        //             Axis.horizontal,
+                                        //         itemCount: categories!.length,
+                                        //         itemBuilder: (context, i) {
+                                        //           return Padding(
+                                        //             padding:
+                                        //                 const EdgeInsets.only(
+                                        //                     right: 8.0),
+                                        //             child: TextButton(
+                                        //               style: ElevatedButton
+                                        //                   .styleFrom(
+                                        //                 foregroundColor:
+                                        //                     Colors.black,
+                                        //                 backgroundColor:
+                                        //                     (category ==
+                                        //                             categories![
+                                        //                                 i])
+                                        //                         ? Colors.black
+                                        //                         : Colors
+                                        //                             .transparent,
+                                        //                 minimumSize:
+                                        //                     Size(50, 35),
+                                        //               ),
+                                        //               onPressed: () {
+                                        //                 setState(() {
+                                        //                   category =
+                                        //                       categories![i];
+                                        //                   // productList = widget
+                                        //                   //     .productList
+                                        //                   //     .where((menuItem) =>
+                                        //                   //         menuItem
+                                        //                   //             .category ==
+                                        //                   //         category)
+                                        //                   //     .toList();
+                                        //                 });
+                                        //               },
+                                        //               child: Padding(
+                                        //                 padding:
+                                        //                     const EdgeInsets
+                                        //                         .symmetric(
+                                        //                         vertical: 5.0),
+                                        //                 child: Center(
+                                        //                   child: Text(
+                                        //                     categories![i],
+                                        //                     style: TextStyle(
+                                        //                         color: (category ==
+                                        //                                 categories![
+                                        //                                     i])
+                                        //                             ? Colors
+                                        //                                 .white
+                                        //                             : Colors
+                                        //                                 .black,
+                                        //                         fontSize: 14,
+                                        //                         fontWeight:
+                                        //                             FontWeight
+                                        //                                 .w400),
+                                        //                   ),
+                                        //                 ),
+                                        //               ),
+                                        //             ),
+                                        //           );
+                                        //         }),
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                     Divider(
@@ -677,7 +812,10 @@ class _POSDeskState extends State<POSDesk> {
                                         child: PlateSelectionDesktop(
                                             userProfile.activeBusiness!,
                                             category,
-                                            widget.productList!)),
+                                            widget.productList!,
+                                            search,
+                                            searchName,
+                                            categoriesProvider.categoryList!)),
                                   ],
                                 ),
                               ),
@@ -735,68 +873,121 @@ class _POSDeskState extends State<POSDesk> {
                           Row(
                             children: [
                               //categories
-                              Expanded(
-                                child: Container(
-                                  height: 35,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.7,
-                                  child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: BouncingScrollPhysics(),
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: categories!.length,
-                                      itemBuilder: (context, i) {
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: TextButton(
-                                            style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.black,
-                                              backgroundColor:
-                                                  (category == categories![i])
-                                                      ? Colors.black
-                                                      : Colors.transparent,
-                                              minimumSize: Size(50, 35),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                category = categories![i];
-                                                // productList = widget.productList
-                                                //     .where((menuItem) =>
-                                                //         menuItem.category ==
-                                                //         category)
-                                                //     .toList();
-                                              });
-                                            },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 5.0),
-                                              child: Center(
-                                                child: Text(
-                                                  categories![i],
-                                                  style: TextStyle(
-                                                      color: (category ==
-                                                              categories![i])
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ),
+                              search
+                                  ? Container(
+                                      width:
+                                          (MediaQuery.of(context).size.width >
+                                                  1100)
+                                              ? 500
+                                              : 350,
+                                      height: 50,
+                                      child: TextFormField(
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                        validator: (val) => val!.isEmpty
+                                            ? "Agrega un nombre"
+                                            : null,
+                                        autofocus: true,
+                                        cursorColor: Colors.grey,
+                                        cursorHeight: 14,
+                                        initialValue: searchName,
+                                        textInputAction: TextInputAction.next,
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons.search,
+                                            color: Colors.grey,
+                                            size: 16,
+                                          ),
+                                          suffixIcon: IconButton(
+                                              tooltip: 'Cerrar',
+                                              splashRadius: 25,
+                                              onPressed: () {
+                                                setState(() {
+                                                  search = false;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.close,
+                                                size: 16,
+                                                color: Colors.grey,
+                                              )),
+                                          errorStyle: TextStyle(
+                                              color: Colors.redAccent[700],
+                                              fontSize: 12),
+                                          border: new OutlineInputBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(12.0),
+                                            borderSide: new BorderSide(
+                                              color: Colors.grey,
                                             ),
                                           ),
-                                        );
-                                      }),
-                                ),
-                              ),
-                              //Switch view
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(12.0),
+                                            borderSide: new BorderSide(
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                        ),
+                                        onChanged: (val) {
+                                          setState(() => searchName = val);
+                                        },
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: Container(
+                                        child: Wrap(
+                                          alignment: WrapAlignment.start,
+                                          spacing: 8,
+                                          runSpacing: 8.0,
+                                          children: List.generate(
+                                              categories!.length, (i) {
+                                            return TextButton(
+                                              style: TextButton.styleFrom(
+                                                  foregroundColor: Colors.black,
+                                                  backgroundColor: (category ==
+                                                          categories![i])
+                                                      ? Colors.black
+                                                      : Colors.transparent,
+                                                  padding: EdgeInsets.all(8)),
+                                              onPressed: () {
+                                                setState(() {
+                                                  category = categories![i];
+                                                });
+                                              },
+                                              child: Text(
+                                                categories![i],
+                                                style: TextStyle(
+                                                    color: (category ==
+                                                            categories![i])
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ),
+                                    ),
+                              //Loolkup
+                              search ? Spacer() : SizedBox(width: 10),
+                              IconButton(
+                                  tooltip: 'Buscar',
+                                  splashRadius: 25,
+                                  onPressed: () {
+                                    setState(() {
+                                      search = true;
+                                    });
+                                  },
+                                  icon: Icon(Icons.search, size: 16)),
                               SizedBox(width: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Container(
-                                  height: 35,
+                              //Switch view
+                              Container(
+                                height: 35,
+                                child: Tooltip(
+                                  message: 'Vista de mesas',
                                   child: OutlinedButton(
                                     style: OutlinedButton.styleFrom(
                                       foregroundColor: Colors.black,
@@ -831,19 +1022,8 @@ class _POSDeskState extends State<POSDesk> {
                                         }, userProfile.uid);
                                       });
                                     },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.visibility, size: 16),
-                                            SizedBox(width: 10),
-                                            Text('Mesas')
-                                          ]),
-                                    ),
+                                    child: Icon(Icons.table_restaurant_outlined,
+                                        size: 16),
                                   ),
                                 ),
                               )
@@ -860,7 +1040,10 @@ class _POSDeskState extends State<POSDesk> {
                                   child: PlateSelectionDesktop(
                                       userProfile.activeBusiness!,
                                       category,
-                                      widget.productList!))),
+                                      widget.productList!,
+                                      search,
+                                      searchName,
+                                      categoriesProvider.categoryList!))),
                         ],
                       ),
                     ),

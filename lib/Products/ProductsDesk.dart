@@ -71,7 +71,7 @@ class _ProductDeskState extends State<ProductDesk> {
       return Container();
     }
 
-    if (MediaQuery.of(context).size.width > 800) {
+    if (MediaQuery.of(context).size.width > 900) {
       return Scaffold(
           body: CustomScrollView(slivers: [
         //Go Back /// Title //Filters
@@ -375,18 +375,18 @@ class _ProductDeskState extends State<ProductDesk> {
                                     style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all<Color?>(
-                                              Colors.greenAccent[400]!),
+                                              Colors.greenAccent),
                                       overlayColor: MaterialStateProperty
                                           .resolveWith<Color?>(
                                         (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.hovered))
-                                            return Colors.greenAccent[300];
+                                            return Colors.grey.shade300;
                                           if (states.contains(
                                                   MaterialState.focused) ||
                                               states.contains(
                                                   MaterialState.pressed))
-                                            return Colors.lightGreenAccent;
+                                            return Colors.greenAccent;
                                           return null; // Defer to the widget's default.
                                         },
                                       ),
@@ -411,13 +411,13 @@ class _ProductDeskState extends State<ProductDesk> {
                                         children: [
                                           Icon(
                                             Icons.add,
-                                            color: Colors.white,
+                                            color: Colors.black,
                                           ),
                                           SizedBox(width: 10),
                                           Text(
                                             'Agregar Producto',
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                TextStyle(color: Colors.black),
                                           )
                                         ],
                                       ),
@@ -714,18 +714,18 @@ class _ProductDeskState extends State<ProductDesk> {
                                         style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all<Color>(
-                                                  Colors.greenAccent[400]!),
+                                                  Colors.greenAccent),
                                           overlayColor: MaterialStateProperty
                                               .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
                                               if (states.contains(
                                                   MaterialState.hovered))
-                                                return Colors.greenAccent[300]!;
+                                                return Colors.grey.shade300;
                                               if (states.contains(
                                                       MaterialState.focused) ||
                                                   states.contains(
                                                       MaterialState.pressed))
-                                                return Colors.lightGreenAccent;
+                                                return Colors.greenAccent;
                                               return null; // Defer to the widget's default.
                                             },
                                           ),
@@ -752,13 +752,13 @@ class _ProductDeskState extends State<ProductDesk> {
                                             children: [
                                               Icon(
                                                 Icons.add,
-                                                color: Colors.white,
+                                                color: Colors.black,
                                               ),
                                               SizedBox(width: 10),
                                               Text(
                                                 'Agregar Producto',
                                                 style: TextStyle(
-                                                    color: Colors.white),
+                                                    color: Colors.black),
                                               )
                                             ],
                                           ),
@@ -820,20 +820,17 @@ class _ProductDeskState extends State<ProductDesk> {
                         ))
                     : SizedBox(),
 
-                //Categoria
-                (MediaQuery.of(context).size.width > 975)
-                    ? Container(
-                        width: 150,
-                        child: Text(
-                          'Categoría',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54),
-                        ))
-                    : SizedBox(),
+                //Stock
+                Container(
+                    width: 150,
+                    child: Text(
+                      'Stock',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black54),
+                    )),
 
                 //Precio
                 Container(
@@ -998,34 +995,37 @@ class _ProductDeskState extends State<ProductDesk> {
                         Container(
                           height: 40,
                           width: 40,
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.black,
-                              padding: EdgeInsets.all(5),
-                              alignment: Alignment.center,
+                          child: Tooltip(
+                            message: 'Categorías',
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                padding: EdgeInsets.all(5),
+                                alignment: Alignment.center,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => StreamProvider<
+                                                List<Products>>.value(
+                                            initialData: [],
+                                            value: DatabaseService()
+                                                .allProductListNoLimit(
+                                                    widget.currentBusiness),
+                                            child: CategoriesDesk(
+                                                widget.currentBusiness,
+                                                categoriesProvider
+                                                    .categoryList!,
+                                                widget.reloadApp))));
+                              },
+                              child: Center(
+                                  child: Icon(
+                                Icons.list,
+                                size: 18,
+                                color: Colors.black,
+                              )),
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          StreamProvider<List<Products>>.value(
-                                              initialData: [],
-                                              value: DatabaseService()
-                                                  .allProductListNoLimit(
-                                                      widget.currentBusiness),
-                                              child: CategoriesDesk(
-                                                  widget.currentBusiness,
-                                                  categoriesProvider
-                                                      .categoryList!,
-                                                  widget.reloadApp))));
-                            },
-                            child: Center(
-                                child: Icon(
-                              Icons.list,
-                              size: 18,
-                              color: Colors.black,
-                            )),
                           ),
                         ),
                         SizedBox(width: 5),
@@ -1047,7 +1047,7 @@ class _ProductDeskState extends State<ProductDesk> {
                             },
                             child: Icon(
                               Icons.add,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                         ),

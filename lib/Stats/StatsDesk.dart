@@ -26,6 +26,9 @@ class _StatsDeskState extends State<StatsDesk>
   late String dateFilter;
   late DateTime selectedDate;
 
+  String year = DateTime.now().year.toString();
+  String month = DateTime.now().month.toString();
+
   @override
   void initState() {
     showMonthlyStats = false;
@@ -72,7 +75,12 @@ class _StatsDeskState extends State<StatsDesk>
               children: [
                 SizedBox(height: 80),
                 (showMonthlyStats)
-                    ? MonthStats(widget.businessID, dateFilter, selectedDate)
+                    ? StreamProvider<MonthlyStats?>.value(
+                        value: DatabaseService().monthlyStatsfromSnapshot(
+                            widget.businessID, year, month),
+                        initialData: null,
+                        child: MonthStats(widget.businessID, dateFilter,
+                            selectedDate, year, month))
                     : StreamProvider<List<DailyTransactions>>.value(
                         initialData: [],
                         value: DatabaseService().specificDailyTransactions(
@@ -85,143 +93,267 @@ class _StatsDeskState extends State<StatsDesk>
               ],
             ),
             //Select Monthly or Daily Stats
-            PopupMenuButton<int>(
-                child: Container(
-                  height: 50,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: <BoxShadow>[
-                      new BoxShadow(
-                        color: Colors.grey[350]!,
-                        offset: Offset(0.0, 0.0),
-                        blurRadius: 10.0,
-                      )
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.filter_alt,
-                          color: Colors.black,
-                          size: 16,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                PopupMenuButton<int>(
+                    child: Container(
+                      height: 50,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: <BoxShadow>[
+                          new BoxShadow(
+                            color: Colors.grey[350]!,
+                            offset: Offset(0.0, 0.0),
+                            blurRadius: 10.0,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.filter_alt,
+                              color: Colors.black,
+                              size: 16,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              dateFilter,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 12),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 10),
-                        Text(
-                          dateFilter,
-                          style: TextStyle(color: Colors.black, fontSize: 12),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                onSelected: (value) async {
-                  switch (value) {
-                    case 0:
-                      setState(() {
-                        showMonthlyStats = false;
-                        dateFilter = 'Hoy';
-                        selectedDate = DateTime.now();
-                      });
-                      break;
-                    case 1:
-                      setState(() {
-                        showMonthlyStats = true;
-                        dateFilter = 'Mes';
-                        selectedDate =
-                            DateTime(DateTime.now().year, DateTime.now().month);
-                      });
-                      break;
-                    case 2:
-                      //Open dialog box to select date
-                      DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: selectedDate,
-                          firstDate:
-                              DateTime.now().subtract(Duration(days: 365)),
-                          lastDate: DateTime.now(),
-                          builder: ((context, child) {
-                            return Theme(
-                                data: Theme.of(context).copyWith(
-                                  colorScheme: ColorScheme.light(
-                                    primary:
-                                        Colors.black, // header background color
-                                    onPrimary:
-                                        Colors.white, // header text color
-                                    onSurface: Colors.black, // body text color
-                                  ),
-                                  textButtonTheme: TextButtonThemeData(
-                                    style: TextButton.styleFrom(
-                                      foregroundColor:
-                                          Colors.black, // button text color
+                    onSelected: (value) async {
+                      switch (value) {
+                        case 0:
+                          setState(() {
+                            showMonthlyStats = false;
+                            dateFilter = 'Hoy';
+                            selectedDate = DateTime.now();
+                          });
+                          break;
+                        case 1:
+                          setState(() {
+                            showMonthlyStats = true;
+                            dateFilter = 'Mes';
+                            selectedDate = DateTime(
+                                DateTime.now().year, DateTime.now().month);
+                          });
+                          break;
+                        case 2:
+                          //Open dialog box to select date
+                          DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: selectedDate,
+                              firstDate:
+                                  DateTime.now().subtract(Duration(days: 365)),
+                              lastDate: DateTime.now(),
+                              builder: ((context, child) {
+                                return Theme(
+                                    data: Theme.of(context).copyWith(
+                                      colorScheme: ColorScheme.light(
+                                        primary: Colors
+                                            .black, // header background color
+                                        onPrimary:
+                                            Colors.white, // header text color
+                                        onSurface:
+                                            Colors.black, // body text color
+                                      ),
+                                      textButtonTheme: TextButtonThemeData(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor:
+                                              Colors.black, // button text color
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    child: child!);
+                              }));
+                          setState(() {
+                            selectedDate = pickedDate!;
+                            showMonthlyStats = false;
+                            dateFilter = 'Fecha';
+                          });
+                          break;
+                        case 3:
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SalesDetailsFilters(
+                                      widget.businessID,
+                                      widget.registerStatus)));
+                      }
+                    },
+                    itemBuilder: (context) {
+                      List<PopupMenuItem<int>> items = [
+                        //Discount
+                        PopupMenuItem<int>(
+                          value: 0,
+                          child: Center(
+                            child: Text(
+                              'Hoy',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 12),
+                            ),
+                          ),
+                        ),
+                        //Tax
+                        PopupMenuItem<int>(
+                          value: 1,
+                          child: Center(
+                            child: Text(
+                              'Mes',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 12),
+                            ),
+                          ),
+                        ),
+                        //Custom item
+                        PopupMenuItem<int>(
+                          value: 2,
+                          child: Center(
+                            child: Text(
+                              'Ir a fecha',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 12),
+                            ),
+                          ),
+                        ),
+                        //All
+                        PopupMenuItem<int>(
+                          value: 3,
+                          child: Center(
+                            child: Text(
+                              'Todas',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ];
+                      return items;
+                    }),
+                SizedBox(width: 20),
+                //Mes
+                (showMonthlyStats)
+                    ? Container(
+                        height: 50,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: <BoxShadow>[
+                            new BoxShadow(
+                              color: Colors.grey[350]!,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 10.0,
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            //Month
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              child: DropdownButton<String>(
+                                value: month.toString(),
+                                //elevation: 5,
+                                style: TextStyle(color: Colors.black),
+                                items: <String>[
+                                  '1',
+                                  '2',
+                                  '3',
+                                  '4',
+                                  '5',
+                                  '6',
+                                  '7',
+                                  '8',
+                                  '9',
+                                  '10',
+                                  '11',
+                                  '12',
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                hint: Text(
+                                  month.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                                child: child!);
-                          }));
-                      setState(() {
-                        selectedDate = pickedDate!;
-                        showMonthlyStats = false;
-                        dateFilter = 'Fecha';
-                      });
-                      break;
-                    case 3:
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SalesDetailsFilters(
-                                  widget.businessID, widget.registerStatus)));
-                  }
-                },
-                itemBuilder: (context) {
-                  List<PopupMenuItem<int>> items = [
-                    //Discount
-                    PopupMenuItem<int>(
-                      value: 0,
-                      child: Center(
-                        child: Text(
-                          'Hoy',
-                          style: TextStyle(color: Colors.black, fontSize: 12),
+                                onChanged: (value) {
+                                  setState(() {
+                                    month = value!;
+                                    selectedDate = DateTime(
+                                        selectedDate.year, int.parse(value), 0);
+                                  });
+                                },
+                              ),
+                            ),
+                            Divider(
+                                indent: 5,
+                                endIndent: 5,
+                                color: Colors.grey,
+                                thickness: 0.5),
+                            //Year
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              child: DropdownButton<String>(
+                                value: year.toString(),
+                                //elevation: 5,
+                                style: TextStyle(color: Colors.black),
+                                items: <String>[
+                                  '2021',
+                                  '2022',
+                                  '2023',
+                                  '2024',
+                                  '2025',
+                                  '2026',
+                                  '2027',
+                                  '2028',
+                                  '2029',
+                                  '2030',
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                hint: Text(
+                                  year.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    year = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                    //Tax
-                    PopupMenuItem<int>(
-                      value: 1,
-                      child: Center(
-                        child: Text(
-                          'Mes',
-                          style: TextStyle(color: Colors.black, fontSize: 12),
-                        ),
-                      ),
-                    ),
-                    //Custom item
-                    PopupMenuItem<int>(
-                      value: 2,
-                      child: Center(
-                        child: Text(
-                          'Ir a fecha',
-                          style: TextStyle(color: Colors.black, fontSize: 12),
-                        ),
-                      ),
-                    ),
-                    //All
-                    PopupMenuItem<int>(
-                      value: 3,
-                      child: Center(
-                        child: Text(
-                          'Todas',
-                          style: TextStyle(color: Colors.black, fontSize: 12),
-                        ),
-                      ),
-                    ),
-                  ];
-                  return items;
-                }),
+                      )
+                    : SizedBox()
+              ],
+            ),
             //Create
             Align(
               alignment: Alignment.topRight,
@@ -275,7 +407,9 @@ class _StatsDeskState extends State<StatsDesk>
                                             StreamProvider<MonthlyStats?>.value(
                                               value: DatabaseService()
                                                   .monthlyStatsfromSnapshot(
-                                                      widget.businessID),
+                                                      widget.businessID,
+                                                      year,
+                                                      month),
                                               initialData: null,
                                               child: NewSaleScreen(
                                                 widget.businessID,

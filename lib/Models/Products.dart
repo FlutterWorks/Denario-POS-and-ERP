@@ -18,27 +18,38 @@ class Products {
   double? expectedMargin;
   double? lowMarginAlert;
   double? iva;
+  //new
+  String? priceType;
+  bool? controlStock;
+  int? currentStock;
+  int? lowStockAlert;
 
-  Products(
-      {this.product,
-      this.price,
-      this.image,
-      this.description,
-      this.category,
-      this.productOptions,
-      this.available,
-      this.productID,
-      this.historicPrices,
-      this.code,
-      this.listOfIngredients,
-      this.ingredients,
-      this.searchName,
-      this.vegan,
-      this.showOnMenu,
-      this.featured,
-      this.expectedMargin,
-      this.lowMarginAlert,
-      this.iva});
+  Products({
+    this.product,
+    this.price,
+    this.image,
+    this.description,
+    this.category,
+    this.productOptions,
+    this.available,
+    this.productID,
+    this.historicPrices,
+    this.code,
+    this.listOfIngredients,
+    this.ingredients,
+    this.searchName,
+    this.vegan,
+    this.showOnMenu,
+    this.featured,
+    this.expectedMargin,
+    this.lowMarginAlert,
+    //New
+    this.iva,
+    this.priceType,
+    this.controlStock,
+    this.currentStock,
+    this.lowStockAlert,
+  });
 }
 
 class ProductOptions {

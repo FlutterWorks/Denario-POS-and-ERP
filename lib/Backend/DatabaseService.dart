@@ -671,6 +671,18 @@ class DatabaseService {
                   ? doc['IVA']
                   : 0
               : 0,
+          priceType: doc.data().toString().contains('Price Type')
+              ? doc['Price Type']
+              : 'Precio por unidad',
+          controlStock: doc.data().toString().contains('Control Stock')
+              ? doc['Control Stock']
+              : false,
+          currentStock: doc.data().toString().contains('Current Stock')
+              ? doc['Current Stock']
+              : 0,
+          lowStockAlert: doc.data().toString().contains('Low Stock Alert')
+              ? doc['Low Stock Alert']
+              : 0,
         );
       }).toList();
     } catch (e) {
@@ -697,7 +709,11 @@ class DatabaseService {
       featured,
       double? expectedMargin,
       double? lowMarginAlert,
-      double? iva) async {
+      double? iva,
+      String? priceType,
+      bool? controlStock,
+      int? currentStock,
+      int? lowStockAlert) async {
     return await FirebaseFirestore.instance
         .collection('Products')
         .doc(businessID)
@@ -723,7 +739,11 @@ class DatabaseService {
       'Featured': featured,
       'Expected Margin': (expectedMargin == null) ? 0 : expectedMargin,
       'Low Margin Alert': (lowMarginAlert == null) ? 0 : lowMarginAlert,
-      'IVA': iva
+      'IVA': iva,
+      'Price Type': priceType,
+      'Control Stock': controlStock,
+      'Current Stock': currentStock,
+      'Low Stock Alert': lowStockAlert
     });
   }
 
@@ -748,7 +768,11 @@ class DatabaseService {
       featured,
       double expectedMargin,
       double lowMarginAlert,
-      double iva) async {
+      double iva,
+      String? priceType,
+      bool? controlStock,
+      int? currentStock,
+      int? lowStockAlert) async {
     return await FirebaseFirestore.instance
         .collection('Products')
         .doc(businessID)
@@ -772,7 +796,11 @@ class DatabaseService {
       'Featured': featured,
       'Expected Margin': expectedMargin,
       'Low Margin Alert': lowMarginAlert,
-      'IVA': iva
+      'IVA': iva,
+      'Price Type': priceType,
+      'Control Stock': controlStock,
+      'Current Stock': currentStock,
+      'Low Stock Alert': lowStockAlert
     });
   }
 
@@ -1016,7 +1044,6 @@ class DatabaseService {
     }
 
     // ////////////////////////Update Accounts (sales and categories)
-
     //Firestore reference
     var firestore = FirebaseFirestore.instance;
     var docRef = firestore
@@ -1029,12 +1056,12 @@ class DatabaseService {
 
     try {
       if (doc.exists) {
-        docRef.update({'Ventas': FieldValue.increment(total)});
+        docRef.update({'Current Stock': FieldValue.increment(total)});
       } else {
-        docRef.set({'Ventas': total});
+        docRef.set({'Current Stock': total});
       }
     } catch (error) {
-      print('Error updating Total Sales Value: $error');
+      print('Error updating Stock: $error');
     }
 
     /////Update each Account for the month based on order's categories
@@ -1059,6 +1086,31 @@ class DatabaseService {
     orderCategories.forEach((k, v) {
       docRef.update({k: FieldValue.increment(v)});
     });
+
+    /////////////////////////// Update Product Stock ///////////////////////////
+
+    for (var i = 0; i < cartList.length; i++) {
+      if (cartList[i]['Control Stock'] == true) {
+        //Firestore reference
+        var prdRef = firestore
+            .collection('Products')
+            .doc(activeBusiness)
+            .collection('Menu')
+            .doc(cartList[i]['Product ID']);
+
+        final prdDoc = await prdRef.get();
+
+        try {
+          if (prdDoc.exists) {
+            prdRef.update({
+              'Current Stock': FieldValue.increment(-cartList[i]["Quantity"])
+            });
+          }
+        } catch (error) {
+          print('Error updating Total Sales Value: $error');
+        }
+      }
+    }
 
     /////////////////////////// MONTH STATS ///////////////////////////
 
@@ -2919,6 +2971,22 @@ class DatabaseService {
     }
   }
 
+  Stream<List<DailyTransactions>> graphDailyTransactions(
+      businessID, String year, String month) async* {
+    try {
+      yield* FirebaseFirestore.instance
+          .collection('ERP')
+          .doc(businessID)
+          .collection(year)
+          .doc(month)
+          .collection('Daily')
+          .snapshots()
+          .map(_specificDayTransactionsFromSnapshot);
+    } catch (e) {
+      yield [];
+    }
+  }
+
   // Daily Transactions List from snapshot
   List<DailyTransactions> _dailyTransactionsListFromSnapshot(
       QuerySnapshot snapshot) {
@@ -3294,10 +3362,8 @@ class DatabaseService {
   }
 
   //Stats from Snap
-  Stream<MonthlyStats?> monthlyStatsfromSnapshot(String businessID) async* {
-    var year = DateTime.now().year.toString();
-    var month = DateTime.now().month.toString();
-
+  Stream<MonthlyStats?> monthlyStatsfromSnapshot(
+      String businessID, String year, String month) async* {
     yield* FirebaseFirestore.instance
         .collection('ERP')
         .doc(businessID)

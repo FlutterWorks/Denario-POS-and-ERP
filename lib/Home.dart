@@ -7,6 +7,7 @@ import 'package:denario/Models/Mapping.dart';
 import 'package:denario/Models/PendingOrders.dart';
 import 'package:denario/Models/Products.dart';
 import 'package:denario/Models/Stats.dart';
+import 'package:denario/Models/Tables.dart';
 import 'package:denario/Models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,16 +59,22 @@ class _HomeState extends State<Home> {
                 .dailyTransactionsList(userProfile.activeBusiness)),
         StreamProvider<MonthlyStats?>.value(
             initialData: null,
-            value: DatabaseService()
-                .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
+            value: DatabaseService().monthlyStatsfromSnapshot(
+                userProfile.activeBusiness!,
+                DateTime.now().year.toString(),
+                DateTime.now().month.toString())),
         StreamProvider<List<Products>>.value(
             initialData: [],
             value:
                 DatabaseService().fullProductList(userProfile.activeBusiness!)),
+        StreamProvider<List<Tables>>.value(
+          initialData: [],
+          value: DatabaseService().tableList(userProfile.activeBusiness!),
+        ),
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth > 750) {
+          if (constraints.maxWidth > 950) {
             return HomeDesk();
           } else {
             return HomeMobile();

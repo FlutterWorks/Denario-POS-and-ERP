@@ -1,6 +1,5 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Models/ScheduledSales.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/NewSaleScreen.dart';
 import 'package:denario/Schedule/DaysList.dart';
@@ -222,14 +221,14 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                                       value: DatabaseService()
                                                           .userProfile(user.uid
                                                               .toString())),
-                                                  StreamProvider<
-                                                      MonthlyStats?>.value(
-                                                    value: DatabaseService()
-                                                        .monthlyStatsfromSnapshot(
-                                                            userProfile
-                                                                .activeBusiness!),
-                                                    initialData: null,
-                                                  )
+                                                  // StreamProvider<
+                                                  //     MonthlyStats?>.value(
+                                                  //   value: DatabaseService()
+                                                  //       .monthlyStatsfromSnapshot(
+                                                  //           userProfile
+                                                  //               .activeBusiness!),
+                                                  //   initialData: null,
+                                                  // )
                                                 ],
                                                 child: Scaffold(
                                                     body: NewSaleScreen(
@@ -541,14 +540,14 @@ class _ScheduleDeskState extends State<ScheduleDesk> {
                                                   value: DatabaseService()
                                                       .userProfile(
                                                           user.uid.toString())),
-                                              StreamProvider<
-                                                  MonthlyStats?>.value(
-                                                value: DatabaseService()
-                                                    .monthlyStatsfromSnapshot(
-                                                        userProfile
-                                                            .activeBusiness!),
-                                                initialData: null,
-                                              )
+                                              // StreamProvider<
+                                              //     MonthlyStats?>.value(
+                                              //   value: DatabaseService()
+                                              //       .monthlyStatsfromSnapshot(
+                                              //           userProfile
+                                              //               .activeBusiness!),
+                                              //   initialData: null,
+                                              // )
                                             ],
                                             child: Scaffold(
                                                 body: NewSaleScreen(

@@ -502,38 +502,11 @@ class _HomeDeskState extends State<HomeDesk> {
 
       return MultiProvider(
         providers: [
-          // StreamProvider<List<Products>>.value(
-          //     initialData: [],
-          //     value: DatabaseService()
-          //         .fullProductList(userProfile.activeBusiness!)),
-          // StreamProvider<CategoryList?>.value(
-          //     initialData: null,
-          //     value:
-          //         DatabaseService().categoriesList(userProfile.activeBusiness)),
-          // StreamProvider<HighLevelMapping?>.value(
-          //     initialData: null,
-          //     value: DatabaseService()
-          //         .highLevelMapping(userProfile.activeBusiness)),
           StreamProvider<DailyTransactions?>.value(
               initialData: null,
               catchError: (_, err) => null,
               value: DatabaseService().dailyTransactions(
                   userProfile.activeBusiness, register.registerID!)),
-          // StreamProvider<MonthlyStats?>.value(
-          //     initialData: null,
-          //     value: DatabaseService()
-          //         .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
-          // StreamProvider<List<DailyTransactions>>.value(
-          //     initialData: [],
-          //     value: DatabaseService()
-          //         .dailyTransactionsList(userProfile.activeBusiness)),
-          // StreamProvider<List<PendingOrders>>.value(
-          //     initialData: [],
-          //     value: DatabaseService()
-          //         .pendingOrderList(userProfile.activeBusiness)),
-          // // StreamProvider<AccountsList?>.value(
-          //     initialData: null,
-          //     value: DatabaseService().accountsList(userProfile.activeBusiness))
         ],
         child: Scaffold(
             appBar: AppBar(

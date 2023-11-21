@@ -6,7 +6,6 @@ import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
 import 'package:denario/Models/SavedOrders.dart';
-import 'package:denario/Models/Stats.dart';
 import 'package:denario/Models/Tables.dart';
 import 'package:denario/Models/User.dart';
 import 'package:denario/No%20POS%20Sales/ScheduleSaleDialog.dart';
@@ -507,12 +506,12 @@ class _TicketViewState extends State<TicketView> {
                                                             .activeBusiness,
                                                         registerStatus
                                                             .registerID!)),
-                                            StreamProvider<MonthlyStats?>.value(
-                                                initialData: null,
-                                                value: DatabaseService()
-                                                    .monthlyStatsfromSnapshot(
-                                                        widget.userProfile
-                                                            .activeBusiness!)),
+                                            // StreamProvider<MonthlyStats?>.value(
+                                            //     initialData: null,
+                                            //     value: DatabaseService()
+                                            //         .monthlyStatsfromSnapshot(
+                                            //             widget.userProfile
+                                            //                 .activeBusiness!)),
                                             StreamProvider<UserData?>.value(
                                                 initialData: null,
                                                 value: DatabaseService()
@@ -1134,13 +1133,13 @@ class _TicketViewState extends State<TicketView> {
                                                               .activeBusiness,
                                                           registerStatus
                                                               .registerID!)),
-                                              StreamProvider<
-                                                      MonthlyStats?>.value(
-                                                  initialData: null,
-                                                  value: DatabaseService()
-                                                      .monthlyStatsfromSnapshot(
-                                                          widget.userProfile
-                                                              .activeBusiness!)),
+                                              // StreamProvider<
+                                              //         MonthlyStats?>.value(
+                                              //     initialData: null,
+                                              //     value: DatabaseService()
+                                              //         .monthlyStatsfromSnapshot(
+                                              //             widget.userProfile
+                                              //                 .activeBusiness!)),
                                               StreamProvider<UserData?>.value(
                                                   initialData: null,
                                                   value: DatabaseService()
@@ -2048,12 +2047,12 @@ class _TicketViewState extends State<TicketView> {
                                                             .activeBusiness,
                                                         registerStatus
                                                             .registerID!)),
-                                            StreamProvider<MonthlyStats?>.value(
-                                                initialData: null,
-                                                value: DatabaseService()
-                                                    .monthlyStatsfromSnapshot(
-                                                        widget.userProfile
-                                                            .activeBusiness!)),
+                                            // StreamProvider<MonthlyStats?>.value(
+                                            //     initialData: null,
+                                            //     value: DatabaseService()
+                                            //         .monthlyStatsfromSnapshot(
+                                            //             widget.userProfile
+                                            //                 .activeBusiness!)),
                                             StreamProvider<UserData?>.value(
                                                 initialData: null,
                                                 value: DatabaseService()

@@ -1,6 +1,7 @@
 import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Backend/Ticket.dart';
 import 'package:denario/Models/Products.dart';
+import 'package:denario/Products/NewProduct.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -10,11 +11,12 @@ class POSItemDialog extends StatefulWidget {
   // final String product;
   // final List<ProductOptions> productOptions;
   // final bool availableOnMenu;
-  // final double price;
-  // final String category;
+  final List categoryList;
+  final String category;
   final String documentID;
 
-  POSItemDialog(this.businessID, this.product, this.documentID);
+  POSItemDialog(this.businessID, this.product, this.documentID, this.category,
+      this.categoryList);
   @override
   _POSItemDialogState createState() => _POSItemDialogState();
 }
@@ -57,13 +59,38 @@ class _POSItemDialogState extends State<POSItemDialog> {
     return total;
   }
 
+  double totalCost = 0;
+  List ingredients = [];
+
   @override
   void initState() {
+    ingredients = widget.product.ingredients!;
+    if (ingredients.length > 0) {
+      for (int x = 0; x < ingredients.length; x++) {
+        if (ingredients[x]['Supply Cost'] != null &&
+            ingredients[x]['Supply Quantity'] != null &&
+            ingredients[x]['Quantity'] != null &&
+            ingredients[x]['Yield'] != null) {
+          double ingredientTotal = ((ingredients[x]['Supply Cost'] /
+                      ingredients[x]['Supply Quantity']) *
+                  ingredients[x]['Quantity']) /
+              ingredients[x]['Yield'];
+          if (!ingredientTotal.isNaN &&
+              !ingredientTotal.isInfinite &&
+              !ingredientTotal.isNegative) {
+            totalCost = totalCost + ingredientTotal;
+          }
+        }
+      }
+    }
+
     isAvailable = widget.product.available!;
     changedAvailability = false;
     quantity = 1;
     selectedPrice = widget.product.price!;
-    basePrice = widget.product.price!;
+    basePrice = (widget.product.priceType == 'Precio por margen')
+        ? (totalCost + (totalCost * (widget.product.price! / 100)))
+        : widget.product.price!;
     super.initState();
   }
 
@@ -82,13 +109,47 @@ class _POSItemDialogState extends State<POSItemDialog> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  //Cancel Icon
+                  //Edit//Cancel Icon
                   Container(
-                    alignment: Alignment(1.0, 0.0),
-                    child: IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Icon(Icons.close),
-                        iconSize: 20.0),
+                    child: Row(
+                      children: [
+                        //Edit
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NewProduct(
+                                            widget.businessID,
+                                            widget.categoryList,
+                                            widget.category,
+                                            widget.product,
+                                            fromPOS: true,
+                                          )));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                //Icon
+                                Icon(Icons.edit, size: 16, color: Colors.black),
+                                SizedBox(width: 8),
+                                //Text
+                                Text(
+                                  'Editar',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 14),
+                                )
+                              ],
+                            )),
+                        Spacer(),
+                        //Close,
+                        IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: Icon(Icons.close),
+                            iconSize: 20.0),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 10),
                   //Product
@@ -119,6 +180,15 @@ class _POSItemDialogState extends State<POSItemDialog> {
                           fontWeight: FontWeight.w600),
                     ),
                   ),
+                  SizedBox(height: 5),
+                  Text(
+                    '${widget.product.priceType}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
+                  ),
                   SizedBox(height: 20),
                   //Available
                   Container(
@@ -127,26 +197,42 @@ class _POSItemDialogState extends State<POSItemDialog> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        //Text
-                        Text(
-                          'Disponible',
-                          style: TextStyle(
-                              color: (isAvailable) ? Colors.black : Colors.grey,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(width: 10),
+                        (widget.product.controlStock!)
+                            ? Text(
+                                'Stock: ${widget.product.currentStock}',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              )
+                            : SizedBox(),
+                        SizedBox(
+                            width: (widget.product.controlStock!) ? 25 : 0),
                         //Available Button
-                        Switch(
-                          value: isAvailable,
-                          onChanged: (value) {
-                            setState(() {
-                              isAvailable = value;
-                              changedAvailability = true;
-                            });
-                          },
-                          activeTrackColor: Colors.lightGreenAccent,
-                          activeColor: Colors.green,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Disponible',
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(width: 10),
+                            Switch(
+                              value: isAvailable,
+                              onChanged: (value) {
+                                setState(() {
+                                  isAvailable = value;
+                                  changedAvailability = true;
+                                });
+                              },
+                              activeTrackColor: Colors.lightGreenAccent,
+                              activeColor: Colors.green,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -404,7 +490,9 @@ class _POSItemDialogState extends State<POSItemDialog> {
                                   totalAmount(basePrice, selectedTags) *
                                       quantity,
                               'Options': selectedTags,
-                              'Supplies': widget.product.ingredients
+                              'Supplies': widget.product.ingredients,
+                              'Product ID': widget.product.productID,
+                              'Control Stock': widget.product.controlStock,
                             });
                           }
                           // Change Availability

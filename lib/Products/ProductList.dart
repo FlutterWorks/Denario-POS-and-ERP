@@ -58,7 +58,7 @@ class ProductList extends StatelessWidget {
             }
           }
 
-          if (MediaQuery.of(context).size.width > 800) {
+          if (MediaQuery.of(context).size.width > 900) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 12.0),
               child: TextButton(
@@ -101,8 +101,26 @@ class ProductList extends StatelessWidget {
                                       BorderRadius.all(Radius.circular(25)),
                                   color: Colors.grey.shade300)),
                       //Nombre
-                      (MediaQuery.of(context).size.width > 975)
-                          ? Container(
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          (MediaQuery.of(context).size.width <= 800)
+                              ? Container(
+                                  width: 150,
+                                  child: Text(
+                                    products[i].code!,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black54),
+                                  ))
+                              : SizedBox(),
+                          (MediaQuery.of(context).size.width <= 800)
+                              ? SizedBox(height: 5)
+                              : SizedBox(),
+                          Container(
                               width: 150,
                               child: Text(
                                 products[i].product!,
@@ -111,49 +129,20 @@ class ProductList extends StatelessWidget {
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
+                              )),
+                          SizedBox(height: 5),
+                          Container(
+                              width: 150,
+                              child: Text(
+                                products[i].category ?? '',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 11),
                               ))
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                (MediaQuery.of(context).size.width <= 800)
-                                    ? Container(
-                                        width: 150,
-                                        child: Text(
-                                          products[i].code!,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black54),
-                                        ))
-                                    : SizedBox(),
-                                (MediaQuery.of(context).size.width <= 800)
-                                    ? SizedBox(height: 5)
-                                    : SizedBox(),
-                                Container(
-                                    width: 150,
-                                    child: Text(
-                                      products[i].product!,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
-                                    )),
-                                SizedBox(height: 5),
-                                Container(
-                                    width: 150,
-                                    child: Text(
-                                      products[i].category ?? '',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 11),
-                                    ))
-                              ],
-                            ),
+                        ],
+                      ),
                       //Código
                       (MediaQuery.of(context).size.width > 800)
                           ? Container(
@@ -168,31 +157,58 @@ class ProductList extends StatelessWidget {
                               ))
                           : SizedBox(),
 
-                      //Categoria
-                      (MediaQuery.of(context).size.width > 975)
-                          ? Container(
-                              width: 150,
-                              child: Text(
-                                products[i].category ?? '',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black),
-                              ))
-                          : SizedBox(),
-
-                      //Precio
+                      //Stock
                       Container(
                           width: 150,
                           child: Text(
-                            '${formatCurrency.format(products[i].price)}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
+                            '${products[i].currentStock}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.black),
                           )),
+
+                      //Precio
+                      (products[i].priceType == 'Precio por margen')
+                          ? Container(
+                              width: 150,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${products[i].price!}%',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey,
+                                        fontSize: 11),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    '${formatCurrency.format(totalCost + (totalCost * (products[i].price! / 100)))}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ))
+                          : Container(
+                              width: 150,
+                              child: Text(
+                                '${formatCurrency.format(products[i].price)}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )),
                       //Costo
                       (MediaQuery.of(context).size.width > 850)
                           ? Container(
@@ -222,7 +238,10 @@ class ProductList extends StatelessWidget {
                                   SizedBox(height: 5),
                                   //Margin
                                   Text(
-                                    '${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%',
+                                    (products[i].priceType ==
+                                            'Precio por margen')
+                                        ? '(${((((totalCost + (totalCost * (products[i].price! / 100))) - totalCost) / (totalCost + (totalCost * (products[i].price! / 100)))) * 100).toStringAsFixed(0)}%)'
+                                        : '(${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%)',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -243,7 +262,9 @@ class ProductList extends StatelessWidget {
                           ? Container(
                               width: 100,
                               child: Text(
-                                '${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%',
+                                (products[i].priceType == 'Precio por margen')
+                                    ? '(${((((totalCost + (totalCost * (products[i].price! / 100))) - totalCost) / (totalCost + (totalCost * (products[i].price! / 100)))) * 100).toStringAsFixed(0)}%)'
+                                    : '(${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%)',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -304,32 +325,35 @@ class ProductList extends StatelessWidget {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(25)),
                                   color: Colors.grey.shade300)),
-                      SizedBox(width: 10),
+                      SizedBox(width: 15),
                       //Nombre
                       Expanded(
                         flex: 5,
                         child: Container(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                  width: 150,
-                                  child: Text(
-                                    products[i].code!,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.black54),
-                                  )),
-                              SizedBox(height: 5),
+                              (products[i].code != '')
+                                  ? Container(
+                                      width: 150,
+                                      child: Text(
+                                        products[i].code!,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.black54),
+                                      ))
+                                  : SizedBox(),
+                              SizedBox(
+                                  height: (products[i].code != '') ? 5 : 0),
                               Container(
                                   width: 150,
                                   child: Text(
                                     products[i].product!,
                                     overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.start,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black),
@@ -341,7 +365,7 @@ class ProductList extends StatelessWidget {
                                     products[i].category!,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.start,
                                     style: TextStyle(
                                         color: Colors.grey, fontSize: 11),
                                   ))
@@ -349,6 +373,38 @@ class ProductList extends StatelessWidget {
                           ),
                         ),
                       ),
+                      //Stock
+                      (products[i].controlStock!)
+                          ? Expanded(
+                              flex: 2,
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        child: Text(
+                                      'Stock',
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 11),
+                                    )),
+                                    SizedBox(height: 5),
+                                    Container(
+                                        child: Text(
+                                      '${products[i].currentStock!}',
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    )),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
                       //Precio
                       Expanded(
                         flex: 2,
@@ -358,7 +414,9 @@ class ProductList extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              '${formatCurrency.format(products[i].price)}',
+                              (products[i].priceType == 'Precio por margen')
+                                  ? '${formatCurrency.format(totalCost + (totalCost * (products[i].price! / 100)))}'
+                                  : '${formatCurrency.format(products[i].price)}',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -384,7 +442,9 @@ class ProductList extends StatelessWidget {
                                 SizedBox(width: 5),
                                 //Margin
                                 Text(
-                                  '(${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%)',
+                                  (products[i].priceType == 'Precio por margen')
+                                      ? '(${((((totalCost + (totalCost * (products[i].price! / 100))) - totalCost) / (totalCost + (totalCost * (products[i].price! / 100)))) * 100).toStringAsFixed(0)}%)'
+                                      : '(${(((products[i].price! - totalCost) / products[i].price!) * 100).toStringAsFixed(0)}%)',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,

@@ -15,9 +15,10 @@ class NewProduct extends StatefulWidget {
   final List categories;
   final String businessField;
   final Products? product;
+  final bool? fromPOS;
   const NewProduct(
       this.activeBusiness, this.categories, this.businessField, this.product,
-      {Key? key})
+      {this.fromPOS, Key? key})
       : super(key: key);
 
   @override
@@ -49,6 +50,15 @@ class _NewProductState extends State<NewProduct> {
     '21%': 21,
     '27%': 27
   };
+  String priceType = 'Precio por unidad';
+  List priceTypes = [
+    'Precio por unidad',
+    'Precio por fracción',
+    'Precio por margen'
+  ];
+  bool controlStock = false;
+  int currentStock = 0;
+  int lowStockAlert = 0;
 
   void setProductOptions(
       bool editProduct,
@@ -168,53 +178,7 @@ class _NewProductState extends State<NewProduct> {
     }
   }
 
-  @override
-  void initState() {
-    if (widget.product != null) {
-      newProduct = false;
-      category = widget.product!.category ?? '';
-      isAvailable = widget.product!.available ?? false;
-      show = widget.product!.showOnMenu ?? false;
-      vegan = widget.product!.vegan ?? false;
-      name = widget.product!.product!;
-      price = widget.product!.price!;
-      code = widget.product!.code ?? '';
-      description = widget.product!.description ?? '';
-      image = widget.product!.image ?? '';
-      ingredients = widget.product!.ingredients ?? [];
-      historicPrices = widget.product!.historicPrices ?? [];
-      featured = widget.product!.featured ?? false;
-      expectedMargin = widget.product!.expectedMargin ?? 0;
-      lowMarginAlert = widget.product!.lowMarginAlert ?? 0;
-      iva = widget.product!.iva ?? 0;
-      if (widget.product!.productOptions!.length > 0) {
-        for (var x = 0; x < widget.product!.productOptions!.length; x++) {
-          productOptions.add({
-            'Mandatory': widget.product!.productOptions![x].mandatory,
-            'Multiple Options':
-                widget.product!.productOptions![x].multipleOptions,
-            'Price Structure':
-                widget.product!.productOptions![x].priceStructure,
-            'Title': widget.product!.productOptions![x].title,
-            'Price Options': widget.product!.productOptions![x].priceOptions
-          });
-        }
-      } else {
-        productOptions = [];
-      }
-    } else {
-      newProduct = true;
-      category = widget.categories.first;
-      isAvailable = true;
-      show = true;
-      featured = false;
-      vegan = false;
-    }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget productPage() {
     if (MediaQuery.of(context).size.width > 800) {
       return Container(
         width: double.infinity,
@@ -226,24 +190,32 @@ class _NewProductState extends State<NewProduct> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             //Title
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 20.0),
-                SizedBox(width: 25),
-                Text(
-                  widget.product == null ? 'Nuevo producto' : 'Editar producto',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 28),
-                ),
-              ],
-            ),
-            SizedBox(height: 35),
+            (widget.fromPOS != null && widget.fromPOS == true)
+                ? SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(Icons.arrow_back),
+                          iconSize: 20.0),
+                      SizedBox(width: 25),
+                      Text(
+                        widget.product == null
+                            ? 'Nuevo producto'
+                            : 'Editar producto',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 28),
+                      ),
+                    ],
+                  ),
+            SizedBox(
+                height: (widget.fromPOS != null && widget.fromPOS == true)
+                    ? 0
+                    : 35),
             //Form
             (MediaQuery.of(context).size.width > 1050)
                 ? Row(
@@ -531,6 +503,268 @@ class _NewProductState extends State<NewProduct> {
                                   ],
                                 ),
                                 SizedBox(height: 20),
+                                //Stock Management
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    //Control Stock
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Controlar Stock',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                                color: Colors.black45),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Switch(
+                                            value: controlStock,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                controlStock = value;
+                                              });
+                                            },
+                                            activeTrackColor:
+                                                Colors.lightGreenAccent,
+                                            activeColor: Colors.green,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 20),
+                                    //Current Stock
+                                    Expanded(
+                                      flex: 4,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Stock actual',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                                color: Colors.black45),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Container(
+                                            width: double.infinity,
+                                            child: TextFormField(
+                                              enabled:
+                                                  controlStock ? true : false,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                              cursorColor: Colors.grey,
+                                              initialValue: (currentStock > 0)
+                                                  ? currentStock.toString()
+                                                  : null,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .digitsOnly
+                                              ],
+                                              validator: (val) {
+                                                if (controlStock &&
+                                                    (val == null ||
+                                                        val.isEmpty)) {
+                                                  return "Agrega un valor inicial";
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              decoration: InputDecoration(
+                                                hintText: '0',
+                                                focusColor: Colors.black,
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black45,
+                                                    fontSize: 14),
+                                                errorStyle: TextStyle(
+                                                    color:
+                                                        Colors.redAccent[700],
+                                                    fontSize: 12),
+                                                border: new OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.grey[350]!,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              ),
+                                              onChanged: (value) {
+                                                if (value != '') {
+                                                  setState(() {
+                                                    currentStock =
+                                                        int.parse(value);
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    currentStock = 0;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 20),
+                                    //Low Stock Alert
+                                    Expanded(
+                                      flex: 4,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Alerta de bajo stock',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                                color: Colors.black45),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Container(
+                                            width: double.infinity,
+                                            child: TextFormField(
+                                              enabled:
+                                                  controlStock ? true : false,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                              cursorColor: Colors.grey,
+                                              initialValue: (lowStockAlert > 0)
+                                                  ? lowStockAlert.toString()
+                                                  : null,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .digitsOnly
+                                              ],
+                                              validator: (val) {
+                                                if (controlStock &&
+                                                    (val == null ||
+                                                        val.isEmpty)) {
+                                                  return "Agrega un valor";
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              decoration: InputDecoration(
+                                                hintText: '0',
+                                                focusColor: Colors.black,
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black45,
+                                                    fontSize: 14),
+                                                errorStyle: TextStyle(
+                                                    color:
+                                                        Colors.redAccent[700],
+                                                    fontSize: 12),
+                                                border: new OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.grey[350]!,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              ),
+                                              onChanged: (value) {
+                                                if (value != '') {
+                                                  setState(() {
+                                                    lowStockAlert =
+                                                        int.parse(value);
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    lowStockAlert = 0;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                //Price Type
+                                Text(
+                                  'Tipo de precio',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.black45),
+                                ),
+                                SizedBox(height: 5),
+                                Container(
+                                    width: double.infinity,
+                                    child: Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 5,
+                                      children:
+                                          List.generate(priceTypes.length, (i) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                12))),
+                                                side: BorderSide(
+                                                    color: (priceType ==
+                                                            priceTypes[i])
+                                                        ? Colors.greenAccent
+                                                        : Colors.grey.shade300,
+                                                    width: 1)),
+                                            onPressed: () {
+                                              if (priceType != priceTypes[i]) {
+                                                setState(() {
+                                                  priceType = priceTypes[i];
+                                                });
+                                              }
+                                            },
+                                            child: Text(
+                                              priceTypes[i],
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    )),
+                                SizedBox(height: 20),
                                 //Price
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -544,13 +778,58 @@ class _NewProductState extends State<NewProduct> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Precio de venta*',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                                color: Colors.black45),
-                                          ),
+                                          (priceType == 'Precio por margen')
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                      Text(
+                                                        '$priceType*',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black45),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Text(
+                                                        '\$${(totalIngredientsCost() + (totalIngredientsCost() * (price / 100))).toStringAsFixed(2)}',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black45),
+                                                      ),
+                                                    ])
+                                              : Text(
+                                                  '$priceType*',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 12,
+                                                      color: Colors.black45),
+                                                ),
+                                          SizedBox(
+                                              height: (priceType ==
+                                                          'Precio por margen' &&
+                                                      totalIngredientsCost() <=
+                                                          0)
+                                                  ? 5
+                                                  : 0),
+                                          (priceType == 'Precio por margen' &&
+                                                  totalIngredientsCost() <= 0)
+                                              ? Text(
+                                                  'Agrega ingredientes para poder calcular el precio',
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                      fontSize: 11))
+                                              : SizedBox(),
                                           SizedBox(height: 10),
                                           Container(
                                             width: double.infinity,
@@ -584,10 +863,23 @@ class _NewProductState extends State<NewProduct> {
                                               },
                                               decoration: InputDecoration(
                                                 hintText: '0.00',
-                                                prefixIcon: Icon(
-                                                  Icons.attach_money,
-                                                  color: Colors.grey,
-                                                ),
+                                                prefixIcon: (priceType ==
+                                                        'Precio por margen')
+                                                    ? Padding(
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        child: Text('%',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)))
+                                                    : Icon(
+                                                        Icons.attach_money,
+                                                        color: Colors.grey,
+                                                      ),
                                                 focusColor: Colors.black,
                                                 hintStyle: TextStyle(
                                                     color: Colors.black45,
@@ -1631,7 +1923,16 @@ class _NewProductState extends State<NewProduct> {
                                                   height: 45,
                                                   child: Center(
                                                     child: Text(
-                                                        '${(((price - totalIngredientsCost()) / price) * 100).toStringAsFixed(1)}%',
+                                                        ((((price - totalIngredientsCost()) /
+                                                                            price) *
+                                                                        100)
+                                                                    .isInfinite ||
+                                                                (((price - totalIngredientsCost()) /
+                                                                            price) *
+                                                                        100)
+                                                                    .isNaN)
+                                                            ? '0'
+                                                            : '${(((price - totalIngredientsCost()) / price) * 100).toStringAsFixed(1)}%',
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -1883,7 +2184,11 @@ class _NewProductState extends State<NewProduct> {
                                                             featured,
                                                             expectedMargin,
                                                             lowMarginAlert,
-                                                            iva));
+                                                            iva,
+                                                            priceType,
+                                                            controlStock,
+                                                            currentStock,
+                                                            lowStockAlert));
                                               } else {
                                                 DatabaseService().createProduct(
                                                     widget.activeBusiness,
@@ -1906,7 +2211,11 @@ class _NewProductState extends State<NewProduct> {
                                                     featured,
                                                     expectedMargin,
                                                     lowMarginAlert,
-                                                    iva);
+                                                    iva,
+                                                    priceType,
+                                                    controlStock,
+                                                    currentStock,
+                                                    lowStockAlert);
                                               }
 
                                               Navigator.of(context).pop();
@@ -1977,7 +2286,11 @@ class _NewProductState extends State<NewProduct> {
                                                             featured,
                                                             expectedMargin!,
                                                             lowMarginAlert!,
-                                                            iva));
+                                                            iva,
+                                                            priceType,
+                                                            controlStock,
+                                                            currentStock,
+                                                            lowStockAlert));
                                               } else {
                                                 if (widget.product!.price !=
                                                     price) {
@@ -2028,7 +2341,15 @@ class _NewProductState extends State<NewProduct> {
                                                     featured,
                                                     expectedMargin!,
                                                     lowMarginAlert!,
-                                                    iva);
+                                                    iva,
+                                                    priceType,
+                                                    controlStock,
+                                                    currentStock,
+                                                    lowStockAlert);
+                                              }
+                                              if (widget.fromPOS != null &&
+                                                  widget.fromPOS == true) {
+                                                Navigator.of(context).pop();
                                               }
                                               Navigator.of(context).pop();
                                             }
@@ -2052,9 +2373,13 @@ class _NewProductState extends State<NewProduct> {
                                               child: ElevatedButton(
                                                   style: ButtonStyle(
                                                     backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all<Color>(
-                                                                Colors.black),
+                                                        MaterialStateProperty.all<
+                                                            Color>((priceType ==
+                                                                    'Precio por margen' &&
+                                                                totalIngredientsCost() <=
+                                                                    0)
+                                                            ? Colors.grey
+                                                            : Colors.black),
                                                     overlayColor:
                                                         MaterialStateProperty
                                                             .resolveWith<
@@ -2078,219 +2403,267 @@ class _NewProductState extends State<NewProduct> {
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    if (newProduct) {
-                                                      if (_formKey.currentState!
-                                                          .validate()) {
-                                                        if (widget
-                                                                .product!
-                                                                .ingredients!
-                                                                .length >
+                                                    if (priceType ==
+                                                            'Precio por margen' &&
+                                                        totalIngredientsCost() <=
                                                             0) {
-                                                          for (int i = 0;
-                                                              i <
-                                                                  ingredients
-                                                                      .length;
-                                                              i++) {
-                                                            listOfIngredients
-                                                                .add(ingredients[
-                                                                        i][
-                                                                    'Ingredient']);
-                                                          }
-                                                        }
-                                                        if (changedImage) {
-                                                          uploadPic(widget.activeBusiness).then((value) => DatabaseService().createProduct(
-                                                              widget
-                                                                  .activeBusiness,
-                                                              name,
-                                                              downloadUrl,
-                                                              category,
-                                                              price,
-                                                              description,
-                                                              productOptions,
-                                                              setSearchParam(name
-                                                                  .toLowerCase()),
-                                                              code,
-                                                              listOfIngredients,
-                                                              ingredients,
-                                                              (widget.businessField ==
-                                                                      'Gatronómico')
-                                                                  ? vegan
-                                                                  : null,
-                                                              show,
-                                                              featured,
-                                                              expectedMargin,
-                                                              lowMarginAlert,
-                                                              iva));
-                                                        } else {
-                                                          DatabaseService().createProduct(
-                                                              widget
-                                                                  .activeBusiness,
-                                                              name,
-                                                              '',
-                                                              category,
-                                                              price,
-                                                              description,
-                                                              productOptions,
-                                                              setSearchParam(name
-                                                                  .toLowerCase()),
-                                                              code,
-                                                              listOfIngredients,
-                                                              ingredients,
-                                                              (widget.businessField ==
-                                                                      'Gatronómico')
-                                                                  ? vegan
-                                                                  : null,
-                                                              show,
-                                                              featured,
-                                                              expectedMargin,
-                                                              lowMarginAlert,
-                                                              iva);
-                                                        }
-
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      }
                                                     } else {
-                                                      if (_formKey.currentState!
-                                                          .validate()) {
-                                                        if (ingredients.length >
-                                                            0) {
-                                                          for (int i = 0;
-                                                              i <
-                                                                  ingredients
-                                                                      .length;
-                                                              i++) {
-                                                            listOfIngredients
-                                                                .add(ingredients[
-                                                                        i][
-                                                                    'Ingredient']);
+                                                      if (newProduct) {
+                                                        if (_formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          if (widget
+                                                                  .product!
+                                                                  .ingredients!
+                                                                  .length >
+                                                              0) {
+                                                            for (int i = 0;
+                                                                i <
+                                                                    ingredients
+                                                                        .length;
+                                                                i++) {
+                                                              listOfIngredients
+                                                                  .add(ingredients[
+                                                                          i][
+                                                                      'Ingredient']);
+                                                            }
                                                           }
-                                                        }
-                                                        if (changedImage) {
-                                                          if (widget.product!
-                                                                  .price !=
-                                                              price) {
-                                                            if (historicPrices
-                                                                    .length >
-                                                                0) {
-                                                              historicPrices
-                                                                          .last[
-                                                                      'To Date'] =
-                                                                  DateTime
-                                                                      .now();
+                                                          if (changedImage) {
+                                                            uploadPic(widget.activeBusiness).then((value) => DatabaseService().createProduct(
+                                                                widget
+                                                                    .activeBusiness,
+                                                                name,
+                                                                downloadUrl,
+                                                                category,
+                                                                price,
+                                                                description,
+                                                                productOptions,
+                                                                setSearchParam(name
+                                                                    .toLowerCase()),
+                                                                code,
+                                                                listOfIngredients,
+                                                                ingredients,
+                                                                (widget.businessField ==
+                                                                        'Gatronómico')
+                                                                    ? vegan
+                                                                    : null,
+                                                                show,
+                                                                featured,
+                                                                expectedMargin,
+                                                                lowMarginAlert,
+                                                                iva,
+                                                                priceType,
+                                                                controlStock,
+                                                                currentStock,
+                                                                lowStockAlert));
+                                                          } else {
+                                                            DatabaseService().createProduct(
+                                                                widget
+                                                                    .activeBusiness,
+                                                                name,
+                                                                '',
+                                                                category,
+                                                                price,
+                                                                description,
+                                                                productOptions,
+                                                                setSearchParam(name
+                                                                    .toLowerCase()),
+                                                                code,
+                                                                listOfIngredients,
+                                                                ingredients,
+                                                                (widget.businessField ==
+                                                                        'Gatronómico')
+                                                                    ? vegan
+                                                                    : null,
+                                                                show,
+                                                                featured,
+                                                                expectedMargin,
+                                                                lowMarginAlert,
+                                                                iva,
+                                                                priceType,
+                                                                controlStock,
+                                                                currentStock,
+                                                                lowStockAlert);
+                                                          }
 
-                                                              historicPrices
-                                                                  .add({
-                                                                'From Date':
+                                                          if (widget.fromPOS !=
+                                                                  null &&
+                                                              widget.fromPOS ==
+                                                                  true) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          }
+
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }
+                                                      } else {
+                                                        if (_formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          if (ingredients
+                                                                  .length >
+                                                              0) {
+                                                            for (int i = 0;
+                                                                i <
+                                                                    ingredients
+                                                                        .length;
+                                                                i++) {
+                                                              listOfIngredients
+                                                                  .add(ingredients[
+                                                                          i][
+                                                                      'Ingredient']);
+                                                            }
+                                                          }
+                                                          if (changedImage) {
+                                                            if (widget.product!
+                                                                    .price !=
+                                                                price) {
+                                                              if (historicPrices
+                                                                      .length >
+                                                                  0) {
+                                                                historicPrices
+                                                                            .last[
+                                                                        'To Date'] =
                                                                     DateTime
-                                                                        .now(),
-                                                                'To Date': null,
-                                                                'Price': price
-                                                              });
-                                                            } else {
-                                                              historicPrices = [
-                                                                {
+                                                                        .now();
+
+                                                                historicPrices
+                                                                    .add({
                                                                   'From Date':
                                                                       DateTime
                                                                           .now(),
                                                                   'To Date':
                                                                       null,
                                                                   'Price': price
-                                                                }
-                                                              ];
+                                                                });
+                                                              } else {
+                                                                historicPrices =
+                                                                    [
+                                                                  {
+                                                                    'From Date':
+                                                                        DateTime
+                                                                            .now(),
+                                                                    'To Date':
+                                                                        null,
+                                                                    'Price':
+                                                                        price
+                                                                  }
+                                                                ];
+                                                              }
                                                             }
-                                                          }
-                                                          uploadPic(widget.activeBusiness).then((value) => DatabaseService().editProduct(
-                                                              widget
-                                                                  .activeBusiness,
-                                                              widget.product!
-                                                                  .productID,
-                                                              isAvailable,
-                                                              name,
-                                                              downloadUrl,
-                                                              category,
-                                                              price,
-                                                              description,
-                                                              productOptions,
-                                                              setSearchParam(name
-                                                                  .toLowerCase()),
-                                                              code,
-                                                              listOfIngredients,
-                                                              ingredients,
-                                                              (widget.businessField ==
-                                                                      'Gatronómico')
-                                                                  ? vegan
-                                                                  : null,
-                                                              show,
-                                                              historicPrices,
-                                                              featured,
-                                                              expectedMargin!,
-                                                              lowMarginAlert!,
-                                                              iva));
-                                                        } else {
-                                                          if (widget.product!
-                                                                  .price !=
-                                                              price) {
-                                                            if (historicPrices
-                                                                    .length >
-                                                                0) {
-                                                              historicPrices
-                                                                          .last[
-                                                                      'To Date'] =
-                                                                  DateTime
-                                                                      .now();
-
-                                                              historicPrices
-                                                                  .add({
-                                                                'From Date':
+                                                            uploadPic(widget.activeBusiness).then((value) => DatabaseService().editProduct(
+                                                                widget
+                                                                    .activeBusiness,
+                                                                widget.product!
+                                                                    .productID,
+                                                                isAvailable,
+                                                                name,
+                                                                downloadUrl,
+                                                                category,
+                                                                price,
+                                                                description,
+                                                                productOptions,
+                                                                setSearchParam(name
+                                                                    .toLowerCase()),
+                                                                code,
+                                                                listOfIngredients,
+                                                                ingredients,
+                                                                (widget.businessField ==
+                                                                        'Gatronómico')
+                                                                    ? vegan
+                                                                    : null,
+                                                                show,
+                                                                historicPrices,
+                                                                featured,
+                                                                expectedMargin!,
+                                                                lowMarginAlert!,
+                                                                iva,
+                                                                priceType,
+                                                                controlStock,
+                                                                currentStock,
+                                                                lowStockAlert));
+                                                          } else {
+                                                            if (widget.product!
+                                                                    .price !=
+                                                                price) {
+                                                              if (historicPrices
+                                                                      .length >
+                                                                  0) {
+                                                                historicPrices
+                                                                            .last[
+                                                                        'To Date'] =
                                                                     DateTime
-                                                                        .now(),
-                                                                'To Date': null,
-                                                                'Price': price
-                                                              });
-                                                            } else {
-                                                              historicPrices = [
-                                                                {
+                                                                        .now();
+
+                                                                historicPrices
+                                                                    .add({
                                                                   'From Date':
                                                                       DateTime
                                                                           .now(),
                                                                   'To Date':
                                                                       null,
                                                                   'Price': price
-                                                                }
-                                                              ];
+                                                                });
+                                                              } else {
+                                                                historicPrices =
+                                                                    [
+                                                                  {
+                                                                    'From Date':
+                                                                        DateTime
+                                                                            .now(),
+                                                                    'To Date':
+                                                                        null,
+                                                                    'Price':
+                                                                        price
+                                                                  }
+                                                                ];
+                                                              }
                                                             }
+                                                            DatabaseService().editProduct(
+                                                                widget
+                                                                    .activeBusiness,
+                                                                widget.product!
+                                                                    .productID,
+                                                                isAvailable,
+                                                                name,
+                                                                image,
+                                                                category,
+                                                                price,
+                                                                description,
+                                                                productOptions,
+                                                                setSearchParam(name
+                                                                    .toLowerCase()),
+                                                                code,
+                                                                listOfIngredients,
+                                                                ingredients,
+                                                                (widget.businessField ==
+                                                                        'Gatronómico')
+                                                                    ? vegan
+                                                                    : null,
+                                                                show,
+                                                                historicPrices,
+                                                                featured,
+                                                                expectedMargin!,
+                                                                lowMarginAlert!,
+                                                                iva,
+                                                                priceType,
+                                                                controlStock,
+                                                                currentStock,
+                                                                lowStockAlert);
                                                           }
-                                                          DatabaseService().editProduct(
-                                                              widget
-                                                                  .activeBusiness,
-                                                              widget.product!
-                                                                  .productID,
-                                                              isAvailable,
-                                                              name,
-                                                              image,
-                                                              category,
-                                                              price,
-                                                              description,
-                                                              productOptions,
-                                                              setSearchParam(name
-                                                                  .toLowerCase()),
-                                                              code,
-                                                              listOfIngredients,
-                                                              ingredients,
-                                                              (widget.businessField ==
-                                                                      'Gatronómico')
-                                                                  ? vegan
-                                                                  : null,
-                                                              show,
-                                                              historicPrices,
-                                                              featured,
-                                                              expectedMargin!,
-                                                              lowMarginAlert!,
-                                                              iva);
+                                                          if (widget.fromPOS !=
+                                                                  null &&
+                                                              widget.fromPOS ==
+                                                                  true) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          }
+                                                          Navigator.of(context)
+                                                              .pop();
                                                         }
-                                                        Navigator.of(context)
-                                                            .pop();
                                                       }
                                                     }
                                                   },
@@ -2658,6 +3031,270 @@ class _NewProductState extends State<NewProduct> {
                                   ],
                                 ),
                                 SizedBox(height: 20),
+                                //Stock Management
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    //Control Stock
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Controlar Stock',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                                color: Colors.black45),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Switch(
+                                            value: controlStock,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                controlStock = value;
+                                              });
+                                            },
+                                            activeTrackColor:
+                                                Colors.lightGreenAccent,
+                                            activeColor: Colors.green,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 20),
+                                    //Current Stock
+                                    Expanded(
+                                      flex: 4,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Stock actual',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                                color: Colors.black45),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Container(
+                                            width: double.infinity,
+                                            child: TextFormField(
+                                              enabled:
+                                                  controlStock ? true : false,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                              cursorColor: Colors.grey,
+                                              initialValue: (currentStock > 0)
+                                                  ? currentStock.toString()
+                                                  : null,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .digitsOnly
+                                              ],
+                                              validator: (val) {
+                                                if (controlStock &&
+                                                    (val == null ||
+                                                        val.isEmpty)) {
+                                                  return "Agrega un valor inicial";
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              decoration: InputDecoration(
+                                                hintText: '0',
+                                                focusColor: Colors.black,
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black45,
+                                                    fontSize: 14),
+                                                errorStyle: TextStyle(
+                                                    color:
+                                                        Colors.redAccent[700],
+                                                    fontSize: 12),
+                                                border: new OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.grey[350]!,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              ),
+                                              onChanged: (value) {
+                                                if (value != '') {
+                                                  setState(() {
+                                                    currentStock =
+                                                        int.parse(value);
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    currentStock = 0;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 20),
+                                    //Low Stock Alert
+                                    Expanded(
+                                      flex: 4,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Alerta de bajo stock',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12,
+                                                color: Colors.black45),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Container(
+                                            width: double.infinity,
+                                            child: TextFormField(
+                                              enabled:
+                                                  controlStock ? true : false,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                              cursorColor: Colors.grey,
+                                              initialValue: (lowStockAlert > 0)
+                                                  ? lowStockAlert.toString()
+                                                  : null,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .digitsOnly
+                                              ],
+                                              validator: (val) {
+                                                if (controlStock &&
+                                                    (val == null ||
+                                                        val.isEmpty)) {
+                                                  return "Agrega un valor";
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              decoration: InputDecoration(
+                                                hintText: '0',
+                                                focusColor: Colors.black,
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black45,
+                                                    fontSize: 14),
+                                                errorStyle: TextStyle(
+                                                    color:
+                                                        Colors.redAccent[700],
+                                                    fontSize: 12),
+                                                border: new OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.grey[350]!,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          12.0),
+                                                  borderSide: new BorderSide(
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              ),
+                                              onChanged: (value) {
+                                                if (value != '') {
+                                                  setState(() {
+                                                    lowStockAlert =
+                                                        int.parse(value);
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    lowStockAlert = 0;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+
+                                //Price Type
+                                Text(
+                                  'Tipo de precio',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.black45),
+                                ),
+                                SizedBox(height: 5),
+                                Container(
+                                    width: double.infinity,
+                                    child: Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 5,
+                                      children:
+                                          List.generate(priceTypes.length, (i) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                12))),
+                                                side: BorderSide(
+                                                    color: (priceType ==
+                                                            priceTypes[i])
+                                                        ? Colors.greenAccent
+                                                        : Colors.grey.shade300,
+                                                    width: 1)),
+                                            onPressed: () {
+                                              if (priceType != priceTypes[i]) {
+                                                setState(() {
+                                                  priceType = priceTypes[i];
+                                                });
+                                              }
+                                            },
+                                            child: Text(
+                                              priceTypes[i],
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    )),
+                                SizedBox(height: 20),
+
                                 //Price
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -2671,13 +3308,58 @@ class _NewProductState extends State<NewProduct> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Precio de venta*',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                                color: Colors.black45),
-                                          ),
+                                          (priceType == 'Precio por margen')
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                      Text(
+                                                        '$priceType*',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black45),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Text(
+                                                        '\$${(totalIngredientsCost() + (totalIngredientsCost() * (price / 100))).toStringAsFixed(2)}',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black45),
+                                                      ),
+                                                    ])
+                                              : Text(
+                                                  '$priceType*',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 12,
+                                                      color: Colors.black45),
+                                                ),
+                                          SizedBox(
+                                              height: (priceType ==
+                                                          'Precio por margen' &&
+                                                      totalIngredientsCost() <=
+                                                          0)
+                                                  ? 5
+                                                  : 0),
+                                          (priceType == 'Precio por margen' &&
+                                                  totalIngredientsCost() <= 0)
+                                              ? Text(
+                                                  'Agrega ingredientes para poder calcular el precio',
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                      fontSize: 11))
+                                              : SizedBox(),
                                           SizedBox(height: 10),
                                           Container(
                                             width: double.infinity,
@@ -2711,10 +3393,23 @@ class _NewProductState extends State<NewProduct> {
                                               },
                                               decoration: InputDecoration(
                                                 hintText: '0.00',
-                                                prefixIcon: Icon(
-                                                  Icons.attach_money,
-                                                  color: Colors.grey,
-                                                ),
+                                                prefixIcon: (priceType ==
+                                                        'Precio por margen')
+                                                    ? Padding(
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        child: Text('%',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)))
+                                                    : Icon(
+                                                        Icons.attach_money,
+                                                        color: Colors.grey,
+                                                      ),
                                                 focusColor: Colors.black,
                                                 hintStyle: TextStyle(
                                                     color: Colors.black45,
@@ -2824,55 +3519,60 @@ class _NewProductState extends State<NewProduct> {
                                   ],
                                 ),
                                 SizedBox(height: 20),
-                                
-                      //IVA
-                      Text(
-                        'IVA Alicuota',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Colors.black45),
-                      ),
-                      SizedBox(height: 5),
-                      Container(
-                          width: double.infinity,
-                          child: Wrap(
-                            alignment: WrapAlignment.center,
-                            spacing: 5,
-                            children: List.generate(alicuotas.keys.length, (i) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12))),
-                                      side: BorderSide(
-                                          color: (iva ==
-                                                  alicuotas[alicuotas.keys
-                                                      .elementAt(i)])
-                                              ? Colors.greenAccent
-                                              : Colors.grey.shade300,
-                                          width: 1)),
-                                  onPressed: () {
-                                    if (iva !=
-                                        alicuotas[
-                                            alicuotas.keys.elementAt(i)]) {
-                                      setState(() {
-                                        iva = alicuotas[
-                                            alicuotas.keys.elementAt(i)]!;
-                                      });
-                                    }
-                                  },
-                                  child: Text(
-                                    alicuotas.keys.elementAt(i),
-                                    style: TextStyle(color: Colors.black),
-                                  ),
+
+                                //IVA
+                                Text(
+                                  'IVA Alicuota',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.black45),
                                 ),
-                              );
-                            }),
-                          )),
-                      SizedBox(height: 20),
+                                SizedBox(height: 5),
+                                Container(
+                                    width: double.infinity,
+                                    child: Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 5,
+                                      children: List.generate(
+                                          alicuotas.keys.length, (i) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                12))),
+                                                side: BorderSide(
+                                                    color: (iva ==
+                                                            alicuotas[alicuotas
+                                                                .keys
+                                                                .elementAt(i)])
+                                                        ? Colors.greenAccent
+                                                        : Colors.grey.shade300,
+                                                    width: 1)),
+                                            onPressed: () {
+                                              if (iva !=
+                                                  alicuotas[alicuotas.keys
+                                                      .elementAt(i)]) {
+                                                setState(() {
+                                                  iva = alicuotas[alicuotas.keys
+                                                      .elementAt(i)]!;
+                                                });
+                                              }
+                                            },
+                                            child: Text(
+                                              alicuotas.keys.elementAt(i),
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    )),
+                                SizedBox(height: 20),
                                 //Dropdown categories
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -3754,7 +4454,16 @@ class _NewProductState extends State<NewProduct> {
                                                   height: 45,
                                                   child: Center(
                                                     child: Text(
-                                                        '${(((price - totalIngredientsCost()) / price) * 100).toStringAsFixed(1)}%',
+                                                        ((((price - totalIngredientsCost()) /
+                                                                            price) *
+                                                                        100)
+                                                                    .isInfinite ||
+                                                                (((price - totalIngredientsCost()) /
+                                                                            price) *
+                                                                        100)
+                                                                    .isNaN)
+                                                            ? '0'
+                                                            : '${(((price - totalIngredientsCost()) / price) * 100).toStringAsFixed(1)}%',
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -3950,9 +4659,13 @@ class _NewProductState extends State<NewProduct> {
                                 (widget.product == null)
                                     ? ElevatedButton(
                                         style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Colors.black),
+                                          backgroundColor: MaterialStateProperty
+                                              .all<Color>((priceType ==
+                                                          'Precio por margen' &&
+                                                      totalIngredientsCost() <=
+                                                          0)
+                                                  ? Colors.grey
+                                                  : Colors.black),
                                           overlayColor: MaterialStateProperty
                                               .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
@@ -3969,191 +4682,222 @@ class _NewProductState extends State<NewProduct> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          if (newProduct) {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              if (ingredients.length > 0) {
-                                                for (int i = 0;
-                                                    i < ingredients.length;
-                                                    i++) {
-                                                  listOfIngredients.add(
-                                                      ingredients[i]
-                                                          ['Ingredient']);
-                                                }
-                                              }
-                                              if (changedImage) {
-                                                uploadPic(widget.activeBusiness).then(
-                                                    (value) => DatabaseService()
-                                                        .createProduct(
-                                                            widget
-                                                                .activeBusiness,
-                                                            name,
-                                                            downloadUrl,
-                                                            category,
-                                                            price,
-                                                            description,
-                                                            productOptions,
-                                                            setSearchParam(name
-                                                                .toLowerCase()),
-                                                            code,
-                                                            listOfIngredients,
-                                                            ingredients,
-                                                            (widget.businessField ==
-                                                                    'Gatronómico')
-                                                                ? vegan
-                                                                : null,
-                                                            show,
-                                                            featured,
-                                                            expectedMargin,
-                                                            lowMarginAlert,
-                                                            iva));
-                                              } else {
-                                                DatabaseService().createProduct(
-                                                    widget.activeBusiness,
-                                                    name,
-                                                    '',
-                                                    category,
-                                                    price,
-                                                    description,
-                                                    productOptions,
-                                                    setSearchParam(
-                                                        name.toLowerCase()),
-                                                    code,
-                                                    listOfIngredients,
-                                                    ingredients,
-                                                    (widget.businessField ==
-                                                            'Gatronómico')
-                                                        ? vegan
-                                                        : null,
-                                                    show,
-                                                    featured,
-                                                    expectedMargin,
-                                                    lowMarginAlert,
-                                                    iva);
-                                              }
-
-                                              Navigator.of(context).pop();
-                                            }
+                                          if (priceType ==
+                                                  'Precio por margen' &&
+                                              totalIngredientsCost() <= 0) {
                                           } else {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              if (ingredients.length > 0) {
-                                                for (int i = 0;
-                                                    i < ingredients.length;
-                                                    i++) {
-                                                  listOfIngredients.add(
-                                                      ingredients[i]
-                                                          ['Ingredient']);
+                                            if (newProduct) {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                if (ingredients.length > 0) {
+                                                  for (int i = 0;
+                                                      i < ingredients.length;
+                                                      i++) {
+                                                    listOfIngredients.add(
+                                                        ingredients[i]
+                                                            ['Ingredient']);
+                                                  }
                                                 }
-                                              }
-                                              if (changedImage) {
-                                                if (widget.product!.price !=
-                                                    price) {
-                                                  try {
-                                                    historicPrices
-                                                            .last['To Date'] =
-                                                        DateTime.now();
+                                                if (changedImage) {
+                                                  uploadPic(
+                                                          widget.activeBusiness)
+                                                      .then((value) => DatabaseService()
+                                                          .createProduct(
+                                                              widget
+                                                                  .activeBusiness,
+                                                              name,
+                                                              downloadUrl,
+                                                              category,
+                                                              price,
+                                                              description,
+                                                              productOptions,
+                                                              setSearchParam(name
+                                                                  .toLowerCase()),
+                                                              code,
+                                                              listOfIngredients,
+                                                              ingredients,
+                                                              (widget.businessField ==
+                                                                      'Gatronómico')
+                                                                  ? vegan
+                                                                  : null,
+                                                              show,
+                                                              featured,
+                                                              expectedMargin,
+                                                              lowMarginAlert,
+                                                              iva,
+                                                              priceType,
+                                                              controlStock,
+                                                              currentStock,
+                                                              lowStockAlert));
+                                                } else {
+                                                  DatabaseService().createProduct(
+                                                      widget.activeBusiness,
+                                                      name,
+                                                      '',
+                                                      category,
+                                                      price,
+                                                      description,
+                                                      productOptions,
+                                                      setSearchParam(
+                                                          name.toLowerCase()),
+                                                      code,
+                                                      listOfIngredients,
+                                                      ingredients,
+                                                      (widget.businessField ==
+                                                              'Gatronómico')
+                                                          ? vegan
+                                                          : null,
+                                                      show,
+                                                      featured,
+                                                      expectedMargin,
+                                                      lowMarginAlert,
+                                                      iva,
+                                                      priceType,
+                                                      controlStock,
+                                                      currentStock,
+                                                      lowStockAlert);
+                                                }
 
-                                                    historicPrices.add({
-                                                      'From Date':
-                                                          DateTime.now(),
-                                                      'To Date': null,
-                                                      'Price': price
-                                                    });
-                                                  } catch (e) {
-                                                    print(e);
-                                                    historicPrices = [
-                                                      {
+                                                if (widget.fromPOS != null &&
+                                                    widget.fromPOS == true) {
+                                                  Navigator.of(context).pop();
+                                                }
+
+                                                Navigator.of(context).pop();
+                                              }
+                                            } else {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                if (ingredients.length > 0) {
+                                                  for (int i = 0;
+                                                      i < ingredients.length;
+                                                      i++) {
+                                                    listOfIngredients.add(
+                                                        ingredients[i]
+                                                            ['Ingredient']);
+                                                  }
+                                                }
+                                                if (changedImage) {
+                                                  if (widget.product!.price !=
+                                                      price) {
+                                                    try {
+                                                      historicPrices
+                                                              .last['To Date'] =
+                                                          DateTime.now();
+
+                                                      historicPrices.add({
                                                         'From Date':
                                                             DateTime.now(),
                                                         'To Date': null,
                                                         'Price': price
-                                                      }
-                                                    ];
+                                                      });
+                                                    } catch (e) {
+                                                      print(e);
+                                                      historicPrices = [
+                                                        {
+                                                          'From Date':
+                                                              DateTime.now(),
+                                                          'To Date': null,
+                                                          'Price': price
+                                                        }
+                                                      ];
+                                                    }
                                                   }
-                                                }
-                                                uploadPic(widget.activeBusiness).then(
-                                                    (value) => DatabaseService()
-                                                        .editProduct(
-                                                            widget
-                                                                .activeBusiness,
-                                                            widget.product!
-                                                                .productID,
-                                                            isAvailable,
-                                                            name,
-                                                            downloadUrl,
-                                                            category,
-                                                            price,
-                                                            description,
-                                                            productOptions,
-                                                            setSearchParam(name
-                                                                .toLowerCase()),
-                                                            code,
-                                                            listOfIngredients,
-                                                            ingredients,
-                                                            (widget.businessField ==
-                                                                    'Gatronómico')
-                                                                ? vegan
-                                                                : null,
-                                                            show,
-                                                            historicPrices,
-                                                            featured,
-                                                            expectedMargin!,
-                                                            lowMarginAlert!,
-                                                            iva));
-                                              } else {
-                                                if (widget.product!.price !=
-                                                    price) {
-                                                  try {
-                                                    historicPrices
-                                                            .last['To Date'] =
-                                                        DateTime.now();
+                                                  uploadPic(
+                                                          widget.activeBusiness)
+                                                      .then((value) => DatabaseService().editProduct(
+                                                          widget.activeBusiness,
+                                                          widget.product!
+                                                              .productID,
+                                                          isAvailable,
+                                                          name,
+                                                          downloadUrl,
+                                                          category,
+                                                          price,
+                                                          description,
+                                                          productOptions,
+                                                          setSearchParam(name
+                                                              .toLowerCase()),
+                                                          code,
+                                                          listOfIngredients,
+                                                          ingredients,
+                                                          (widget.businessField ==
+                                                                  'Gatronómico')
+                                                              ? vegan
+                                                              : null,
+                                                          show,
+                                                          historicPrices,
+                                                          featured,
+                                                          expectedMargin!,
+                                                          lowMarginAlert!,
+                                                          iva,
+                                                          priceType,
+                                                          controlStock,
+                                                          currentStock,
+                                                          lowStockAlert));
+                                                } else {
+                                                  if (widget.product!.price !=
+                                                      price) {
+                                                    try {
+                                                      historicPrices
+                                                              .last['To Date'] =
+                                                          DateTime.now();
 
-                                                    historicPrices.add({
-                                                      'From Date':
-                                                          DateTime.now(),
-                                                      'To Date': null,
-                                                      'Price': price
-                                                    });
-                                                  } catch (e) {
-                                                    print(e);
-                                                    historicPrices = [
-                                                      {
+                                                      historicPrices.add({
                                                         'From Date':
                                                             DateTime.now(),
                                                         'To Date': null,
                                                         'Price': price
-                                                      }
-                                                    ];
+                                                      });
+                                                    } catch (e) {
+                                                      print(e);
+                                                      historicPrices = [
+                                                        {
+                                                          'From Date':
+                                                              DateTime.now(),
+                                                          'To Date': null,
+                                                          'Price': price
+                                                        }
+                                                      ];
+                                                    }
                                                   }
+                                                  DatabaseService().editProduct(
+                                                      widget.activeBusiness,
+                                                      widget.product!.productID,
+                                                      isAvailable,
+                                                      name,
+                                                      image,
+                                                      category,
+                                                      price,
+                                                      description,
+                                                      productOptions,
+                                                      setSearchParam(
+                                                          name.toLowerCase()),
+                                                      code,
+                                                      listOfIngredients,
+                                                      ingredients,
+                                                      (widget.businessField ==
+                                                              'Gatronómico')
+                                                          ? vegan
+                                                          : null,
+                                                      show,
+                                                      historicPrices,
+                                                      featured,
+                                                      expectedMargin!,
+                                                      lowMarginAlert!,
+                                                      iva,
+                                                      priceType,
+                                                      controlStock,
+                                                      currentStock,
+                                                      lowStockAlert);
                                                 }
-                                                DatabaseService().editProduct(
-                                                    widget.activeBusiness,
-                                                    widget.product!.productID,
-                                                    isAvailable,
-                                                    name,
-                                                    image,
-                                                    category,
-                                                    price,
-                                                    description,
-                                                    productOptions,
-                                                    setSearchParam(
-                                                        name.toLowerCase()),
-                                                    code,
-                                                    listOfIngredients,
-                                                    ingredients,
-                                                    (widget.businessField ==
-                                                            'Gatronómico')
-                                                        ? vegan
-                                                        : null,
-                                                    show,
-                                                    historicPrices,
-                                                    featured,
-                                                    expectedMargin!,
-                                                    lowMarginAlert!,
-                                                    iva);
+
+                                                if (widget.fromPOS != null &&
+                                                    widget.fromPOS == true) {
+                                                  Navigator.of(context).pop();
+                                                }
+                                                Navigator.of(context).pop();
                                               }
-                                              Navigator.of(context).pop();
                                             }
                                           }
                                         },
@@ -4175,9 +4919,13 @@ class _NewProductState extends State<NewProduct> {
                                               child: ElevatedButton(
                                                   style: ButtonStyle(
                                                     backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all<Color>(
-                                                                Colors.black),
+                                                        MaterialStateProperty.all<
+                                                            Color>((priceType ==
+                                                                    'Precio por margen' &&
+                                                                totalIngredientsCost() <=
+                                                                    0)
+                                                            ? Colors.grey
+                                                            : Colors.black),
                                                     overlayColor:
                                                         MaterialStateProperty
                                                             .resolveWith<
@@ -4201,219 +4949,258 @@ class _NewProductState extends State<NewProduct> {
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    if (newProduct) {
-                                                      if (_formKey.currentState!
-                                                          .validate()) {
-                                                        if (widget
-                                                                .product!
-                                                                .ingredients!
-                                                                .length >
+                                                    if (priceType ==
+                                                            'Precio por margen' &&
+                                                        totalIngredientsCost() <=
                                                             0) {
-                                                          for (int i = 0;
-                                                              i <
-                                                                  ingredients
-                                                                      .length;
-                                                              i++) {
-                                                            listOfIngredients
-                                                                .add(ingredients[
-                                                                        i][
-                                                                    'Ingredient']);
-                                                          }
-                                                        }
-                                                        if (changedImage) {
-                                                          uploadPic(widget.activeBusiness).then((value) => DatabaseService().createProduct(
-                                                              widget
-                                                                  .activeBusiness,
-                                                              name,
-                                                              downloadUrl,
-                                                              category,
-                                                              price,
-                                                              description,
-                                                              productOptions,
-                                                              setSearchParam(name
-                                                                  .toLowerCase()),
-                                                              code,
-                                                              listOfIngredients,
-                                                              ingredients,
-                                                              (widget.businessField ==
-                                                                      'Gatronómico')
-                                                                  ? vegan
-                                                                  : null,
-                                                              show,
-                                                              featured,
-                                                              expectedMargin,
-                                                              lowMarginAlert,
-                                                              iva));
-                                                        } else {
-                                                          DatabaseService().createProduct(
-                                                              widget
-                                                                  .activeBusiness,
-                                                              name,
-                                                              '',
-                                                              category,
-                                                              price,
-                                                              description,
-                                                              productOptions,
-                                                              setSearchParam(name
-                                                                  .toLowerCase()),
-                                                              code,
-                                                              listOfIngredients,
-                                                              ingredients,
-                                                              (widget.businessField ==
-                                                                      'Gatronómico')
-                                                                  ? vegan
-                                                                  : null,
-                                                              show,
-                                                              featured,
-                                                              expectedMargin,
-                                                              lowMarginAlert,
-                                                              iva);
-                                                        }
-
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      }
                                                     } else {
-                                                      if (_formKey.currentState!
-                                                          .validate()) {
-                                                        if (ingredients.length >
-                                                            0) {
-                                                          for (int i = 0;
-                                                              i <
-                                                                  ingredients
-                                                                      .length;
-                                                              i++) {
-                                                            listOfIngredients
-                                                                .add(ingredients[
-                                                                        i][
-                                                                    'Ingredient']);
+                                                      if (newProduct) {
+                                                        if (_formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          if (widget
+                                                                  .product!
+                                                                  .ingredients!
+                                                                  .length >
+                                                              0) {
+                                                            for (int i = 0;
+                                                                i <
+                                                                    ingredients
+                                                                        .length;
+                                                                i++) {
+                                                              listOfIngredients
+                                                                  .add(ingredients[
+                                                                          i][
+                                                                      'Ingredient']);
+                                                            }
                                                           }
-                                                        }
-                                                        if (changedImage) {
-                                                          if (widget.product!
-                                                                  .price !=
-                                                              price) {
-                                                            if (historicPrices
-                                                                    .length >
-                                                                0) {
-                                                              historicPrices
-                                                                          .last[
-                                                                      'To Date'] =
-                                                                  DateTime
-                                                                      .now();
+                                                          if (changedImage) {
+                                                            uploadPic(widget.activeBusiness).then((value) => DatabaseService().createProduct(
+                                                                widget
+                                                                    .activeBusiness,
+                                                                name,
+                                                                downloadUrl,
+                                                                category,
+                                                                price,
+                                                                description,
+                                                                productOptions,
+                                                                setSearchParam(name
+                                                                    .toLowerCase()),
+                                                                code,
+                                                                listOfIngredients,
+                                                                ingredients,
+                                                                (widget.businessField ==
+                                                                        'Gatronómico')
+                                                                    ? vegan
+                                                                    : null,
+                                                                show,
+                                                                featured,
+                                                                expectedMargin,
+                                                                lowMarginAlert,
+                                                                iva,
+                                                                priceType,
+                                                                controlStock,
+                                                                currentStock,
+                                                                lowStockAlert));
+                                                          } else {
+                                                            DatabaseService().createProduct(
+                                                                widget
+                                                                    .activeBusiness,
+                                                                name,
+                                                                '',
+                                                                category,
+                                                                price,
+                                                                description,
+                                                                productOptions,
+                                                                setSearchParam(name
+                                                                    .toLowerCase()),
+                                                                code,
+                                                                listOfIngredients,
+                                                                ingredients,
+                                                                (widget.businessField ==
+                                                                        'Gatronómico')
+                                                                    ? vegan
+                                                                    : null,
+                                                                show,
+                                                                featured,
+                                                                expectedMargin,
+                                                                lowMarginAlert,
+                                                                iva,
+                                                                priceType,
+                                                                controlStock,
+                                                                currentStock,
+                                                                lowStockAlert);
+                                                          }
 
-                                                              historicPrices
-                                                                  .add({
-                                                                'From Date':
+                                                          if(widget.fromPOS != null && widget.fromPOS == true){
+                                                      Navigator.of(context).pop();
+                                                    }
+
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }
+                                                      } else {
+                                                        if (_formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          if (ingredients
+                                                                  .length >
+                                                              0) {
+                                                            for (int i = 0;
+                                                                i <
+                                                                    ingredients
+                                                                        .length;
+                                                                i++) {
+                                                              listOfIngredients
+                                                                  .add(ingredients[
+                                                                          i][
+                                                                      'Ingredient']);
+                                                            }
+                                                          }
+                                                          if (changedImage) {
+                                                            if (widget.product!
+                                                                    .price !=
+                                                                price) {
+                                                              if (historicPrices
+                                                                      .length >
+                                                                  0) {
+                                                                historicPrices
+                                                                            .last[
+                                                                        'To Date'] =
                                                                     DateTime
-                                                                        .now(),
-                                                                'To Date': null,
-                                                                'Price': price
-                                                              });
-                                                            } else {
-                                                              historicPrices = [
-                                                                {
+                                                                        .now();
+
+                                                                historicPrices
+                                                                    .add({
                                                                   'From Date':
                                                                       DateTime
                                                                           .now(),
                                                                   'To Date':
                                                                       null,
                                                                   'Price': price
-                                                                }
-                                                              ];
+                                                                });
+                                                              } else {
+                                                                historicPrices =
+                                                                    [
+                                                                  {
+                                                                    'From Date':
+                                                                        DateTime
+                                                                            .now(),
+                                                                    'To Date':
+                                                                        null,
+                                                                    'Price':
+                                                                        price
+                                                                  }
+                                                                ];
+                                                              }
                                                             }
-                                                          }
-                                                          uploadPic(widget.activeBusiness).then((value) => DatabaseService().editProduct(
-                                                              widget
-                                                                  .activeBusiness,
-                                                              widget.product!
-                                                                  .productID,
-                                                              isAvailable,
-                                                              name,
-                                                              downloadUrl,
-                                                              category,
-                                                              price,
-                                                              description,
-                                                              productOptions,
-                                                              setSearchParam(name
-                                                                  .toLowerCase()),
-                                                              code,
-                                                              listOfIngredients,
-                                                              ingredients,
-                                                              (widget.businessField ==
-                                                                      'Gatronómico')
-                                                                  ? vegan
-                                                                  : null,
-                                                              show,
-                                                              historicPrices,
-                                                              featured,
-                                                              expectedMargin!,
-                                                              lowMarginAlert!,
-                                                              iva));
-                                                        } else {
-                                                          if (widget.product!
-                                                                  .price !=
-                                                              price) {
-                                                            if (historicPrices
-                                                                    .length >
-                                                                0) {
-                                                              historicPrices
-                                                                          .last[
-                                                                      'To Date'] =
-                                                                  DateTime
-                                                                      .now();
-
-                                                              historicPrices
-                                                                  .add({
-                                                                'From Date':
+                                                            uploadPic(widget.activeBusiness).then((value) => DatabaseService().editProduct(
+                                                                widget
+                                                                    .activeBusiness,
+                                                                widget.product!
+                                                                    .productID,
+                                                                isAvailable,
+                                                                name,
+                                                                downloadUrl,
+                                                                category,
+                                                                price,
+                                                                description,
+                                                                productOptions,
+                                                                setSearchParam(name
+                                                                    .toLowerCase()),
+                                                                code,
+                                                                listOfIngredients,
+                                                                ingredients,
+                                                                (widget.businessField ==
+                                                                        'Gatronómico')
+                                                                    ? vegan
+                                                                    : null,
+                                                                show,
+                                                                historicPrices,
+                                                                featured,
+                                                                expectedMargin!,
+                                                                lowMarginAlert!,
+                                                                iva,
+                                                                priceType,
+                                                                controlStock,
+                                                                currentStock,
+                                                                lowStockAlert));
+                                                          } else {
+                                                            if (widget.product!
+                                                                    .price !=
+                                                                price) {
+                                                              if (historicPrices
+                                                                      .length >
+                                                                  0) {
+                                                                historicPrices
+                                                                            .last[
+                                                                        'To Date'] =
                                                                     DateTime
-                                                                        .now(),
-                                                                'To Date': null,
-                                                                'Price': price
-                                                              });
-                                                            } else {
-                                                              historicPrices = [
-                                                                {
+                                                                        .now();
+
+                                                                historicPrices
+                                                                    .add({
                                                                   'From Date':
                                                                       DateTime
                                                                           .now(),
                                                                   'To Date':
                                                                       null,
                                                                   'Price': price
-                                                                }
-                                                              ];
+                                                                });
+                                                              } else {
+                                                                historicPrices =
+                                                                    [
+                                                                  {
+                                                                    'From Date':
+                                                                        DateTime
+                                                                            .now(),
+                                                                    'To Date':
+                                                                        null,
+                                                                    'Price':
+                                                                        price
+                                                                  }
+                                                                ];
+                                                              }
                                                             }
+                                                            DatabaseService().editProduct(
+                                                                widget
+                                                                    .activeBusiness,
+                                                                widget.product!
+                                                                    .productID,
+                                                                isAvailable,
+                                                                name,
+                                                                image,
+                                                                category,
+                                                                price,
+                                                                description,
+                                                                productOptions,
+                                                                setSearchParam(name
+                                                                    .toLowerCase()),
+                                                                code,
+                                                                listOfIngredients,
+                                                                ingredients,
+                                                                (widget.businessField ==
+                                                                        'Gatronómico')
+                                                                    ? vegan
+                                                                    : null,
+                                                                show,
+                                                                historicPrices,
+                                                                featured,
+                                                                expectedMargin!,
+                                                                lowMarginAlert!,
+                                                                iva,
+                                                                priceType,
+                                                                controlStock,
+                                                                currentStock,
+                                                                lowStockAlert);
                                                           }
-                                                          DatabaseService().editProduct(
-                                                              widget
-                                                                  .activeBusiness,
-                                                              widget.product!
-                                                                  .productID,
-                                                              isAvailable,
-                                                              name,
-                                                              image,
-                                                              category,
-                                                              price,
-                                                              description,
-                                                              productOptions,
-                                                              setSearchParam(name
-                                                                  .toLowerCase()),
-                                                              code,
-                                                              listOfIngredients,
-                                                              ingredients,
-                                                              (widget.businessField ==
-                                                                      'Gatronómico')
-                                                                  ? vegan
-                                                                  : null,
-                                                              show,
-                                                              historicPrices,
-                                                              featured,
-                                                              expectedMargin!,
-                                                              lowMarginAlert!,
-                                                              iva);
+
+                                                          if(widget.fromPOS != null && widget.fromPOS == true){
+                                                      Navigator.of(context).pop();
+                                                    }
+                                                          Navigator.of(context)
+                                                              .pop();
                                                         }
-                                                        Navigator.of(context)
-                                                            .pop();
                                                       }
                                                     }
                                                   },
@@ -4475,6 +5262,13 @@ class _NewProductState extends State<NewProduct> {
                                                                 .activeBusiness,
                                                             widget.product!
                                                                 .productID!);
+                                                    if (widget.fromPOS !=
+                                                            null &&
+                                                        widget.fromPOS ==
+                                                            true) {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    }
                                                     Navigator.of(context).pop();
                                                   },
                                                   child: Center(
@@ -4511,24 +5305,32 @@ class _NewProductState extends State<NewProduct> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             //Title
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 20.0),
-                SizedBox(width: 25),
-                Text(
-                  widget.product == null ? 'Nuevo producto' : 'Editar producto',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 28),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
+            (widget.fromPOS != null && widget.fromPOS == true)
+                ? SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(Icons.arrow_back),
+                          iconSize: 20.0),
+                      SizedBox(width: 25),
+                      Text(
+                        widget.product == null
+                            ? 'Nuevo producto'
+                            : 'Editar producto',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 28),
+                      ),
+                    ],
+                  ),
+            SizedBox(
+                height: (widget.fromPOS != null && widget.fromPOS == true)
+                    ? 0
+                    : 20),
             //Form
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -4718,14 +5520,281 @@ class _NewProductState extends State<NewProduct> {
                         ),
                       ),
                       SizedBox(height: 15),
-                      //Price
+                      //Stock Management
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          //Control Stock
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Controlar Stock',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.black45),
+                                ),
+                                SizedBox(height: 10),
+                                Switch(
+                                  value: controlStock,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      controlStock = value;
+                                    });
+                                  },
+                                  activeTrackColor: Colors.lightGreenAccent,
+                                  activeColor: Colors.green,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          //Current Stock
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Stock actual',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.black45),
+                                ),
+                                SizedBox(height: 10),
+                                Container(
+                                  width: double.infinity,
+                                  child: TextFormField(
+                                    enabled: controlStock ? true : false,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                    cursorColor: Colors.grey,
+                                    initialValue: (currentStock > 0)
+                                        ? currentStock.toString()
+                                        : null,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    validator: (val) {
+                                      if (controlStock &&
+                                          (val == null || val.isEmpty)) {
+                                        return "Agrega un valor inicial";
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: '0',
+                                      focusColor: Colors.black,
+                                      hintStyle: TextStyle(
+                                          color: Colors.black45, fontSize: 14),
+                                      errorStyle: TextStyle(
+                                          color: Colors.redAccent[700],
+                                          fontSize: 12),
+                                      border: new OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.grey[350]!,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (value != '') {
+                                        setState(() {
+                                          currentStock = int.parse(value);
+                                        });
+                                      } else {
+                                        setState(() {
+                                          currentStock = 0;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          //Low Stock Alert
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Alerta de bajo stock',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.black45),
+                                ),
+                                SizedBox(height: 10),
+                                Container(
+                                  width: double.infinity,
+                                  child: TextFormField(
+                                    enabled: controlStock ? true : false,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                    cursorColor: Colors.grey,
+                                    initialValue: (lowStockAlert > 0)
+                                        ? lowStockAlert.toString()
+                                        : null,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    validator: (val) {
+                                      if (controlStock &&
+                                          (val == null || val.isEmpty)) {
+                                        return "Agrega un valor";
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: '0',
+                                      focusColor: Colors.black,
+                                      hintStyle: TextStyle(
+                                          color: Colors.black45, fontSize: 14),
+                                      errorStyle: TextStyle(
+                                          color: Colors.redAccent[700],
+                                          fontSize: 12),
+                                      border: new OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.grey[350]!,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (value != '') {
+                                        setState(() {
+                                          lowStockAlert = int.parse(value);
+                                        });
+                                      } else {
+                                        setState(() {
+                                          lowStockAlert = 0;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+
+                      //Price Type
                       Text(
-                        'Precio de venta*',
+                        'Tipo de precio',
                         style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 12,
                             color: Colors.black45),
                       ),
+                      SizedBox(height: 5),
+                      Container(
+                          width: double.infinity,
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 5,
+                            children: List.generate(priceTypes.length, (i) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12))),
+                                      side: BorderSide(
+                                          color: (priceType == priceTypes[i])
+                                              ? Colors.greenAccent
+                                              : Colors.grey.shade300,
+                                          width: 1)),
+                                  onPressed: () {
+                                    if (priceType != priceTypes[i]) {
+                                      setState(() {
+                                        priceType = priceTypes[i];
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    priceTypes[i],
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              );
+                            }),
+                          )),
+                      SizedBox(height: 15),
+
+                      //Price
+                      (priceType == 'Precio por margen')
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                  Text(
+                                    '$priceType*',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    '\$${(totalIngredientsCost() + (totalIngredientsCost() * (price / 100))).toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                        color: Colors.black45),
+                                  ),
+                                ])
+                          : Text(
+                              '$priceType*',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.black45),
+                            ),
+                      SizedBox(
+                          height: (priceType == 'Precio por margen' &&
+                                  totalIngredientsCost() <= 0)
+                              ? 5
+                              : 0),
+                      (priceType == 'Precio por margen' &&
+                              totalIngredientsCost() <= 0)
+                          ? Text(
+                              'Agrega ingredientes para poder calcular el precio',
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 11))
+                          : SizedBox(),
                       SizedBox(height: 5),
                       Container(
                         width: double.infinity,
@@ -4751,10 +5820,18 @@ class _NewProductState extends State<NewProduct> {
                           },
                           decoration: InputDecoration(
                             hintText: '0.00',
-                            prefixIcon: Icon(
-                              Icons.attach_money,
-                              color: Colors.grey,
-                            ),
+                            prefixIcon: (priceType == 'Precio por margen')
+                                ? Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text('%',
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)))
+                                : Icon(
+                                    Icons.attach_money,
+                                    color: Colors.grey,
+                                  ),
                             focusColor: Colors.black,
                             hintStyle:
                                 TextStyle(color: Colors.black45, fontSize: 14),
@@ -5660,7 +6737,16 @@ class _NewProductState extends State<NewProduct> {
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                      '${(((price - totalIngredientsCost()) / price) * 100).toStringAsFixed(1)}%',
+                                      ((((price - totalIngredientsCost()) /
+                                                          price) *
+                                                      100)
+                                                  .isInfinite ||
+                                              (((price - totalIngredientsCost()) /
+                                                          price) *
+                                                      100)
+                                                  .isNaN)
+                                          ? '0'
+                                          : '${(((price - totalIngredientsCost()) / price) * 100).toStringAsFixed(1)}%',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -5795,7 +6881,10 @@ class _NewProductState extends State<NewProduct> {
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
-                                        Colors.black),
+                                        (priceType == 'Precio por margen' &&
+                                                totalIngredientsCost() <= 0)
+                                            ? Colors.grey
+                                            : Colors.black),
                                 overlayColor:
                                     MaterialStateProperty.resolveWith<Color?>(
                                   (Set<MaterialState> states) {
@@ -5810,174 +6899,201 @@ class _NewProductState extends State<NewProduct> {
                                 ),
                               ),
                               onPressed: () {
-                                if (newProduct) {
-                                  if (_formKey.currentState!.validate()) {
-                                    if (ingredients.length > 0) {
-                                      for (int i = 0;
-                                          i < ingredients.length;
-                                          i++) {
-                                        listOfIngredients
-                                            .add(ingredients[i]['Ingredient']);
-                                      }
-                                    }
-                                    if (changedImage) {
-                                      uploadPic(widget.activeBusiness).then(
-                                          (value) => DatabaseService()
-                                              .createProduct(
-                                                  widget.activeBusiness,
-                                                  name,
-                                                  downloadUrl,
-                                                  category,
-                                                  price,
-                                                  description,
-                                                  productOptions,
-                                                  setSearchParam(
-                                                      name.toLowerCase()),
-                                                  code,
-                                                  listOfIngredients,
-                                                  ingredients,
-                                                  (widget.businessField ==
-                                                          'Gatronómico')
-                                                      ? vegan
-                                                      : null,
-                                                  show,
-                                                  featured,
-                                                  expectedMargin,
-                                                  lowMarginAlert,
-                                                  iva));
-                                    } else {
-                                      DatabaseService().createProduct(
-                                          widget.activeBusiness,
-                                          name,
-                                          '',
-                                          category,
-                                          price,
-                                          description,
-                                          productOptions,
-                                          setSearchParam(name.toLowerCase()),
-                                          code,
-                                          listOfIngredients,
-                                          ingredients,
-                                          (widget.businessField ==
-                                                  'Gatronómico')
-                                              ? vegan
-                                              : null,
-                                          show,
-                                          featured,
-                                          expectedMargin,
-                                          lowMarginAlert,
-                                          iva);
-                                    }
-
-                                    Navigator.of(context).pop();
-                                  }
+                                if (priceType == 'Precio por margen' &&
+                                    totalIngredientsCost() <= 0) {
                                 } else {
-                                  if (_formKey.currentState!.validate()) {
-                                    if (ingredients.length > 0) {
-                                      for (int i = 0;
-                                          i < ingredients.length;
-                                          i++) {
-                                        listOfIngredients
-                                            .add(ingredients[i]['Ingredient']);
+                                  if (newProduct) {
+                                    if (_formKey.currentState!.validate()) {
+                                      if (ingredients.length > 0) {
+                                        for (int i = 0;
+                                            i < ingredients.length;
+                                            i++) {
+                                          listOfIngredients.add(
+                                              ingredients[i]['Ingredient']);
+                                        }
                                       }
-                                    }
-                                    if (changedImage) {
-                                      if (widget.product!.price != price) {
-                                        try {
-                                          historicPrices.last['To Date'] =
-                                              DateTime.now();
+                                      if (changedImage) {
+                                        uploadPic(widget.activeBusiness).then(
+                                            (value) => DatabaseService()
+                                                .createProduct(
+                                                    widget.activeBusiness,
+                                                    name,
+                                                    downloadUrl,
+                                                    category,
+                                                    price,
+                                                    description,
+                                                    productOptions,
+                                                    setSearchParam(
+                                                        name.toLowerCase()),
+                                                    code,
+                                                    listOfIngredients,
+                                                    ingredients,
+                                                    (widget.businessField ==
+                                                            'Gatronómico')
+                                                        ? vegan
+                                                        : null,
+                                                    show,
+                                                    featured,
+                                                    expectedMargin,
+                                                    lowMarginAlert,
+                                                    iva,
+                                                    priceType,
+                                                    controlStock,
+                                                    currentStock,
+                                                    lowStockAlert));
+                                      } else {
+                                        DatabaseService().createProduct(
+                                            widget.activeBusiness,
+                                            name,
+                                            '',
+                                            category,
+                                            price,
+                                            description,
+                                            productOptions,
+                                            setSearchParam(name.toLowerCase()),
+                                            code,
+                                            listOfIngredients,
+                                            ingredients,
+                                            (widget.businessField ==
+                                                    'Gatronómico')
+                                                ? vegan
+                                                : null,
+                                            show,
+                                            featured,
+                                            expectedMargin,
+                                            lowMarginAlert,
+                                            iva,
+                                            priceType,
+                                            controlStock,
+                                            currentStock,
+                                            lowStockAlert);
+                                      }
 
-                                          historicPrices.add({
-                                            'From Date': DateTime.now(),
-                                            'To Date': null,
-                                            'Price': price
-                                          });
-                                        } catch (e) {
-                                          print(e);
-                                          historicPrices = [
-                                            {
+                                      if(widget.fromPOS != null && widget.fromPOS == true){
+                                                      Navigator.of(context).pop();
+                                                    }
+
+                                      Navigator.of(context).pop();
+                                    }
+                                  } else {
+                                    if (_formKey.currentState!.validate()) {
+                                      if (ingredients.length > 0) {
+                                        for (int i = 0;
+                                            i < ingredients.length;
+                                            i++) {
+                                          listOfIngredients.add(
+                                              ingredients[i]['Ingredient']);
+                                        }
+                                      }
+                                      if (changedImage) {
+                                        if (widget.product!.price != price) {
+                                          try {
+                                            historicPrices.last['To Date'] =
+                                                DateTime.now();
+
+                                            historicPrices.add({
                                               'From Date': DateTime.now(),
                                               'To Date': null,
                                               'Price': price
-                                            }
-                                          ];
+                                            });
+                                          } catch (e) {
+                                            print(e);
+                                            historicPrices = [
+                                              {
+                                                'From Date': DateTime.now(),
+                                                'To Date': null,
+                                                'Price': price
+                                              }
+                                            ];
+                                          }
                                         }
-                                      }
-                                      uploadPic(widget.activeBusiness).then(
-                                          (value) => DatabaseService()
-                                              .editProduct(
-                                                  widget.activeBusiness,
-                                                  widget.product!.productID,
-                                                  isAvailable,
-                                                  name,
-                                                  downloadUrl,
-                                                  category,
-                                                  price,
-                                                  description,
-                                                  productOptions,
-                                                  setSearchParam(
-                                                      name.toLowerCase()),
-                                                  code,
-                                                  listOfIngredients,
-                                                  ingredients,
-                                                  (widget.businessField ==
-                                                          'Gatronómico')
-                                                      ? vegan
-                                                      : null,
-                                                  show,
-                                                  historicPrices,
-                                                  featured,
-                                                  expectedMargin!,
-                                                  lowMarginAlert!,
-                                                  iva));
-                                    } else {
-                                      if (widget.product!.price != price) {
-                                        try {
-                                          historicPrices.last['To Date'] =
-                                              DateTime.now();
+                                        uploadPic(widget.activeBusiness).then(
+                                            (value) => DatabaseService()
+                                                .editProduct(
+                                                    widget.activeBusiness,
+                                                    widget.product!.productID,
+                                                    isAvailable,
+                                                    name,
+                                                    downloadUrl,
+                                                    category,
+                                                    price,
+                                                    description,
+                                                    productOptions,
+                                                    setSearchParam(
+                                                        name.toLowerCase()),
+                                                    code,
+                                                    listOfIngredients,
+                                                    ingredients,
+                                                    (widget.businessField ==
+                                                            'Gatronómico')
+                                                        ? vegan
+                                                        : null,
+                                                    show,
+                                                    historicPrices,
+                                                    featured,
+                                                    expectedMargin!,
+                                                    lowMarginAlert!,
+                                                    iva,
+                                                    priceType,
+                                                    controlStock,
+                                                    currentStock,
+                                                    lowStockAlert));
+                                      } else {
+                                        if (widget.product!.price != price) {
+                                          try {
+                                            historicPrices.last['To Date'] =
+                                                DateTime.now();
 
-                                          historicPrices.add({
-                                            'From Date': DateTime.now(),
-                                            'To Date': null,
-                                            'Price': price
-                                          });
-                                        } catch (e) {
-                                          print(e);
-                                          historicPrices = [
-                                            {
+                                            historicPrices.add({
                                               'From Date': DateTime.now(),
                                               'To Date': null,
                                               'Price': price
-                                            }
-                                          ];
+                                            });
+                                          } catch (e) {
+                                            print(e);
+                                            historicPrices = [
+                                              {
+                                                'From Date': DateTime.now(),
+                                                'To Date': null,
+                                                'Price': price
+                                              }
+                                            ];
+                                          }
                                         }
+                                        DatabaseService().editProduct(
+                                            widget.activeBusiness,
+                                            widget.product!.productID,
+                                            isAvailable,
+                                            name,
+                                            image,
+                                            category,
+                                            price,
+                                            description,
+                                            productOptions,
+                                            setSearchParam(name.toLowerCase()),
+                                            code,
+                                            listOfIngredients,
+                                            ingredients,
+                                            (widget.businessField ==
+                                                    'Gatronómico')
+                                                ? vegan
+                                                : null,
+                                            show,
+                                            historicPrices,
+                                            featured,
+                                            expectedMargin!,
+                                            lowMarginAlert!,
+                                            iva,
+                                            priceType,
+                                            controlStock,
+                                            currentStock,
+                                            lowStockAlert);
                                       }
-                                      DatabaseService().editProduct(
-                                          widget.activeBusiness,
-                                          widget.product!.productID,
-                                          isAvailable,
-                                          name,
-                                          image,
-                                          category,
-                                          price,
-                                          description,
-                                          productOptions,
-                                          setSearchParam(name.toLowerCase()),
-                                          code,
-                                          listOfIngredients,
-                                          ingredients,
-                                          (widget.businessField ==
-                                                  'Gatronómico')
-                                              ? vegan
-                                              : null,
-                                          show,
-                                          historicPrices,
-                                          featured,
-                                          expectedMargin!,
-                                          lowMarginAlert!,
-                                          iva);
+                                      if(widget.fromPOS != null && widget.fromPOS == true){
+                                                      Navigator.of(context).pop();
+                                                    }
+                                      Navigator.of(context).pop();
                                     }
-                                    Navigator.of(context).pop();
                                   }
                                 }
                               },
@@ -5998,9 +7114,13 @@ class _NewProductState extends State<NewProduct> {
                                   Expanded(
                                     child: ElevatedButton(
                                         style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Colors.black),
+                                          backgroundColor: MaterialStateProperty
+                                              .all<Color>((priceType ==
+                                                          'Precio por margen' &&
+                                                      totalIngredientsCost() <=
+                                                          0)
+                                                  ? Colors.grey
+                                                  : Colors.black),
                                           overlayColor: MaterialStateProperty
                                               .resolveWith<Color?>(
                                             (Set<MaterialState> states) {
@@ -6017,193 +7137,221 @@ class _NewProductState extends State<NewProduct> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          if (newProduct) {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              if (widget.product!.ingredients!
-                                                      .length >
-                                                  0) {
-                                                for (int i = 0;
-                                                    i < ingredients.length;
-                                                    i++) {
-                                                  listOfIngredients.add(
-                                                      ingredients[i]
-                                                          ['Ingredient']);
-                                                }
-                                              }
-                                              if (changedImage) {
-                                                uploadPic(widget.activeBusiness).then(
-                                                    (value) => DatabaseService()
-                                                        .createProduct(
-                                                            widget
-                                                                .activeBusiness,
-                                                            name,
-                                                            downloadUrl,
-                                                            category,
-                                                            price,
-                                                            description,
-                                                            productOptions,
-                                                            setSearchParam(name
-                                                                .toLowerCase()),
-                                                            code,
-                                                            listOfIngredients,
-                                                            ingredients,
-                                                            (widget.businessField ==
-                                                                    'Gatronómico')
-                                                                ? vegan
-                                                                : null,
-                                                            show,
-                                                            featured,
-                                                            expectedMargin,
-                                                            lowMarginAlert,
-                                                            iva));
-                                              } else {
-                                                DatabaseService().createProduct(
-                                                    widget.activeBusiness,
-                                                    name,
-                                                    '',
-                                                    category,
-                                                    price,
-                                                    description,
-                                                    productOptions,
-                                                    setSearchParam(
-                                                        name.toLowerCase()),
-                                                    code,
-                                                    listOfIngredients,
-                                                    ingredients,
-                                                    (widget.businessField ==
-                                                            'Gatronómico')
-                                                        ? vegan
-                                                        : null,
-                                                    show,
-                                                    featured,
-                                                    expectedMargin,
-                                                    lowMarginAlert,
-                                                    iva);
-                                              }
-
-                                              Navigator.of(context).pop();
-                                            }
+                                          if (priceType ==
+                                                  'Precio por margen' &&
+                                              totalIngredientsCost() <= 0) {
                                           } else {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              if (ingredients.length > 0) {
-                                                for (int i = 0;
-                                                    i < ingredients.length;
-                                                    i++) {
-                                                  listOfIngredients.add(
-                                                      ingredients[i]
-                                                          ['Ingredient']);
+                                            if (newProduct) {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                if (widget.product!.ingredients!
+                                                        .length >
+                                                    0) {
+                                                  for (int i = 0;
+                                                      i < ingredients.length;
+                                                      i++) {
+                                                    listOfIngredients.add(
+                                                        ingredients[i]
+                                                            ['Ingredient']);
+                                                  }
                                                 }
-                                              }
-                                              if (changedImage) {
-                                                if (widget.product!.price !=
-                                                    price) {
-                                                  if (historicPrices.length >
-                                                      0) {
-                                                    historicPrices
-                                                            .last['To Date'] =
-                                                        DateTime.now();
+                                                if (changedImage) {
+                                                  uploadPic(
+                                                          widget.activeBusiness)
+                                                      .then((value) => DatabaseService()
+                                                          .createProduct(
+                                                              widget
+                                                                  .activeBusiness,
+                                                              name,
+                                                              downloadUrl,
+                                                              category,
+                                                              price,
+                                                              description,
+                                                              productOptions,
+                                                              setSearchParam(name
+                                                                  .toLowerCase()),
+                                                              code,
+                                                              listOfIngredients,
+                                                              ingredients,
+                                                              (widget.businessField ==
+                                                                      'Gatronómico')
+                                                                  ? vegan
+                                                                  : null,
+                                                              show,
+                                                              featured,
+                                                              expectedMargin,
+                                                              lowMarginAlert,
+                                                              iva,
+                                                              priceType,
+                                                              controlStock,
+                                                              currentStock,
+                                                              lowStockAlert));
+                                                } else {
+                                                  DatabaseService().createProduct(
+                                                      widget.activeBusiness,
+                                                      name,
+                                                      '',
+                                                      category,
+                                                      price,
+                                                      description,
+                                                      productOptions,
+                                                      setSearchParam(
+                                                          name.toLowerCase()),
+                                                      code,
+                                                      listOfIngredients,
+                                                      ingredients,
+                                                      (widget.businessField ==
+                                                              'Gatronómico')
+                                                          ? vegan
+                                                          : null,
+                                                      show,
+                                                      featured,
+                                                      expectedMargin,
+                                                      lowMarginAlert,
+                                                      iva,
+                                                      priceType,
+                                                      controlStock,
+                                                      currentStock,
+                                                      lowStockAlert);
+                                                }
 
-                                                    historicPrices.add({
-                                                      'From Date':
-                                                          DateTime.now(),
-                                                      'To Date': null,
-                                                      'Price': price
-                                                    });
-                                                  } else {
-                                                    historicPrices = [
-                                                      {
+                                                if(widget.fromPOS != null && widget.fromPOS == true){
+                                                      Navigator.of(context).pop();
+                                                    }
+
+                                                Navigator.of(context).pop();
+                                              }
+                                            } else {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                if (ingredients.length > 0) {
+                                                  for (int i = 0;
+                                                      i < ingredients.length;
+                                                      i++) {
+                                                    listOfIngredients.add(
+                                                        ingredients[i]
+                                                            ['Ingredient']);
+                                                  }
+                                                }
+                                                if (changedImage) {
+                                                  if (widget.product!.price !=
+                                                      price) {
+                                                    if (historicPrices.length >
+                                                        0) {
+                                                      historicPrices
+                                                              .last['To Date'] =
+                                                          DateTime.now();
+
+                                                      historicPrices.add({
                                                         'From Date':
                                                             DateTime.now(),
                                                         'To Date': null,
                                                         'Price': price
-                                                      }
-                                                    ];
+                                                      });
+                                                    } else {
+                                                      historicPrices = [
+                                                        {
+                                                          'From Date':
+                                                              DateTime.now(),
+                                                          'To Date': null,
+                                                          'Price': price
+                                                        }
+                                                      ];
+                                                    }
                                                   }
-                                                }
-                                                uploadPic(widget.activeBusiness).then(
-                                                    (value) => DatabaseService()
-                                                        .editProduct(
-                                                            widget
-                                                                .activeBusiness,
-                                                            widget.product!
-                                                                .productID,
-                                                            isAvailable,
-                                                            name,
-                                                            downloadUrl,
-                                                            category,
-                                                            price,
-                                                            description,
-                                                            productOptions,
-                                                            setSearchParam(name
-                                                                .toLowerCase()),
-                                                            code,
-                                                            listOfIngredients,
-                                                            ingredients,
-                                                            (widget.businessField ==
-                                                                    'Gatronómico')
-                                                                ? vegan
-                                                                : null,
-                                                            show,
-                                                            historicPrices,
-                                                            featured,
-                                                            expectedMargin!,
-                                                            lowMarginAlert!,
-                                                            iva));
-                                              } else {
-                                                if (widget.product!.price !=
-                                                    price) {
-                                                  if (historicPrices.length >
-                                                      0) {
-                                                    historicPrices
-                                                            .last['To Date'] =
-                                                        DateTime.now();
+                                                  uploadPic(
+                                                          widget.activeBusiness)
+                                                      .then((value) => DatabaseService().editProduct(
+                                                          widget.activeBusiness,
+                                                          widget.product!
+                                                              .productID,
+                                                          isAvailable,
+                                                          name,
+                                                          downloadUrl,
+                                                          category,
+                                                          price,
+                                                          description,
+                                                          productOptions,
+                                                          setSearchParam(name
+                                                              .toLowerCase()),
+                                                          code,
+                                                          listOfIngredients,
+                                                          ingredients,
+                                                          (widget.businessField ==
+                                                                  'Gatronómico')
+                                                              ? vegan
+                                                              : null,
+                                                          show,
+                                                          historicPrices,
+                                                          featured,
+                                                          expectedMargin!,
+                                                          lowMarginAlert!,
+                                                          iva,
+                                                          priceType,
+                                                          controlStock,
+                                                          currentStock,
+                                                          lowStockAlert));
+                                                } else {
+                                                  if (widget.product!.price !=
+                                                      price) {
+                                                    if (historicPrices.length >
+                                                        0) {
+                                                      historicPrices
+                                                              .last['To Date'] =
+                                                          DateTime.now();
 
-                                                    historicPrices.add({
-                                                      'From Date':
-                                                          DateTime.now(),
-                                                      'To Date': null,
-                                                      'Price': price
-                                                    });
-                                                  } else {
-                                                    historicPrices = [
-                                                      {
+                                                      historicPrices.add({
                                                         'From Date':
                                                             DateTime.now(),
                                                         'To Date': null,
                                                         'Price': price
-                                                      }
-                                                    ];
+                                                      });
+                                                    } else {
+                                                      historicPrices = [
+                                                        {
+                                                          'From Date':
+                                                              DateTime.now(),
+                                                          'To Date': null,
+                                                          'Price': price
+                                                        }
+                                                      ];
+                                                    }
                                                   }
+                                                  DatabaseService().editProduct(
+                                                      widget.activeBusiness,
+                                                      widget.product!.productID,
+                                                      isAvailable,
+                                                      name,
+                                                      image,
+                                                      category,
+                                                      price,
+                                                      description,
+                                                      productOptions,
+                                                      setSearchParam(
+                                                          name.toLowerCase()),
+                                                      code,
+                                                      listOfIngredients,
+                                                      ingredients,
+                                                      (widget.businessField ==
+                                                              'Gatronómico')
+                                                          ? vegan
+                                                          : null,
+                                                      show,
+                                                      historicPrices,
+                                                      featured,
+                                                      expectedMargin!,
+                                                      lowMarginAlert!,
+                                                      iva,
+                                                      priceType,
+                                                      controlStock,
+                                                      currentStock,
+                                                      lowStockAlert);
                                                 }
-                                                DatabaseService().editProduct(
-                                                    widget.activeBusiness,
-                                                    widget.product!.productID,
-                                                    isAvailable,
-                                                    name,
-                                                    image,
-                                                    category,
-                                                    price,
-                                                    description,
-                                                    productOptions,
-                                                    setSearchParam(
-                                                        name.toLowerCase()),
-                                                    code,
-                                                    listOfIngredients,
-                                                    ingredients,
-                                                    (widget.businessField ==
-                                                            'Gatronómico')
-                                                        ? vegan
-                                                        : null,
-                                                    show,
-                                                    historicPrices,
-                                                    featured,
-                                                    expectedMargin!,
-                                                    lowMarginAlert!,
-                                                    iva);
+                                                if(widget.fromPOS != null && widget.fromPOS == true){
+                                                      Navigator.of(context).pop();
+                                                    }
+                                                Navigator.of(context).pop();
                                               }
-                                              Navigator.of(context).pop();
                                             }
                                           }
                                         },
@@ -6275,6 +7423,85 @@ class _NewProductState extends State<NewProduct> {
           ],
         )),
       );
+    }
+  }
+
+  @override
+  void initState() {
+    if (widget.product != null) {
+      newProduct = false;
+      category = widget.product!.category ?? '';
+      isAvailable = widget.product!.available ?? false;
+      show = widget.product!.showOnMenu ?? false;
+      vegan = widget.product!.vegan ?? false;
+      name = widget.product!.product!;
+      price = widget.product!.price!;
+      code = widget.product!.code ?? '';
+      description = widget.product!.description ?? '';
+      image = widget.product!.image ?? '';
+      ingredients = widget.product!.ingredients ?? [];
+      historicPrices = widget.product!.historicPrices ?? [];
+      featured = widget.product!.featured ?? false;
+      expectedMargin = widget.product!.expectedMargin ?? 0;
+      lowMarginAlert = widget.product!.lowMarginAlert ?? 0;
+      iva = widget.product!.iva ?? 0;
+      priceType = widget.product!.priceType ?? 'Precio por unidad';
+      controlStock = widget.product!.controlStock ?? false;
+      currentStock = widget.product!.currentStock ?? 0;
+      lowStockAlert = widget.product!.lowStockAlert ?? 0;
+      if (widget.product!.productOptions!.length > 0) {
+        for (var x = 0; x < widget.product!.productOptions!.length; x++) {
+          productOptions.add({
+            'Mandatory': widget.product!.productOptions![x].mandatory,
+            'Multiple Options':
+                widget.product!.productOptions![x].multipleOptions,
+            'Price Structure':
+                widget.product!.productOptions![x].priceStructure,
+            'Title': widget.product!.productOptions![x].title,
+            'Price Options': widget.product!.productOptions![x].priceOptions
+          });
+        }
+      } else {
+        productOptions = [];
+      }
+    } else {
+      newProduct = true;
+      category = widget.categories.first;
+      isAvailable = true;
+      show = true;
+      featured = false;
+      vegan = false;
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.fromPOS != null && widget.fromPOS == true) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              iconSize: 20.0),
+          centerTitle: true,
+          title: Text(
+            widget.product == null ? 'Nuevo producto' : 'Editar producto',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                fontWeight: FontWeight.w900, fontSize: 16, color: Colors.black),
+          ),
+        ),
+        body: productPage(),
+      );
+    } else {
+      return productPage();
     }
   }
 }

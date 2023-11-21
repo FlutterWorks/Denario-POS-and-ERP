@@ -1,3 +1,4 @@
+import 'package:denario/Backend/DatabaseService.dart';
 import 'package:denario/Dashboard/DailySalesGraph.dart';
 import 'package:denario/Models/Categories.dart';
 import 'package:denario/Models/DailyCash.dart';
@@ -15,7 +16,10 @@ class MonthStats extends StatefulWidget {
   final String userBusiness;
   final String dateFilter;
   final DateTime selectedDate;
-  MonthStats(this.userBusiness, this.dateFilter, this.selectedDate);
+  final String year;
+  final String month;
+  MonthStats(this.userBusiness, this.dateFilter, this.selectedDate, this.year,
+      this.month);
   @override
   State<MonthStats> createState() => _MonthStatsState();
 }
@@ -145,7 +149,15 @@ class _MonthStatsState extends State<MonthStats> {
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.all(20.0),
-                                        child: DailySalesGraph(),
+                                        child: StreamProvider<
+                                                List<DailyTransactions>>.value(
+                                            value: DatabaseService()
+                                                .graphDailyTransactions(
+                                                    widget.userBusiness,
+                                                    widget.year,
+                                                    widget.month),
+                                            initialData: [],
+                                            child: DailySalesGraph()),
                                       ),
                                     ),
                                   ],
@@ -654,6 +666,7 @@ class _MonthStatsState extends State<MonthStats> {
                 Container(
                     constraints: BoxConstraints(minHeight: 300, maxHeight: 400),
                     width: double.infinity,
+                    padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(25),
