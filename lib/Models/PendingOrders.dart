@@ -2,7 +2,7 @@ class PendingOrders {
   String? orderName;
   String? address;
   int? phone;
-  int? total;
+  double? total;
   String? paymentType;
   List? orderDetail;
   DateTime? orderDate;

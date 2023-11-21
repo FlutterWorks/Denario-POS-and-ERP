@@ -853,225 +853,217 @@ class _POSDeskState extends State<POSDesk> {
       } else {
         categories = categoriesProvider.categoryList;
 
-        return StreamProvider<List<Tables>>.value(
-            initialData: [],
-            value: DatabaseService().tableList(userProfile.activeBusiness!),
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //Plate Selection
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
+        return Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //Plate Selection
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      //Category selection
+                      Row(
                         children: [
-                          //Category selection
-                          Row(
-                            children: [
-                              //categories
-                              search
-                                  ? Container(
-                                      width:
-                                          (MediaQuery.of(context).size.width >
-                                                  1100)
-                                              ? 500
-                                              : 350,
-                                      height: 50,
-                                      child: TextFormField(
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 14),
-                                        validator: (val) => val!.isEmpty
-                                            ? "Agrega un nombre"
-                                            : null,
-                                        autofocus: true,
-                                        cursorColor: Colors.grey,
-                                        cursorHeight: 14,
-                                        initialValue: searchName,
-                                        textInputAction: TextInputAction.next,
-                                        decoration: InputDecoration(
-                                          prefixIcon: Icon(
-                                            Icons.search,
-                                            color: Colors.grey,
-                                            size: 16,
-                                          ),
-                                          suffixIcon: IconButton(
-                                              tooltip: 'Cerrar',
-                                              splashRadius: 25,
-                                              onPressed: () {
-                                                setState(() {
-                                                  search = false;
-                                                });
-                                              },
-                                              icon: Icon(
-                                                Icons.close,
-                                                size: 16,
-                                                color: Colors.grey,
-                                              )),
-                                          errorStyle: TextStyle(
-                                              color: Colors.redAccent[700],
-                                              fontSize: 12),
-                                          border: new OutlineInputBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            borderSide: new BorderSide(
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                new BorderRadius.circular(12.0),
-                                            borderSide: new BorderSide(
-                                              color: Colors.green,
-                                            ),
-                                          ),
-                                        ),
-                                        onChanged: (val) {
-                                          setState(() => searchName = val);
-                                        },
+                          //categories
+                          search
+                              ? Container(
+                                  width:
+                                      (MediaQuery.of(context).size.width > 1100)
+                                          ? 500
+                                          : 350,
+                                  height: 50,
+                                  child: TextFormField(
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                    validator: (val) => val!.isEmpty
+                                        ? "Agrega un nombre"
+                                        : null,
+                                    autofocus: true,
+                                    cursorColor: Colors.grey,
+                                    cursorHeight: 14,
+                                    initialValue: searchName,
+                                    textInputAction: TextInputAction.next,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.search,
+                                        color: Colors.grey,
+                                        size: 16,
                                       ),
-                                    )
-                                  : Expanded(
-                                      child: Container(
-                                        child: Wrap(
-                                          alignment: WrapAlignment.start,
-                                          spacing: 8,
-                                          runSpacing: 8.0,
-                                          children: List.generate(
-                                              categories!.length, (i) {
-                                            return TextButton(
-                                              style: TextButton.styleFrom(
-                                                  foregroundColor: Colors.black,
-                                                  backgroundColor: (category ==
-                                                          categories![i])
+                                      suffixIcon: IconButton(
+                                          tooltip: 'Cerrar',
+                                          splashRadius: 25,
+                                          onPressed: () {
+                                            setState(() {
+                                              search = false;
+                                            });
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            size: 16,
+                                            color: Colors.grey,
+                                          )),
+                                      errorStyle: TextStyle(
+                                          color: Colors.redAccent[700],
+                                          fontSize: 12),
+                                      border: new OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(12.0),
+                                        borderSide: new BorderSide(
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                    onChanged: (val) {
+                                      setState(() => searchName = val);
+                                    },
+                                  ),
+                                )
+                              : Expanded(
+                                  child: Container(
+                                    child: Wrap(
+                                      alignment: WrapAlignment.start,
+                                      spacing: 8,
+                                      runSpacing: 8.0,
+                                      children: List.generate(
+                                          categories!.length, (i) {
+                                        return TextButton(
+                                          style: TextButton.styleFrom(
+                                              foregroundColor: Colors.black,
+                                              backgroundColor:
+                                                  (category == categories![i])
                                                       ? Colors.black
                                                       : Colors.transparent,
-                                                  padding: EdgeInsets.all(8)),
-                                              onPressed: () {
-                                                setState(() {
-                                                  category = categories![i];
-                                                });
-                                              },
-                                              child: Text(
-                                                categories![i],
-                                                style: TextStyle(
-                                                    color: (category ==
-                                                            categories![i])
+                                              padding: EdgeInsets.all(8)),
+                                          onPressed: () {
+                                            setState(() {
+                                              category = categories![i];
+                                            });
+                                          },
+                                          child: Text(
+                                            categories![i],
+                                            style: TextStyle(
+                                                color:
+                                                    (category == categories![i])
                                                         ? Colors.white
                                                         : Colors.black,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            );
-                                          }),
-                                        ),
-                                      ),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        );
+                                      }),
                                     ),
-                              //Loolkup
-                              search ? Spacer() : SizedBox(width: 10),
-                              IconButton(
-                                  tooltip: 'Buscar',
-                                  splashRadius: 25,
-                                  onPressed: () {
-                                    setState(() {
-                                      search = true;
-                                    });
-                                  },
-                                  icon: Icon(Icons.search, size: 16)),
-                              SizedBox(width: 10),
-                              //Switch view
-                              Container(
-                                height: 35,
-                                child: Tooltip(
-                                  message: 'Vista de mesas',
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.black,
-                                    ),
-                                    onPressed: () {
-                                      DatabaseService().deleteUserBusiness({
-                                        'Business ID': userProfile
-                                            .businesses![businessIndex!]
-                                            .businessID,
-                                        'Business Name': userProfile
-                                            .businesses![businessIndex!]
-                                            .businessName,
-                                        'Business Rol': userProfile
-                                            .businesses![businessIndex!]
-                                            .roleInBusiness,
-                                        'Table View': userProfile
-                                            .businesses![businessIndex!]
-                                            .tableView
-                                      }, userProfile.uid).then((value) {
-                                        DatabaseService()
-                                            .updateUserBusinessProfile({
-                                          'Business ID': userProfile
-                                              .businesses![businessIndex!]
-                                              .businessID,
-                                          'Business Name': userProfile
-                                              .businesses![businessIndex!]
-                                              .businessName,
-                                          'Business Rol': userProfile
-                                              .businesses![businessIndex!]
-                                              .roleInBusiness,
-                                          'Table View': true
-                                        }, userProfile.uid);
-                                      });
-                                    },
-                                    child: Icon(Icons.table_restaurant_outlined,
-                                        size: 16),
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                          Divider(
-                              color: Colors.grey,
-                              thickness: 0.5,
-                              indent: 15,
-                              endIndent: 15),
-                          //Plates GridView
-                          Expanded(
-                              child: Container(
-                                  child: PlateSelectionDesktop(
-                                      userProfile.activeBusiness!,
-                                      category,
-                                      widget.productList!,
-                                      search,
-                                      searchName,
-                                      categoriesProvider.categoryList!))),
+                          //Loolkup
+                          search ? Spacer() : SizedBox(width: 10),
+                          IconButton(
+                              tooltip: 'Buscar',
+                              splashRadius: 25,
+                              onPressed: () {
+                                setState(() {
+                                  search = true;
+                                });
+                              },
+                              icon: Icon(Icons.search, size: 16)),
+                          SizedBox(width: 10),
+                          //Switch view
+                          Container(
+                            height: 35,
+                            child: Tooltip(
+                              message: 'Vista de mesas',
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                ),
+                                onPressed: () {
+                                  DatabaseService().deleteUserBusiness({
+                                    'Business ID': userProfile
+                                        .businesses![businessIndex!].businessID,
+                                    'Business Name': userProfile
+                                        .businesses![businessIndex!]
+                                        .businessName,
+                                    'Business Rol': userProfile
+                                        .businesses![businessIndex!]
+                                        .roleInBusiness,
+                                    'Table View': userProfile
+                                        .businesses![businessIndex!].tableView
+                                  }, userProfile.uid).then((value) {
+                                    DatabaseService()
+                                        .updateUserBusinessProfile({
+                                      'Business ID': userProfile
+                                          .businesses![businessIndex!]
+                                          .businessID,
+                                      'Business Name': userProfile
+                                          .businesses![businessIndex!]
+                                          .businessName,
+                                      'Business Rol': userProfile
+                                          .businesses![businessIndex!]
+                                          .roleInBusiness,
+                                      'Table View': true
+                                    }, userProfile.uid);
+                                  });
+                                },
+                                child: Icon(Icons.table_restaurant_outlined,
+                                    size: 16),
+                              ),
+                            ),
+                          )
                         ],
                       ),
-                    ),
+                      Divider(
+                          color: Colors.grey,
+                          thickness: 0.5,
+                          indent: 15,
+                          endIndent: 15),
+                      //Plates GridView
+                      Expanded(
+                          child: Container(
+                              child: PlateSelectionDesktop(
+                                  userProfile.activeBusiness!,
+                                  category,
+                                  widget.productList!,
+                                  search,
+                                  searchName,
+                                  categoriesProvider.categoryList!))),
+                    ],
                   ),
-                  //Ticket View
-                  Container(
-                      height: double.infinity,
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      constraints: BoxConstraints(minWidth: 300),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: <BoxShadow>[
-                            new BoxShadow(
-                              color: Colors.grey[200]!,
-                              offset: new Offset(-15.0, 15.0),
-                              blurRadius: 10.0,
-                            )
-                          ]),
-                      child: TicketView(
-                          userProfile,
-                          businessIndex!,
-                          false,
-                          tableController,
-                          false,
-                          userProfile.businesses![businessIndex!].tableView!))
-                ],
+                ),
               ),
-            ));
+              //Ticket View
+              Container(
+                  height: double.infinity,
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  constraints: BoxConstraints(minWidth: 300),
+                  decoration:
+                      BoxDecoration(color: Colors.white, boxShadow: <BoxShadow>[
+                    new BoxShadow(
+                      color: Colors.grey[200]!,
+                      offset: new Offset(-15.0, 15.0),
+                      blurRadius: 10.0,
+                    )
+                  ]),
+                  child: TicketView(
+                      userProfile,
+                      businessIndex!,
+                      false,
+                      tableController,
+                      false,
+                      userProfile.businesses![businessIndex!].tableView!))
+            ],
+          ),
+        );
       }
     } catch (e) {
       return Container(

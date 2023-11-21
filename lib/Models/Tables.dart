@@ -6,10 +6,10 @@ class Tables {
   bool? isOpen;
   DateTime? openSince;
   int? numberOfPeople;
-  int? subTotal;
-  int? total;
-  int? tax;
-  int? discount;
+  double? subTotal;
+  double? total;
+  double? tax;
+  double? discount;
   String? paymentType;
   List? orderDetail;
   int? orderColor;

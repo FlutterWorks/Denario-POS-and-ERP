@@ -2,9 +2,9 @@ class Ticket {
   String? orderName;
   List<TicketItem>? items;
   String? paymentType;
-  int? subtotal;
-  int? discounts;
-  int? total;
+  double? subtotal;
+  double? discounts;
+  double? total;
 
   Ticket(
       {this.orderName,
@@ -18,8 +18,8 @@ class Ticket {
 class TicketItem {
   String? itemName;
   String? itemCategory;
-  int? itemPrice;
-  int? itemQty;
+  double? itemPrice;
+  double? itemQty;
 
   TicketItem({this.itemName, this.itemCategory, this.itemPrice, this.itemQty});
 }

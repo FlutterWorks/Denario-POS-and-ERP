@@ -1771,7 +1771,9 @@ class _TicketViewState extends State<TicketView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         //Guardar
-                        Container(
+                        (ticketConcept == 'Mesa')
+                        ? SizedBox()
+                        : Container(
                           height: 40,
                           width: 40,
                           child: OutlinedButton(
@@ -1996,7 +1998,7 @@ class _TicketViewState extends State<TicketView> {
                             )),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: (ticketConcept == 'Mesa') ? 0 : 10),
                         //PopUp Menu
                         MoreTicketPopUp(
                           widget.userProfile.activeBusiness!,

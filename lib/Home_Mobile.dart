@@ -203,540 +203,504 @@ class _HomeMobileState extends State<HomeMobile> {
       return Loading();
     }
 
-    // pageNavigators = [
-    //   Navigator(onGenerateRoute: (routeSettings) {
-    //     return MaterialPageRoute(builder: (context) {
-    //       if (userBusiness.businessField == 'Gastronómico' ||
-    //           userBusiness.businessField == 'Tienda Minorista') {
-    //         return POSProducts(categoriesProvider.categoryList[0]);
-    //       } else {
-    //         return NoPOSDashboard(userProfile.activeBusiness);
-    //       }
-    //     });
-    //   }),
-    // ];
-    final businessIndexOnProfile = userProfile.businesses!.indexWhere(
-        (element) => element.businessID == userProfile.activeBusiness);
+    try {
+      final businessIndexOnProfile = userProfile.businesses!.indexWhere(
+          (element) => element.businessID == userProfile.activeBusiness);
 
-    if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
-        'Dueñ@') {
-      navigationBarItems = [
-        screenNavigator(
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? 'POS'
-                : 'Inicio',
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? Icons.blur_circular
-                : Icons.home,
-            0),
-        (userBusiness.cashBalancing!)
-            ? screenNavigator('Caja', Icons.fax, 1)
-            : SizedBox(),
-        screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
-        screenNavigator('Gastos', Icons.multiline_chart, 4),
-        screenNavigator('Productos', Icons.assignment, 5),
-        screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
-        screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
-        screenNavigator('PnL', Icons.data_usage, 8)
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Venta Minorista' ||
-                userBusiness.businessField == 'Belleza/Spa') {
-              return POSProducts(
-                categoriesProvider.categoryList![0] ?? '',
-                scaffoldKeyMobile: _scaffoldKey,
-              );
-            } else {
-              return NoPOSDashboard(userProfile.activeBusiness!);
-            }
-          });
-        }),
-        (userBusiness.cashBalancing!)
-            ? Navigator(onGenerateRoute: (routeSettings) {
-                return MaterialPageRoute(builder: (context) => DailyDesk());
-              })
-            : Container(),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ScheduleDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness!, registerStatus));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  ExpensesDesk('Dueñ@', userProfile.activeBusiness!));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => ProductDesk(
-                  userProfile.activeBusiness!,
-                  categoriesProvider.categoryList!,
-                  userBusiness.businessField!,
-                  reloadApp));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => SuppliersDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => SuppliesDesk(
-                  userProfile.activeBusiness!,
-                  categoriesProvider.categoryList!,
-                  userBusiness.businessField!));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => PnlDesk());
-        }),
-      ];
-    } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
-        'Encargad@') {
-      navigationBarItems = [
-        screenNavigator(
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? 'POS'
-                : 'Inicio',
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? Icons.blur_circular
-                : Icons.home,
-            0),
-        (userBusiness.cashBalancing!)
-            ? screenNavigator('Caja', Icons.fax, 1)
-            : SizedBox(),
-        (userBusiness.cashBalancing!) ? SizedBox(height: 20) : SizedBox(),
-        screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
-        screenNavigator('Gastos', Icons.multiline_chart, 4),
-        screenNavigator('Productos', Icons.assignment, 5),
-        screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
-        screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList![0]);
-            } else {
-              return NoPOSDashboard(userProfile.activeBusiness!);
-            }
-          });
-        }),
-        (userBusiness.cashBalancing!)
-            ? Navigator(onGenerateRoute: (routeSettings) {
-                return MaterialPageRoute(builder: (context) => DailyDesk());
-              })
-            : Container(),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ScheduleDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness!, registerStatus));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  ExpensesDesk('Encargad@', userProfile.activeBusiness!));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => ProductDesk(
-                  userProfile.activeBusiness!,
-                  categoriesProvider.categoryList!,
-                  userBusiness.businessField!,
-                  reloadApp));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => SuppliersDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) => SuppliesDesk(
-                  userProfile.activeBusiness!,
-                  categoriesProvider.categoryList!,
-                  userBusiness.businessField!));
-        }),
-      ];
-    } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
-        'Cajer@') {
-      navigationBarItems = [
-        screenNavigator(
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? 'POS'
-                : 'Inicio',
-            (userBusiness.businessField == 'Gastronómico' ||
-                    userBusiness.businessField == 'Venta Minorista' ||
-                    userBusiness.businessField == 'Belleza/Spa')
-                ? Icons.blur_circular
-                : Icons.home,
-            0),
-        (userBusiness.cashBalancing!)
-            ? screenNavigator('Caja', Icons.fax, 1)
-            : SizedBox(),
-        screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
-        screenNavigator('Gastos', Icons.multiline_chart, 3),
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista') {
-              return POSProducts(categoriesProvider.categoryList![0]);
-            } else {
-              return NoPOSDashboard(userProfile.activeBusiness!);
-            }
-          });
-        }),
-        (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Tienda Minorista')
-            ? Navigator(onGenerateRoute: (routeSettings) {
-                return MaterialPageRoute(builder: (context) => DailyDesk());
-              })
-            : Container(),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ScheduleDesk());
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  ExpensesDesk('Cajer@', userProfile.activeBusiness!));
-        }),
-      ];
-    } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
-        'Contador(a)') {
-      navigationBarItems = [
-        screenNavigator('Ventas', Icons.insert_chart_outlined, 1),
-        screenNavigator('Gastos', Icons.multiline_chart, 4),
-        screenNavigator('PnL', Icons.data_usage, 2),
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  StatsDesk(userProfile.activeBusiness!, registerStatus));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  ExpensesDesk('Encargad@', userProfile.activeBusiness!));
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => PnlDesk());
-        }),
-      ];
-    } else if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
-            'Moz@' ||
-        userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
-            'Otro') {
-      navigationBarItems = [
-        screenNavigator('POS', Icons.blur_circular, 0),
-        screenNavigator('Agenda', Icons.calendar_month_outlined, 1),
-      ];
-      pageNavigators = [
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) {
-            if (userBusiness.businessField == 'Gastronómico' ||
-                userBusiness.businessField == 'Venta Minorista' ||
-                userBusiness.businessField == 'Belleza/Spa') {
-              return POSProducts(categoriesProvider.categoryList![0]);
-            } else {
-              return NoPOSDashboard(userProfile.activeBusiness!);
-            }
-          });
-        }),
-        Navigator(onGenerateRoute: (routeSettings) {
-          return MaterialPageRoute(builder: (context) => ScheduleDesk());
-        }),
-      ];
-    }
-    return MultiProvider(
-      providers: [
-        // StreamProvider<List<Products>>.value(
-        //     initialData: [],
-        //     value:
-        //         DatabaseService().fullProductList(userProfile.activeBusiness!)),
-        // StreamProvider<CategoryList?>.value(
-        //     initialData: null,
-        //     value:
-        //         DatabaseService().categoriesList(userProfile.activeBusiness)),
-        // StreamProvider<HighLevelMapping?>.value(
-        //     initialData: null,
-        //     value:
-        //         DatabaseService().highLevelMapping(userProfile.activeBusiness)),
-        StreamProvider<DailyTransactions?>.value(
-            initialData: null,
-            catchError: (_, err) => null,
-            value: DatabaseService().dailyTransactions(
-                userProfile.activeBusiness, registerStatus.registerID!)),
-        // StreamProvider<MonthlyStats?>.value(
-        //     initialData: null,
-        //     value: DatabaseService()
-        //         .monthlyStatsfromSnapshot(userProfile.activeBusiness!)),
-        // StreamProvider<List<DailyTransactions>>.value(
-        //     initialData: [],
-        //     value: DatabaseService()
-        //         .dailyTransactionsList(userProfile.activeBusiness)),
-        // StreamProvider<List<PendingOrders>>.value(
-        //     initialData: [],
-        //     value:
-        //         DatabaseService().pendingOrderList(userProfile.activeBusiness)),
-        // StreamProvider<AccountsList?>.value(
-        //     initialData: null,
-        //     value: DatabaseService().accountsList(userProfile.activeBusiness)),
-        // StreamProvider<List<Tables>>.value(
-        //   initialData: [],
-        //   value: DatabaseService().tableList(userProfile.activeBusiness!),
-        // ),
-        // StreamProvider<List<SavedOrders>>.value(
-        //     initialData: [],
-        //     value: DatabaseService()
-        //         .savedCounterOrders(userProfile.activeBusiness)),
-      ],
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: Drawer(
-          child: Container(
-              color: Colors.black87,
-              height: double.infinity,
-              width: 75,
-              child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      //Name
-                      SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            //User
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return StreamProvider<UserData?>.value(
-                                      initialData: null,
-                                      value: DatabaseService()
-                                          .userProfile(userProfile.uid!),
-                                      child: Scaffold(body: UserSettings()));
-                                }));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white24),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    //Image
-                                    Container(
-                                        height: 40,
-                                        width: 40,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Colors.grey.shade300),
-                                            color: Colors.grey,
-                                            image: DecorationImage(
-                                                image: NetworkImage(
-                                                    userProfile.profileImage!),
-                                                fit: BoxFit.cover))),
-                                    SizedBox(width: 10),
-                                    //Name
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        //Name
-                                        Text(
-                                          userProfile.name!,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                        SizedBox(height: 5),
-                                        //Current business
-                                        Text(
-                                          userProfile
-                                              .businesses![
-                                                  businessIndexOnProfile]
-                                              .businessName!,
-                                          style: TextStyle(
-                                              color: Colors.grey.shade300,
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    //Icons
-                                    Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.white,
-                                      size: 14,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            //Change business
-                            TextButton(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.grey,
-                              ),
-                              onPressed: () {
-                                changeBusinessDialog(userProfile.businesses!,
-                                    userProfile.activeBusiness);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
+      if (userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
+          'Dueñ@') {
+        navigationBarItems = [
+          screenNavigator(
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? 'POS'
+                  : 'Inicio',
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? Icons.blur_circular
+                  : Icons.home,
+              0),
+          (userBusiness.cashBalancing!)
+              ? screenNavigator('Caja', Icons.fax, 1)
+              : SizedBox(),
+          screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
+          screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
+          screenNavigator('Gastos', Icons.multiline_chart, 4),
+          screenNavigator('Productos', Icons.assignment, 5),
+          screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
+          screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
+          screenNavigator('PnL', Icons.data_usage, 8)
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) {
+              if (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Venta Minorista' ||
+                  userBusiness.businessField == 'Belleza/Spa') {
+                return POSProducts(
+                  categoriesProvider.categoryList![0] ?? '',
+                  scaffoldKeyMobile: _scaffoldKey,
+                );
+              } else {
+                return NoPOSDashboard(userProfile.activeBusiness!);
+              }
+            });
+          }),
+          (userBusiness.cashBalancing!)
+              ? Navigator(onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => DailyDesk());
+                })
+              : Container(),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => ScheduleDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    ExpensesDesk('Dueñ@', userProfile.activeBusiness!));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => ProductDesk(
+                    userProfile.activeBusiness!,
+                    categoriesProvider.categoryList!,
+                    userBusiness.businessField!,
+                    reloadApp));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => SuppliersDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => SuppliesDesk(
+                    userProfile.activeBusiness!,
+                    categoriesProvider.categoryList!,
+                    userBusiness.businessField!));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => PnlDesk());
+          }),
+        ];
+      } else if (userProfile
+              .businesses![businessIndexOnProfile].roleInBusiness ==
+          'Encargad@') {
+        navigationBarItems = [
+          screenNavigator(
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? 'POS'
+                  : 'Inicio',
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? Icons.blur_circular
+                  : Icons.home,
+              0),
+          (userBusiness.cashBalancing!)
+              ? screenNavigator('Caja', Icons.fax, 1)
+              : SizedBox(),
+          (userBusiness.cashBalancing!) ? SizedBox(height: 20) : SizedBox(),
+          screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
+          screenNavigator('Ventas', Icons.insert_chart_outlined, 3),
+          screenNavigator('Gastos', Icons.multiline_chart, 4),
+          screenNavigator('Productos', Icons.assignment, 5),
+          screenNavigator('Proveedores', Icons.local_shipping_outlined, 6),
+          screenNavigator('Insumos', Icons.shopping_basket_outlined, 7),
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) {
+              if (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Tienda Minorista') {
+                return POSProducts(categoriesProvider.categoryList![0]);
+              } else {
+                return NoPOSDashboard(userProfile.activeBusiness!);
+              }
+            });
+          }),
+          (userBusiness.cashBalancing!)
+              ? Navigator(onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => DailyDesk());
+                })
+              : Container(),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => ScheduleDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    ExpensesDesk('Encargad@', userProfile.activeBusiness!));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => ProductDesk(
+                    userProfile.activeBusiness!,
+                    categoriesProvider.categoryList!,
+                    userBusiness.businessField!,
+                    reloadApp));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => SuppliersDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) => SuppliesDesk(
+                    userProfile.activeBusiness!,
+                    categoriesProvider.categoryList!,
+                    userBusiness.businessField!));
+          }),
+        ];
+      } else if (userProfile
+              .businesses![businessIndexOnProfile].roleInBusiness ==
+          'Cajer@') {
+        navigationBarItems = [
+          screenNavigator(
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? 'POS'
+                  : 'Inicio',
+              (userBusiness.businessField == 'Gastronómico' ||
+                      userBusiness.businessField == 'Venta Minorista' ||
+                      userBusiness.businessField == 'Belleza/Spa')
+                  ? Icons.blur_circular
+                  : Icons.home,
+              0),
+          (userBusiness.cashBalancing!)
+              ? screenNavigator('Caja', Icons.fax, 1)
+              : SizedBox(),
+          screenNavigator('Agenda', Icons.calendar_month_outlined, 2),
+          screenNavigator('Gastos', Icons.multiline_chart, 3),
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) {
+              if (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Tienda Minorista') {
+                return POSProducts(categoriesProvider.categoryList![0]);
+              } else {
+                return NoPOSDashboard(userProfile.activeBusiness!);
+              }
+            });
+          }),
+          (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Tienda Minorista')
+              ? Navigator(onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => DailyDesk());
+                })
+              : Container(),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => ScheduleDesk());
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    ExpensesDesk('Cajer@', userProfile.activeBusiness!));
+          }),
+        ];
+      } else if (userProfile
+              .businesses![businessIndexOnProfile].roleInBusiness ==
+          'Contador(a)') {
+        navigationBarItems = [
+          screenNavigator('Ventas', Icons.insert_chart_outlined, 1),
+          screenNavigator('Gastos', Icons.multiline_chart, 4),
+          screenNavigator('PnL', Icons.data_usage, 2),
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    StatsDesk(userProfile.activeBusiness!, registerStatus));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    ExpensesDesk('Encargad@', userProfile.activeBusiness!));
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => PnlDesk());
+          }),
+        ];
+      } else if (userProfile
+                  .businesses![businessIndexOnProfile].roleInBusiness ==
+              'Moz@' ||
+          userProfile.businesses![businessIndexOnProfile].roleInBusiness ==
+              'Otro') {
+        navigationBarItems = [
+          screenNavigator('POS', Icons.blur_circular, 0),
+          screenNavigator('Agenda', Icons.calendar_month_outlined, 1),
+        ];
+        pageNavigators = [
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) {
+              if (userBusiness.businessField == 'Gastronómico' ||
+                  userBusiness.businessField == 'Venta Minorista' ||
+                  userBusiness.businessField == 'Belleza/Spa') {
+                return POSProducts(categoriesProvider.categoryList![0]);
+              } else {
+                return NoPOSDashboard(userProfile.activeBusiness!);
+              }
+            });
+          }),
+          Navigator(onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(builder: (context) => ScheduleDesk());
+          }),
+        ];
+      }
+      return MultiProvider(
+        providers: [
+          StreamProvider<DailyTransactions?>.value(
+              initialData: null,
+              catchError: (_, err) => null,
+              value: DatabaseService().dailyTransactions(
+                  userProfile.activeBusiness, registerStatus.registerID!)),
+        ],
+        child: Scaffold(
+          key: _scaffoldKey,
+          drawer: Drawer(
+            child: Container(
+                color: Colors.black87,
+                height: double.infinity,
+                width: 75,
+                child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        //Name
+                        SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              //User
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return StreamProvider<UserData?>.value(
+                                        initialData: null,
+                                        value: DatabaseService()
+                                            .userProfile(userProfile.uid!),
+                                        child: Scaffold(body: UserSettings()));
+                                  }));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white24),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(
-                                        Icons.swap_horiz_outlined,
-                                        color: Colors.white,
-                                        size: 16,
-                                      ),
+                                      //Image
+                                      Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: Colors.grey.shade300),
+                                              color: Colors.grey,
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      userProfile
+                                                          .profileImage!),
+                                                  fit: BoxFit.cover))),
                                       SizedBox(width: 10),
-                                      Text(
-                                        "Cambiar de negocio",
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.white,
-                                        ),
+                                      //Name
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          //Name
+                                          Text(
+                                            userProfile.name!,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                          SizedBox(height: 5),
+                                          //Current business
+                                          Text(
+                                            userProfile
+                                                .businesses![
+                                                    businessIndexOnProfile]
+                                                .businessName!,
+                                            style: TextStyle(
+                                                color: Colors.grey.shade300,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ],
+                                      ),
+                                      Spacer(),
+                                      //Icons
+                                      Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
+                                        size: 14,
                                       )
-                                    ]),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              //Change business
+                              TextButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  changeBusinessDialog(userProfile.businesses!,
+                                      userProfile.activeBusiness);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.swap_horiz_outlined,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "Cambiar de negocio",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      ]),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          indent: 25,
+                          endIndent: 25,
+                          thickness: 1,
+                          color: Colors.grey,
+                        ),
+                        //Navigation
+                        Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: navigationBarItems!.length,
+                                itemExtent: null,
+                                itemBuilder: (context, i) {
+                                  return navigationBarItems![i];
+                                })),
+                        //Sign out
+                        Container(
+                          height: 150,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(20),
+                          child: Column(children: [
+                            Divider(
+                              indent: 5,
+                              endIndent: 5,
+                              thickness: 1,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(height: 10),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  fixedSize: Size(double.infinity, 50)),
+                              onPressed: () {
+                                _auth.signOut();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Wrapper()));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  //Icon
+                                  Icon(Icons.exit_to_app,
+                                      color: Colors.white, size: 25),
+                                  SizedBox(width: 10),
+                                  //Text
+                                  Text(
+                                    'Salir',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 11),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        indent: 25,
-                        endIndent: 25,
-                        thickness: 1,
-                        color: Colors.grey,
-                      ),
-                      //Navigation
-                      Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: navigationBarItems!.length,
-                              itemExtent: null,
-                              itemBuilder: (context, i) {
-                                return navigationBarItems![i];
-                              })),
-                      //Sign out
-                      Container(
-                        height: 150,
-                        width: double.infinity,
-                        padding: EdgeInsets.all(20),
-                        child: Column(children: [
-                          Divider(
-                            indent: 5,
-                            endIndent: 5,
-                            thickness: 1,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(height: 10),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                fixedSize: Size(double.infinity, 50)),
-                            onPressed: () {
-                              _auth.signOut();
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Wrapper()));
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //Icon
-                                Icon(Icons.exit_to_app,
-                                    color: Colors.white, size: 25),
-                                SizedBox(width: 10),
-                                //Text
-                                Text(
-                                  'Salir',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 11),
-                                  textAlign: TextAlign.center,
-                                )
-                              ],
-                            ),
-                          ),
-                        ]),
-                      )
-                    ]),
-              )),
-        ),
-        endDrawer: Drawer(
-          //Ticket View
-          child: Container(
-              color: Colors.white,
-              child: TicketView(userProfile, businessIndexOnProfile, false,
-                  null, false, false)),
-        ),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Center(
+                          ]),
+                        )
+                      ]),
+                )),
+          ),
+          endDrawer: Drawer(
+            //Ticket View
             child: Container(
-              height: 120,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('images/Denario Logo.png'))),
+                color: Colors.white,
+                child: TicketView(userProfile, businessIndexOnProfile, false,
+                    null, false, false)),
+          ),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            title: Center(
+              child: Container(
+                height: 120,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('images/Denario Logo.png'))),
+              ),
+            ),
+            leading: IconButton(
+                onPressed: openDrawer,
+                icon: Icon(Icons.menu, color: Colors.black, size: 25)),
+          ),
+          body: WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: Stack(
+              children: [
+                Container(
+                    child: IndexedStack(
+                        index: pageIndex, children: pageNavigators!)),
+              ],
             ),
           ),
-          leading: IconButton(
-              onPressed: openDrawer,
-              icon: Icon(Icons.menu, color: Colors.black, size: 25)),
         ),
-        body: WillPopScope(
-          onWillPop: () async {
-            return false;
-          },
-          child: Stack(
-            children: [
-              Container(
-                  child: IndexedStack(
-                      index: pageIndex, children: pageNavigators!)),
-            ],
-          ),
-        ),
-      ),
-    );
+      );
+    } catch (e) {
+      return Loading();
+    }
   }
 }
