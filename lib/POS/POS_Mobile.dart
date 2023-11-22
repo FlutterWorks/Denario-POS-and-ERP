@@ -8,6 +8,7 @@ import 'package:denario/Models/Products.dart';
 import 'package:denario/Models/SavedOrders.dart';
 import 'package:denario/Models/Tables.dart';
 import 'package:denario/Models/User.dart';
+import 'package:denario/POS/CounterViewMobile.dart';
 import 'package:denario/POS/PlateSelection_Mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -46,6 +47,7 @@ class _POSMobileState extends State<POSMobile> {
   @override
   void initState() {
     category = widget.firstCategory;
+    selectedTag = 'Mesas';
     super.initState();
   }
 
@@ -105,12 +107,58 @@ class _POSMobileState extends State<POSMobile> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 //Title
-                                Text(
-                                  'Mesas',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
+                                Container(
+                                  height: 35,
+                                  width: 300,
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: BouncingScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: tableViewTags.length,
+                                      itemBuilder: (context, i) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: Container(
+                                            width: 120,
+                                            child: TextButton(
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: Colors.black,
+                                                backgroundColor: (selectedTag ==
+                                                        tableViewTags[i])
+                                                    ? Colors.black
+                                                    : Colors.transparent,
+                                                minimumSize: Size(50, 35),
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  selectedTag =
+                                                      tableViewTags[i];
+                                                });
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 5.0),
+                                                child: Center(
+                                                  child: Text(
+                                                    tableViewTags[i],
+                                                    style: TextStyle(
+                                                        color: (selectedTag ==
+                                                                tableViewTags[
+                                                                    i])
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
                                 ),
                                 Spacer(),
                                 //Switch view
@@ -155,145 +203,189 @@ class _POSMobileState extends State<POSMobile> {
                                       child: Icon(Icons.list, size: 16),
                                     ),
                                   ),
-                                )
+                                ),
+                                // SizedBox(width: 15),
+                                //Add
+                                Container(
+                                  height: 40,
+                                  child: FloatingActionButton(
+                                    backgroundColor: Colors.greenAccent,
+                                    foregroundColor: Colors.black,
+                                    onPressed: () {
+                                      bloc.retrieveOrder(
+                                          '',
+                                          '',
+                                          [],
+                                          0,
+                                          0,
+                                          Colors.white,
+                                          false,
+                                          '',
+                                          true,
+                                          'Mostrador',
+                                          false,
+                                          {});
+                                      tableController.animateToPage(1,
+                                          duration: Duration(milliseconds: 250),
+                                          curve: Curves.easeIn);
+                                    },
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
                               ],
                             )),
                       )),
-                  //Tables
-                  SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount:
-                            (MediaQuery.of(context).size.width > 650) ? 4 : 3,
-                        crossAxisSpacing: 2.0,
-                        mainAxisSpacing: 2.0,
-                        childAspectRatio: 1,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, i) {
-                          return Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                padding: MaterialStateProperty.all<
-                                    EdgeInsetsGeometry>(EdgeInsets.zero),
-                                backgroundColor: (tables[i].isOpen!)
-                                    ? MaterialStateProperty.all<Color>(
-                                        Colors.greenAccent)
-                                    : MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                                overlayColor:
-                                    MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.hovered))
-                                      return Colors.black12;
-                                    if (states
-                                            .contains(MaterialState.focused) ||
-                                        states.contains(MaterialState.pressed))
-                                      return Colors.black26;
-                                    return null; // Defer to the widget's default.
-                                  },
-                                ),
-                                shape: (tables[i].shape == "Circle")
-                                    ? MaterialStateProperty.all<CircleBorder>(
-                                        CircleBorder())
-                                    : MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                      ),
-                              ),
-                              onPressed: () {
-                                if (tables[i].isOpen!) {
-                                  //retrieve order
-                                  bloc.retrieveOrder(
-                                      tables[i].table,
-                                      tables[i].paymentType,
-                                      tables[i].orderDetail,
-                                      tables[i].discount,
-                                      tables[i].tax,
-                                      Color(tables[i].orderColor!),
-                                      true,
-                                      'Mesa ${tables[i].table}',
-                                      false,
-                                      'Mesa',
-                                      (tables[i].client!['Name'] == '' ||
-                                              tables[i].client!['Name'] == null)
-                                          ? false
-                                          : true,
-                                      tables[i].client);
-                                } else {
-                                  //create order with table name
-                                  bloc.retrieveOrder(
-                                      tables[i].table,
-                                      tables[i].paymentType,
-                                      tables[i].orderDetail,
-                                      tables[i].discount,
-                                      tables[i].tax,
-                                      Color(tables[i].orderColor!),
-                                      false,
-                                      'Mesa ${tables[i].table}',
-                                      false,
-                                      'Mesa',
-                                      false, {});
-                                }
-                                tableController.animateToPage(1,
-                                    duration: Duration(milliseconds: 250),
-                                    curve: Curves.easeIn);
-                              },
-                              child: Container(
-                                  width: double.infinity,
-                                  child: (tables[i].isOpen!)
-                                      ? Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              tables[i].table!,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: true,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600),
+                  //Tables//Counter
+                  (selectedTag == 'Mesas')
+                      ? SliverGrid(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                (MediaQuery.of(context).size.width > 650)
+                                    ? 4
+                                    : 3,
+                            crossAxisSpacing: 2.0,
+                            mainAxisSpacing: 2.0,
+                            childAspectRatio: 1,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (context, i) {
+                              return Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    padding: MaterialStateProperty.all<
+                                        EdgeInsetsGeometry>(EdgeInsets.zero),
+                                    backgroundColor: (tables[i].isOpen!)
+                                        ? MaterialStateProperty.all<Color>(
+                                            Colors.greenAccent)
+                                        : MaterialStateProperty.all<Color>(
+                                            Colors.white),
+                                    overlayColor: MaterialStateProperty
+                                        .resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.hovered))
+                                          return Colors.black12;
+                                        if (states.contains(
+                                                MaterialState.focused) ||
+                                            states.contains(
+                                                MaterialState.pressed))
+                                          return Colors.black26;
+                                        return null; // Defer to the widget's default.
+                                      },
+                                    ),
+                                    shape: (tables[i].shape == "Circle")
+                                        ? MaterialStateProperty.all<
+                                            CircleBorder>(CircleBorder())
+                                        : MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
-                                            SizedBox(height: 15),
-                                            Text(
-                                              '${formatCurrency.format(tables[i].total!)}',
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: true,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ],
-                                        )
-                                      : Center(
-                                          child: Text(
-                                            tables[i].table!,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: true,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600),
                                           ),
-                                        )),
-                            ),
-                          );
-                        },
-                        childCount: tables.length,
-                      ))
+                                  ),
+                                  onPressed: () {
+                                    if (tables[i].isOpen!) {
+                                      //retrieve order
+                                      bloc.retrieveOrder(
+                                          tables[i].table,
+                                          tables[i].paymentType,
+                                          tables[i].orderDetail,
+                                          tables[i].discount,
+                                          tables[i].tax,
+                                          Color(tables[i].orderColor!),
+                                          true,
+                                          'Mesa ${tables[i].table}',
+                                          false,
+                                          'Mesa',
+                                          (tables[i].client!['Name'] == '' ||
+                                                  tables[i].client!['Name'] ==
+                                                      null)
+                                              ? false
+                                              : true,
+                                          tables[i].client);
+                                    } else {
+                                      //create order with table name
+                                      bloc.retrieveOrder(
+                                          tables[i].table,
+                                          tables[i].paymentType,
+                                          tables[i].orderDetail,
+                                          tables[i].discount,
+                                          tables[i].tax,
+                                          Color(tables[i].orderColor!),
+                                          false,
+                                          'Mesa ${tables[i].table}',
+                                          false,
+                                          'Mesa',
+                                          false, {});
+                                    }
+                                    tableController.animateToPage(1,
+                                        duration: Duration(milliseconds: 250),
+                                        curve: Curves.easeIn);
+                                  },
+                                  child: Container(
+                                      width: double.infinity,
+                                      child: (tables[i].isOpen!)
+                                          ? Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  tables[i].table!,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                SizedBox(height: 15),
+                                                Text(
+                                                  '${formatCurrency.format(tables[i].total!)}',
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.black54,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ],
+                                            )
+                                          : Center(
+                                              child: Text(
+                                                tables[i].table!,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: true,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            )),
+                                ),
+                              );
+                            },
+                            childCount: tables.length,
+                          ))
+                      : CounterViewMobile(tableController)
                 ],
               ),
               //Inside Table
