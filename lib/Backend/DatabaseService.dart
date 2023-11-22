@@ -259,6 +259,7 @@ class DatabaseService {
       'Arqueo de Caja': cashBalancing,
       'Caja Abierta': false,
       'Caja Actual': '',
+      'Caja': {},
       'Payment Types': [
         {
           'Type': 'Efectivo',
